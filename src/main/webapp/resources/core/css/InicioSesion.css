@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background: radial-gradient(white, gray);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,4 +76,29 @@ a:hover {
 
 hr {
     border-color:  black;
+}
+
+/* Estilos para el footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.footer-alumnos{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #bbb;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
