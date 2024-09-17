@@ -113,7 +113,7 @@ footer {
     padding: 20px;
     text-align: center;
     margin-top: 20px;
-    position: fixed;
+    display: block;
     bottom: 0;
     width: 100%;
 }
