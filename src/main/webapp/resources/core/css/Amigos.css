@@ -13,7 +13,7 @@ body {
 header {
     min-height: 30px;
     width: 100%;
-    padding: 30px;
+    padding: 20px;
     font-size: 25px;
     background: #f4f4f4;
     display:flex;
@@ -27,6 +27,14 @@ header {
     align-items: center;
     gap: 15px;
     margin-left: auto;
+}
+
+#usuario{
+    width: 60px;
+}
+
+#configuracion{
+    width: 40px;
 }
 
 /*CONTENIDO*/
