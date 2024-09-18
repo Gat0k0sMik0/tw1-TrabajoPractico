@@ -1,0 +1,182 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* FONDO */
+	background: radial-gradient(white, gray);
+}
+
+header {
+	height: 90px;
+	width: 100%;
+	font-size: 25px;
+	background: #f4f4f4;
+	padding: 10px;
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header-bienvenida{
+	display: flex;
+	font-size: 15px;
+	font-family: 'Press Start 2P', cursive;
+}
+
+.header-cerrarSesion{
+	display: flex;
+	margin-left: 300px;
+	font-size: 15px;
+	font-family: 'Press Start 2P', cursive;
+	align-items: center;
+	color: black;
+}
+
+.header-usuario{
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	margin-left: auto;
+}
+
+#usuario{
+	width: 60px;
+}
+
+#configuracion{
+	width: 40px;
+}
+.main-header img {
+	margin: 18px;
+}
+
+.amigos{
+	margin: 15px;
+	display: flex;
+	flex-direction: row;
+	font-family: 'Press Start 2P', cursive;
+	color: white;
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: 20px;
+}
+
+.amigos img{
+	width: 60px;
+}
+
+.container-juegos{
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	margin: 10px;
+}
+
+.truco-container{
+	position: relative;
+	width: 33%;
+}
+
+.truco-container img{
+	width: 100%;
+}
+
+.truco-container .texto-truco {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 45px;
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0.5);
+	font-family: 'Press Start 2P', cursive;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.uno-container{
+	position: relative;
+	width: 33%;
+}
+
+.uno-container img{
+	width: 100%;
+
+}
+
+.uno-container .texto-uno {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 45px;
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0.5);
+	font-family: 'Press Start 2P', cursive;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.chinchon-container{
+	position: relative;
+	width: 33%;
+}
+
+.chinchon-container img{
+	width: 100%;
+	border-radius: 60px;
+}
+
+.chinchon-container .texto-chinchon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 45px;
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0.5);
+	font-family: 'Press Start 2P', cursive;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+a {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+footer {
+	background-color: #333;
+	color: white;
+	padding: 20px;
+	text-align: center;
+	margin-top: 20px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+.footer-container {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.footer-alumnos{
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	color: #bbb;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
