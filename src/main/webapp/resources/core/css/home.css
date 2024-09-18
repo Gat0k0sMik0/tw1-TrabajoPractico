@@ -10,19 +10,20 @@ body {
 	flex-direction: column;
 	align-items: center;
 	/* FONDO */
-	background: radial-gradient(white, gray);
+	/*background: radial-gradient(white, gray);*/
+	background-color: #84ba36;
 }
-
 header {
 	height: 90px;
 	width: 100%;
 	font-size: 25px;
-	background: #f4f4f4;
+	background: rgba(0, 0, 0, 0.5);
 	padding: 10px;
 	display:flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	color: white;
 }
 
 .header-bienvenida{
@@ -37,7 +38,6 @@ header {
 	font-size: 15px;
 	font-family: 'Press Start 2P', cursive;
 	align-items: center;
-	color: black;
 }
 
 .header-usuario{
