@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Jugadores</title>
+    <link rel="stylesheet" th:href="@{/css/estadisticas.css}">
+</head>
+<body>
+<header class="main-header">
+    <div class="header-bienvenida">
+        Bienvenido NombreDeUsuario
+    </div>
+    <div class="header-cerrarSesion">
+        <a href="#">Cerrar sesión</a>
+    </div>
+    <div class="header-usuario">
+        <a href="#">
+            <img id="usuario" src="img/usuario.png" alt="Usuario">
+        </a>
+    </div>
+    <div class="header-confi">
+        <a href="#">
+            <img id="configuracion" src="img/configuracion.png" alt="Configuración">
+        </a>
+    </div>
+</header>
+
+<div class="container">
+    <h2>Estadísticas de Jugadores</h2>
+    <ul class="player-list">
+        <li class="player">
+            <span class="player-name">Jugador 1</span>
+            <span class="player-level">Nivel: 10</span>
+            <span class="player-score">Puntaje: 1200</span>
+        </li>
+        <li class="player">
+            <span class="player-name">Jugador 2</span>
+            <span class="player-level">Nivel: 8</span>
+            <span class="player-score">Puntaje: 900</span>
+        </li>
+        <li class="player">
+            <span class="player-name">Jugador 3</span>
+            <span class="player-level">Nivel: 12</span>
+            <span class="player-score">Puntaje: 1500</span>
+        </li>
+        <li class="player">
+            <span class="player-name">Jugador 4</span>
+            <span class="player-level">Nivel: 5</span>
+            <span class="player-score">Puntaje: 600</span>
+        </li>
+    </ul>
+</div>
+
+<footer>
+    <div class="footer-container">
+        <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
+        <div class="footer-alumnos">
+            <a href="#">Lucas Gavagnin</a> |
+            <a href="#">Gonzalo Ramos</a> |
+            <a href="#">Martin Zaccardo</a> |
+            <a href="#">Franco Vargas</a> |
+            <a href="#">Victoria Croce</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
