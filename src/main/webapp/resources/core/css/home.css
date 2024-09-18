@@ -1,3 +1,4 @@
+
 * {
 	margin: 0;
 	padding: 0;
@@ -26,13 +27,13 @@ header {
 
 .header-bienvenida{
 	display: flex;
-	font-size: 15px;
+	font-size: 30px;
 	font-family: 'Press Start 2P', cursive;
 }
 
 .header-cerrarSesion{
 	display: flex;
-	margin-left: 300px;
+	margin-left: 310px;
 	font-size: 15px;
 	font-family: 'Press Start 2P', cursive;
 	align-items: center;
