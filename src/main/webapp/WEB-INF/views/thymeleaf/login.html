@@ -44,7 +44,8 @@
                         placeholder="Ingrese su contraseña"
                 />
             </div>
-            <button id="btn-login" class="btn btn-primary btn-block" type="submit">Login</button>
+            <button id="btn-login" class="btn btn-primary btn-block" Type="submit">Login</button>
+            <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
         </form>
         <div class="text-white">
             <p class="m-0 d-flex gap-2"> ¿No tienes una cuenta? <a class="text-info" href="nuevo-usuario">Regístrate</a>
