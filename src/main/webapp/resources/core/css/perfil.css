@@ -1,38 +1,10 @@
-* {
-    box-sizing: border-box;
-    text-decoration: none;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+/* HEADER MODS */
+.settingsImageContainer {
+    width: 50px;
 }
 
-p {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background: #5f5f5f;
-}
-
-header {
-    border-bottom: 1px solid #fff;
-}
-
-main {
-    min-height: 100vh;
-}
-
-.bor1 {
-    border: 5px solid red;
-}
-
-.bor2 {
-    border: 5px solid blue;
-}
-
-.bor3 {
-    border: 5px solid green;
+.settingsImageContainer > img {
+    width: 100%;
 }
 
 .userData {
