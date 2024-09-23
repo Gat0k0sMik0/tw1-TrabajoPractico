@@ -1,91 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Home</title>
-  <link rel="stylesheet" th:href="@{/css/home.css}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!--  Estilo Custom -->
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <title>Game Home</title>
 </head>
 <body>
-
-<header class="main-header" >
-      <div class="header-bienvenida">
-        Bienvenido NombreDeUsuario
-      </div>
-
-      <div class="header-cerrarSesion">
-        Cerrar sesión
-      </div>
-
-      <div class="header-usuario">
-        <a th:href="@{/perfilUsuario}">
-          <img id="usuario" th:src="@{/img/usuario.png}" alt="Usuario">
+<header class="col-12 py-3 bor1 d-flex align-items-center justify-content-between px-4">
+    <h1>Bienvenido $nombreUsuario</h1>
+    <nav class="d-flex flex-wrap gap-5 bor1 align-items-center fs-5">
+        <!-- th:href="@{/perfilUsuario}" -->
+        <a class="text-decoration-none text-white" th:href="@{/perfil}">
+            <!-- th:src="@{/img/usuario.png}" -->
+            <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
         </a>
-      </div>
-
-      <div class="header-confi">
-        <a href="">
-          <img id="configuracion" th:src="@{/img/configuracion.png}" alt="Configuracion">
+        <a href="" class="text-decoration-none text-white fs-5">
+            <!-- th:src="@{/img/configuracion.png}" -->
+            <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
         </a>
-      </div>
+        <button class="closeSessionBtn">Cerrar sesión</button>
+    </nav>
 </header>
-
-
-<div class="amigos">
-  <h1>Amigos</h1>
-  <img id="amigo1" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo2" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo3" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo4" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo5" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo6" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo7" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo8" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo9" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo10" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo11" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo12" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo13" th:src="@{/img/usuario.png}" alt="Usuario">
-  <img id="amigo14" th:src="@{/img/usuario.png}" alt="Usuario">
-</div>
-
-<div class="container-juegos">
-
-  <div class="truco-container">
-    <a th:href="@{/MenuJuego}">
-      <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
-      <div class="texto-truco">TRUCO</div>
-    </a>
-  </div>
-
-  <div class="uno-container">
-    <a href="#">
-      <img th:src="@{/img/uno-home.jpg}" alt="Imagen del juego uno">
-      <div class="texto-uno">UNO</div>
-    </a>
-  </div>
-
-  <div class="chinchon-container">
-    <a href="#">
-      <img th:src="@{/img/chinchon.jpg}" alt="Imagen del juego chinchon">
-      <div class="texto-chinchon">CHINCHON</div>
-    </a>
-  </div>
-
-</div>
-
-<footer>
-  <div class="footer-container">
-    <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
-    <div class="footer-alumnos">
-      <p>Lucas Gavagnin | </p>
-      <p>Gonzalo Ramos | </p>
-      <p>Martin Zaccardo | </p>
-      <p>Franco Vargas | </p>
-      <p>Victoria Croce </p>
+<main>
+    <div class="amigos">
+        <a th:href="@{/amigos}">
+            <h1>Amigos</h1>
+        </a>
+        <img id="amigo1" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo2" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo3" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo4" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo5" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo6" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo7" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo8" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo9" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo10" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo11" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo12" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo13" th:src="@{/img/usuario.png}" alt="Usuario">
+        <img id="amigo14" th:src="@{/img/usuario.png}" alt="Usuario">
     </div>
-  </div>
 
+    <div class="container-juegos">
+
+        <div class="truco-container">
+            <a th:href="@{/MenuJuego}">
+                <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
+                <div class="texto-truco">TRUCO</div>
+            </a>
+        </div>
+
+        <div class="uno-container">
+            <a href="#">
+                <img th:src="@{/img/uno-home.jpg}" alt="Imagen del juego uno">
+                <div class="texto-uno">UNO</div>
+            </a>
+        </div>
+
+        <div class="chinchon-container">
+            <a href="#">
+                <img th:src="@{/img/chinchon.jpg}" alt="Imagen del juego chinchon">
+                <div class="texto-chinchon">CHINCHON</div>
+            </a>
+        </div>
+
+    </div>
+</main>
+<footer class="col-12 py-4 d-flex flex-column gap-2">
+    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
+        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
+            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
+            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+        </div>
+        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
+            <p>Victoria Croce</p>
+            <p>Lucas Gavagnin</p>
+            <p>Gonzalo Ramos</p>
+            <p>Franco Vargas</p>
+            <p>Martin Zaccardo</p>
+        </div>
+        <div class="col-4 d-flex flex-wrap justify-content-center">
+            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
+        </div>
+    </div>
+    <hr class="col-10 mx-auto text-white"/>
+    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
 </footer>
 </body>
 </html>

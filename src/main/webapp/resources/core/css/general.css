@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* FONDO */
+    /*background: radial-gradient(white, gray);*/
+    background-color: #515151;
+    position: relative;
+}
+
+header {
+    border-bottom: 1px solid #fff;
+    height: 90px;
+    position: fixed;
+    background-color: #577a23;
+    z-index: 10;
+    color: #fff;
+}
+
+main {
+    min-height: calc(100vh - 900px);
+    padding: 90px;
+}
+
+footer {
+    border-top: 1px solid #fff;
+    background-color: #577a23;
+}
+
+.footerImage {
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+    border-radius: 100%;
+    padding: 0.5rem;
+}
+
+.separationBar {
+    border-left: 1px solid rgba(255, 255, 255, 0.30);
+    border-right: 1px solid rgba(255, 255, 255, 0.30);
+}
+
+
+/* CLASES PARA AYUDA DE MAQUETADO */
+.bor1 {
+    border: 5px solid red;
+}
+
+.bor2 {
+    border: 5px solid blue;
+}
+
+.bor3 {
+    border: 5px solid green;
+}

@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!--  Estilo Custom  -->
+    <link rel="stylesheet" th:href="@{/css/menu-juego.css}"/>
     <title>Game Interface</title>
-    <link rel="stylesheet" th:href="@{/css/MenuJuego.css}">
 </head>
 <body>
-
 <!-- HEADER -->
-<header class="main-header">
-    <div class="back-button">
-        <a th:href="@{/home}">VOLVER AL MENU</a>
-    </div>
-    <div class="header-usuario">
-        <a href="">
-            <img id="usuario" th:src="@{/img/usuario.png}" alt="Usuario">
+<header class="col-12 py-3 bor1 d-flex align-items-center">
+    <nav class="col-10 mx-auto d-flex flex-wrap justify-content-between align-items-center text-white">
+        <a class="text-decoration-none fs-4 text-white" th:href="@{/home}">
+            Home
         </a>
-
-    </div>
-    <div class="header-confi">
-        <a href="">
-            <img id="configuracion" th:src="@{/img/configuracion.png}" alt="Configuracion">
-        </a>
-    </div>
+        <div class="d-flex gap-2 align-items-center">
+            <a class="text-decoration-none text-white" th:href="@{/perfil}">
+                <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+            </a>
+            <a href="" class="text-decoration-none text-white fs-5">
+                <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+            </a>
+        </div>
+    </nav>
 </header>
 
-    <div class="info-container">
+<main class="info-container col-12">
+    <div class="col-10 mx-auto menuJuegoWrapper">
         <h1>TRUCO</h1>
         <!-- Imagen de portada del juego -->
         <img th:src="@{/img/fondo-truco.jpg}" alt="Imagen del juego">
-            <button>JUGAR</button>
+        <button>JUGAR</button>
 
 
         <!-- Estadísticas del juego -->
@@ -113,21 +117,28 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 
-<!-- Footer -->
-<footer>
-    <div class="footer-container">
-        <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
-        <div class="footer-alumnos">
-            <p>Lucas Gavagnin | </p>
-            <p>Gonzalo Ramos | </p>
-            <p>Martin Zaccardo | </p>
-            <p>Franco Vargas | </p>
-            <p>Victoria Croce </p>
+</main>
+<footer class="col-12 py-4 d-flex flex-column gap-2">
+    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
+        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
+            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
+            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+        </div>
+        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
+            <p>Victoria Croce</p>
+            <p>Lucas Gavagnin</p>
+            <p>Gonzalo Ramos</p>
+            <p>Franco Vargas</p>
+            <p>Martin Zaccardo</p>
+        </div>
+        <div class="col-4 d-flex flex-wrap justify-content-center">
+            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
         </div>
     </div>
+    <hr class="col-10 mx-auto text-white"/>
+    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
 </footer>
 </body>
 </html>
