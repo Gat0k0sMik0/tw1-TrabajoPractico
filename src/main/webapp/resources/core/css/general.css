@@ -26,8 +26,8 @@ header {
 }
 
 main {
-    min-height: calc(100vh - 900px);
-    padding: 90px;
+    min-height: 100vh;
+    padding-top: 90px;
 }
 
 footer {
@@ -46,6 +46,10 @@ footer {
 .separationBar {
     border-left: 1px solid rgba(255, 255, 255, 0.30);
     border-right: 1px solid rgba(255, 255, 255, 0.30);
+}
+
+.separationBar > p {
+    margin: 0;
 }
 
 
