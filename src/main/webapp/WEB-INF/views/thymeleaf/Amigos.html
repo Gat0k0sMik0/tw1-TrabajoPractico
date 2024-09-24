@@ -29,11 +29,10 @@
     <h1>Lista de Amigos</h1>
     <div class="friends-list">
         <ul>
-            <li >Juan Pérez</li>
-            <li >María García</li>
-            <li >Carlos Martínez</li>
-            <li >Laura Sánchez</li>
-            <li >Pedro González</li>
+            <li th:each="amigo : ${amigos}">
+                <a th:href="@{'/amigos/' + ${amigo.nombre}}"
+                   th:text="${amigo.nombre}"></a>
+            </li>
         </ul>
     </div>
 
