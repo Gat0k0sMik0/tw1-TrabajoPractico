@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioLogin;
