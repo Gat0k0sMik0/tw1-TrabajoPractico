@@ -11,8 +11,10 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String nombreUsuario;
     private String email;
     private String password;
+    private String confirmPassword;
     private String rol;
     private Boolean activo = false;
 
@@ -46,12 +48,22 @@ public class Usuario {
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
-
     public boolean activo() {
         return activo;
     }
-
     public void activar() {
         activo = true;
+    }
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

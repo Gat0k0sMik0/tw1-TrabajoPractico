@@ -1,37 +1,43 @@
 package com.tallerwebi.presentacion;
+import com.tallerwebi.dominio.ServicioRegistro;
+import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ControladorRegistro {
 
-    @GetMapping("/registro")
-    public String mostrarFormulario(Model model) {
-        return "registro";
+    private final ServicioRegistro servicioRegistro;
+
+    @Autowired
+    public ControladorRegistro(ServicioRegistro servicioRegistro) {
+        this.servicioRegistro = servicioRegistro;
     }
 
-    @PostMapping("/registro")
-    public String procesarFormulario(
-            @RequestParam("nombre") String nombre,
-            @RequestParam("apellido") String apellido,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("password2") String password2,
-            Model model) {
+    @RequestMapping("/registro")
+    public ModelAndView IrAlRegistro() {
+        ModelMap model = new ModelMap();
+        model.put("datosRegistro", new Usuario());
+        return new ModelAndView("registro", model);
+    }
 
-        if (!password.equals(password2)) {
-            model.addAttribute("error", "Las contraseñas no coinciden");
-            return "registro";
+    @RequestMapping(path = "/validarRegistro", method = RequestMethod.POST)
+    public ModelAndView validarRegistro(@RequestParam("datosRegistro") Usuario datosUsuario) {
+        ModelMap model = new ModelMap();
+
+        try {
+            servicioRegistro.validarDatos(datosUsuario);
+        } catch (CamposVaciosException | NombreInvalidoException | EmailInvalidoException |
+                 ContraseniasDiferentesException | ContraseniaInvalidaException e) {
+            String error = e.getMessage();
+            model.put("error", error);
+            return new ModelAndView("registro", model);
         }
-        else {
-            model.addAttribute("mensaje", "¡Registro Exitoso!");
-        }
-
-
-        return "registro";
+        return new ModelAndView("redirect:/InicioDeSesion");
     }
 
 
