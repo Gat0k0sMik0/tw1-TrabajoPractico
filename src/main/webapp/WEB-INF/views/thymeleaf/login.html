@@ -4,43 +4,76 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Taller Web I</title>
-
-    <!-- Boostrap core css -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!--  Estilo Custom -->
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 
-    <!-- custom style -->
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <title>Login</title>
 
 </head>
 
 <body>
-
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
-</nav>
-
-<main role="main" class="container">
-
-    <div class = "container">
-        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-            <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
-                <h3 class="form-signin-heading">Taller Web I</h3>
-                <hr class="colorgraph"><br>
-
-                <input th:field="*{email}" id="email" type="email" class="form-control" required/>
-                <input th:field="*{password}" type="password" id="password" class="form-control" required/>
-
-                <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit">Login</button>
-
-                <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
-                </p>
-            </form>
-            <a id="ir-a-registrarme" href="nuevo-usuario">Registrarme</a>
+<header class="col-12 d-flex align-items-center">
+    <div class="col-10 mx-auto d-flex align-items-center justify-content-between">
+        <h1>Bienvenido a nuestra plataforma de juegos</h1>
+    </div>
+</header>
+<main role="main" class="col-12 d-flex justify-content-center align-items-center">
+    <div class="col-3 mx-auto d-flex flex-column align-items-center justify-content-center border rounded-4 p-4">
+        <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}"
+              class="w-100 p-2 rounded-4 d-flex flex-column gap-2">
+            <h3 class="text-center text-white m-0">Taller Web I</h3>
+            <div class="d-flex flex-column gap-2">
+                <input
+                        th:field="*{email}"
+                        id="email"
+                        type="email"
+                        class="form-control"
+                        required
+                        placeholder="Ingrese su correo electrónico"
+                />
+                <input
+                        th:field="*{password}"
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        required
+                        placeholder="Ingrese su contraseña"
+                />
+            </div>
+            <button id="btn-login" class="btn btn-primary btn-block" Type="submit">Login</button>
+            <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
+        </form>
+        <div class="text-white">
+            <p class="m-0 d-flex gap-2"> ¿No tienes una cuenta? <a class="text-info" href="nuevo-usuario">Regístrate</a>
+            </p>
         </div>
     </div>
 </main>
-<!-- /.container -->
+
+<footer class="col-12 py-4 d-flex flex-column gap-2">
+    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
+        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
+            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
+            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+        </div>
+        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
+            <p>Victoria Croce</p>
+            <p>Lucas Gavagnin</p>
+            <p>Gonzalo Ramos</p>
+            <p>Franco Vargas</p>
+            <p>Martin Zaccardo</p>
+        </div>
+        <div class="col-4 d-flex flex-wrap justify-content-center">
+            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
+        </div>
+    </div>
+    <hr class="col-10 mx-auto text-white"/>
+    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
+</footer>
 
 <!-- Boostrap core js -->
 <script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>

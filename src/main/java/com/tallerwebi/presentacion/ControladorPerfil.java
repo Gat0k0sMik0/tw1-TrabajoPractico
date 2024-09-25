@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ControladorPerfilUsuario {
+public class ControladorPerfil {
 
-    @RequestMapping("/perfilUsuario")
+    @RequestMapping("/perfil")
         public ModelAndView perfilUsuario() {
             ModelMap model = new ModelMap();
             model.put("fullname", "John Doe");
             model.put("username", "johndoe123");
-            return new ModelAndView("perfilUsuario", model);
+            return new ModelAndView("perfil", model);
         }
 
 }
