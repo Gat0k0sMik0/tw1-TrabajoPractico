@@ -8,7 +8,7 @@
 
 <div class="container">
 <h2>Configuracion</h2>
-<form th:action="@{/perfil}" method="post">
+<form th:action="@{/perfil}" method="post" th:object="${datosUsuario}">
     <div class="form-group">
         <label for="nombre">Nombre</label>
         <input th:value="${nombre}" type="text" id="nombre" name="nombre" required>

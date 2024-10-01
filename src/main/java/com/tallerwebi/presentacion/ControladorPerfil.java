@@ -11,20 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class ControladorPerfil {
 
     @RequestMapping("/perfil")
-        public ModelAndView perfilUsuario() {
-            ModelMap model = new ModelMap();
-            model.put("fullname", "John Doe");
-            model.put("username", "johndoe123");
-            return new ModelAndView("perfil", model);
-        }
+        public ModelAndView perfilUsuario(HttpServletRequest request) {
+        HttpSession sesion = request.getSession();
+        Usuario usuario = (Usuario) sesion.getAttribute("usuarioLogueado");
+        ModelMap model = new ModelMap();
+        model.put("datosUsuario", usuario);
+        return new ModelAndView("perfil", model);
+    }
 
     @RequestMapping("/modificar-perfil")
-    public ModelAndView modificarPerfil() {
+    public ModelAndView modificarPerfil(HttpServletRequest request) {
+        HttpSession sesion = request.getSession();
+        Usuario usuario = (Usuario) sesion.getAttribute("usuarioLogueado");
         ModelMap model = new ModelMap();
+        model.put("datosUsuario", usuario);
         return new ModelAndView("modificar-perfil", model);
     }
 

@@ -56,16 +56,38 @@ public class ServicioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaModificarlaContrasena() {
+    public void queSePuedaModificarLaContrasena() {
         // given
         Usuario nuevoUsuario = servicioUsuario.registrar("vickycroce@gmail.com", "hola", "Carla");
         String nuevaContra = "gato";
 
         //when
-        servicioUsuario.modificarUsuario("Carla", "vickycroce@gmail.com", "vickycroce@gmail.com", nuevaContra);
-        nuevoUsuario = repositorioUsuario.buscarUsuario("vickycroce@gmail.com", "hola");
+        when(repositorioUsuario.buscar("vickycroce@gmail.com")).thenReturn(nuevoUsuario);
+        servicioUsuario.modificarContra( "vickycroce@gmail.com",  nuevaContra);
+        // Simulamos la búsqueda en el repositorio después de cambiar la contraseña
+        when(repositorioUsuario.buscar("vickycroce@gmail.com")).thenReturn(nuevoUsuario);
 
-        //then
-        assertThat(nuevoUsuario.getPassword(), is(nuevaContra));
+        // then
+        Usuario usuarioModificado = repositorioUsuario.buscar("vickycroce@gmail.com");
+        assertEquals(nuevaContra, usuarioModificado.getPassword());
+    }
+
+    @Test
+    public void queSePuedaModificarElEmail() {
+        // given
+        Usuario nuevoUsuario = servicioUsuario.registrar("vickycroce@gmail.com", "hola", "Carla");
+        String nuevoMail = "gato@gmail.com";
+
+        //when
+        when(repositorioUsuario.buscar("vickycroce@gmail.com")).thenReturn(nuevoUsuario);
+        servicioUsuario.modificarEmail("vickycroce@gmail.com", nuevoMail);
+        // Simulamos la búsqueda en el repositorio después de cambiar la contraseña
+        when(repositorioUsuario.buscar(nuevoMail)).thenReturn(nuevoUsuario);
+        Usuario usuarioBuscado = repositorioUsuario.buscar(nuevoMail);
+
+        // then
+        Usuario usuarioModificado = repositorioUsuario.buscar(nuevoMail);
+        assertEquals(nuevoMail, usuarioModificado.getEmail());
+        assertThat(usuarioBuscado, notNullValue());
     }
 }

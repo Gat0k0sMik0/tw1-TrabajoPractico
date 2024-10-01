@@ -43,12 +43,29 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     }
 
     @Override
-    public void modificarUsuario(String nombreNuevo, String email, String nuevoEmail, String nuevaContra) {
+    public void modificarEmail( String email, String nuevoEmail) {
         Usuario usuario = repositorioUsuario.buscar(email);
         if(usuario != null) {
-            usuario.setNombre(nombreNuevo);
             usuario.setEmail(nuevoEmail);
-            usuario.setPassword(nuevaContra);repositorioUsuario.modificar(usuario);
+            repositorioUsuario.modificar(usuario);
+        }
+    }
+
+    @Override
+    public void modificarNombreDeUsuario( String email, String nuevoNombre) {
+        Usuario usuario = repositorioUsuario.buscar(email);
+        if(usuario != null) {
+            usuario.setNombre(nuevoNombre);
+            repositorioUsuario.modificar(usuario);
+        }
+    }
+
+    @Override
+    public void modificarContra( String email, String nuevaContra) {
+        Usuario usuario = repositorioUsuario.buscar(email);
+        if(usuario != null) {
+            usuario.setPassword(nuevaContra);
+            repositorioUsuario.modificar(usuario);
         }
     }
 
