@@ -39,8 +39,13 @@
             <div class="rounded-circle position-absolute p-5 userImage"></div>
         </div>
         <div class="col-12 d-flex flex-column justify-content-center align-items-center text-white py-2">
-            <p class="fs-3 fw-semibold m-0" th:text="${datosUsuario.getEmail()}"></p>
-            <p th:text="${datosUsuario.getEmail()}"></p>
+
+            <!-- <p class="fs-3 fw-semibold m-0" th:text="${datosUsuario.getEmail()}"></p> -->
+            <!-- <p th:text="${datosUsuario.getEmail()}"></p> -->
+            
+
+            <p class="fs-3 fw-semibold m-0" th:text="${fullname}"></p>
+            <p th:text="${username}"></p>
         </div>
         <div class="px-2 px-md-0 pt-2">
             <div class="gameWrapper col-md-12">

@@ -48,7 +48,7 @@
             <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
         </form>
         <div class="text-white">
-            <p class="m-0 d-flex gap-2"> ¿No tienes una cuenta? <a class="text-info" href="nuevo-usuario">Regístrate</a>
+            <p class="m-0 d-flex gap-2"> ¿No tienes una cuenta? <a th:href="@{registro}">Regístrate</a>
             </p>
         </div>
     </div>
