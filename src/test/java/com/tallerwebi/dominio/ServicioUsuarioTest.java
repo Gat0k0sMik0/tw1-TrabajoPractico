@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ServicioUsuarioTest {
@@ -27,7 +28,7 @@ public class ServicioUsuarioTest {
         Usuario tester = new Usuario();
         tester.setEmail(email);
         tester.setPassword("");
-        servicioUsuario.registrar(email, "");
+        servicioUsuario.registrar(email, "", "coco");
         //when
         when(repositorioUsuario.buscar(email)).thenReturn(tester);
         Usuario buscado = servicioUsuario.buscar(email);
@@ -41,16 +42,30 @@ public class ServicioUsuarioTest {
         // given
         String email = "gonzalo@gonzalo.com";
         // when
-        Usuario nuevoUsuario = servicioUsuario.registrar(email, "");
+        Usuario nuevoUsuario = servicioUsuario.registrar(email, "", "coco");
         // then
         assertThat(nuevoUsuario, notNullValue());
     }
 
     @Test
     public void siExisteOtroUsuarioConEseMailEntoncesFalla() {
-        servicioUsuario.registrar("gonzalo@gonzalo.com", "");
+        servicioUsuario.registrar("gonzalo@gonzalo.com", "", "coco");
         when(repositorioUsuario.buscar("gonzalo@gonzalo.com")).thenReturn(new Usuario());
-        Usuario nuevoCreado = servicioUsuario.registrar("gonzalo@gonzalo.com", "");
+        Usuario nuevoCreado = servicioUsuario.registrar("gonzalo@gonzalo.com", "", "coco");
         assertThat(nuevoCreado, nullValue());
+    }
+
+    @Test
+    public void queSePuedaModificarlaContrasena() {
+        // given
+        Usuario nuevoUsuario = servicioUsuario.registrar("vickycroce@gmail.com", "hola", "Carla");
+        String nuevaContra = "gato";
+
+        //when
+        servicioUsuario.modificarUsuario("Carla", "vickycroce@gmail.com", "vickycroce@gmail.com", nuevaContra);
+        nuevoUsuario = repositorioUsuario.buscarUsuario("vickycroce@gmail.com", "hola");
+
+        //then
+        assertThat(nuevoUsuario.getPassword(), is(nuevaContra));
     }
 }
