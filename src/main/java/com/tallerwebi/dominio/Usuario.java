@@ -15,8 +15,10 @@ public class Usuario {
     private String email;
     private String password;
     private String confirmPassword;
-    private String rol;
-    private Boolean activo = false;
+    private String rol; //sacar
+    private Boolean activo = false; //indiferente
+    //foto
+    //PREGUNTAR AL PROFE SI VA ACA AMIGOS
 
     public Long getId() {
         return id;
