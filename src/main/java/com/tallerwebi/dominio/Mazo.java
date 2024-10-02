@@ -69,6 +69,14 @@ public class Mazo {
         return cartas.size();
     }
 
+    public Carta getCartaRandom () {
+        return cartas.get(new Random().nextInt(cartas.size()));
+    }
+
+    public Carta getCartaPorIndice (Integer indice) {
+        return cartas.get(indice);
+    }
+
     public List<Carta> getSeisCartasAleatoriasSinRepetir() {
         List<Carta> cartasBuscadas = new ArrayList<>();
         int indice = 0;

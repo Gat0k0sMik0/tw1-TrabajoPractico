@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Component
 public class Truco {
 
@@ -23,31 +21,10 @@ public class Truco {
         this.nroRonda = 0;
         this.testigo = 0;
         manosDePartida = new ArrayList<>();
+        this.mazo = new Mazo();
     }
 
-    public List<Ronda> getRondasJugadas() {
-        return rondasJugadas;
-    }
 
-    public void setRondasJugadas(List<Ronda> rondasJugadas) {
-        this.rondasJugadas = rondasJugadas;
-    }
-
-    public Integer getTestigo() {
-        return testigo;
-    }
-
-    public void setTestigo(Integer testigo) {
-        this.testigo = testigo;
-    }
-
-    public Integer getNroMovimiento() {
-        return nroMovimiento;
-    }
-
-    public void setNroMovimiento(Integer nroMovimiento) {
-        this.nroMovimiento = nroMovimiento;
-    }
 
     public void registrarMovimiento(Jugador j1, Carta cartaTirada) {
         Ronda r = new Ronda(nroRonda,
@@ -184,5 +161,29 @@ public class Truco {
 
     public void setMazo(Mazo mazo) {
         this.mazo = mazo;
+    }
+
+    public List<Ronda> getRondasJugadas() {
+        return rondasJugadas;
+    }
+
+    public void setRondasJugadas(List<Ronda> rondasJugadas) {
+        this.rondasJugadas = rondasJugadas;
+    }
+
+    public Integer getTestigo() {
+        return testigo;
+    }
+
+    public void setTestigo(Integer testigo) {
+        this.testigo = testigo;
+    }
+
+    public Integer getNroMovimiento() {
+        return nroMovimiento;
+    }
+
+    public void setNroMovimiento(Integer nroMovimiento) {
+        this.nroMovimiento = nroMovimiento;
     }
 }
