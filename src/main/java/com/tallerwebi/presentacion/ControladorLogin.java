@@ -2,8 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.MailExistenteException;
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,43 +34,54 @@ public class ControladorLogin {
 
     @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
     public ModelAndView validarLogin(@ModelAttribute("datosLogin") DatosLogin datosLogin, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        ModelMap model = new ModelMap();
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
-            request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
-            model.put("email", usuarioBuscado.getEmail());
-
-//            redirectAttributes.addFlashAttribute("email", usuarioBuscado.getEmail());
-
-            return new ModelAndView("redirect:/home", model);
+            request.getSession().setAttribute("usuarioActivo", usuarioBuscado);
+            redirectAttributes.addFlashAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
+            return new ModelAndView("redirect:/home");
         } else {
-            model.put("error", "Usuario o clave incorrecta");
+            ModelMap model = new ModelMap();
+            model.put("error", "El usuario o clave son incorrectos");
+            return new ModelAndView("inicioDeSesion", model);
         }
-        return new ModelAndView("login", model);
-    }
-
-    // METODOS PARA EL REGISTRO
-    @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
-    public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario) {
-        ModelMap model = new ModelMap();
-
-        try {
-            servicioLogin.registrar(usuario);
-        } catch (MailExistenteException e) {
-            model.put("errorMail", "El usuario ya existe");
-            return new ModelAndView("registro", model);
-        } catch (Exception e) {
-            model.put("error", "Error al registrar el nuevo usuario");
-            return new ModelAndView("registro", model);
-        }
-        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(path = "/nuevo-usuario", method = RequestMethod.GET)
     public ModelAndView nuevoUsuario() {
         ModelMap model = new ModelMap();
-        model.put("usuario", new Usuario());
+        model.put("nuevoUsuario", new Usuario());
         return new ModelAndView("registro", model);
+    }
+
+    // METODOS PARA EL REGISTRO
+    @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
+    public ModelAndView registrarme(@ModelAttribute("nuevoUsuario") Usuario usuario) {
+        ModelMap model = new ModelMap();
+
+        // Manejo de excepciones
+        try {
+            servicioLogin.registrar(usuario);
+        } catch (EmailInvalidoException e) {
+            model.put("error", "El correo no es válido");
+            return new ModelAndView("registro", model);
+        } catch (MailExistenteException e) {
+            model.put("error", "El correo ya existe");
+            return new ModelAndView("registro", model);
+        } catch (UsuarioInvalidoException e) {
+            model.put("error", "El usuario debe contener entre 4 y 16 caracteres");
+            return new ModelAndView("registro", model);
+        } catch (UsuarioExistenteException e) {
+            model.put("error", "El usuario ya existe");
+            return new ModelAndView("registro", model);
+        } catch (ContraseniaInvalidaException e) {
+            model.put("error", "La contraseña debe contener entre 5 y 15 caracteres");
+            return new ModelAndView("registro", model);
+        } catch (ContraseniasDiferentesException e) {
+            model.put("error", "Las contraseñas no coinciden");
+            return new ModelAndView("registro", model);
+        }
+
+        return new ModelAndView("redirect:/login");
     }
 
     /*@RequestMapping(path = "/home", method = RequestMethod.GET)

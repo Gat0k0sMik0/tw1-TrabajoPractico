@@ -15,7 +15,7 @@ public class ServicioUsuarioTest {
 
     @Test
     public void queBuscarUnUsuarioQueNoExisteDeNull() {
-        when(repositorioUsuario.buscar("prueba@prueba.com")).thenReturn(null);
+        when(repositorioUsuario.buscarPorMail("prueba@prueba.com")).thenReturn(null);
         Usuario usuario = servicioUsuario.buscar("prueba@prueba.com");
         assertThat(usuario, nullValue());
     }
@@ -29,7 +29,7 @@ public class ServicioUsuarioTest {
         tester.setPassword("");
         servicioUsuario.registrar(email, "");
         //when
-        when(repositorioUsuario.buscar(email)).thenReturn(tester);
+        when(repositorioUsuario.buscarPorMail(email)).thenReturn(tester);
         Usuario buscado = servicioUsuario.buscar(email);
         //then
         assertThat(buscado.getEmail(), equalToIgnoringCase(email));
@@ -49,7 +49,7 @@ public class ServicioUsuarioTest {
     @Test
     public void siExisteOtroUsuarioConEseMailEntoncesFalla() {
         servicioUsuario.registrar("gonzalo@gonzalo.com", "");
-        when(repositorioUsuario.buscar("gonzalo@gonzalo.com")).thenReturn(new Usuario());
+        when(repositorioUsuario.buscarPorMail("gonzalo@gonzalo.com")).thenReturn(new Usuario());
         Usuario nuevoCreado = servicioUsuario.registrar("gonzalo@gonzalo.com", "");
         assertThat(nuevoCreado, nullValue());
     }

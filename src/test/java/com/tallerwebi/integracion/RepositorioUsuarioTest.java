@@ -4,7 +4,6 @@ import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
-import org.hamcrest.MatcherAssert;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,15 +31,15 @@ public class RepositorioUsuarioTest {
     @Test
     @Transactional
     @Rollback
-    public void queBuscarMeTraigaAlgo () {
-        assertThat(repositorioUsuario.buscar(""), nullValue());
+    public void queBuscarPorMailMeTraigaAlgo() {
+        assertThat(repositorioUsuario.buscarPorMail(""), nullValue());
     }
 
     @Test
     @Transactional
     @Rollback
     public void siNoExisteElEmailQueSeaNulo () {
-        assertThat(repositorioUsuario.buscar("carcajada@carcajada.com"), nullValue());
+        assertThat(repositorioUsuario.buscarPorMail("carcajada@carcajada.com"), nullValue());
     }
 
     @Test
@@ -61,7 +60,7 @@ public class RepositorioUsuarioTest {
     @Test
     @Transactional
     @Rollback
-    public void puedoBuscarUsuarioPorMail(){
+    public void puedoBuscarPorMailUsuarioPorMail(){
         // given
         Usuario usuario1 = new Usuario();
         usuario1.setEmail("flor1@flor.com");
@@ -75,7 +74,7 @@ public class RepositorioUsuarioTest {
         sessionFactory.getCurrentSession().save(usuario2);
 
         //when
-        Usuario usuarioBuscado = repositorioUsuario.buscar("flor1@flor.com");
+        Usuario usuarioBuscado = repositorioUsuario.buscarPorMail("flor1@flor.com");
         // then
         assertThat(usuarioBuscado, notNullValue());
         assertThat(usuarioBuscado.getPassword(), equalToIgnoringCase("123456"));
@@ -91,7 +90,7 @@ public class RepositorioUsuarioTest {
         usuario1.setPassword("123456");
         sessionFactory.getCurrentSession().save(usuario1);
         //when
-        Usuario buscado = repositorioUsuario.buscar("gonzalo@gonzalo.com");
+        Usuario buscado = repositorioUsuario.buscarPorMail("gonzalo@gonzalo.com");
         // then
         assertThat(buscado, notNullValue());
         assertThat(buscado.getPassword(), equalToIgnoringCase("123456"));
@@ -107,7 +106,7 @@ public class RepositorioUsuarioTest {
         usuario1.setPassword("123456");
         sessionFactory.getCurrentSession().save(usuario1);
         //when
-        Usuario buscado = repositorioUsuario.buscar("atajo@atajo.com");
+        Usuario buscado = repositorioUsuario.buscarPorMail("atajo@atajo.com");
         // then
         assertThat(buscado, notNullValue());
     }

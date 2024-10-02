@@ -3,8 +3,7 @@ package com.tallerwebi.infraestructura;
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.MailExistenteException;
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class ServicioLoginImpl implements ServicioLogin {
 
-    private RepositorioUsuario repositorioUsuario;
+    private final RepositorioUsuario repositorioUsuario;
 
     @Autowired
     public ServicioLoginImpl(RepositorioUsuario repositorioUsuario){
@@ -27,11 +26,37 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(Usuario usuario) throws UsuarioExistente, MailExistenteException {
-        Usuario usuarioEncontrado = repositorioUsuario.buscar(usuario.getEmail());
-        if(usuarioEncontrado != null){
+    public void registrar(Usuario usuario) throws MailExistenteException, ContraseniaInvalidaException, UsuarioInvalidoException, UsuarioExistenteException, EmailInvalidoException, ContraseniasDiferentesException {
+        Usuario usuarioEncontradoConMail = repositorioUsuario.buscarPorMail(usuario.getEmail());
+        Usuario usuarioEncontradoConNombre = repositorioUsuario.buscarPorNombre(usuario.getNombreUsuario());
+
+        // Validacion correo
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        if (!usuario.getEmail().matches(emailRegex) || !usuario.getEmail().endsWith(".com")) {
+            throw new EmailInvalidoException();
+        }
+        // Que no exista usuario con mismo correo
+        if(usuarioEncontradoConMail != null){
             throw new MailExistenteException();
         }
+        // Validacion largo de nombre de usuario
+        if (usuario.getNombreUsuario().length() > 16  || usuario.getNombreUsuario().length() < 4) {
+            throw new UsuarioInvalidoException();
+        }
+        // Que no exista usuario con el mismo nombre
+        if (usuarioEncontradoConNombre != null) {
+            throw new UsuarioExistenteException();
+        }
+        // Validacion repetir contraseña
+        if (!usuario.getPassword().equals(usuario.getConfirmPassword())) {
+            throw new ContraseniasDiferentesException();
+        }
+        // Validacion largo de contraseña
+        if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5) {
+            throw new ContraseniaInvalidaException();
+        }
+
+
         repositorioUsuario.guardar(usuario);
     }
 

@@ -8,8 +8,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
@@ -36,10 +34,18 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public Usuario buscar(String email) {
+    public Usuario buscarPorMail(String email) {
         Session session = sessionFactory.getCurrentSession();
         return (Usuario) session.createCriteria(Usuario.class)
                 .add(Restrictions.eq("email", email))
+                .uniqueResult();
+    }
+
+    @Override
+    public Usuario buscarPorNombre(String nombreUsuario) {
+        Session session = sessionFactory.getCurrentSession();
+        return (Usuario) session.createCriteria(Usuario.class)
+                .add(Restrictions.eq("nombreUsuario", nombreUsuario))
                 .uniqueResult();
     }
 

@@ -21,7 +21,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
     @Override
     public Usuario buscar(String email) {
-        Usuario usuario = repositorioUsuario.buscar(email);
+        Usuario usuario = repositorioUsuario.buscarPorMail(email);
         if (usuario == null) {
             return null;
         }
@@ -30,7 +30,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
     @Override
     public Usuario registrar(String email, String password) {
-        Usuario existeOtro = repositorioUsuario.buscar(email);
+        Usuario existeOtro = repositorioUsuario.buscarPorMail(email);
         if (existeOtro != null) {
             return null;
         }
