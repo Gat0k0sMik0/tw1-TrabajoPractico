@@ -21,7 +21,8 @@ public class ControladorHomeTest {
         Usuario creado = new Usuario();
         creado.setEmail(email);
         creado.setPassword("");
-        when(servicioUsuario.registrar(creado.getEmail(),creado.getPassword())).thenReturn(creado);
+        creado.setNombreUsuario("juan");
+        when(servicioUsuario.registrar(creado.getEmail(),creado.getPassword(), creado.getNombreUsuario())).thenReturn(creado);
         when(servicioUsuario.buscar(creado.getEmail())).thenReturn(creado);
         Usuario buscado = servicioUsuario.buscar(email);
         assertThat(buscado.getEmail(), equalToIgnoringCase(email));

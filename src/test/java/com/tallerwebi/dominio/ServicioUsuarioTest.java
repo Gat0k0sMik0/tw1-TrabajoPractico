@@ -27,7 +27,7 @@ public class ServicioUsuarioTest {
         Usuario tester = new Usuario();
         tester.setEmail(email);
         tester.setPassword("");
-        servicioUsuario.registrar(email, "");
+        servicioUsuario.registrar(email, "", "carla");
         //when
         when(repositorioUsuario.buscarPorMail(email)).thenReturn(tester);
         Usuario buscado = servicioUsuario.buscar(email);
@@ -41,16 +41,16 @@ public class ServicioUsuarioTest {
         // given
         String email = "gonzalo@gonzalo.com";
         // when
-        Usuario nuevoUsuario = servicioUsuario.registrar(email, "");
+        Usuario nuevoUsuario = servicioUsuario.registrar(email, "", "carla");
         // then
         assertThat(nuevoUsuario, notNullValue());
     }
 
     @Test
     public void siExisteOtroUsuarioConEseMailEntoncesFalla() {
-        servicioUsuario.registrar("gonzalo@gonzalo.com", "");
+        servicioUsuario.registrar("gonzalo@gonzalo.com", "", "carla");
         when(repositorioUsuario.buscarPorMail("gonzalo@gonzalo.com")).thenReturn(new Usuario());
-        Usuario nuevoCreado = servicioUsuario.registrar("gonzalo@gonzalo.com", "");
+        Usuario nuevoCreado = servicioUsuario.registrar("gonzalo@gonzalo.com", "", "carla");
         assertThat(nuevoCreado, nullValue());
     }
 }
