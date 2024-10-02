@@ -27,14 +27,19 @@ public class Jugador {
         this.nombre = nombre;
     }
 
-    private Integer getIndiceDeCartaBuscada (Carta carta) {
+    private int getIndiceDeCartaBuscada (Carta carta) {
         return cartas.indexOf(carta);
 
     }
+    public Boolean saberSiExiste (Carta carta) {
+        return cartas.contains(carta);
+    }
 
     public Carta tirarCarta(Carta carta) {
-        Integer indiceDeCartaParaBorrar = getIndiceDeCartaBuscada(carta);
-        cartas.remove(indiceDeCartaParaBorrar);
-        return carta;
+        boolean existeLaCartaEnCartas = cartas.contains(carta);
+        if (existeLaCartaEnCartas) {
+            cartas.remove(carta);
+            return carta;
+        } else return null;
     }
 }

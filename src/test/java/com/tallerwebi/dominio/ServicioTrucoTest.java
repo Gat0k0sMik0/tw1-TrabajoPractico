@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
 import com.tallerwebi.infraestructura.ServicioTrucoImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ServicioTrucoTest {
@@ -37,7 +38,7 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void siUnaCartaNoSeRepiteNoFalla() {
+    public void siUnaCartaNoSeRepiteNoFalla() throws IndiceFueraDeRangoException {
         List<Carta> cartitas = new ArrayList<>();
         Truco truco = new Truco();
         truco.cargarCartasAlMazo();
@@ -71,50 +72,63 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void queUnJugadorPuedaTirarUnaCarta() {
-//        List<Carta> seis = mazo.getSeisCartasAleatoriasSinRepetir();
-//        mazo.asignarCartasAJugadores(j1, j2, seis);
-//        List<Carta> tiradas = new ArrayList<>();
-//        Carta tiradaDelJugador = j1.tirarCarta(0);
-//        tiradas.add(tiradaDelJugador);
-//        assertEquals(2, j1.getCartas().size());
-//        assertEquals(1, tiradas.size());
+    public void queLaCartaATirarNoSeaNula() throws IndiceFueraDeRangoException {
+        Truco truco = new Truco();
+        List<Carta> seis = givenSeCarganSeisCartas(truco);
+        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        Carta tiradaDelJugador = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+        assertThat(tiradaDelJugador, notNullValue());
+    }
+
+    @Test
+    public void queLaCartaATirarSeaNula() throws IndiceFueraDeRangoException {
+        Truco truco = new Truco();
+        List<Carta> seis = givenSeCarganSeisCartas(truco);
+        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        Carta tiradaDelJugador = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(2, "Espadas"));
+        assertThat(tiradaDelJugador, nullValue());
+    }
+
+    @Test
+    public void queUnJugadorPuedaTirarUnaCarta() throws IndiceFueraDeRangoException {
+        Truco truco = new Truco();
+        List<Carta> seis = givenSeCarganSeisCartas(truco);
+        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> tiradas = new ArrayList<>();
+        Carta tiradaDelJugador = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+        tiradas.add(tiradaDelJugador);
+        assertEquals(2, j1.getCartas().size());
+        assertEquals(1, tiradas.size());
     }
 
 
     @Test
-    public void queSeRegistreElMovimiento() {
+    public void queSeRegistreElMovimiento() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
-        List<Carta> seis = new ArrayList<>();
-        seis.add(truco.getMazo().getCartaPorIndice(6));
-        seis.add(truco.getMazo().getCartaPorIndice(7));
-        seis.add(truco.getMazo().getCartaPorIndice(9));
-        seis.add(truco.getMazo().getCartaPorIndice(30));
-        seis.add(truco.getMazo().getCartaPorIndice(31));
-        seis.add(truco.getMazo().getCartaPorIndice(32));
+        List<Carta> seis = givenSeCarganSeisCartas(truco);
         truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         // when
-        Carta cartaTirada = j1.tirarCarta(truco.getMazo().getCartaPorIndice(6));
+        Carta cartaTirada = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
         truco.registrarMovimiento(j1, cartaTirada);
         // then
         assertEquals(1, truco.getRondasJugadas().size());
     }
 
     @Test
-    public void queLaCartaQueTiroElJugadorUnoSeaLaEsperada() {
+    public void queLaCartaQueTiroElJugadorUnoSeaLaEsperada() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
         truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         // when
-        Carta cartaTirada = j1.tirarCarta(truco.getMazo().getCartaPorIndice(6));
+        Carta cartaTirada = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
         truco.registrarMovimiento(j1, cartaTirada);
         // then
         assertEquals(truco.getRondasJugadas().get(0).getNroCarta(), cartaTirada.getNumero());
     }
 
-    public List<Carta> givenSeCarganSeisCartas(Truco truco) {
+    public List<Carta> givenSeCarganSeisCartas(Truco truco) throws IndiceFueraDeRangoException {
         List<Carta> seis = new ArrayList<>();
         seis.add(truco.getMazo().getCartaPorIndice(6));
         seis.add(truco.getMazo().getCartaPorIndice(7));
@@ -126,14 +140,14 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void queSeHayanHechoDosRondas() {
+    public void queSeHayanHechoDosRondas() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
         truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         // when
-        Carta c1 = j1.tirarCarta(truco.getMazo().getCartaPorIndice(6));
-        Carta c2 = j2.tirarCarta(truco.getMazo().getCartaPorIndice(30));
+        Carta c1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+        Carta c2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
         truco.registrarMovimiento(j1, c1);
         truco.registrarMovimiento(j2, c2);
         // then
@@ -142,14 +156,14 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void saberQuienGanoLaPrimeraRonda() {
+    public void saberQuienGanoLaPrimeraRonda() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
         truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         // when
-        Carta c1 = j1.tirarCarta(truco.getMazo().getCartaPorIndice(6));
-        Carta c2 = j2.tirarCarta(truco.getMazo().getCartaPorIndice(30));
+        Carta c1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+        Carta c2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
 
         truco.registrarMovimiento(j1, c1);
         truco.registrarMovimiento(j2, c2);
@@ -159,16 +173,16 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void queLaPrimeraRondaLaGaneElPrimeroYLaSegundaElSegundo() {
+    public void queLaPrimeraRondaLaGaneElPrimeroYLaSegundaElSegundo() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
         truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         // when
-        Carta c1 = j1.tirarCarta(truco.getMazo().getCartaPorIndice(6));
-        Carta c2 = j2.tirarCarta(truco.getMazo().getCartaPorIndice(30));
-        Carta c3 = j1.tirarCarta(truco.getMazo().getCartaPorIndice(9));
-        Carta c4 = j2.tirarCarta(truco.getMazo().getCartaPorIndice(31));
+        Carta c1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+        Carta c2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
+        Carta c3 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
+        Carta c4 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(2, "Copas"));
         truco.registrarMovimiento(j1, c1);
         truco.registrarMovimiento(j2, c2);
         truco.registrarMovimiento(j1, c3);
@@ -181,7 +195,7 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void queElJugadorDosGaneDosDeTresRondas() {
+    public void queElJugadorDosGaneDosDeTresRondas() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenAsignoCartasALosJugadores();
@@ -198,7 +212,7 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void saberQuienGanoLaPrimeraMano() {
+    public void saberQuienGanoLaPrimeraMano() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenAsignoCartasALosJugadores();
@@ -211,7 +225,7 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void queSeRegistreQuienGanoLaPrimeraMano() {
+    public void queSeRegistreQuienGanoLaPrimeraMano() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenAsignoCartasALosJugadores();
@@ -226,21 +240,23 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void queSeJueguenTresManosYQueElGanadorSeaElEsperado() {
+    public void queSeJueguenTresManosYQueElGanadorSeaElEsperado() throws IndiceFueraDeRangoException {
         // given
         Truco truco = new Truco();
         List<Carta> seis = givenAsignoCartasALosJugadores();
         truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         // when
         whenJuegoUnaMano(truco);
+        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         whenJuegoUnaMano(truco);
+        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
         whenJuegoUnaMano(truco);
         // then
         assertEquals(j2.getNombre(), truco.saberQuienSumoMasPuntosEnLasManos(j1, j2).getNombre());
 
     }
 
-    private List<Carta> givenAsignoCartasALosJugadores () {
+    private List<Carta> givenAsignoCartasALosJugadores() throws IndiceFueraDeRangoException {
         List<Carta> seis = new ArrayList<>();
         Truco truco = new Truco();
         seis.add(truco.getMazo().getCartaPorIndice(3)); // 4 espada xxx
@@ -253,23 +269,14 @@ public class ServicioTrucoTest {
     }
 
     private void whenJuegoUnaMano(Truco truco) {
-        // cartas para J1
-        Carta e4 = truco.getMazo().getCartaPorIndice(3); // 4 espada xxx
-        Carta e7 = truco.getMazo().getCartaPorIndice(6); // 7 espada x
-        Carta e12 = truco.getMazo().getCartaPorIndice(9); // 12 espada xx
-        // cartas para J2
-        Carta c1 = truco.getMazo().getCartaPorIndice(30); // 1 copa x
-        Carta c2 = truco.getMazo().getCartaPorIndice(31); // 2 copa xx
-        Carta c3 = truco.getMazo().getCartaPorIndice(32); // 3 copa xxx
+        Carta ct1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+        Carta ct2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
 
-        Carta ct1 = j1.tirarCarta(e7);
-        Carta ct2 = j2.tirarCarta(c1);
+        Carta ct3 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
+        Carta ct4 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(2, "Copas"));
 
-        Carta ct3 = j1.tirarCarta(e12);
-        Carta ct4 = j2.tirarCarta(c2);
-
-        Carta ct5 = j1.tirarCarta(e4);
-        Carta ct6 = j2.tirarCarta(c3);
+        Carta ct5 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(4, "Espadas"));
+        Carta ct6 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(3, "Copas"));
 
         truco.registrarMovimiento(j1, ct1);
         truco.registrarMovimiento(j2, ct2);

@@ -84,6 +84,15 @@ public class Truco {
         return rondas;
     }
 
+    public Carta buscarCartaPorNumeroYPalo(Integer numero, String palo) {
+        for (Carta c : this.mazo.getCartas()) {
+            if (c.getPalo().equals(palo) && c.getNumero().equals(numero)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
     public Jugador saberQuienGanoLaPrimeraMano(Jugador j1, Jugador j2) {
         Integer puntosJ1 = 0;
         Integer puntosJ2 = 0;

@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Carta {
@@ -56,5 +57,18 @@ public class Carta {
 
     public void setPalo(String palo) {
         this.palo = palo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Carta carta = (Carta) o;
+        return Objects.equals(valor, carta.valor) && Objects.equals(numero, carta.numero) && Objects.equals(palo, carta.palo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(valor, numero, palo);
     }
 }
