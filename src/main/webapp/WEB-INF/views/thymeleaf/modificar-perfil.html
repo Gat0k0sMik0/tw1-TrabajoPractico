@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Perfil</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+
+    <!-- Estilo custom -->
+    <link rel="stylesheet" th:href="@{/css/modificar-perfil.css}"/>
+</head>
+<body>
+
+
+
+    <header class="col-12 d-flex align-items-center">
+        <div class="col-10 mx-auto d-flex align-items-center justify-content-between">
+            <h1 th:text="'Bienvenido ' + ${nombreUsuario}"></h1>
+            <nav class="d-flex flex-wrap gap-5 align-items-center fs-5">
+                <!-- th:href="@{/perfilUsuario}" -->
+                <a class="text-decoration-none text-white" th:href="@{/perfil}">
+                    <!-- th:src="@{/img/usuario.png}" -->
+                    <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+                </a>
+                <a href="" class="text-decoration-none text-white fs-5">
+                    <!-- th:src="@{/img/configuracion.png}" -->
+                    <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+                </a>
+                <button class="closeSessionBtn">Cerrar sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="formulario">
+        <h2>Configuracion</h2>
+        <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+            <form th:action="@{/actualizar-perfil}" method="post" th:object="${datosUsuario}">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input th:field="*{nombreUsuario}" type="text" id="nombre" name="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input  th:field="*{email}" type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input th:field="*{password}" type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Confirmar contraseña</label>
+                    <input th:field="*{confirmPassword}" type="password" id="confirmar-password" name="confirmPassword" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">Aceptar</button>
+                </div>
+            </form>
+    </div>
+
+    <footer class="col-12 py-4 d-flex flex-column gap-2">
+        <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
+            <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
+                <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
+                <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+            </div>
+            <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
+                <p>Victoria Croce</p>
+                <p>Lucas Gavagnin</p>
+                <p>Gonzalo Ramos</p>
+                <p>Franco Vargas</p>
+                <p>Martin Zaccardo</p>
+            </div>
+            <div class="col-4 d-flex flex-wrap justify-content-center">
+                <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
+            </div>
+        </div>
+        <hr class="col-10 mx-auto text-white"/>
+        <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>

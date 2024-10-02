@@ -38,6 +38,7 @@ public class ControladorLogin {
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("usuarioActivo", usuarioBuscado);
             redirectAttributes.addFlashAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
+            redirectAttributes.addFlashAttribute("email", usuarioBuscado.getEmail());
             return new ModelAndView("redirect:/home");
         } else {
             ModelMap model = new ModelMap();

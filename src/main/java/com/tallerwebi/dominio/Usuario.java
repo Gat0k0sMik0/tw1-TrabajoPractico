@@ -17,6 +17,7 @@ public class Usuario {
     private String confirmPassword;
     private String rol;
     private Boolean activo = false;
+    private String avatar;
 
     public Long getId() {
         return id;
@@ -65,5 +66,13 @@ public class Usuario {
     }
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 }
