@@ -3,6 +3,7 @@ package com.tallerwebi.infraestructura;
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.MailExistenteException;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,10 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(Usuario usuario) throws UsuarioExistente {
-        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
+    public void registrar(Usuario usuario) throws UsuarioExistente, MailExistenteException {
+        Usuario usuarioEncontrado = repositorioUsuario.buscar(usuario.getEmail());
         if(usuarioEncontrado != null){
-            throw new UsuarioExistente();
+            throw new MailExistenteException();
         }
         repositorioUsuario.guardar(usuario);
     }
