@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -73,7 +75,10 @@ public class Mazo {
         return cartas.get(new Random().nextInt(cartas.size()));
     }
 
-    public Carta getCartaPorIndice (Integer indice) {
+    public Carta getCartaPorIndice (Integer indice) throws IndiceFueraDeRangoException {
+        if (indice < 0 || indice > cartas.size()) {
+            throw new IndiceFueraDeRangoException();
+        }
         return cartas.get(indice);
     }
 
@@ -112,19 +117,28 @@ public class Mazo {
         Carta c1 = seis.get(0);
         Carta c2 = seis.get(1);
         Carta c3 = seis.get(2);
-        Carta c4 = seis.get(3);
-        Carta c5 = seis.get(4);
-        Carta c6 = seis.get(5);
         List<Carta> mazo1 = new ArrayList<>();
         mazo1.add(c1);
         mazo1.add(c2);
         mazo1.add(c3);
+
+        Carta c4 = seis.get(3);
+        Carta c5 = seis.get(4);
+        Carta c6 = seis.get(5);
         List<Carta> mazo2 = new ArrayList<>();
         mazo2.add(c4);
         mazo2.add(c5);
         mazo2.add(c6);
+
         j1.setCartas(mazo1);
         j2.setCartas(mazo2);
     }
 
+    public List<Carta> getCartas() {
+        return cartas;
+    }
+
+    public void setCartas(List<Carta> cartas) {
+        this.cartas = cartas;
+    }
 }
