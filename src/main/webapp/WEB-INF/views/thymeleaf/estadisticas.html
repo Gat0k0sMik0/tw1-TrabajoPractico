@@ -8,14 +8,14 @@
 </head>
 <body>
 <header class="main-header">
-    <div class="header-bienvenida">
-        Bienvenido NombreDeUsuario
-    </div>
+    <a th:href="@{/home}">
+        Home
+    </a>
     <div class="header-cerrarSesion">
         <a href="#">Cerrar sesión</a>
     </div>
     <div class="header-usuario">
-        <a href="#">
+        <a th:href="@{/perfil}">
             <img id="usuario" src="img/usuario.png" alt="Usuario">
         </a>
     </div>
@@ -28,28 +28,22 @@
 
 <div class="container">
     <h2>Estadísticas de Jugadores</h2>
-    <ul class="player-list">
-        <li class="player">
-            <span class="player-name">Jugador 1</span>
-            <span class="player-level">Nivel: 10</span>
-            <span class="player-score">Puntaje: 1200</span>
-        </li>
-        <li class="player">
-            <span class="player-name">Jugador 2</span>
-            <span class="player-level">Nivel: 8</span>
-            <span class="player-score">Puntaje: 900</span>
-        </li>
-        <li class="player">
-            <span class="player-name">Jugador 3</span>
-            <span class="player-level">Nivel: 12</span>
-            <span class="player-score">Puntaje: 1500</span>
-        </li>
-        <li class="player">
-            <span class="player-name">Jugador 4</span>
-            <span class="player-level">Nivel: 5</span>
-            <span class="player-score">Puntaje: 600</span>
-        </li>
-    </ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Jugador</th>
+            <th>Nivel</th>
+            <th>Puntaje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="estadistica : ${estadisticas}">
+            <td th:text="${estadistica.jugador}"></td>
+            <td th:text="${estadistica.nivel}"></td>
+            <td th:text="${estadistica.puntaje}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <footer>
