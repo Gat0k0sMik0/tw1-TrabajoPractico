@@ -15,9 +15,9 @@ import java.util.List;
 
 @Controller
 public class ControladorAmigos {
-    @RequestMapping("/Amigos")
+    @RequestMapping("/amigos")
     public ModelAndView irAChatAmigos() {
-        return new ModelAndView("Amigos");
+        return new ModelAndView("amigos");
     }
 
 }

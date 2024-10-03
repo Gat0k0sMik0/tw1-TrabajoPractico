@@ -107,6 +107,11 @@ a {
 	cursor: pointer;
 }
 
+#estadisticas{
+	justify-content: center;
+	align-items: center;
+}
+
 .closeSessionBtn {
 	padding: 0.8rem 1.6rem;
 	background: #1D8FF2;
