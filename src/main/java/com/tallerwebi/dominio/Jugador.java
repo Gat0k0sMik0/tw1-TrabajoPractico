@@ -37,4 +37,9 @@ public class Jugador {
         cartas.remove(indiceDeCartaParaBorrar);
         return carta;
     }
+
+    // Añadir carta a la mano
+    public void recibirCarta(Carta carta) {
+        this.cartas.add(carta);
+    }
 }
