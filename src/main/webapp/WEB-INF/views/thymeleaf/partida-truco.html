@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Truco - Partida</title>
+    <link rel="stylesheet" th:href="@{/css/truco.css}"/>
+</head>
+<body>
+<h1>Partida de Truco</h1>
+
+<h2>Jugador:</h2>
+
+<div id="mesa">
+    <div id="cartas-contrincante">
+        <h3>Cartas Contrincante:</h3>
+        <img th:src="@{/img/cartas-contricante.png}" alt="Cartas del Contrincante">
+    </div>
+
+    <h3>Tus Cartas:</h3>
+    <div id="cartas">
+        <img id="mis-cartas" th:src="@{/img/cartas.png}" alt="Tus Cartas">
+        <img id="mazo" th:src="@{/img/mazo.png}" alt="Mazo de Cartas">
+    </div>
+
+    <div id="botones">
+        <button> Tirar carta</button>
+        <button> Envido</button>
+        <button> Tanto</button>
+        <button> Irme al mazo</button>
+    </div>
+
+
+</div>
+</body>
+</html>

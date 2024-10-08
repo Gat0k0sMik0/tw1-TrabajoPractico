@@ -42,4 +42,9 @@ public class Jugador {
             return carta;
         } else return null;
     }
+
+    // Añadir carta a la mano
+    public void recibirCarta(Carta carta) {
+        this.cartas.add(carta);
+    }
 }
