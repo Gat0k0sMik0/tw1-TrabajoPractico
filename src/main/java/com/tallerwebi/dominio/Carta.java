@@ -14,6 +14,7 @@ public class Carta {
     private Integer valor;
     private Integer numero;
     private String palo;
+    private String img;
 
     public Carta() {
 
@@ -25,7 +26,12 @@ public class Carta {
         this.palo = palo;
     }
 
-
+    public Carta(Integer valor, Integer numero, String palo, String img) {
+        this.valor = valor;
+        this.numero = numero;
+        this.palo = palo;
+        this.img = img;
+    }
 
     public Long getId() {
         return id;
@@ -70,5 +76,13 @@ public class Carta {
     @Override
     public int hashCode() {
         return Objects.hash(valor, numero, palo);
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

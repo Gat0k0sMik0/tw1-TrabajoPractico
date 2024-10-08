@@ -24,8 +24,6 @@ public class Truco {
         this.mazo = new Mazo();
     }
 
-
-
     public void registrarMovimiento(Jugador j1, Carta cartaTirada) {
         Ronda r = new Ronda(nroRonda,
                 j1,
