@@ -4,11 +4,52 @@ body {
     color: #ecf0f1;
     margin: 0;
     padding: 0;
+    height: 100vh;
+}
+
+/* HEADER */
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+        "texto imagenes";
+}
+
+.texto-bienvenida {
+    grid-area: texto;
+}
+
+.imagenes {
+    grid-area: imagenes;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.headerImage {
+    height: 45px;
+    background-color: #fff;
+    border-radius: 100%;
+    padding: 0.5rem;
+}
+
+.division {
+    margin: 0.5rem;
+    border: 0.5px solid white;
+    height: 100%;
+}
+
+/* CONTENIDO */
+main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
 }
 
 h1 {
@@ -27,21 +68,20 @@ h2, h3 {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    max-width: 900px;
-}
+    width: 70rem;
+    height: 35rem;
 
-#mesa img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+    display: grid;
+    grid-template-areas:
+    "cartas_rival"
+    "cartas_en_juego"
+    "cartas_jugador"
+    "botones";
 }
 
 /* Cartas contrincante */
 #cartas-contrincante {
+    grid-area: cartas_rival;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,11 +93,39 @@ h2, h3 {
     height: auto;
 }
 
+/* Cartas en juego */
+#cartas-en-juego {
+    grid-area: cartas_en_juego;
+    display: grid;
+    grid-template-areas:
+        "mazo vacio vacio vacio carta1 carta2 vacio vacio vacio";
+}
+
+#cartaRival {
+    grid-area: carta1;
+}
+
+#miCarta {
+    grid-area: carta2;
+}
+
+#mazo {
+    grid-area: mazo;
+    height: 160px;
+    cursor: pointer;
+}
+
+#miCarta, #cartaRival {
+    height: 120px;
+}
+
 /* Tus cartas */
 #cartas {
+    grid-area: cartas_jugador;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
 }
 
 #mis-cartas img{
@@ -74,6 +142,45 @@ h2, h3 {
 #cartas img:last-child {
     margin-right: 0;
 }
+
+/* Botones */
+#botones {
+    grid-area: botones;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Estilos para el footer */
+footer {
+    margin-top: 30px;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    display: block;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer-alumnos{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #bbb;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+
 
 
 

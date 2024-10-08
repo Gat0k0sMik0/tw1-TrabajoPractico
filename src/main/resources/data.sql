@@ -1,6 +1,10 @@
 INSERT INTO Usuario(id, email, password, rol, activo)
 VALUES (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 
+/* USUARIO DE PRUEBA */
+    INSERT INTO Usuario(nombreUsuario, email, password)
+    VALUES ('admin', 'test@prueba.com', 'admintest')
+
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)
 VALUES
