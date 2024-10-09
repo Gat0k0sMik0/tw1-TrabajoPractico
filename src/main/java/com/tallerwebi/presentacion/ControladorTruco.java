@@ -29,9 +29,20 @@ public class ControladorTruco {
     public ModelAndView comenzarPartidaTruco(HttpServletRequest request) {
         HttpSession sesion = request.getSession();
         Usuario usuario = (Usuario) sesion.getAttribute("usuarioActivo");
-        Jugador jugador1 = new Jugador(usuario.getNombreUsuario());
-        Jugador jugador2 = new Jugador("Juan");
+
+        if (usuario == null) {
+            // Si no hay usuario activo en la sesión, redirige al inicio de sesión o lanza un error
+            return new ModelAndView("redirect:/login"); // Cambia esto según tu vista de login
+        }
+
+        // Crear jugadores para la partida
+        Jugador jugador1 = new Jugador(usuario.getNombreUsuario()); // Usuario logueado
+        Jugador jugador2 = new Jugador("Juan"); // Jugador contrario o bot
+
+        // Iniciar la partida
         servicioTruco.empezar(jugador1, jugador2);
+
+        // Retornar la vista de la partida
         return new ModelAndView("partida-truco");
     }
 

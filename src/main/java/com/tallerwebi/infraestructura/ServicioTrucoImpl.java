@@ -12,9 +12,7 @@ import java.util.List;
 public class ServicioTrucoImpl implements ServicioTruco {
 
     private Truco truco;
-   // private PartidaTruco partida;
     private Jugador jugador;
-   // private Robot robot;
     private List<Carta> mazo;
     private List<Carta> cartasJugadas;
 
