@@ -21,6 +21,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
     @Autowired
     public ServicioTrucoImpl(Truco truco) {
         this.truco = truco;
+        this.cartasJugadas = new ArrayList<>();
     }
 
     @Override
@@ -31,58 +32,22 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
 
-    // Método para iniciar una partida
-   /* public void iniciarPartida(String nombreJugador) {
-        this.jugador = new Jugador(nombreJugador);
-        this.robot = new Robot("Robot");
-
-        // Repartir las cartas
-        repartirCartas(jugador);
-        repartirCartas(robot);
-    }*/
-
-    // Inicializa el mazo de cartas del Truco
-    private void inicializarMazo() {
-        mazo = new ArrayList<>();
-        String[] palos = {"Espada", "Oro", "Basto", "Copa"};
-        for (String palo : palos) {
-            for (int numero = 1; numero <= 12; numero++) {
-                if (numero != 8 && numero != 9) {
-                    int valor = asignarValor(numero, palo);
-                    mazo.add(new Carta(valor, numero, palo));
-                }
+        // Método para que el jugador tire una carta
+        public void tirarCarta(Jugador jugador, Carta cartaSeleccionada) {
+            List<Carta> cartasJugador = jugador.getCartas();
+            if (cartasJugador.contains(cartaSeleccionada)) {
+                cartasJugador.remove(cartaSeleccionada); // Elimina la carta de la mano del jugador
+                cartasJugadas.add(cartaSeleccionada); // Agrega la carta a las cartas jugadas
+                System.out.println(jugador.getNombre() + " ha jugado la carta " + cartaSeleccionada.getNumero() + " de " + cartaSeleccionada.getPalo());
+            } else {
+                throw new IllegalArgumentException("La carta seleccionada no está en la mano del jugador.");
             }
         }
-        Collections.shuffle(mazo);
-    }
 
-    // Asigna el valor de la carta según las reglas del Truco
-    private int asignarValor(int numero, String palo) {
-        // Reglas específicas del Truco para asignar el valor
-        if (numero == 1 && palo.equals("Espada")) return 14;
-        if (numero == 1 && palo.equals("Basto")) return 13;
-        if (numero == 7 && palo.equals("Espada")) return 12;
-        if (numero == 7 && palo.equals("Oro")) return 11;
-        if (numero == 3) return 10;
-        if (numero == 2) return 9;
-        if (numero == 1) return 8;
-        if (numero == 12) return 7;
-        if (numero == 11) return 6;
-        if (numero == 10) return 5;
-        if (numero == 7) return 4;
-        if (numero == 6) return 3;
-        if (numero == 5) return 2;
-        if (numero == 4) return 1;
-
-        return 0; // por defecto
-    }
-
-    // Repartir 3 cartas a un jugador
-    private void repartirCartas(Jugador jugador) {
-        for (int i = 0; i < 3; i++) {
-            Carta carta = mazo.remove(0);
-            jugador.recibirCarta(carta);
+        public List<Carta> getCartasJugadas() {
+            return cartasJugadas;
         }
     }
 
-}
+
+
