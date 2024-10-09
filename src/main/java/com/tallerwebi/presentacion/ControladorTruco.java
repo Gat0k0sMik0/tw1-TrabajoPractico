@@ -68,6 +68,7 @@ public class ControladorTruco {
         model.put("cartasJugador2", cartasJugador2);
         model.put("Jugador1", jugador1);
         model.put("Jugador2", jugador2);
+        model.put("partidaIniciada", true);
 
         return new ModelAndView("partida-truco", model);
     }

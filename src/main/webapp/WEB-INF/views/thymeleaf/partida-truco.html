@@ -16,10 +16,9 @@
     </header>
 
     <main>
-        <h3 th:text="${jugador2 != null ? 'Tu contrincante es ' + jugador2.nombre : 'Esperando Rival...'}"></h3>
+        <h3 th:text="${Jugador2 != null ? 'Tu contrincante es ' + Jugador2.nombre : 'Esperando Rival...'}"></h3>
 
         <div id="mesa">
-            <form method="post" action="">
                 <div id="cartas-contrincante">
                     <ul class="disposicion-cartas" style="list-style-type: none;">
                         <li th:each="carta : ${cartasJugador2}">
@@ -32,25 +31,27 @@
                     <a th:href="@{/comenzar-partida-truco}">
                         <img id="mazo"  th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                     </a>
-                    <img  id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">
                     <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">
+                    <img  id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">
                 </div>
 
                 <div id="mis-cartas">
                     <ul class="disposicion-cartas" style="list-style-type: none;">
                         <li th:each="carta : ${cartasJugador1}">
-                            <img th:src="@{${carta.img}}" alt="Carta" />
+                            <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}"  class="carta" onclick="seleccionarCarta(this)" />
                         </li>
                     </ul>
                 </div>
 
-                <div id="botones">
-                    <button> Tirar carta</button>
-                    <button> Envido</button>
-                    <button> Tanto</button>
-                    <button> Irme al mazo</button>
-                </div>
-            </form>
+                <form>
+                    <input type="hidden" name="cartaSeleccionada" id="cartaSeleccionada"/>
+                    <div id="botones" th:if="${partidaIniciada} == true">
+                        <button > Tirar carta</button>
+                        <button> Envido</button>
+                        <button> Tanto</button>
+                        <button> Irme al mazo</button>
+                    </div>
+                </form>
 
         </div>
     </main>
@@ -69,5 +70,24 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartas = document.querySelectorAll('.carta');
+            const cartaSeleccionadaInput = document.getElementById('cartaSeleccionada');
+
+            cartas.forEach(carta => {
+                carta.addEventListener('click', () => {
+                    /* Al hacer click en una carta, se borra el estilo en las demas
+                    * y se aplica solo a la que seleccioné */
+                    cartas.forEach(c => c.classList.remove('carta-seleccionada'));
+                    carta.classList.add('carta-seleccionada');
+
+                    const cartaId = carta.getAttribute('data-id');
+                    // Asignar el ID al input oculto
+                    cartaSeleccionadaInput.value = cartaId;
+                })
+            })
+        })
+    </script>
 </body>
 </html>
