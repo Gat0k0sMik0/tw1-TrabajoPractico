@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -16,8 +19,8 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     RepositorioUsuario repositorioUsuario;
 
     @Autowired
-    public ServicioUsuarioImpl (RepositorioUsuario servicioUsuario) {
-     this.repositorioUsuario = servicioUsuario;
+    public ServicioUsuarioImpl(RepositorioUsuario servicioUsuario) {
+        this.repositorioUsuario = servicioUsuario;
     }
 
     @Override
@@ -43,33 +46,6 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         return u;
     }
 
-  /*  @Override
-    public void modificarEmail( String email, String nuevoEmail) {
-        Usuario usuario = repositorioUsuario.buscarPorMail(email);
-        if(usuario != null) {
-            usuario.setEmail(nuevoEmail);
-            repositorioUsuario.modificar(usuario);
-        }
-    }
-
-    @Override
-    public void modificarNombreDeUsuario( String email, String nuevoNombre) {
-        Usuario usuario = repositorioUsuario.buscarPorMail(email);
-        if(usuario != null) {
-            usuario.setNombreUsuario(nuevoNombre);
-            repositorioUsuario.modificar(usuario);
-        }
-    }
-
-    @Override
-    public void modificarContra( String email, String nuevaContra) {
-        Usuario usuario = repositorioUsuario.buscarPorMail(email);
-        if(usuario != null) {
-            usuario.setPassword(nuevaContra);
-            repositorioUsuario.modificar(usuario);
-        }
-    }*/
-
     @Override
     public Usuario actualizarPerfil(Usuario usuarioLogueado, Usuario usuarioNuevo) {
         usuarioLogueado.setNombreUsuario(usuarioNuevo.getNombreUsuario());
@@ -78,6 +54,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         usuarioLogueado.setConfirmPassword(usuarioNuevo.getConfirmPassword());
         repositorioUsuario.modificar(usuarioLogueado);
         return usuarioLogueado;
+    }
+
+    @Override
+    public Usuario buscarPorId(Long id) {
+        return repositorioUsuario.buscarPorId(id);
     }
 
     @Override
@@ -91,11 +72,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
             throw new EmailInvalidoException();
         }
         // Que no exista usuario con mismo correo
-        if(usuarioEncontradoConMail != null){
+        if (usuarioEncontradoConMail != null) {
             throw new MailExistenteException();
         }
         // Validacion largo de nombre de usuario
-        if (usuario.getNombreUsuario().length() > 16  || usuario.getNombreUsuario().length() < 4) {
+        if (usuario.getNombreUsuario().length() > 16 || usuario.getNombreUsuario().length() < 4) {
             throw new UsuarioInvalidoException();
         }
         // Que no exista usuario con el mismo nombre
@@ -110,5 +91,14 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5) {
             throw new ContraseniaInvalidaException();
         }
+    }
+
+    @Override
+    public List<Usuario> getUsuariosRandom(Integer cantidad, Long idUsuario) {
+        return repositorioUsuario.getUsuariosRandom(cantidad, idUsuario);
+    }
+
+    private Boolean saberSiExisteUnUsuarioEnLaLista(Usuario usuario, List<Usuario> lista){
+        return lista.contains(usuario);
     }
 }

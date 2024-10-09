@@ -15,8 +15,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
@@ -109,6 +113,33 @@ public class RepositorioUsuarioTest {
         Usuario buscado = repositorioUsuario.buscarPorMail("atajo@atajo.com");
         // then
         assertThat(buscado, notNullValue());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void obtenerUsuariosRandom(){
+        // given
+        Long idUsuarioExcluido = 1L;
+        Usuario usuarioPrueba = givenCreoYGuardoUsuarios();
+        //when
+        List<Usuario> randoms = repositorioUsuario.getUsuariosRandom(3, idUsuarioExcluido);
+        // then
+        assertFalse(randoms.isEmpty());
+        assertThat(randoms, hasItem(usuarioPrueba));
+    }
+
+    public Usuario givenCreoYGuardoUsuarios() {
+        Usuario usuario1 = new Usuario();
+        usuario1.setEmail("test1@prueba.com");
+        Usuario usuario2 = new Usuario();
+        usuario2.setEmail("test2@prueba.com");
+        Usuario usuario3 = new Usuario();
+        usuario3.setEmail("test3@prueba.com");
+        sessionFactory.getCurrentSession().save(usuario1);
+        sessionFactory.getCurrentSession().save(usuario2);
+        sessionFactory.getCurrentSession().save(usuario3);
+        return usuario1;
     }
 
     // GUARDAR, MODIFICAR, BUSCAR

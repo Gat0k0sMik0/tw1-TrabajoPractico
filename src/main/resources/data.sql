@@ -5,6 +5,11 @@ VALUES (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
     INSERT INTO Usuario(nombreUsuario, email, password)
     VALUES ('admin', 'test@prueba.com', 'admintest')
 
+/* AMIGOS DE PRUEBA */
+INSERT INTO Usuario(nombreUsuario, email, password)
+VALUES ('user1', 'user1@user.com', 'user1234'),('user2', 'user2@user.com', 'user1234');
+
+
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)
 VALUES
