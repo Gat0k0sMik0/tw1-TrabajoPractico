@@ -11,12 +11,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Controller
 public class ControladorTruco {
 
+    @Autowired
     private ServicioTruco servicioTruco;
+
+    public ControladorTruco(ServicioTruco servicioTruco) {
+        this.servicioTruco = servicioTruco;
+    }
 
     @RequestMapping("/partida-truco")
     public ModelAndView irAPartidaTruco() {
@@ -31,19 +37,39 @@ public class ControladorTruco {
         Usuario usuario = (Usuario) sesion.getAttribute("usuarioActivo");
 
         if (usuario == null) {
-            // Si no hay usuario activo en la sesión, redirige al inicio de sesión o lanza un error
-            return new ModelAndView("redirect:/login"); // Cambia esto según tu vista de login
+            return new ModelAndView("redirect:/login");
         }
 
-        // Crear jugadores para la partida
-        Jugador jugador1 = new Jugador(usuario.getNombreUsuario()); // Usuario logueado
-        Jugador jugador2 = new Jugador("Juan"); // Jugador contrario o bot
+        Jugador jugador1 = new Jugador(usuario.getNombreUsuario());
+        Jugador jugador2 = new Jugador("Juan ElComeChancho");
 
-        // Iniciar la partida
-        servicioTruco.empezar(jugador1, jugador2);
+        // Recuperar cartas de la sesión
+        List<Carta> cartasJugador1 = (List<Carta>) sesion.getAttribute("cartasJugador1");
+        List<Carta> cartasJugador2 = (List<Carta>) sesion.getAttribute("cartasJugador2");
 
-        // Retornar la vista de la partida
-        return new ModelAndView("partida-truco");
+        if (cartasJugador1 == null || cartasJugador2 == null) {
+            // Iniciar la partida y generar cartas si no hay cartas en la sesión
+            servicioTruco.empezar(jugador1, jugador2);
+
+            cartasJugador1 = jugador1.getCartas();
+            cartasJugador2 = jugador2.getCartas();
+
+            // Almacenar cartas en la sesión
+            sesion.setAttribute("cartasJugador1", cartasJugador1);
+            sesion.setAttribute("cartasJugador2", cartasJugador2);
+        } else {
+            // Crear los jugadores y recuperar sus cartas de la sesión
+            jugador1.setCartas(cartasJugador1);
+            jugador2.setCartas(cartasJugador2);
+        }
+
+        ModelMap model = new ModelMap();
+        model.put("cartasJugador1", cartasJugador1);
+        model.put("cartasJugador2", cartasJugador2);
+        model.put("Jugador1", jugador1);
+        model.put("Jugador2", jugador2);
+
+        return new ModelAndView("partida-truco", model);
     }
 
     @RequestMapping(path="/tirar-carta",  method = RequestMethod.POST)

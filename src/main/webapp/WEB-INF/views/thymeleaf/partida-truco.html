@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Truco - Partida</title>
-    <link rel="stylesheet" th:href="@{/css/truco.css}"/>
+    <link rel="stylesheet" th:href="@{/css/partida-truco.css}"/>
 </head>
 <body>
     <header>
-        <h1 class="texto-bienvenida">¡¡Bienvenido a nuestra plataforma de juegos!!</h1>
+        <h1 class="texto-bienvenida">PARTIDA DE TRUCO</h1>
         <div class="imagenes">
             <img th:src="@{/img/logos/javalogo.webp}" class="headerImage"/>
             <img th:src="@{/img/logos/springlogo.svg}" class="headerImage"/>
@@ -16,34 +16,42 @@
     </header>
 
     <main>
-        <h1>Partida de Truco</h1>
-        <h2>Jugador:</h2>
+        <h3 th:text="${jugador2 != null ? 'Tu contrincante es ' + jugador2.nombre : 'Esperando Rival...'}"></h3>
 
         <div id="mesa">
-            <div id="cartas-contrincante">
-                <h3>Cartas Contrincante:</h3>
-                <img th:src="@{/img/cartas-truco/Cartas_Adversario.png}" alt="Cartas del Contrincante">
-            </div>
+            <form method="post" action="">
+                <div id="cartas-contrincante">
+                    <ul class="disposicion-cartas" style="list-style-type: none;">
+                        <li th:each="carta : ${cartasJugador2}">
+                            <img th:src="@{${carta.img}}" alt="Carta" />
+                        </li>
+                    </ul>
+                </div>
 
-            <div id="cartas-en-juego">
-                <a th:href="@{/comenzar-partida-truco}">
-                <img id="mazo"  th:src="@{/img/cartas-truco/Mazo_Cartas.png}" alt="Mazo de Cartas">
-                </a>
-                <img id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">
-                <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">
-            </div>
+                <div id="cartas-en-juego">
+                    <a th:href="@{/comenzar-partida-truco}">
+                        <img id="mazo"  th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                    </a>
+                    <img  id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">
+                    <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">
+                </div>
 
-            <div id="cartas">
-                <h3>Tus Cartas:</h3>
-                <img id="mis-cartas" th:src="@{/img/cartas-truco/Mis_Cartas.png}" alt="Tus Cartas">
-            </div>
+                <div id="mis-cartas">
+                    <ul class="disposicion-cartas" style="list-style-type: none;">
+                        <li th:each="carta : ${cartasJugador1}">
+                            <img th:src="@{${carta.img}}" alt="Carta" />
+                        </li>
+                    </ul>
+                </div>
 
-            <div id="botones">
-                <button> Tirar carta</button>
-                <button> Envido</button>
-                <button> Tanto</button>
-                <button> Irme al mazo</button>
-            </div>
+                <div id="botones">
+                    <button> Tirar carta</button>
+                    <button> Envido</button>
+                    <button> Tanto</button>
+                    <button> Irme al mazo</button>
+                </div>
+            </form>
+
         </div>
     </main>
 

@@ -52,13 +52,7 @@ main {
     align-items: center;
 }
 
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-h2, h3 {
+h3 {
     margin-bottom: 10px;
     text-align: center;
 }
@@ -68,8 +62,9 @@ h2, h3 {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    width: 70rem;
-    height: 35rem;
+    width: 50rem;
+    height: 28rem;
+    position: relative; /* Para posicionar al mazo con absolute*/
 
     display: grid;
     grid-template-areas:
@@ -88,38 +83,6 @@ h2, h3 {
     margin-bottom: 20px;
 }
 
-#cartas-contrincante img {
-    width: 120px;
-    height: auto;
-}
-
-/* Cartas en juego */
-#cartas-en-juego {
-    grid-area: cartas_en_juego;
-    display: grid;
-    grid-template-areas:
-        "mazo vacio vacio vacio carta1 carta2 vacio vacio vacio";
-}
-
-#cartaRival {
-    grid-area: carta1;
-}
-
-#miCarta {
-    grid-area: carta2;
-}
-
-#mazo {
-    grid-area: mazo;
-    height: 160px;
-    cursor: pointer;
-}
-
-#miCarta, #cartaRival {
-    height: 120px;
-}
-
-/* Tus cartas */
 #cartas {
     grid-area: cartas_jugador;
     display: flex;
@@ -128,19 +91,41 @@ h2, h3 {
     justify-content: center;
 }
 
-#mis-cartas img{
-    width:220px;
-    height: 220px;
+.disposicion-cartas {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
-#cartas img {
-    width: 120px;
-    height: auto;
-    margin-right: 10px;
+/* Tamaño de cartas */
+.disposicion-cartas img {
+    width: 65px;
 }
 
-#cartas img:last-child {
-    margin-right: 0;
+/* Cartas en juego */
+#cartas-en-juego {
+    grid-area: cartas_en_juego;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+#mazo {
+    width: 250px;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#miCarta, #cartaRival {
+    height: 120px;
 }
 
 /* Botones */

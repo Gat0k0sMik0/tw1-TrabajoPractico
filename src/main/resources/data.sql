@@ -3,7 +3,7 @@ VALUES (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 
 /* USUARIO DE PRUEBA */
     INSERT INTO Usuario(nombreUsuario, email, password)
-    VALUES ('admin', 'test@prueba.com', 'admintest')
+    VALUES ('admin', 'test@prueba.com', 'admin')
 
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)
