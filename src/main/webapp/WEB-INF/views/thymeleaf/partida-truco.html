@@ -17,7 +17,6 @@
 
     <main>
         <h1>Partida de Truco</h1>
-
         <h2>Jugador:</h2>
 
         <div id="mesa">
@@ -27,7 +26,9 @@
             </div>
 
             <div id="cartas-en-juego">
-                <img id="mazo" th:src="@{/img/cartas-truco/Mazo_Cartas.png}" alt="Mazo de Cartas">
+                <a th:href="@{/comenzar-partida-truco}">
+                <img id="mazo"  th:src="@{/img/cartas-truco/Mazo_Cartas.png}" alt="Mazo de Cartas">
+                </a>
                 <img id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">
                 <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">
             </div>
