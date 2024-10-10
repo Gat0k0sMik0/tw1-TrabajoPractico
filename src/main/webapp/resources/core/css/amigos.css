@@ -23,6 +23,11 @@ h1 {
     margin-bottom: 20px;
 }
 
+.tablaAmigos {
+    width: fit-content;
+}
+
+
 .friends-list {
     float: left;
     width: 40%;

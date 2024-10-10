@@ -1,13 +1,13 @@
-INSERT INTO Usuario(id, email, password, rol, activo)
-VALUES (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
-
-/* USUARIO DE PRUEBA */
-    INSERT INTO Usuario(nombreUsuario, email, password)
-    VALUES ('admin', 'test@prueba.com', 'admin')
-
-/* AMIGOS DE PRUEBA */
-INSERT INTO Usuario(nombreUsuario, email, password)
-VALUES ('user1', 'user1@user.com', 'user1234'),('user2', 'user2@user.com', 'user1234');
+/* USUARIOS */
+INSERT INTO Usuario(nombreUsuario, email, password, rol, activo)
+VALUES
+('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true),
+('admin', 'test@prueba.com', 'admin', 'ADMIN', true),
+('user1', 'user1@user.com', 'user0000', 'USER', true),
+('user2', 'user2@user.com', 'user0000', 'USER', true),
+('user3', 'user3@user.com', 'user0000', 'USER', true),
+('user4', 'user4@user.com', 'user0000', 'USER', true),
+('user5', 'user5@user.com', 'user0000', 'USER', true);
 
 
 /* INSERT DE CARTAS PARA EL TRUCO */
