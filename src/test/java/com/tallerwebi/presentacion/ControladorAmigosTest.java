@@ -9,6 +9,7 @@ import com.tallerwebi.infraestructura.ServicioUsuarioImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,5 +38,31 @@ public class ControladorAmigosTest {
         List<Usuario> amigos = servicioAmistad.getAmigosDeUnUsuarioPorId(mainUser.getId());
         // Then
         assertEquals(2, amigos.size());
+    }
+
+    @Test
+    public void queSePuedaAgregarUnAmigo() {
+        Usuario u1 = new Usuario();
+        u1.setEmail("gonza@gonza.com");
+        u1.setNombreUsuario("gonzalo");
+        u1.setPassword("gonza857");
+        Usuario u2 = new Usuario();
+        u1.setEmail("leo@leo.com");
+        u1.setNombreUsuario("leonel");
+        u1.setPassword("leo123");
+        when(servicioUsuario.buscar("gonza@gonza.com")).thenReturn(u1);
+        Usuario usuario = servicioUsuario.buscar("leo@leo.com");
+        when(servicioUsuario.buscarPorId(u2.getId())).thenReturn(u2);
+        Usuario amigo = servicioUsuario.buscarPorId(u2.getId());
+        try {
+            servicioAmistad.agregarAmigo(usuario, amigo);
+        } catch (AmistadesException e) {
+
+        }
+        List<Usuario> amigosEsperados = new ArrayList<>();
+        amigosEsperados.add(u2);
+        when(servicioAmistad.getAmigosDeUnUsuarioPorId(u1.getId())).thenReturn(amigosEsperados);
+        List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(u1.getId());
+        assertEquals(amigosDelUsuario.size(), 1);
     }
 }

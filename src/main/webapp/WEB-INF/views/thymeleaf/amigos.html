@@ -32,32 +32,54 @@
     <div class="d-flex gap-2">
         <div th:if="${error != null}" class="d-flex flex-column gap-2">
             <p th:text="${error}"></p>
-            <p>Recomendados</p>
-            <div class="friends-list">
-                <ul th:each="amigo : ${amigosSugeridos}">
-                    <li th:text="${amigo.nombreUsuario}"></li>
-                </ul>
-            </div>
         </div>
-        <div th:unless="${error != null}" class="d-flex flex-colum gap-2">
-            <p>Tus amigos</p>
-            <div class="friends-list">
-                <ul th:each="amigo : ${amigosSugeridos}">
-                    <li th:text="${amigo.nombreUsuario}"></li>
-                </ul>
-            </div>
+        <div th:unless="${error != null}" class="d-flex flex-column gap-2">
+            <p>Estas visualizando tus amigos</p>
         </div>
+        <!--  AMIGOS RECOMENDADOS (SALEN PORQUE NO TIENE AMIGOS)     -->
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col" class="text-center">Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterar sobre la lista de amigos (puede ser Thymeleaf u otro motor de plantillas) -->
+            <tr th:each="amigo : ${amigosSugeridos}">
+                <td th:text="${amigo.id} + ' - ' + ${amigo.nombreUsuario}"></td>
+                <td class="text-center">
+                    <form th:action="@{/agregar-amigo}" method="post">
+                        <input type="hidden" name="idAmigo" th:value="${amigo.id}">
+                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!--  AMIGOS (SALE PORQUE SI TIENE AMIGOS)     -->
+        <table th:unless="${error != null}" class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col" class="text-center">Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterar sobre la lista de amigos (puede ser Thymeleaf u otro motor de plantillas) -->
+            <tr th:each="amigo : ${amigos}">
+                <td th:text="${amigo.id} + ' - ' + ${amigo.nombreUsuario}"></td>
+                <td class="text-center">
+                    <button class="btn btn-success btn-sm">Mensaje</button>
+<!--                    <form th:action="@{/agregar-amigo}" method="post">-->
+<!--                        <input type="hidden" name="idAmigo" th:value="${amigo.id}">-->
+<!--                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>-->
+<!--                    </form>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-<!--    <div class="friend-details" id="friend-details">-->
-<!--        &lt;!&ndash; Aquí se mostrarán los detalles del amigo &ndash;&gt;-->
-<!--        <h2>Detalles del amigo</h2>-->
-<!--        <div id="details-content">-->
-<!--            Haz clic en un amigo para ver más información.-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            <button id="button-chat"> Ir al chat</button>-->
-<!--        </div>-->
-<!--    </div>-->
 </main>
 <footer class="col-12 py-4 d-flex flex-column gap-2">
     <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
