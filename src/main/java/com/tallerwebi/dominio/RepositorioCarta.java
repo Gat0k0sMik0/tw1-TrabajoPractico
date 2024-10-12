@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface RepositorioCarta {
     List<Carta> obtenerCartas();
+
+    Carta buscarCartaPorId(Long id);
 }

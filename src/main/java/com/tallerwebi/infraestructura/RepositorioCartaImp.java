@@ -25,4 +25,12 @@ public class RepositorioCartaImp implements RepositorioCarta {
         return session.createCriteria(Carta.class)
                 .list();
     }
+
+    @Override
+    public Carta buscarCartaPorId (Long id ) {
+       final Session session = sessionFactory.getCurrentSession();
+       return (Carta) session.get(Carta.class, id);
+    }
+
+
 }

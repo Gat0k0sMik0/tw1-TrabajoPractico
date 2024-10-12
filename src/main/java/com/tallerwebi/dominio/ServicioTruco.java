@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ServicioTruco {
     void empezar(Jugador j1, Jugador j2);
-    void tirarCarta(Jugador jugador, Carta cartaSeleccionada);
+    Carta tirarCarta(Jugador jugador, Long idCartaSeleccionada);
     List<Carta> getCartasJugadas();
 
 }

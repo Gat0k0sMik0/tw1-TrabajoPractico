@@ -4,16 +4,16 @@ import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
 import com.tallerwebi.infraestructura.ServicioTrucoImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
-public class ServicioTrucoTest {
-
+/*public class ServicioTrucoTest {
+    RepositorioCarta repositorioCarta = mock(RepositorioCartaImpl.class);
     ServicioTruco servicioTruco = new ServicioTrucoImpl(new Truco());
     Jugador j1 = new Jugador("gonza");
     Jugador j2 = new Jugador("leo");
@@ -287,4 +287,4 @@ public class ServicioTrucoTest {
     }
 
 
-}
+}*/

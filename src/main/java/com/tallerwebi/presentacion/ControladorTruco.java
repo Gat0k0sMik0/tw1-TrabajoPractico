@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -11,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -32,7 +34,7 @@ public class ControladorTruco {
     }
 
     @RequestMapping(path = "/comenzar-partida-truco", method = RequestMethod.GET)
-    public ModelAndView comenzarPartidaTruco(HttpServletRequest request) {
+    public ModelAndView comenzarPartidaTruco(@RequestParam(value = "cartaTirada", required = false )Long idCartaTirada, HttpServletRequest request) {
         HttpSession sesion = request.getSession();
         Usuario usuario = (Usuario) sesion.getAttribute("usuarioActivo");
 
@@ -57,6 +59,10 @@ public class ControladorTruco {
             // Almacenar cartas en la sesión
             sesion.setAttribute("cartasJugador1", cartasJugador1);
             sesion.setAttribute("cartasJugador2", cartasJugador2);
+            // Almacenar jugadores en la sesión
+            sesion.setAttribute("jugador1", jugador1);
+            sesion.setAttribute("jugador2", jugador2);
+
         } else {
             // Crear los jugadores y recuperar sus cartas de la sesión
             jugador1.setCartas(cartasJugador1);
@@ -69,39 +75,20 @@ public class ControladorTruco {
         model.put("Jugador1", jugador1);
         model.put("Jugador2", jugador2);
         model.put("partidaIniciada", true);
+        if(idCartaTirada != null){
+            model.put("cartaTirada", idCartaTirada);
+        }
 
         return new ModelAndView("partida-truco", model);
     }
 
-    @RequestMapping(path="/tirar-carta",  method = RequestMethod.POST)
-    public String tirarCarta(@RequestParam("cartaId") Long cartaId, HttpSession session, Model model) {
-        // Obtener el jugador actual de la sesión
-        Jugador jugador = (Jugador) session.getAttribute("jugadorActual");
-
-        // Buscar la carta seleccionada en la mano del jugador
-        Carta cartaSeleccionada = null;
-        for (Carta carta : jugador.getCartas()) {
-            if (carta.getId().equals(cartaId)) {
-                cartaSeleccionada = carta;
-                break;
-            }
-        }
-
-        // Verificar si se encontró la carta seleccionada
-        if (cartaSeleccionada == null) {
-            // Si no se encuentra la carta, mostrar un error
-            model.addAttribute("error", "La carta seleccionada no está en la mano del jugador.");
-            return "error"; // Redirigir a una página de error si lo prefieres
-        }
-
-        // Llamar al servicio para tirar la carta
-        servicioTruco.tirarCarta(jugador, cartaSeleccionada);
-
-        // Agregar las cartas jugadas al modelo para visualizarlas
-        model.addAttribute("cartasJugadas", servicioTruco.getCartasJugadas());
-
-        // Redirigir a la página de la partida
-        return "redirect:/truco/partida-truco";
+    @RequestMapping(path="/tirar-carta", method = RequestMethod.POST)
+    public ModelAndView tirarCarta(@RequestParam("idCartaSeleccionada") Long cartaId, HttpServletRequest request) {
+        HttpSession sesion = request.getSession();
+        Jugador jugador1 = (Jugador) sesion.getAttribute("jugador1");
+        Carta cartaTirada = servicioTruco.tirarCarta(jugador1, cartaId);
+        ModelMap model = new ModelMap();
+        model.put("cartaTirada", cartaTirada);
+        return new ModelAndView("redirect:/comenzar-partida-truco", model);
     }
-
 }

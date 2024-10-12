@@ -3,6 +3,7 @@
 <head>
     <title>Truco - Partida</title>
     <link rel="stylesheet" th:href="@{/css/partida-truco.css}"/>
+    <script th:src="@{/js/seleccionarCarta.js}"></script>
 </head>
 <body>
     <header>
@@ -32,7 +33,9 @@
                         <img id="mazo"  th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                     </a>
                     <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">
-                    <img  id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">
+                    <img id="miCarta" th:if="${cartaTirada != null}"
+                         th:src="@{${cartaTirada.img}}"
+                         alt="Mi Carta Jugada" />
                 </div>
 
                 <div id="mis-cartas">
@@ -43,15 +46,18 @@
                     </ul>
                 </div>
 
-                <form>
-                    <input type="hidden" name="cartaSeleccionada" id="cartaSeleccionada"/>
-                    <div id="botones" th:if="${partidaIniciada} == true">
-                        <button > Tirar carta</button>
-                        <button> Envido</button>
-                        <button> Tanto</button>
-                        <button> Irme al mazo</button>
-                    </div>
-                </form>
+            <form method="POST">
+                <input type="hidden" name="idCartaSeleccionada" id="idCartaSeleccionada"/>
+                <div id="botones" th:if="${partidaIniciada} == true">
+                    <!--cada boton lleva a una url distinta-->
+                    <button type="submit" th:formaction="@{/tirar-carta}">Tirar carta</button>
+                    <button type="button">Envido</button>
+                    <button type="button">Tanto</button>
+                    <button type="button">Irme al mazo</button>
+                </div>
+            </form>
+
+
 
         </div>
     </main>
@@ -70,24 +76,5 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cartas = document.querySelectorAll('.carta');
-            const cartaSeleccionadaInput = document.getElementById('cartaSeleccionada');
-
-            cartas.forEach(carta => {
-                carta.addEventListener('click', () => {
-                    /* Al hacer click en una carta, se borra el estilo en las demas
-                    * y se aplica solo a la que seleccioné */
-                    cartas.forEach(c => c.classList.remove('carta-seleccionada'));
-                    carta.classList.add('carta-seleccionada');
-
-                    const cartaId = carta.getAttribute('data-id');
-                    // Asignar el ID al input oculto
-                    cartaSeleccionadaInput.value = cartaId;
-                })
-            })
-        })
-    </script>
 </body>
 </html>
