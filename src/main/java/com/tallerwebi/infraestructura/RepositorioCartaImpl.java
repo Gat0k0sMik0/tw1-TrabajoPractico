@@ -2,27 +2,29 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Carta;
 import com.tallerwebi.dominio.RepositorioCarta;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 @Repository
-public class RepositorioCartaImp implements RepositorioCarta {
+public class RepositorioCartaImpl implements RepositorioCarta {
 
     private SessionFactory sessionFactory;
 
     @Autowired
-    public RepositorioCartaImp(SessionFactory sessionFactory) {
+    public RepositorioCartaImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    @Transactional
     @Override
-    public List obtenerCartas() {
-        final Session session = sessionFactory.getCurrentSession();
-        return session.createCriteria(Carta.class)
+    public List<Carta> obtenerCartas() {
+        return (List<Carta>) sessionFactory.getCurrentSession()
+                .createCriteria(Carta.class)
                 .list();
     }
 }
