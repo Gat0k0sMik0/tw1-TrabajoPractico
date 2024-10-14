@@ -79,7 +79,7 @@ public class Mazo {
         if (indice < 0 || indice > cartas.size()) {
             throw new IndiceFueraDeRangoException();
         }
-        return cartas.get(indice);
+        return this.cartas.get(indice);
     }
 
     public List<Carta> getSeisCartasAleatoriasSinRepetir() {
@@ -88,8 +88,8 @@ public class Mazo {
         int random = 0;
         Random r = new Random();
         while (indice < 6) {
-            random = r.nextInt(cartas.size());
-            Carta cartaRandom = cartas.get(random);
+            random = r.nextInt(this.cartas.size());
+            Carta cartaRandom = this.cartas.get(random);
             if (cartasBuscadas.isEmpty()) {
                 cartasBuscadas.add(cartaRandom);
                 indice++;
