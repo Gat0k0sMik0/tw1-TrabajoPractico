@@ -128,6 +128,12 @@ public class ControladorTruco {
                 break;
             }
         }
+        servicioTruco.cambiarTurno(actual);
+
+        if (jugador1.getCartasTiradas().size() > 1 && jugador2.getCartasTiradas().size() > 1 &&
+                jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
+            servicioTruco.determinarGanadorRonda(jugador1, jugador2);
+        }
 
         servicioTruco.tirarCarta(actual, cartaSeleccionada);
         model.put("jugadas", servicioTruco.getRondasJugadas().size());
@@ -144,6 +150,7 @@ public class ControladorTruco {
         model.put("cartasJugador2", jugador2.getCartas());
         model.put("jugador1", jugador1);
         model.put("jugador2", jugador2);
+        model.put("turnoJugador", servicioTruco.getTurnoJugador());
 
         return new ModelAndView("partida-truco", model);
     }
