@@ -23,6 +23,8 @@
 <main>
     <h3 th:text="${jugador2 != null && jugador1 != null ? jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
     <h3 th:text="${jugadas != null ? 'Jugaste: ' + jugadas + ' rondas.' : 'XD'}"></h3>
+    <p th:if="${error != null}" style="color: red" th:text="'Error, ' + ${error}"></p>
+
     <div id="mesa">
 
         <!--    CARTAS JUGADOR 1    -->
@@ -31,7 +33,7 @@
                 <input type="hidden" name="cartaId" th:value="${carta.id}"/>
                 <input type="hidden" name="jugador" th:value="${jugador1.nombre}"/>
                 <input type="hidden" name="cartaValor" th:value="${carta.valor}"/>
-                <button type="submit" class="cartaTirarBtn">
+                <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador1}">>
                     <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                 </button>
             </form>
@@ -68,7 +70,7 @@
                 <input type="hidden" name="cartaId" th:value="${carta.id}"/>
                 <input type="hidden" name="jugador" th:value="${jugador2.nombre}"/>
                 <input type="hidden" name="cartaValor" th:value="${carta.valor}"/>
-                <button type="submit" class="cartaTirarBtn">
+                <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador2}">>
                     <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                 </button>
             </form>
