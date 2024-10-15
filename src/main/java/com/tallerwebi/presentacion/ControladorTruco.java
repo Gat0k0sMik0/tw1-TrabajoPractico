@@ -56,14 +56,32 @@ public class ControladorTruco {
         List<Carta> cartasJugador1 = (List<Carta>) sesion.getAttribute("cartasJugador1");
         List<Carta> cartasJugador2 = (List<Carta>) sesion.getAttribute("cartasJugador2");
 
-        // Iniciar la partida y generar cartas si no hay cartas en la sesión
-        if(cartasJugador1 == null || cartasJugador2 == null  ||
-          jugador1.getCartas().isEmpty() || jugador2.getCartas().isEmpty()) {
+        // Verificar si las cartas son null
+        if (cartasJugador1 == null) {
+            cartasJugador1 = new ArrayList<>();
+        }
+        if (cartasJugador2 == null) {
+            cartasJugador2 = new ArrayList<>();
+        }
+
+        // Verificar si las cartas están agotadas
+        boolean cartasAgotadas = cartasJugador1.isEmpty() && cartasJugador2.isEmpty();
+
+        // Verificar si las cartas ya han sido repartidas
+        Boolean cartasRepartidas = (Boolean) sesion.getAttribute("cartasRepartidas");
+
+        // Repartir cartas si nunca se repartieron o si están agotadas
+        if (cartasRepartidas == null || !cartasRepartidas || cartasAgotadas) {
             servicioTruco.empezar(jugador1, jugador2);
+
+            // Actualizar las cartas en la sesión
             cartasJugador1 = jugador1.getCartas();
             cartasJugador2 = jugador2.getCartas();
-        }else{
-            // Crear los jugadores y recuperar sus cartas de la sesion si exiten
+
+            // Marcar las cartas como repartidas
+            sesion.setAttribute("cartasRepartidas", true);
+        } else {
+            // Si ya fueron repartidas, establecer las cartas desde la sesión
             jugador1.setCartas(cartasJugador1);
             jugador2.setCartas(cartasJugador2);
         }
