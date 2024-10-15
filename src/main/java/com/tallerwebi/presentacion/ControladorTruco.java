@@ -52,12 +52,24 @@ public class ControladorTruco {
         Jugador jugador1 = new Jugador(usuario.getNombreUsuario());
         Jugador jugador2 = new Jugador("Juan ElComeChancho");
 
-        // Iniciar la partida y generar cartas si no hay cartas en la sesión
-        servicioTruco.empezar(jugador1, jugador2);
+        // Recuperar cartas de la sesion
+        List<Carta> cartasJugador1 = (List<Carta>) sesion.getAttribute("cartasJugador1");
+        List<Carta> cartasJugador2 = (List<Carta>) sesion.getAttribute("cartasJugador2");
 
-        List<Carta> cartasJugador1 = jugador1.getCartas();
-        List<Carta> cartasJugador2 = jugador2.getCartas();
-        List<Carta> todasLasCartas = new ArrayList<>();
+        // Iniciar la partida y generar cartas si no hay cartas en la sesión
+        if(cartasJugador1 == null || cartasJugador2 == null  ||
+          jugador1.getCartas().isEmpty() || jugador2.getCartas().isEmpty()) {
+            servicioTruco.empezar(jugador1, jugador2);
+            cartasJugador1 = jugador1.getCartas();
+            cartasJugador2 = jugador2.getCartas();
+        }else{
+            // Crear los jugadores y recuperar sus cartas de la sesion si exiten
+            jugador1.setCartas(cartasJugador1);
+            jugador2.setCartas(cartasJugador2);
+        }
+
+
+       List<Carta> todasLasCartas = new ArrayList<>();
         todasLasCartas.addAll(cartasJugador1);
         todasLasCartas.addAll(cartasJugador2);
 
