@@ -47,6 +47,9 @@
                     <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                 </a>
             </div>
+            <div id="texto-repartir" th:if="${partidaIniciada == false}">
+                <img th:src="@{/img/cartas-truco/repartir-cartas-v2.png}">
+            </div>
             <div class="col-8 d-flex flex-column flex-wrap gap-1">
                 <!--  CARTAS J1       -->
                 <div th:if="${cartasTiradasJ1 != null}">
@@ -76,7 +79,7 @@
             </form>
         </div>
 
-        <div class="d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada} == true">
+        <div class="d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada}">
             <form method="post" th:action="@{/accion-truco}">
                 <button type="submit" class="btn btn-primary">Truco</button>
             </form>

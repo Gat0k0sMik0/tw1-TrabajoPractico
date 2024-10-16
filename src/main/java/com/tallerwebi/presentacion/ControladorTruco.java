@@ -34,14 +34,27 @@ public class ControladorTruco {
 
     @RequestMapping("/partida-truco")
     public ModelAndView irAPartidaTruco(HttpSession session) {
+        if (session.getAttribute("usuarioActivo") == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
+        List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
+
         ModelMap model = new ModelMap();
-        model.put("cartasJugador1", session.getAttribute("cartasJugador1"));
-        model.put("cartasJugador2", session.getAttribute("cartasJugador2"));
+        model.put("cartasJugador1", cartasJugador1);
+        model.put("cartasJugador2", cartasJugador2);
         model.put("jugador1", session.getAttribute("jugador1"));
         model.put("jugador2", session.getAttribute("jugador2"));
         model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
+
+        boolean partidaIniciada = (cartasJugador1 != null && cartasJugador2 != null) &&
+                (!cartasJugador1.isEmpty() || !cartasJugador2.isEmpty());
+        model.put("partidaIniciada", partidaIniciada);
+
         return new ModelAndView("partida-truco", model);
     }
+
 
     @RequestMapping("/comenzar-truco")
     public ModelAndView comenzarTruco(HttpSession sesion) {
