@@ -82,7 +82,7 @@
             </form>
         </div>
 
-        <div class="d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada}">
+        <div class="botones d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada}">
             <form method="post" th:action="@{/accion-truco}">
                 <button type="submit" class="btn btn-primary">Truco</button>
             </form>
@@ -100,7 +100,7 @@
             </form>
         </div>
     </div>
-    <div>
+    <div class="tabla-datos">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
@@ -120,11 +120,11 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="tabla-datos">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>J</th>
+                <th>JUGADOR</th>
                 <th>VALOR</th>
                 <th>NÚMERO</th>
                 <th>PALO</th>

@@ -142,6 +142,15 @@ h3 {
     gap: 20px;
 }
 
+.tabla-datos {
+    width: 50rem;
+    height: fit-content;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 20px;
+    background-color: #e6b549;
+}
+
 /* Estilos para el footer */
 footer {
     margin-top: 30px;
