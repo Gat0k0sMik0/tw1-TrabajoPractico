@@ -41,12 +41,18 @@ public class ControladorTruco {
         List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
         List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
 
+
         ModelMap model = new ModelMap();
         model.put("cartasJugador1", cartasJugador1);
         model.put("cartasJugador2", cartasJugador2);
         model.put("jugador1", session.getAttribute("jugador1"));
         model.put("jugador2", session.getAttribute("jugador2"));
+        model.put("cartasTiradasJ1", session.getAttribute("cartasTiradasJ1"));
+        model.put("cartasTiradasJ2", session.getAttribute("cartasTiradasJ2"));
+        model.put("turnoJugador", session.getAttribute("turnoJugador"));
         model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
+        model.put("jugadas", session.getAttribute("jugadas"));
+        model.put("rondas", session.getAttribute("rondas"));
 
         boolean partidaIniciada = (cartasJugador1 != null && cartasJugador2 != null) &&
                 (!cartasJugador1.isEmpty() || !cartasJugador2.isEmpty());
@@ -83,6 +89,14 @@ public class ControladorTruco {
         // Verificar si las cartas ya han sido repartidas
         Boolean cartasRepartidas = (Boolean) sesion.getAttribute("cartasRepartidas");
 
+        if((cartasJugador1 != null && cartasJugador2 != null) &&
+                (cartasJugador1.isEmpty() && cartasJugador2.isEmpty())){
+            sesion.setAttribute("cartasTiradasJ1", null);
+            sesion.setAttribute("cartasTiradasJ2", null);
+            sesion.setAttribute("jugadas", null);
+            sesion.setAttribute("rondas", null);
+        }
+
         // Repartir cartas si nunca se repartieron o si están agotadas
         if (cartasRepartidas == null || !cartasRepartidas || cartasAgotadas) {
             servicioTruco.empezar(jugador1, jugador2);
@@ -99,10 +113,10 @@ public class ControladorTruco {
             jugador2.setCartas(cartasJugador2);
         }
 
-
        List<Carta> todasLasCartas = new ArrayList<>();
         todasLasCartas.addAll(cartasJugador1);
         todasLasCartas.addAll(cartasJugador2);
+
 
         // Almacenar cartas en la sesión
         sesion.setAttribute("cartasJugador1", cartasJugador1);
@@ -149,23 +163,24 @@ public class ControladorTruco {
         }
 
         servicioTruco.tirarCarta(actual, cartaSeleccionada);
-        model.put("jugadas", servicioTruco.getRondasJugadas().size());
-        model.put("rondas", servicioTruco.getRondasJugadas());
+        session.setAttribute("jugadas", servicioTruco.getRondasJugadas().size());
+        session.setAttribute("rondas", servicioTruco.getRondasJugadas());
 
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
 
         // Agregar las cartas jugadas al modelo para visualizarlas
-        model.put("cartasTiradasJ1", jugador1.getCartasTiradas());
-        model.put("cartasTiradasJ2", jugador2.getCartasTiradas());
-        model.put("cartasJugador1", jugador1.getCartas());
-        model.put("cartasJugador2", jugador2.getCartas());
-        model.put("jugador1", jugador1);
-        model.put("jugador2", jugador2);
-        model.put("turnoJugador", servicioTruco.getTurnoJugador());
+        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
+        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
+        session.setAttribute("cartasJugador1", jugador1.getCartas());
+        session.setAttribute("cartasJugador2", jugador2.getCartas());
+        session.setAttribute("jugador1", jugador1);
+        session.setAttribute("jugador2", jugador2);
+        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
 
-        return new ModelAndView("partida-truco", model);
+
+        return new ModelAndView("redirect:/partida-truco", model);
     }
 
 
