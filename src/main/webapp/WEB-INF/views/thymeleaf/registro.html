@@ -4,71 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link rel="stylesheet" th:href="@{/css/stylesRegistro.css}">
+    <link rel="stylesheet" th:href="@{/css/InicioSesion.css}">
 </head>
 <body>
-<div class="container">
-    <h2>Registro</h2>
-    <form th:action="@{/registro}" method="post">
-        <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required>
+    <header>
+        <h1 class="texto-bienvenida">¡Registrate para disfrutar de todos los beneficios!</h1>
+        <div class="imagenes">
+            <img th:src="@{/img/logos/javalogo.webp}" class="headerImage"/>
+            <img th:src="@{/img/logos/springlogo.svg}" class="headerImage"/>
+            <div class="division"></div>
+            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="headerImage"/></div>
         </div>
-        <div class="form-group">
-            <label for="apellido">Apellido</label>
-            <input type="text" id="apellido" name="apellido" required>
-        </div>
-        <div class="form-group">
+    </header>
+
+    <form id="formulario" th:action="@{/registrarme}" method="post" th:object="${nuevoUsuario}">
+        <h1>Registrarse en la aplicación</h1>
+
+        <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+            <label for="nombre">Nombre de usuario</label>
+            <input th:field="*{nombreUsuario}" type="text" id="nombre" name="nombre" placeholder="Ej: Jaimito4570" required>
+
             <label for="email">Correo Electrónico</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-group">
+
+            <input th:field="*{email}" type="email" id="email" name="email" placeholder="Ej: name@example.com" required>
+
             <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div class="form-group">
+            <input th:field="*{password}" type="password" id="password" name="password" placeholder="Entre 5 y 15 caracteres" required>
+
             <label for="password2">Repetir Contraseña</label>
-            <input type="password" id="password2" name="password2" required>
-        </div>
-        <div class="form-group">
+            <input th:field="*{confirmPassword}" type="password" id="password2" name="password2" placeholder="Entre 5 y 15 caracteres" required>
+
             <button type="submit">Registrarse</button>
-        </div>
     </form>
 
-    <div th:if="${error}">
-        <p th:text="${error}" style="color: red;"></p>
-    </div>
-
-    <div th:if="${mensaje}" id="registroExitosoModal" class="modal">
-        <div class="modal-content">
-            <h2 th:text="${mensaje}">¡Registro Exitoso!</h2>
-            <button id="btnCerrarModal">Cerrar</button>
-            <a th:href="@{/login}" class="button-link">
-                Iniciar Sesión
-            </a>
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
+            <div class="footer-alumnos">
+                <p>Lucas Gavagnin | </p>
+                <p>Gonzalo Ramos | </p>
+                <p>Martin Zaccardo | </p>
+                <p>Franco Vargas | </p>
+                <p>Victoria Croce </p>
+            </div>
         </div>
-    </div>
-
-</div>
-
-<footer>
-    <div class="footer-container">
-        <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
-        <div class="footer-alumnos">
-            <p>Lucas Gavagnin | </p>
-            <p>Gonzalo Ramos | </p>
-            <p>Martin Zaccardo | </p>
-            <p>Franco Vargas | </p>
-            <p>Victoria Croce </p>
-        </div>
-    </div>
-</footer>
-
-<script>
-    document.getElementById('btnCerrarModal')?.addEventListener('click', function() {
-        document.getElementById('registroExitosoModal').style.display = 'none';
-    });
-</script>
+    </footer>
 
 </body>
 </html>

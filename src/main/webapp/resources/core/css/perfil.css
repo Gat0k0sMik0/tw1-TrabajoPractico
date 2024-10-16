@@ -1,0 +1,71 @@
+/* HEADER MODS */
+.settingsImageContainer {
+    width: 50px;
+}
+
+.settingsImageContainer > img {
+    width: 100%;
+}
+
+.userData {
+    background: #515151;
+    min-height: 100vh;
+}
+
+.userHeader {
+    height: 250px;
+}
+
+.imgStyle {
+    height: 200px;
+}
+
+.userImage {
+    bottom: 0;
+    width: 150px;
+    height: 150px;
+    background-color: #95BF39;
+}
+
+.gameWrapper {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: auto;
+    gap: 0.5rem;
+}
+
+.gameInfo {
+    padding: 0.5rem;
+    height: fit-content;
+    display: flex;
+    gap: 0.5rem
+}
+
+
+.gameFirstCol {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameImage {
+    width: 100px;
+    height: 100px;
+    background-color: #95BF39;
+}
+
+
+.gameSecondCol {
+    width: 75%;
+}
+
+.progressBar {
+    background: #1D8FF2;
+}
+
+@media screen and (min-width: 768px) {
+    .gameWrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

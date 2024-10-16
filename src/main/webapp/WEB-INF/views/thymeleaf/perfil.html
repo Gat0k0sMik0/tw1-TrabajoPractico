@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+
+    <!-- Estilo custom -->
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+
+    <title>Taller Web I</title>
+
+
+</head>
+<body>
+<header class="col-12 py-3 d-flex align-items-center">
+    <nav class="col-10 mx-auto d-flex flex-wrap justify-content-between align-items-center text-white">
+        <a class="text-decoration-none fs-4 text-white" th:href="@{/home}">
+            Home
+        </a>
+        <p class="fs-4 m-0">
+            Perfil
+        </p>
+        <a th:href="@{/modificar-perfil}" class="text-decoration-none text-white fs-5 settingsImageContainer">
+            <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+        </a>
+    </nav>
+</header>
+<main class="col-12 d-flex flex-column align-items-center">
+    <div class="col-12 col-md-10 pt-md-3 userData">
+        <div class="col-12 position-relative userHeader d-flex justify-content-center">
+            <div class="col-12 imgStyle bg-dark position-relative"></div>
+            <div class="rounded-circle position-absolute p-5 userImage"></div>
+        </div>
+
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center text-white py-2">
+
+            <!-- <p class="fs-3 fw-semibold m-0" th:text="${datosUsuario.getEmail()}"></p> -->
+            <!-- <p th:text="${datosUsuario.getEmail()}"></p> -->
+            
+
+            <p class="fs-3 fw-semibold m-0" th:text="${fullname}"></p>
+            <p th:text="${username}"></p>
+        </div>
+        <div class="px-2 px-md-0 pt-2">
+            <div class="gameWrapper col-md-12">
+                <div class="gameInfo bg-black text-white">
+                    <div class="gameFirstCol">
+                        <div class="rounded-circle p-5 gameImage"></div>
+                    </div>
+                    <div class="gameSecondCol d-flex flex-column gap-1 justify-content-between p-1">
+                        <div class="col-12 d-flex justify-content-between">
+                            <p>Nombre juego</p>
+                            <p>Nivel 777</p>
+                        </div>
+                        <div class="col-12 progressBar px-2">
+                            Barra de progreso
+                        </div>
+                        <div class="col-12 d-flex flex-wrap justify-content-between">
+                            <p>Rockie</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <p>Partidas: 500</p>
+                                <p>Ganadas: 0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gameInfo bg-black text-white">
+                    <div class="gameFirstCol">
+                        <div class="rounded-circle p-5 gameImage"></div>
+                    </div>
+                    <div class="gameSecondCol d-flex flex-column gap-1 justify-content-between p-1">
+                        <div class="col-12 d-flex justify-content-between">
+                            <p>Nombre juego</p>
+                            <p>Nivel 777</p>
+                        </div>
+                        <div class="col-12 progressBar px-2">
+                            Barra de progreso
+                        </div>
+                        <div class="col-12 d-flex flex-wrap justify-content-between">
+                            <p>Rockie</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <p>Partidas: 500</p>
+                                <p>Ganadas: 0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="col-12 py-4 d-flex flex-column gap-2">
+    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
+        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
+            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
+            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+        </div>
+        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
+            <p>Victoria Croce</p>
+            <p>Lucas Gavagnin</p>
+            <p>Gonzalo Ramos</p>
+            <p>Franco Vargas</p>
+            <p>Martin Zaccardo</p>
+        </div>
+        <div class="col-4 d-flex flex-wrap justify-content-center">
+            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
+        </div>
+    </div>
+    <hr class="col-10 mx-auto text-white"/>
+    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
+</footer>
+<!-- Boostrap core js -->
+<script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+</body>
+</html>

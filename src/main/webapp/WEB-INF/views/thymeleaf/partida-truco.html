@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Truco - Partida</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!-- Estilos custom -->
+    <link rel="stylesheet" th:href="@{/css/partida-truco.css}"/>
+</head>
+<body>
+<header>
+    <h1 class="texto-bienvenida">PARTIDA DE TRUCO</h1>
+    <div class="imagenes">
+        <img th:src="@{/img/logos/javalogo.webp}" class="headerImage"/>
+        <img th:src="@{/img/logos/springlogo.svg}" class="headerImage"/>
+        <div class="division"></div>
+        <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="headerImage"/></div>
+    </div>
+</header>
+
+<main>
+    <h3 th:text="${jugador2 != null && jugador1 != null ? jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
+    <h3 th:text="${jugadas != null ? 'Jugaste: ' + jugadas + ' rondas.' : 'XD'}"></h3>
+    <p th:if="${error != null}" style="color: red" th:text="'Error, ' + ${error}"></p>
+
+    <div id="mesa">
+
+        <!--    CARTAS JUGADOR 1    -->
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <form class="cartaContainer" method="post" th:action="@{/accion-tirar}" th:each="carta : ${cartasJugador1}">
+                <input type="hidden" name="cartaId" th:value="${carta.id}"/>
+                <input type="hidden" name="jugador" th:value="${jugador1.nombre}"/>
+                <input type="hidden" name="cartaValor" th:value="${carta.valor}"/>
+                <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador1}">>
+                    <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
+                </button>
+            </form>
+        </div>
+
+        <!--    CARTAS     -->
+        <div id="cartas-en-juego" class="d-flex flex-wrap">
+            <!--  MAZO -->
+            <div class="col-4">
+                <a th:href="@{/comenzar-truco}">
+                    <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                </a>
+            </div>
+            <div class="col-8 d-flex flex-column flex-wrap gap-1">
+                <!--  CARTAS J1       -->
+                <div th:if="${cartasTiradasJ1 != null}">
+                    <img th:each="carta : ${cartasTiradasJ1}" th:src="@{${carta.img}}" alt="Carta" class="cartaTirada"/>
+                </div>
+                <!--  CARTAS J2   -->
+                <div th:if="${cartasTiradasJ2 != null}">
+                    <img th:each="carta : ${cartasTiradasJ2}" th:src="@{${carta.img}}" alt="Carta" class="cartaTirada"/>
+                </div>
+            </div>
+
+
+            <!--            <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">-->
+            <!--            <img id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">-->
+        </div>
+
+
+        <!--    CARTAS JUGADOR 2 (mias)   -->
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <form class="cartaContainer" method="post" th:action="@{/accion-tirar}" th:each="carta : ${cartasJugador2}">
+                <input type="hidden" name="cartaId" th:value="${carta.id}"/>
+                <input type="hidden" name="jugador" th:value="${jugador2.nombre}"/>
+                <input type="hidden" name="cartaValor" th:value="${carta.valor}"/>
+                <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador2}">>
+                    <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
+                </button>
+            </form>
+        </div>
+
+        <div class="d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada} == true">
+            <form method="post" th:action="@{/accion-truco}">
+                <button type="submit" class="btn btn-primary">Truco</button>
+            </form>
+
+            <form method="post" th:action="@{/accion-envido}">
+                <button type="submit" class="btn btn-primary">Envido</button>
+            </form>
+
+            <form method="post" th:action="@{/accion-flor}">
+                <button type="submit" class="btn btn-primary">Flor</button>
+            </form>
+
+            <form method="post" th:action="@{/accion-mazo}">
+                <button type="submit" class="btn btn-primary">Ir al mazo</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>VALOR</th>
+                <th>NÚMERO</th>
+                <th>PALO</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="carta : ${todasLasCartas}">
+                <td th:text="${carta.id}"></td>
+                <td th:text="${carta.valor}"></td>
+                <td th:text="${carta.numero}"></td>
+                <td th:text="${carta.palo}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>J</th>
+                <th>VALOR</th>
+                <th>NÚMERO</th>
+                <th>PALO</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ronda : ${rondas}">
+                <td th:text="${ronda.jugador.nombre}"></td>
+                <td th:text="${ronda.valorCarta}"></td>
+                <td th:text="${ronda.nroCarta}"></td>
+                <td th:text="${ronda.palo}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-container">
+        <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
+        <div class="footer-alumnos">
+            <p>Lucas Gavagnin | </p>
+            <p>Gonzalo Ramos | </p>
+            <p>Martin Zaccardo | </p>
+            <p>Franco Vargas | </p>
+            <p>Victoria Croce </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cartas = document.querySelectorAll('.carta');
+        const cartaSeleccionadaInput = document.getElementById('cartaSeleccionada');
+
+        cartas.forEach(carta => {
+            carta.addEventListener('click', () => {
+                /* Al hacer click en una carta, se borra el estilo en las demas
+                * y se aplica solo a la que seleccioné */
+                cartas.forEach(c => c.classList.remove('carta-seleccionada'));
+                carta.classList.add('carta-seleccionada');
+
+                const cartaId = carta.getAttribute('data-id');
+                // Asignar el ID al input oculto
+                cartaSeleccionadaInput.value = cartaId;
+            })
+        })
+    })
+</script>
+</body>
+</html>

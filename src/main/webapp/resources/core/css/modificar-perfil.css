@@ -1,0 +1,108 @@
+/* HEADER MODS */
+.settingsImageContainer {
+    width: 50px;
+}
+
+.settingsImageContainer > img {
+    width: 100%;
+}
+
+.userData {
+    background: #515151;
+    min-height: 100vh;
+}
+
+.userHeader {
+    height: 250px;
+}
+
+.imgStyle {
+    height: 200px;
+}
+
+.userImage {
+    bottom: 0;
+    width: 150px;
+    height: 150px;
+    background-color: #95BF39;
+}
+
+#usuario{
+    width: 60px;
+}
+
+#configuracion{
+    width: 40px;
+}
+.main-header img {
+    margin: 18px;
+}
+
+#formulario {
+    margin: 50px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 140px;
+}
+
+h2 {
+    text-align: center;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background: lightgrey;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0000FF;
+}
+
+
+@media screen and (min-width: 768px) {
+    .gameWrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+
+
+

@@ -1,0 +1,82 @@
+#usuario{
+    width: 60px;
+}
+
+#configuracion{
+    width: 40px;
+}
+
+/*CONTENIDO*/
+.container {
+    max-width: 800px;
+    min-height: 500px;
+    margin: 30px auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.tablaAmigos {
+    width: fit-content;
+}
+
+
+.friends-list {
+    float: left;
+    width: 40%;
+    min-height: 500px;
+}
+
+.friends-list ul {
+    list-style: none;
+}
+
+.friends-list li {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.friends-list li:hover {
+    background-color: #e0e0e0;
+}
+
+.friend-details {
+    float: right;
+    width: 55%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.friend-details h2 {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+#details-content {
+    color: #333;
+    font-size: 16px;
+}
+
+#button-chat{
+    width: 200px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#button-chat:hover {
+    background-color: #e0e0e0;
+}
+

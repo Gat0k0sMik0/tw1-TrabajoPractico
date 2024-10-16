@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!--  Estilo Custom  -->
+    <link rel="stylesheet" th:href="@{/css/menu-juego.css}"/>
+    <title>Game Interface</title>
+</head>
+<body>
+<!-- HEADER -->
+<header class="col-12 py-3 d-flex align-items-center">
+    <nav class="col-10 mx-auto d-flex flex-wrap justify-content-between align-items-center text-white">
+        <a class="text-decoration-none fs-4 text-white" th:href="@{/home}">
+            Home
+        </a>
+        <h1>TRUCO</h1>
+        <div class="d-flex gap-2 align-items-center">
+            <a class="text-decoration-none text-white" th:href="@{/perfil}">
+                <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+            </a>
+            <a href="" class="text-decoration-none text-white fs-5">
+                <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<main class="info-container col-12">
+    <div class="col-10 mx-auto menuJuegoWrapper">
+        <!-- Imagen de portada del juego -->
+        <img th:src="@{/img/fondo-truco.jpg}" alt="Imagen del juego">
+        <a th:href="@{/partida-truco}"> <button> JUGAR</button> </a>
+
+        <!-- Estadísticas del juego -->
+        <div class="game-stats">
+            <div class="opciones">
+                <h2 class="opcion1">Estadísticas</h2>
+                <h2 class="opcion2">Historial</h2>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Jugador</th>
+                    <th>Partidas</th>
+                    <th>Partidas Ganadas</th>
+                    <th>Partidas Perdidas</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Sofía Hernández</td>
+                    <td>23</td>
+                    <td>15</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Ana Martínez</td>
+                    <td>22</td>
+                    <td>14</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>María López</td>
+                    <td>20</td>
+                    <td>12</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Javier Morales</td>
+                    <td>21</td>
+                    <td>13</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Laura García</td>
+                    <td>19</td>
+                    <td>13</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Carlos Gómez</td>
+                    <td>18</td>
+                    <td>10</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Luis Fernández</td>
+                    <td>17</td>
+                    <td>11</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Isabel Ruiz</td>
+                    <td>16</td>
+                    <td>10</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>15</td>
+                    <td>9</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Pablo Torres</td>
+                    <td>14</td>
+                    <td>7</td>
+                    <td>7</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+<footer class="col-12 py-4 d-flex flex-column gap-2">
+    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
+        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
+            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
+            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+        </div>
+        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
+            <p>Victoria Croce</p>
+            <p>Lucas Gavagnin</p>
+            <p>Gonzalo Ramos</p>
+            <p>Franco Vargas</p>
+            <p>Martin Zaccardo</p>
+        </div>
+        <div class="col-4 d-flex flex-wrap justify-content-center">
+            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
+        </div>
+    </div>
+    <hr class="col-10 mx-auto text-white"/>
+    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>

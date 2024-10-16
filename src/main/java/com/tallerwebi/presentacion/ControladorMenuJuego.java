@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorMenuJuego {
     @RequestMapping("/MenuJuego")
     public ModelAndView MenuJuego() {
-        return new ModelAndView("MenuJuego");
+        return new ModelAndView("menu-juego");
     }
 
 }
