@@ -18,11 +18,16 @@
         <div class="division"></div>
         <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="headerImage"/></div>
     </div>
+    <div>
+        <a th:href="@{/volver-home}">Volver al menu</a>
+    </div>
 </header>
 
 <main>
     <h3 th:text="${jugador2 != null && jugador1 != null ? jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
     <h3 th:text="${jugadas != null ? 'Jugaste: ' + jugadas + ' rondas.' : 'XD'}"></h3>
+    <p th:if="${error != null}" style="color: red" th:text="'Error, ' + ${error}"></p>
+
     <div id="mesa">
 
         <!--    CARTAS JUGADOR 1    -->
@@ -31,7 +36,7 @@
                 <input type="hidden" name="cartaId" th:value="${carta.id}"/>
                 <input type="hidden" name="jugador" th:value="${jugador1.nombre}"/>
                 <input type="hidden" name="cartaValor" th:value="${carta.valor}"/>
-                <button type="submit" class="cartaTirarBtn">
+                <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador1}">>
                     <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                 </button>
             </form>
@@ -44,6 +49,9 @@
                 <a th:href="@{/comenzar-truco}">
                     <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                 </a>
+            </div>
+            <div id="texto-repartir" th:if="${partidaIniciada == false}">
+                <img th:src="@{/img/cartas-truco/repartir-cartas-v2.png}">
             </div>
             <div class="col-8 d-flex flex-column flex-wrap gap-1">
                 <!--  CARTAS J1       -->
@@ -64,13 +72,13 @@
                 <input type="hidden" name="cartaId" th:value="${carta.id}"/>
                 <input type="hidden" name="jugador" th:value="${jugador2.nombre}"/>
                 <input type="hidden" name="cartaValor" th:value="${carta.valor}"/>
-                <button type="submit" class="cartaTirarBtn">
+                <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador2}">>
                     <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                 </button>
             </form>
         </div>
 
-        <div class="d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada} == true">
+        <div class="botones d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada}">
             <form method="post" th:action="@{/accion-truco}">
                 <button type="submit" class="btn btn-primary">Truco</button>
             </form>
@@ -88,7 +96,7 @@
             </form>
         </div>
     </div>
-    <div>
+    <div class="tabla-datos">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
@@ -108,11 +116,11 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="tabla-datos">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
+                <th>JUGADOR</th>
                 <th>VALOR</th>
                 <th>NÚMERO</th>
                 <th>PALO</th>
