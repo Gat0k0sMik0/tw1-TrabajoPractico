@@ -55,10 +55,6 @@
                     <img th:each="carta : ${cartasTiradasJ2}" th:src="@{${carta.img}}" alt="Carta" class="cartaTirada"/>
                 </div>
             </div>
-
-
-            <!--            <img id="cartaRival" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Carta Jugada Rival">-->
-            <!--            <img id="miCarta" th:src="@{/img/cartas-truco/Carta_Atras.png}" alt="Mi Carta Jugada">-->
         </div>
 
 
@@ -96,26 +92,6 @@
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
-                <th>VALOR</th>
-                <th>NÚMERO</th>
-                <th>PALO</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="carta : ${todasLasCartas}">
-                <td th:text="${carta.id}"></td>
-                <td th:text="${carta.valor}"></td>
-                <td th:text="${carta.numero}"></td>
-                <td th:text="${carta.palo}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div>
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-            <tr>
                 <th>J</th>
                 <th>VALOR</th>
                 <th>NÚMERO</th>
@@ -128,6 +104,26 @@
                 <td th:text="${ronda.valorCarta}"></td>
                 <td th:text="${ronda.nroCarta}"></td>
                 <td th:text="${ronda.palo}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>VALOR</th>
+                <th>NÚMERO</th>
+                <th>PALO</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="carta : ${todasLasCartas}">
+                <td th:text="${carta.id}"></td>
+                <td th:text="${carta.valor}"></td>
+                <td th:text="${carta.numero}"></td>
+                <td th:text="${carta.palo}"></td>
             </tr>
             </tbody>
         </table>
