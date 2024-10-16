@@ -66,9 +66,9 @@ public class ServicioTrucoImpl implements ServicioTruco {
         Carta cartaJ2 = jugador2.getCartasTiradas().get(jugador2.getCartasTiradas().size() - 1);
 
         if (cartaJ1.getValor() > cartaJ2.getValor()) {
-            cambiarTurno(jugador1);
-        } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
             cambiarTurno(jugador2);
+        } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
+            cambiarTurno(jugador1);
         }
     }
 

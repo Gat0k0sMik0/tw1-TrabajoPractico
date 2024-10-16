@@ -113,12 +113,10 @@ public class ControladorTruco {
             jugador2.setCartas(cartasJugador2);
         }
 
-       List<Carta> todasLasCartas = new ArrayList<>();
+        List<Carta> todasLasCartas = new ArrayList<>();
         todasLasCartas.addAll(cartasJugador1);
         todasLasCartas.addAll(cartasJugador2);
-
-
-        // Almacenar cartas en la sesión
+      
         sesion.setAttribute("cartasJugador1", cartasJugador1);
         sesion.setAttribute("cartasJugador2", cartasJugador2);
         sesion.setAttribute("jugador1", jugador1);
@@ -140,7 +138,6 @@ public class ControladorTruco {
         Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
         if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
 
-
         Carta cartaSeleccionada = null;
         Jugador actual = null;
         if (jugadorNombre.equalsIgnoreCase(jugador1.getNombre())) {
@@ -148,6 +145,9 @@ public class ControladorTruco {
         } else {
             actual = jugador2;
         }
+
+        servicioTruco.cambiarTurno(actual);
+
         // Buscar la carta seleccionada en la mano del jugador
         for (Carta carta : actual.getCartas()) {
             if (carta.getId().equals(cartaId)) {
@@ -155,16 +155,19 @@ public class ControladorTruco {
                 break;
             }
         }
-        servicioTruco.cambiarTurno(actual);
 
-        if (jugador1.getCartasTiradas().size() > 1 && jugador2.getCartasTiradas().size() > 1 &&
-                jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
+        servicioTruco.tirarCarta(actual, cartaSeleccionada);
+
+        if (jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
             servicioTruco.determinarGanadorRonda(jugador1, jugador2);
         }
 
-        servicioTruco.tirarCarta(actual, cartaSeleccionada);
+        model.put("jugadas", servicioTruco.getRondasJugadas().size());
+        model.put("rondas", servicioTruco.getRondasJugadas());
+      
         session.setAttribute("jugadas", servicioTruco.getRondasJugadas().size());
         session.setAttribute("rondas", servicioTruco.getRondasJugadas());
+
 
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
