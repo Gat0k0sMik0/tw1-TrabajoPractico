@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +38,8 @@ public class ServicioTrucoImpl implements ServicioTruco {
     public void tirarCarta(Jugador jugador, Carta cartaSeleccionada) {
         List<Carta> cartasJugador = jugador.getCartas();
         if (cartasJugador.contains(cartaSeleccionada)) {
-            jugador.tirarCarta(cartaSeleccionada);
-            truco.registrarMovimiento(jugador, cartaSeleccionada);
+            jugador.tirarCarta(cartaSeleccionada); // Se le saca la carta de la mano al jugador
+            truco.registrarMovimiento(jugador, cartaSeleccionada); // Se registra quien tiro y que carta
             cartasJugadas.add(cartaSeleccionada); // Agrega la carta a las cartas jugadas
         } else {
             throw new IllegalArgumentException("La carta seleccionada no está en la mano del jugador.");
@@ -62,14 +63,24 @@ public class ServicioTrucoImpl implements ServicioTruco {
 
     @Override
     public void determinarGanadorRonda(Jugador jugador1, Jugador jugador2) {
-        Carta cartaJ1 = jugador1.getCartasTiradas().get(jugador1.getCartasTiradas().size() - 1);
-        Carta cartaJ2 = jugador2.getCartasTiradas().get(jugador2.getCartasTiradas().size() - 1);
+        // Si ya tiraron los 2
+        if (jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
+            // Conseguimos las últimas tiradas.
+            Carta cartaJ1 = jugador1.getCartasTiradas().get(jugador1.getCartasTiradas().size() - 1);
+            Carta cartaJ2 = jugador2.getCartasTiradas().get(jugador2.getCartasTiradas().size() - 1);
 
-        if (cartaJ1.getValor() > cartaJ2.getValor()) {
-            cambiarTurno(jugador2);
-        } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
-            cambiarTurno(jugador1);
+            // Comparamos quien tiró la más alta, en base a eso damos poder
+            if (cartaJ1.getValor() > cartaJ2.getValor()) {
+                cambiarTurno(jugador2);
+            } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
+                cambiarTurno(jugador1);
+            }
         }
+    }
+
+    @Override
+    public void validarCartas(List<Carta> cartasJugador) {
+        if (cartasJugador.isEmpty()) throw new TrucoException("Las cartas del jugador no existen");
     }
 
     public List<Carta> getCartasJugadas(Jugador j) {
