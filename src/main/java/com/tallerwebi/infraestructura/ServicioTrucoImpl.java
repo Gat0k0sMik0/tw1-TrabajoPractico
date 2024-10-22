@@ -83,7 +83,115 @@ public class ServicioTrucoImpl implements ServicioTruco {
         if (cartasJugador.isEmpty()) throw new TrucoException("Las cartas del jugador no existen");
     }
 
-    public List<Carta> getCartasJugadas(Jugador j) {
+    @Override
+    public Boolean esLaPrimerRonda(Jugador j1, Jugador j2) {
+        return truco.getRondasJugadas().size() <= 1;
+    }
+
+    @Override
+    public void verificarEnvido(Jugador jugador1, Jugador jugador2) {
+        Integer tantosJ1 = verLosTantos(jugador1);
+        Integer tantosJ2 = verLosTantos(jugador2);
+
+        if (tantosJ1 > tantosJ2) {
+            //puntosJugador1++;
+        }
+
+        if (tantosJ2 > tantosJ1) {
+            //puntosJugador2++;
+        }
+
+        if (tantosJ2.equals(tantosJ1)) {
+            //Gana jugador actual
+        }
+    }
+
+    private Integer verLosTantos(Jugador jugador) {
+        List<Carta> cartasManoJugador = jugador.getCartas();
+        List<Carta> cartasTiradasJugador = jugador.getCartasTiradas();
+        List<Carta> todasLasCartas = new ArrayList<>();
+
+        //Obtengo todas las cartas del jugador
+        if(cartasManoJugador.size() == 2){
+            todasLasCartas.add(cartasManoJugador.get(0));
+            todasLasCartas.add(cartasManoJugador.get(1));
+            todasLasCartas.add(cartasTiradasJugador.get(0));
+        } else {
+            todasLasCartas.add(cartasManoJugador.get(0));
+            todasLasCartas.add(cartasManoJugador.get(1));
+            todasLasCartas.add(cartasManoJugador.get(2));
+        }
+
+        Integer tantos = 0;
+
+        // For para recorrer una carta y su siguiente
+        for (int i = 0; i < todasLasCartas.size(); i++) {
+            for (int j = i + 1; j < todasLasCartas.size(); j++) {
+
+                // Verifico si no es flor
+                if(!todasLasCartas.get(0).getPalo().equals(todasLasCartas.get(1).getPalo()) &&
+                        !todasLasCartas.get(1).getPalo().equals(todasLasCartas.get(2).getPalo())){
+
+                    // Si no tenemos ningun palo que se repita en las 3 cartas, obtengo el numero mayor
+                    // que no sea ni 10, ni 11, ni 12
+                    if(!todasLasCartas.get(i).getPalo().equals(todasLasCartas.get(j).getPalo())){
+                        tantos = obtenerPaloMayor(todasLasCartas);
+                    }
+
+                    //Ahora si busco las cartas que tengan el mismo palo y sumo los tantos
+                    if (todasLasCartas.get(i).getPalo().equals(todasLasCartas.get(j).getPalo())) {
+                        Integer valor1 = todasLasCartas.get(i).getNumero();
+                        Integer valor2 = todasLasCartas.get(j).getNumero();
+                        tantos = sumarTantos(valor1, valor2);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return tantos;
+    }
+
+    private Integer obtenerPaloMayor(List<Carta> todasLasCartas) {
+        Carta mayor = null;
+
+        for (int i = 0; i < todasLasCartas.size(); i++) {
+            if ((todasLasCartas.get(i).getNumero() != 10 && todasLasCartas.get(i).getNumero() != 11
+                    && todasLasCartas.get(i).getNumero() != 12) &&
+                    (mayor.equals(null) || todasLasCartas.get(i).getNumero() > mayor.getNumero())) {
+                mayor = todasLasCartas.get(i);
+            }
+        }
+
+        Integer resultado = (mayor != null) ? mayor.getNumero() : 0;
+        return resultado;
+    }
+
+    private Integer sumarTantos(Integer valor1, Integer valor2) {
+        Integer tantosIniciales = 20;
+        Integer tantos = 0;
+
+        if (!valor1.equals(10) || !valor1.equals(11) || !valor1.equals(12) || !valor2.equals(10) || !valor2.equals(11) || !valor2.equals(12)){
+            tantos = tantosIniciales + valor1 + valor2;
+        }
+
+        if (valor1.equals(10) || valor1.equals(11) || valor1.equals(12) && valor2.equals(10) || valor2.equals(11) || valor2.equals(12)){
+            tantos = tantosIniciales;
+        }
+
+        if (valor1.equals(10) || valor1.equals(11) || valor1.equals(12)) {
+            tantos = tantosIniciales + valor2;
+        }
+
+        if (valor2.equals(10) || valor2.equals(11) || valor2.equals(12)) {
+            tantos = tantosIniciales + valor1;
+        }
+
+        return tantos;
+    }
+
+
+        public List<Carta> getCartasJugadas(Jugador j) {
         return j.getCartasTiradas();
     }
 
