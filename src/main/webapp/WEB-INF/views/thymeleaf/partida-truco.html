@@ -26,8 +26,34 @@
 <main>
     <h3 th:text="${jugador2 != null && jugador1 != null ? jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
     <h3 th:text="${jugadas != null ? 'Jugaste: ' + jugadas + ' rondas.' : 'XD'}"></h3>
+    <h3 th:text="${texto}"></h3>
 
     <div id="mesa">
+        <div class="botones d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada}">
+            <form method="post" th:action="@{/accion-truco}">
+                <button type="submit" class="btn btn-primary">Truco</button>
+            </form>
+
+            <form method="post" th:action="@{/accion-envido}" >
+                <button type="submit" class="btn btn-primary" th:disabled="${envidoValido == false}">Envido</button>
+                <input type="hidden" name="jugador" th:value="${jugador1.nombre}"/>
+            </form>
+            <div id="respuestas" th:if="${mostrarRespuestasJ1}">
+                <form th:action="@{/responderEnvido}" method="post">
+                    <button type="submit" name="respuesta" value="quiero">Quiero</button>
+                    <button type="submit" name="respuesta" value="no quiero">No quiero</button>
+                    <input type="hidden" name="jugador" th:value="${jugador1.nombre}"/>
+                </form>
+            </div>
+
+            <form method="post" th:action="@{/accion-flor}">
+                <button type="submit" class="btn btn-primary">Flor</button>
+            </form>
+
+            <form method="post" th:action="@{/accion-mazo}">
+                <button type="submit" class="btn btn-primary">Ir al mazo</button>
+            </form>
+        </div>
 
         <!--    CARTAS JUGADOR 1    -->
         <div class="d-flex flex-wrap gap-2 justify-content-center">
@@ -40,6 +66,8 @@
                 </button>
             </form>
         </div>
+
+
 
         <!--    CARTAS     -->
         <div id="cartas-en-juego" class="d-flex flex-wrap">
@@ -82,9 +110,17 @@
                 <button type="submit" class="btn btn-primary">Truco</button>
             </form>
 
-            <form method="post" th:action="@{/accion-envido}">
-                <button type="submit" class="btn btn-primary">Envido</button>
+            <form method="post" th:action="@{/accion-envido}" >
+                <button type="submit" class="btn btn-primary" th:disabled="${envidoValido == false}">Envido</button>
+                <input type="hidden" name="jugador" th:value="${jugador2.nombre}"/>
             </form>
+            <div id="respuestas2" th:if="${mostrarRespuestasJ2}">
+                <form th:action="@{/responderEnvido}" method="post">
+                    <button type="submit" name="respuesta" value="quiero">Quiero</button>
+                    <button type="submit" name="respuesta" value="no quiero">No quiero</button>
+                    <input type="hidden" name="jugador" th:value="${jugador2.nombre}"/>
+                </form>
+            </div>
 
             <form method="post" th:action="@{/accion-flor}">
                 <button type="submit" class="btn btn-primary">Flor</button>
