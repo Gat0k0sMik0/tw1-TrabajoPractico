@@ -1,9 +1,10 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
+import com.tallerwebi.infraestructura.RepositorioCartaImpl;
 import com.tallerwebi.infraestructura.ServicioTrucoImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +13,10 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-/*public class ServicioTrucoTest {
-    RepositorioCarta repositorioCarta = mock(RepositorioCartaImpl.class);
-    ServicioTruco servicioTruco = new ServicioTrucoImpl(new Truco());
+public class ServicioTrucoTest {
+
+    RepositorioCartaImpl repositorioCarta = mock(RepositorioCartaImpl.class);
+    ServicioTruco servicioTruco = new ServicioTrucoImpl(repositorioCarta);
     Jugador j1 = new Jugador("gonza");
     Jugador j2 = new Jugador("leo");
 
@@ -255,6 +257,20 @@ import static org.mockito.Mockito.mock;
         assertEquals(j2.getNombre(), truco.saberQuienSumoMasPuntosEnLasManos(j1, j2).getNombre());
 
     }
+//    @Test
+//    public void gayElQueLee() throws IndiceFueraDeRangoException {
+//        Truco truco = new Truco();
+//        List<Carta> seis = givenAsignoCartasALosJugadores();
+//        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+//
+//        Carta ct1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
+//        Carta ct2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
+//
+//        servicioTruco.tirarCarta(j1, ct1);
+//        servicioTruco.tirarCarta(j2, ct2);
+//
+//    }
+
 
     private List<Carta> givenAsignoCartasALosJugadores() throws IndiceFueraDeRangoException {
         List<Carta> seis = new ArrayList<>();
@@ -287,4 +303,4 @@ import static org.mockito.Mockito.mock;
     }
 
 
-}*/
+}

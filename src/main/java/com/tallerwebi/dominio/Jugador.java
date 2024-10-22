@@ -5,11 +5,22 @@ import java.util.List;
 
 public class Jugador {
     private List<Carta> cartas = new ArrayList<>();
+    private List<Carta> cartasTiradas = new ArrayList<>();
     private String nombre;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
     }
+
+
+    public List<Carta> getCartasTiradas() {
+        return cartasTiradas;
+    }
+
+    public void setCartasTiradas(List<Carta> cartasTiradas) {
+        this.cartasTiradas = cartasTiradas;
+    }
+
 
     public List<Carta> getCartas() {
         return cartas;
@@ -39,6 +50,7 @@ public class Jugador {
         boolean existeLaCartaEnCartas = cartas.contains(carta);
         if (existeLaCartaEnCartas) {
             cartas.remove(carta);
+            cartasTiradas.add(carta);
             return carta;
         } else return null;
     }

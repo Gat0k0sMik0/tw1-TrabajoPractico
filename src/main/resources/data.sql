@@ -14,60 +14,60 @@ VALUES
 INSERT INTO Carta(valor, numero, palo, img)
 VALUES
 -- Cuatro, cinco, seis
-(0, 4, 'Oro', '4_Oro'),
-(0, 4, 'Copa', '4_Copa'),
-(0, 4, 'Espada', '4_Espada'),
-(0, 4, 'Basto', '4_Basto'),
+(0, 4, 'Oro', '/img/cartas-truco/oro/4_Oro.png'),
+(0, 4, 'Copa', '/img/cartas-truco/copa/4_Copa.png'),
+(0, 4, 'Espada', '/img/cartas-truco/espada/4_Espada.png'),
+(0, 4, 'Basto', '/img/cartas-truco/basto/4_Basto.png'),
 
-(1, 5, 'Oro', '5_Oro'),
-(1, 5, 'Copa', '5_Copa'),
-(1, 5, 'Espada', '5_Espada'),
-(1, 5, 'Basto', '5_Basto'),
+(1, 5, 'Oro', '/img/cartas-truco/oro/5_Oro.png'),
+(1, 5, 'Copa', '/img/cartas-truco/copa/5_Copa.png'),
+(1, 5, 'Espada', '/img/cartas-truco/espada/5_Espada.png'),
+(1, 5, 'Basto', '/img/cartas-truco/basto/5_Basto.png'),
 
-(2, 6, 'Oro', '6_Oro'),
-(2, 6, 'Copa', '6_Copa'),
-(2, 6, 'Espada', '6_Espada'),
-(2, 6, 'Basto', '6_Basto'),
+(2, 6, 'Oro', '/img/cartas-truco/oro/6_Oro.png'),
+(2, 6, 'Copa', '/img/cartas-truco/copa/6_Copa.png'),
+(2, 6, 'Espada', '/img/cartas-truco/espada/6_Espada.png'),
+(2, 6, 'Basto', '/img/cartas-truco/basto/6_Basto.png'),
 
 -- Siete (Copa y Basto) = 3
-(3, 7, 'Copa', '7_Copa'),
-(3, 7, 'Basto', '7_Basto'),
+(3, 7, 'Copa', '/img/cartas-truco/copa/7_Copa.png'),
+(3, 7, 'Basto', '/img/cartas-truco/basto/7_Basto.png'),
 
 -- Diez, Once, Doce
-(4, 10, 'Oro', '10_Oro'),
-(4, 10, 'Copa', '10_Copa'),
-(4, 10, 'Espada', '10_Espada'),
-(4, 10, 'Basto', '10_Basto'),
+(4, 10, 'Oro', '/img/cartas-truco/oro/10_Oro.png'),
+(4, 10, 'Copa', '/img/cartas-truco/copa/10_Copa.png'),
+(4, 10, 'Espada', '/img/cartas-truco/espada/10_Espada.png'),
+(4, 10, 'Basto', '/img/cartas-truco/basto/10_Basto.png'),
 
-(5, 11, 'Oro', '11_Oro'),
-(5, 11, 'Copa', '11_Copa'),
-(5, 11, 'Espada', '11_Espada'),
-(5, 11, 'Basto', '11_Basto'),
+(5, 11, 'Oro', '/img/cartas-truco/oro/11_Oro.png'),
+(5, 11, 'Copa', '/img/cartas-truco/copa/11_Copa.png'),
+(5, 11, 'Espada', '/img/cartas-truco/espada/11_Espada.png'),
+(5, 11, 'Basto', '/img/cartas-truco/basto/11_Basto.png'),
 
-(6, 12, 'Oro', '12_Oro'),
-(6, 12, 'Copa', '12_Copa'),
-(6, 12, 'Espada', '12_Espada'),
-(6, 12, 'Basto', '12_Basto'),
+(6, 12, 'Oro', '/img/cartas-truco/oro/12_Oro.png'),
+(6, 12, 'Copa', '/img/cartas-truco/copa/12_Copa.png'),
+(6, 12, 'Espada', '/img/cartas-truco/espada/12_Espada.png'),
+(6, 12, 'Basto', '/img/cartas-truco/basto/12_Basto.png'),
 
 -- Uno (Copa y Oro) = 7
-(7, 1, 'Oro', '1_Oro'),
-(7, 1, 'Copa', '1_Copa'),
+(7, 1, 'Oro', '/img/cartas-truco/oro/1_Oro.png'),
+(7, 1, 'Copa', '/img/cartas-truco/copa/1_Copa.png'),
 
 -- Dos, Tres
-(8, 2, 'Oro', '2_Oro'),
-(8, 2, 'Copa', '2_Copa'),
-(8, 2, 'Espada', '2_Espada'),
-(8, 2, 'Basto', '2_Basto'),
+(8, 2, 'Oro', '/img/cartas-truco/oro/2_Oro.png'),
+(8, 2, 'Copa', '/img/cartas-truco/copa/2_Copa.png'),
+(8, 2, 'Espada', '/img/cartas-truco/espada/2_Espada.png'),
+(8, 2, 'Basto', '/img/cartas-truco/basto/2_Basto.png'),
 
-(9, 3, 'Oro', '3_Oro'),
-(9, 3, 'Copa', '3_Copa'),
-(9, 3, 'Espada', '3_Espada'),
-(9, 3, 'Basto', '3_Basto'),
+(9, 3, 'Oro', '/img/cartas-truco/oro/3_Oro.png'),
+(9, 3, 'Copa', '/img/cartas-truco/copa/3_Copa.png'),
+(9, 3, 'Espada', '/img/cartas-truco/espada/3_Espada.png'),
+(9, 3, 'Basto', '/img/cartas-truco/basto/3_Basto.png'),
 
 -- Siete (Oro) = 10, Siete (Espada) = 11
-(10, 7, 'Oro', '7_Oro'),
-(11, 7, 'Espada', '7_Espada'),
+(10, 7, 'Oro', '/img/cartas-truco/oro/7_Oro.png'),
+(11, 7, 'Espada', '/img/cartas-truco/espada/7_Espada.png'),
 
 -- Uno (Basto) = 12, Uno (Espada) = 13
-(12, 1, 'Basto', '1_Basto'),
-(13, 1, 'Espada', '1_Espada');
+(12, 1, 'Basto', '/img/cartas-truco/basto/1_Basto.png'),
+(13, 1, 'Espada', '/img/cartas-truco/espada/1_Espada.png');
