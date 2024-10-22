@@ -11,4 +11,6 @@ public interface ServicioTruco {
     Boolean esTurnoJugador(String jugadorNombre);
     Jugador getTurnoJugador();
     void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
+
+    void validarCartas(List<Carta> cartasJugador2);
 }
