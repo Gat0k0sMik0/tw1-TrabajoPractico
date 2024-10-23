@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Jugador {
+    private String nombre;
+    private Integer puntosRonda = 0;
+    private Integer puntosPartida = 0;
     private List<Carta> cartas = new ArrayList<>();
     private List<Carta> cartasTiradas = new ArrayList<>();
     private String nombre;
@@ -13,6 +16,22 @@ public class Jugador {
         this.nombre = nombre;
     }
 
+    public Carta tirarCarta(Carta carta) {
+        boolean existeLaCartaEnCartas = cartas.contains(carta);
+        if (existeLaCartaEnCartas) {
+            cartas.remove(carta);
+            cartasTiradas.add(carta);
+            return carta;
+        } else return null;
+    }
+
+    public Integer getPuntosPartida() {
+        return puntosPartida;
+    }
+
+    public void setPuntosPartida(Integer puntosPartida) {
+        this.puntosPartida = puntosPartida;
+      
     public List<Integer> getPuntos() {
         return puntos;
     }
@@ -46,25 +65,31 @@ public class Jugador {
         this.nombre = nombre;
     }
 
-    private int getIndiceDeCartaBuscada (Carta carta) {
+    private int getIndiceDeCartaBuscada(Carta carta) {
         return cartas.indexOf(carta);
 
     }
-    public Boolean saberSiExiste (Carta carta) {
+
+    public Boolean saberSiExiste(Carta carta) {
         return cartas.contains(carta);
     }
 
-    public Carta tirarCarta(Carta carta) {
-        boolean existeLaCartaEnCartas = cartas.contains(carta);
-        if (existeLaCartaEnCartas) {
-            cartas.remove(carta);
-            cartasTiradas.add(carta);
-            return carta;
-        } else return null;
-    }
+
 
     // Añadir carta a la mano
     public void recibirCarta(Carta carta) {
         this.cartas.add(carta);
+    }
+
+    public void agregarPuntoRonda() {
+        this.puntosRonda++;
+    }
+
+    public Integer getPuntosRonda() {
+        return puntosRonda;
+    }
+
+    public void setPuntosRonda(Integer puntosRonda) {
+        this.puntosRonda = puntosRonda;
     }
 }
