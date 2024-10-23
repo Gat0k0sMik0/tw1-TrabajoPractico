@@ -19,7 +19,6 @@ public class ServicioTrucoTest {
     ServicioTruco servicioTruco = new ServicioTrucoImpl(repositorioCarta);
     Jugador j1 = new Jugador("gonza");
     Jugador j2 = new Jugador("leo");
-
     @Test
     public void queSeCreeElTrucoYSeCarguenLasCartas() {
         Truco truco = new Truco();

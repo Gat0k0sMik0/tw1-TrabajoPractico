@@ -26,7 +26,8 @@
 <main>
     <h3 th:text="${jugador2 != null && jugador1 != null ? jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
     <h3 th:text="${jugadas != null ? 'Jugaste: ' + jugadas + ' rondas.' : 'XD'}"></h3>
-
+    <h1>${mensaje}</h1>
+    <p>Redirigiendo a la página de inicio...</p>
     <div id="mesa">
 
         <!--    CARTAS JUGADOR 1    -->
