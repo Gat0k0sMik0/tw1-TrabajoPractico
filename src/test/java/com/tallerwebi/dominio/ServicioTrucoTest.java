@@ -29,6 +29,7 @@ public class ServicioTrucoTest {
         jugadores.add(j2);
     }
 
+    
     @Test
     public void queSeCreeElTrucoYSeCarguenLasCartas() {
         Truco truco = new Truco();
