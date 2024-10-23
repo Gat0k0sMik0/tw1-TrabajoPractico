@@ -13,4 +13,10 @@ public interface ServicioTruco {
     void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
 
     void validarCartas(List<Carta> cartasJugador2);
+
+    void rechazarTruco(Jugador jugadorActual);
+
+    void aceptarTruco(Jugador jugador1, Jugador jugador2);
+
+    void cantarTruco(Jugador jugadorActual);
 }

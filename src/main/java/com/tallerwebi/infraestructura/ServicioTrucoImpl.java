@@ -17,6 +17,8 @@ public class ServicioTrucoImpl implements ServicioTruco {
     private List<Carta> cartasJugadas;
     private RepositorioCarta repositorioCarta;
     private Jugador turno;
+    private String trucoCantadoPor;
+    private boolean trucoAceptado;
     /*private Integer puntosJugador1;
     private Integer puntosJugador2;*/
 
@@ -81,6 +83,21 @@ public class ServicioTrucoImpl implements ServicioTruco {
     @Override
     public void validarCartas(List<Carta> cartasJugador) {
         if (cartasJugador.isEmpty()) throw new TrucoException("Las cartas del jugador no existen");
+    }
+
+    public void cantarTruco(Jugador jugadorQueCanta) {
+        jugadorQueCanta.sumarPuntos(2); // El valor inicial del truco es 2 puntos
+        this.trucoAceptado = false;
+    }
+
+    @Override
+    public void rechazarTruco(Jugador jugadorQueRechaza) {
+        jugadorQueRechaza.sumarPuntos(1);  // El jugador que cantó truco gana 1 punto
+    }
+
+    @Override
+    public void aceptarTruco(Jugador jugador1, Jugador jugador2) {
+
     }
 
     public List<Carta> getCartasJugadas(Jugador j) {

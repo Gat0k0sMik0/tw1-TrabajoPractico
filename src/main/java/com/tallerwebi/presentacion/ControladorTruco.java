@@ -141,4 +141,57 @@ public class ControladorTruco {
         return null;
     }
 
+    @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
+    public ModelAndView accionCantarTruco(
+            @RequestParam("jugador") String jugadorNombre,
+            HttpSession session) {
+
+        ModelMap model = new ModelMap();
+        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+
+        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+
+        Jugador jugadorActual = jugador1.getNombre().equals(jugadorNombre) ? jugador1 : jugador2;
+
+        // Cantar Truco
+        servicioTruco.cantarTruco(jugadorActual);
+
+        // Actualizar el modelo con los datos de la partida
+        model.put("jugador1", jugador1);
+        model.put("jugador2", jugador2);
+        model.put("turnoJugador", servicioTruco.getTurnoJugador());
+        model.put("trucoCantado", true);
+
+        return new ModelAndView("partida-truco", model);
+    }
+
+    @RequestMapping(path = "/respuesta-truco", method = RequestMethod.POST)
+    public ModelAndView accionRespuestaTruco(
+            @RequestParam("respuesta") String respuesta,
+            @RequestParam("jugador") String jugadorNombre,
+            HttpSession session) {
+
+        ModelMap model = new ModelMap();
+        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+
+        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+
+        Jugador jugadorActual = jugador1.getNombre().equals(jugadorNombre) ? jugador1 : jugador2;
+
+        // Respuesta al truco
+        if (respuesta.equalsIgnoreCase("quiero")) {
+            servicioTruco.aceptarTruco(jugador1, jugador2);
+        } else if (respuesta.equalsIgnoreCase("no quiero")) {
+            servicioTruco.rechazarTruco(jugadorActual);
+        }
+
+        model.put("jugador1", jugador1);
+        model.put("jugador2", jugador2);
+        model.put("turnoJugador", servicioTruco.getTurnoJugador());
+
+        return new ModelAndView("partida-truco", model);
+    }
+
 }

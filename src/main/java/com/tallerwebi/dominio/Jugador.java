@@ -7,9 +7,11 @@ public class Jugador {
     private List<Carta> cartas = new ArrayList<>();
     private List<Carta> cartasTiradas = new ArrayList<>();
     private String nombre;
+    private int puntos;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
+        this.puntos = 0;
     }
 
 
@@ -58,5 +60,13 @@ public class Jugador {
     // Añadir carta a la mano
     public void recibirCarta(Carta carta) {
         this.cartas.add(carta);
+    }
+
+    public int gePuntos() {
+        return puntos ;
+    }
+
+    public void sumarPuntos(int puntosASumar){
+        this.puntos += puntosASumar;
     }
 }
