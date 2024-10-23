@@ -49,16 +49,18 @@ public class ControladorTruco {
         model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
         model.put("partidaIniciada", session.getAttribute("partidaIniciada"));
         model.put("terminada", session.getAttribute("terminada"));
+        model.put("mostrarRespuestasJ1", session.getAttribute("mostrarRespuestasJ1"));
+        model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
 
         // Para ver como va
         model.put("rondas", session.getAttribute("rondas"));
         model.put("manos", session.getAttribute("manos"));
         model.put("movimientos", session.getAttribute("movimientos"));
         model.put("nroRondas", session.getAttribute("nroRondas"));
+        model.put("envidoValido", session.getAttribute("envidoValido"));
 
         return new ModelAndView("partida-truco", model);
     }
-
 
     @RequestMapping("/comenzar-truco")
     public ModelAndView comenzarTruco(HttpSession sesion, SessionStatus sessionStatus) {
@@ -94,6 +96,8 @@ public class ControladorTruco {
         sesion.setAttribute("todasLasCartas", todasLasCartas); // SOLO PARA DESARROLLO
         sesion.setAttribute("partidaIniciada", true);
         sesion.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+        sesion.setAttribute("mostrarRespuestasJ1", false);
+        sesion.setAttribute("mostrarRespuestasJ2", false);
 
         // para ver
         sesion.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
@@ -114,9 +118,9 @@ public class ControladorTruco {
         ModelMap model = new ModelMap();
 
         //if que serviciotrucoSabersillegoa30
-        if (servicioTruco.ganadorGeneral() != null){
+        /*if (servicioTruco.ganadorGeneral() != null){
 
-        }
+        }*/
 
         // Obtener jugadores de la sesión
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
@@ -159,6 +163,9 @@ public class ControladorTruco {
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
         session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
+        session.setAttribute("envidoValido", servicioTruco.esLaPrimerRonda());
+        session.setAttribute("mostrarRespuestasJ1", false);
+        session.setAttribute("mostrarRespuestasJ2", false);
 
         // para ver como va
         session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
@@ -176,6 +183,82 @@ public class ControladorTruco {
         }
         return null;
     }
+
+    @RequestMapping(path = "/accion-envido", method = RequestMethod.POST)
+    public ModelAndView cantarEnvido(
+            @RequestParam("jugador") String jugadorNombre,
+            HttpSession session) {
+        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+
+        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+
+        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
+            session.setAttribute("mostrarRespuestasJ2", true);
+        } else {
+            session.setAttribute("mostrarRespuestasJ1", true);
+        }
+
+        // Actualizar los jugadores en la sesión para mantener el estado del juego
+        session.setAttribute("jugador1", jugador1);
+        session.setAttribute("jugador2", jugador2);
+        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
+        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
+        session.setAttribute("cartasJugador1", jugador1.getCartas());
+        session.setAttribute("cartasJugador2", jugador2.getCartas());
+        session.setAttribute("jugador1", jugador1);
+        session.setAttribute("jugador2", jugador2);
+        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
+        session.setAttribute("envidoValido", false);
+
+        // para ver como va
+        session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+        session.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
+
+        return new ModelAndView("redirect:/partida-truco");
+    }
+
+    @PostMapping("/responderEnvido")
+    public ModelAndView responderEnvido(@RequestParam String respuesta, HttpSession session,
+                                        @RequestParam("jugador") String jugadorNombre ) {
+
+        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+
+        Jugador actual = null;
+        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
+            actual = jugador1;
+        } else {
+            actual = jugador2;
+        }
+
+        /*if (respuesta.equals("quiero")) {
+            servicioTruco.verificarEnvido(jugador1, jugador2);
+        } else {
+            SumarPuntosJugadorContrario();
+        }*/
+
+        // Actualizar los jugadores en la sesión para mantener el estado del juego
+        session.setAttribute("jugador1", jugador1);
+        session.setAttribute("jugador2", jugador2);
+        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
+        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
+        session.setAttribute("cartasJugador1", jugador1.getCartas());
+        session.setAttribute("cartasJugador2", jugador2.getCartas());
+        session.setAttribute("jugador1", jugador1);
+        session.setAttribute("jugador2", jugador2);
+        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
+        session.setAttribute("envidoValido", false);
+
+        // para ver como va
+        session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+        session.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
+
+        return new ModelAndView("redirect:/partida-truco");
+    }
+
 
 
     @RequestMapping("/final-partida")

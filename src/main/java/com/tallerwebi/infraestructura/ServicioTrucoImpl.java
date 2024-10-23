@@ -174,7 +174,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
     @Override
-    public Boolean esLaPrimerRonda(Jugador j1, Jugador j2) {
+    public Boolean esLaPrimerRonda() {
         return truco.getRondasDeManoActual().size() <= 1;
     }
 

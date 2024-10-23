@@ -13,7 +13,7 @@ public interface ServicioTruco {
     // de comprobación
     List<Ronda> getRondasJugadas();
 
-    Boolean esLaPrimerRonda(Jugador j1, Jugador j2);
+    Boolean esLaPrimerRonda();
 
     void verificarEnvido(Jugador jugador1, Jugador jugador2);
 
