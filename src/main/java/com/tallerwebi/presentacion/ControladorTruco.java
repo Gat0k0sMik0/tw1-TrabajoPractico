@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.TrucoException;
+import com.tallerwebi.infraestructura.ServicioTrucoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ public class ControladorTruco {
 
     @Autowired
     private ServicioTruco servicioTruco;
+    @Autowired
+    private ServicioTrucoImpl servicioTrucoImpl;
 
     public ControladorTruco(ServicioTruco servicioTruco) {
         this.servicioTruco = servicioTruco;
@@ -110,6 +113,11 @@ public class ControladorTruco {
 
         ModelMap model = new ModelMap();
 
+        //if que serviciotrucoSabersillegoa30
+        if (servicioTruco.ganadorGeneral() != null){
+
+        }
+
         // Obtener jugadores de la sesión
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
         Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
@@ -168,5 +176,21 @@ public class ControladorTruco {
         }
         return null;
     }
+
+
+    @RequestMapping("/final-partida")
+    public ModelAndView finalizarPartida(Jugador jugador, @RequestParam("jugador") String jugadorNombre,
+                                         HttpSession session) {
+        ModelMap model = new ModelMap();
+        model.put("mensaje", "¡" + jugador.getNombre() + " ha ganado la partida!");
+
+        session.setAttribute("jugadas", servicioTruco.getRondasJugadas().size());
+        session.setAttribute("rondas", servicioTruco.getRondasJugadas());
+
+        return new ModelAndView("redirect:/home", model);
+
+
+    }
+
 
 }

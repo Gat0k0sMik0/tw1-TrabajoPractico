@@ -9,6 +9,8 @@ public class Jugador {
     private Integer puntosPartida = 0;
     private List<Carta> cartas = new ArrayList<>();
     private List<Carta> cartasTiradas = new ArrayList<>();
+    private String nombre;
+    private List<Integer> puntos;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
@@ -29,6 +31,13 @@ public class Jugador {
 
     public void setPuntosPartida(Integer puntosPartida) {
         this.puntosPartida = puntosPartida;
+      
+    public List<Integer> getPuntos() {
+        return puntos;
+    }
+
+    public void setPuntos(List<Integer> puntos) {
+        this.puntos = puntos;
     }
 
     public List<Carta> getCartasTiradas() {
