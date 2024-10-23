@@ -24,8 +24,9 @@
 </header>
 
 <main>
-    <h3 th:text="${jugador2 != null && jugador1 != null ? jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
-    <h3 th:text="${jugadas != null ? 'Jugaste: ' + jugadas + ' rondas.' : 'XD'}"></h3>
+    <h1 th:text="${(terminada != null) ? (terminada ? 'fin' : 'no fin') : 'no fin'}"></h1>
+    <h3 th:text="${jugador2 != null && jugador1 != null ? 'Jugando ' + jugador1.nombre + ' VS ' + jugador2.nombre : 'XD'}"></h3>
+
 
     <div id="mesa">
 
@@ -95,31 +96,68 @@
             </form>
         </div>
     </div>
+
+    <!--  INFORMACIÓN PARA DESARROLLO  -->
+
+    <h3 th:text="${nroRondas != null ? 'Rondas jugadas (máx 3): ' + nroRondas + ' rondas.' : 'No comenzado.'}"></h3>
+    <h3 th:text="${movimientos != null ? 'Movimientos realizados (máx 6): ' + movimientos + ' movimientos.' : 'No comenzado.'}"></h3>
+
     <div class="tabla-datos">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-            <tr>
-                <th>J</th>
-                <th>VALOR</th>
-                <th>NÚMERO</th>
-                <th>PALO</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="ronda : ${rondas}">
-                <td th:text="${ronda.jugador.nombre}"></td>
-                <td th:text="${ronda.valorCarta}"></td>
-                <td th:text="${ronda.nroCarta}"></td>
-                <td th:text="${ronda.palo}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- Verifica si la lista de rondas no es null ni está vacía -->
+        <div th:if="${rondas != null and !rondas.isEmpty()}">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>NRO RONDA</th>
+                    <th>ID JUGADOR</th>
+                    <th>VALOR</th>
+                    <th>NRO + PALO</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ronda : ${rondas}">
+                    <td th:text="${ronda.nroRonda}"></td>
+                    <td th:text="${ronda.jugador}"></td>
+                    <td th:text="${ronda.valorCarta}"></td>
+                    <!-- Concatenación con Thymeleaf usando |...| -->
+                    <td th:text="|${ronda.nroCarta} ${ronda.palo}|"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Mensaje cuando la lista está vacía o es null -->
+        <div th:if="${rondas == null or rondas.isEmpty()}">
+            <p>No hay rondas jugadas aún.</p>
+        </div>
+    </div>
+    <div class="tabla-datos">
+        <!-- Verifica si la lista de rondas no es null ni está vacía -->
+        <div th:if="${manos != null and !manos.isEmpty()}">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>NOMBRE JUGADOR</th>
+                    <th>PUNTOS</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="mano : ${manos}">
+                    <td th:text="${mano.jugador.nombre}"></td>
+                    <td th:text="${mano.puntos}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Mensaje cuando la lista está vacía o es null -->
+        <div th:if="${manos == null or manos.isEmpty()}">
+            <p>No hay ganador de mano aún</p>
+        </div>
     </div>
     <div class="tabla-datos">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>JUGADOR</th>
+                <th>ID CARTA</th>
                 <th>VALOR</th>
                 <th>NÚMERO</th>
                 <th>PALO</th>

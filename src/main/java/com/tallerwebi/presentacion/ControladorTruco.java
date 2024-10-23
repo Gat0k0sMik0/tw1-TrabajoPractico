@@ -1,11 +1,13 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,25 +44,34 @@ public class ControladorTruco {
         model.put("cartasTiradasJ2", session.getAttribute("cartasTiradasJ2"));
         model.put("turnoJugador", session.getAttribute("turnoJugador"));
         model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
-        model.put("jugadas", session.getAttribute("jugadas"));
-        model.put("rondas", session.getAttribute("rondas"));
         model.put("partidaIniciada", session.getAttribute("partidaIniciada"));
+        model.put("terminada", session.getAttribute("terminada"));
+
+        // Para ver como va
+        model.put("rondas", session.getAttribute("rondas"));
+        model.put("manos", session.getAttribute("manos"));
+        model.put("movimientos", session.getAttribute("movimientos"));
+        model.put("nroRondas", session.getAttribute("nroRondas"));
 
         return new ModelAndView("partida-truco", model);
     }
 
 
     @RequestMapping("/comenzar-truco")
-    public ModelAndView comenzarTruco(HttpSession sesion) {
+    public ModelAndView comenzarTruco(HttpSession sesion, SessionStatus sessionStatus) {
         Usuario usuario = (Usuario) sesion.getAttribute("usuarioActivo");
         if (usuario == null) return new ModelAndView("redirect:/login");
 
         // Asignamos usuario como jugador
         Jugador jugador1 = new Jugador(usuario.getNombreUsuario());
         Jugador jugador2 = new Jugador("Juan ElComeChancho");
+
+        List<Jugador> jugadores = new ArrayList<>();
+        jugadores.add(jugador1);
+        jugadores.add(jugador2);
 //
         // Empezamos la partida
-        servicioTruco.empezar(jugador1, jugador2);
+        servicioTruco.empezar(jugadores);
 
         // Obtenemos las cartas de los jugadores
         List<Carta> cartasJugador1 = jugador1.getCartas();
@@ -79,6 +90,13 @@ public class ControladorTruco {
         sesion.setAttribute("jugador2", jugador2);
         sesion.setAttribute("todasLasCartas", todasLasCartas); // SOLO PARA DESARROLLO
         sesion.setAttribute("partidaIniciada", true);
+        sesion.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+
+        // para ver
+        sesion.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        sesion.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+        sesion.setAttribute("manos", servicioTruco.getManosJugadas());
+        sesion.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -112,15 +130,20 @@ public class ControladorTruco {
         // Si ya se jugó una ronda, cambia el turno a el jugador que corresponda
         servicioTruco.determinarGanadorRonda(jugador1, jugador2);
 
+        try  {
+            servicioTruco.tirarCarta(actual, cartaSeleccionada);
+            session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+        } catch (TrucoException e) {
+            session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+        }
+
         // Inyección al modelo
-        model.put("jugadas", servicioTruco.getRondasJugadas().size());
-        model.put("rondas", servicioTruco.getRondasJugadas());
+//        model.put("rondas", servicioTruco.getRondasDeLaManoActual());
+//        model.put("movimientos", servicioTruco.getMovimientosDeLaManoActual());
 
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
-        session.setAttribute("jugadas", servicioTruco.getRondasJugadas().size());
-        session.setAttribute("rondas", servicioTruco.getRondasJugadas());
         session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
         session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
         session.setAttribute("cartasJugador1", jugador1.getCartas());
@@ -129,7 +152,12 @@ public class ControladorTruco {
         session.setAttribute("jugador2", jugador2);
         session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
 
-        return new ModelAndView("redirect:/partida-truco", model);
+        // para ver como va
+        session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+        session.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
+
+        return new ModelAndView("redirect:/partida-truco");
     }
 
     private Carta getCartaDeLasCartasDelJuegadorPorId(Long idCarta, Jugador jugador) {

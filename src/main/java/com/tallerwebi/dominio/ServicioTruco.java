@@ -3,7 +3,9 @@ package com.tallerwebi.dominio;
 import java.util.List;
 
 public interface ServicioTruco {
-    void empezar(Jugador j1, Jugador j2);
+    void empezar(List<Jugador> jugadores);
+    void empezar(List<Jugador> jugadores, List<Carta> cartas);
+
     void tirarCarta(Jugador jugador, Carta cartaSeleccionada);
     List<Carta> getCartasJugadas(Jugador j);
     List<Ronda> getRondasJugadas();
@@ -11,6 +13,15 @@ public interface ServicioTruco {
     Boolean esTurnoJugador(String jugadorNombre);
     Jugador getTurnoJugador();
     void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
-
     void validarCartas(List<Carta> cartasJugador2);
+    Boolean saberSiLaManoEstaTerminada();
+    List<Ronda> getRondasDeLaManoActual();
+
+    Integer getNumeroDeRondasJugadasDeLaManoActual();
+
+    Integer getMovimientosDeLaManoActual();
+
+    Truco getTruco();
+
+    List<Mano> getManosJugadas();
 }

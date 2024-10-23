@@ -8,12 +8,12 @@ public class Ronda {
     private Integer nroCarta;
     private String palo;
 
-    public Ronda(Integer nroRonda, Jugador jugador, Integer valorCarta, Integer nroCarta, String palo) {
+    public Ronda(Integer nroRonda, Jugador jugador, Carta carta) {
         this.nroRonda = nroRonda;
         this.jugador = jugador;
-        this.valorCarta = valorCarta;
-        this.nroCarta = nroCarta;
-        this.palo = palo;
+        this.valorCarta = carta.getValor();
+        this.nroCarta = carta.getNumero();
+        this.palo = carta.getPalo();
     }
 
     public Integer getNroRonda() {

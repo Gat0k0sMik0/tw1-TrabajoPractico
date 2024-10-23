@@ -39,3 +39,4 @@ function sendMessage(){
         body: JSON.stringify({message: message})
     });
 }
+
