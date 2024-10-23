@@ -12,6 +12,11 @@ public interface ServicioTruco {
 
     // de comprobación
     List<Ronda> getRondasJugadas();
+
+    Boolean esLaPrimerRonda(Jugador j1, Jugador j2);
+
+    void verificarEnvido(Jugador jugador1, Jugador jugador2);
+
     List<Carta> getCartasJugadas(Jugador j);
     Boolean esTurnoJugador(String jugadorNombre);
     Jugador getTurnoJugador();

@@ -22,13 +22,14 @@ public class ServicioTrucoTest {
     Jugador j1 = new Jugador("gonza");
     Jugador j2 = new Jugador("leo");
     List<Jugador> jugadores = new ArrayList<>();
-  
+
     @BeforeEach
     public void iniciarTest () {
         jugadores.add(j1);
         jugadores.add(j2);
     }
-  
+
+    
     @Test
     public void queSeCreeElTrucoYSeCarguenLasCartas() {
         Truco truco = new Truco();
