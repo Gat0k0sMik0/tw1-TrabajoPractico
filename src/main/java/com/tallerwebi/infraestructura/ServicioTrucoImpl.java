@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.TrucoException;
+import com.tallerwebi.presentacion.ControladorTruco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class ServicioTrucoImpl implements ServicioTruco {
 
     private Truco truco;
+    private List<Jugador> jugadores;
     private Jugador jugador;
     private List<Carta> mazo;
     private List<Carta> cartasJugadas;
@@ -32,6 +34,9 @@ public class ServicioTrucoImpl implements ServicioTruco {
         this.truco.getMazo().setCartas(repositorioCarta.obtenerCartas());
         List<Carta> seisAleatorias = this.truco.getMazo().getSeisCartasAleatoriasSinRepetir();
         this.truco.getMazo().asignarCartasAJugadores(j1, j2, seisAleatorias);
+        this.jugadores = new ArrayList<>();
+        this.jugadores.add(j1);
+        this.jugadores.add(j2);
     }
 
     // Método para que el jugador tire una carta
@@ -260,6 +265,42 @@ public class ServicioTrucoImpl implements ServicioTruco {
 
         return tantos;
     }*/
+
+
+    public Jugador ganadorGeneral(){
+        Integer puntosGanador = 30;
+        Jugador jugadorGanador = null;
+
+       for (Jugador jugador : jugadores) {
+           if (jugador.getPuntos().stream().mapToInt(Integer::intValue).sum() == puntosGanador) {
+               return jugador;
+           }
+       }
+        return jugadorGanador;
+    }
+
+    private void contadorPuntos(Integer puntoTotal, Jugador jugador){
+        jugador.getPuntos().add(puntoTotal);
+        ganadorGeneral();
+    }
+
+    private void comparadorDePuntos(Jugador jugador1, Jugador jugador2) {
+        // totales del jugador 1
+        int puntosJugador1 = jugador1.getPuntos().stream().mapToInt(Integer::intValue).sum();
+
+        // del jugador 2
+        int puntosJugador2 = jugador2.getPuntos().stream().mapToInt(Integer::intValue).sum();
+
+        // los puntos totales
+        if (puntosJugador1 > puntosJugador2) {
+            System.out.println(jugador1.getNombre() + " le esta ganando a " + jugador2.getNombre());
+        } else if (puntosJugador2 > puntosJugador1) {
+            System.out.println(jugador2.getNombre() + " le esta ganando a " + jugador1.getNombre());
+        } else {
+            System.out.println(jugador1.getNombre() + " y " + jugador2.getNombre() + " estan empatados!!.");
+        }
+    }
+
 }
 
 

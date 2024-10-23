@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.infraestructura.ServicioTrucoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,8 @@ public class ControladorTruco {
 
     @Autowired
     private ServicioTruco servicioTruco;
+    @Autowired
+    private ServicioTrucoImpl servicioTrucoImpl;
 
     public ControladorTruco(ServicioTruco servicioTruco) {
         this.servicioTruco = servicioTruco;
@@ -45,10 +48,6 @@ public class ControladorTruco {
         model.put("jugadas", session.getAttribute("jugadas"));
         model.put("rondas", session.getAttribute("rondas"));
         model.put("partidaIniciada", session.getAttribute("partidaIniciada"));
-        model.put("envidoValido", session.getAttribute("envidoValido"));
-        model.put("mostrarRespuestasJ1", session.getAttribute("mostrarRespuestasJ1"));
-        model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
-
 
         return new ModelAndView("partida-truco", model);
     }
@@ -83,8 +82,6 @@ public class ControladorTruco {
         sesion.setAttribute("jugador2", jugador2);
         sesion.setAttribute("todasLasCartas", todasLasCartas); // SOLO PARA DESARROLLO
         sesion.setAttribute("partidaIniciada", true);
-        sesion.setAttribute("mostrarRespuestasJ1", false);
-        sesion.setAttribute("mostrarRespuestasJ2", false);
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -97,6 +94,11 @@ public class ControladorTruco {
             HttpSession session) {
 
         ModelMap model = new ModelMap();
+
+        //if que serviciotrucoSabersillegoa30
+        if (servicioTruco.ganadorGeneral() != null){
+
+        }
 
         // Obtener jugadores de la sesión
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
@@ -134,9 +136,6 @@ public class ControladorTruco {
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
         session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-        session.setAttribute("envidoValido", servicioTruco.esLaPrimerRonda(jugador1, jugador2));
-        session.setAttribute("mostrarRespuestasJ1", false);
-        session.setAttribute("mostrarRespuestasJ2", false);
 
         return new ModelAndView("redirect:/partida-truco", model);
     }
@@ -150,69 +149,19 @@ public class ControladorTruco {
         return null;
     }
 
-    @RequestMapping(path = "/accion-envido", method = RequestMethod.POST)
-    public ModelAndView cantarEnvido(
-            @RequestParam("jugador") String jugadorNombre,
-            HttpSession session) {
-        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
 
-        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
-            session.setAttribute("mostrarRespuestasJ2", true);
-        } else {
-            session.setAttribute("mostrarRespuestasJ1", true);
-        }
+    @RequestMapping("/final-partida")
+    public ModelAndView finalizarPartida(Jugador jugador, @RequestParam("jugador") String jugadorNombre,
+                                         HttpSession session) {
+        ModelMap model = new ModelMap();
+        model.put("mensaje", "¡" + jugador.getNombre() + " ha ganado la partida!");
 
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
         session.setAttribute("jugadas", servicioTruco.getRondasJugadas().size());
         session.setAttribute("rondas", servicioTruco.getRondasJugadas());
-        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
-        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
-        session.setAttribute("cartasJugador1", jugador1.getCartas());
-        session.setAttribute("cartasJugador2", jugador2.getCartas());
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-        session.setAttribute("envidoValido", false);
 
-        return new ModelAndView("redirect:/partida-truco");
-    }
+        return new ModelAndView("redirect:/home", model);
 
-    @PostMapping("/responderEnvido")
-    public ModelAndView responderEnvido(@RequestParam String respuesta, HttpSession session,
-                                        @RequestParam("jugador") String jugadorNombre ) {
 
-        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
-
-        Jugador actual = null;
-        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
-            actual = jugador1;
-        } else {
-            actual = jugador2;
-        }
-
-        /*if (respuesta.equals("quiero")) {
-            servicioTruco.verificarEnvido(jugador1, jugador2);
-        } else {
-            SumarPuntosJugadorContrario();
-        }*/
-
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-        session.setAttribute("jugadas", servicioTruco.getRondasJugadas().size());
-        session.setAttribute("rondas", servicioTruco.getRondasJugadas());
-        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
-        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
-        session.setAttribute("cartasJugador1", jugador1.getCartas());
-        session.setAttribute("cartasJugador2", jugador2.getCartas());
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-        session.setAttribute("envidoValido", false);
-
-        return new ModelAndView("redirect:/partida-truco");
     }
 
 
