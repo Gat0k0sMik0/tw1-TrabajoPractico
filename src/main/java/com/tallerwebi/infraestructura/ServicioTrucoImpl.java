@@ -65,8 +65,30 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
     @Override
-    public void accion (String accion, Jugador cantador, Jugador receptor) {
-       this.truco.guardarAccion(cantador, accion, false);
+    public Integer accion (String accion, Jugador cantador, Jugador receptor) {
+       return this.truco.guardarAccion(cantador, accion, false);
+    }
+
+    @Override
+    public Accion getAccionPorNro(Integer nro) {
+        return this.truco.getAccionPorNro(nro);
+    }
+
+    // Guardar puntos luego de cantar acción
+    @Override
+    public void guardarPuntos(Jugador j, Integer puntos) {
+        this.truco.guardarPuntosDePartida(j, puntos);
+    }
+    @Override
+    public Integer getPuntosDeUnJugador(Jugador jugador) {
+        return this.truco.getPuntosDeUnJugador(jugador);
+    }
+
+    @Override
+    public void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta) {
+        Accion a = this.truco.getAccionPorNro(nroAccion);
+        a.setRespuesta(respuesta);
+
     }
 
     @Override

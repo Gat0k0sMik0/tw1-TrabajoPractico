@@ -61,6 +61,8 @@ public class ControladorTruco {
         model.put("tantoJ1", session.getAttribute("tantoJ1"));
         model.put("tantoJ2", session.getAttribute("tantoJ2"));
         model.put("acciones", session.getAttribute("acciones"));
+        model.put("puntosJ1", session.getAttribute("puntosJ1"));
+        model.put("puntosJ2", session.getAttribute("puntosJ2"));
 
         return new ModelAndView("partida-truco", model);
     }
@@ -193,6 +195,8 @@ public class ControladorTruco {
         if (j1 == null || j2 == null) return new ModelAndView("redirect:/home");
 
         Jugador actuador = saberJugadorPorNombre(actuadorNombre, j1, j2);
+        if (actuador == null) return new ModelAndView("redirect:/home");
+
         Jugador receptor = null;
 
         if (actuador.getNombre().equals(j1.getNombre())) {
@@ -201,7 +205,8 @@ public class ControladorTruco {
             receptor = j1;
         }
 
-        servicioTruco.accion(accionValue, actuador, receptor);
+        Integer nroAccion = servicioTruco.accion(accionValue, actuador, receptor);
+        session.setAttribute("nroDeAccionAResponder", nroAccion);
 
         if (accionValue.equals("ENVIDO")) {
             Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
@@ -229,7 +234,7 @@ public class ControladorTruco {
     @RequestMapping(path = "/responder", method = RequestMethod.POST)
     public ModelAndView responder (
             @RequestParam("jugador") String actuadorNombre,
-            @RequestParam("accion") String accionValue,
+            @RequestParam("respuesta") String respuesta,
             HttpSession session
     ) {
         Jugador j1 = (Jugador) session.getAttribute("jugador1");
@@ -237,9 +242,11 @@ public class ControladorTruco {
 
         if (j1 == null || j2 == null) return new ModelAndView("redirect:/home");
 
-        String accion = saberAccionEnvido(accionValue);
+        String accion = saberAccionEnvido(respuesta);
         Jugador actuador = saberJugadorPorNombre(actuadorNombre, j1, j2);
         Jugador receptor = null;
+        Integer nroDeAccionAResponder = (int)session.getAttribute("nroDeAccionAResponder");
+        Jugador ganadorEnvido = null;
 
         if (actuador.getNombre().equals(j1.getNombre())) {
             receptor = j2;
@@ -247,8 +254,21 @@ public class ControladorTruco {
             receptor = j1;
         }
 
-        servicioTruco.accion(accion, actuador, receptor);
-
+        if (accion.equals("QUIERO")) {
+            servicioTruco.actualizarRespuestaDeAccion(nroDeAccionAResponder, true);
+            Integer tantoJ1 = (int)session.getAttribute("tantoJ1");
+            Integer tantoJ2 = (int)session.getAttribute("tantoJ2");
+            if (tantoJ2 > tantoJ1) {
+                ganadorEnvido = j1;
+            } else {
+                ganadorEnvido = j2;
+            }
+            servicioTruco.guardarPuntos(ganadorEnvido, 2);
+            session.setAttribute("puntosJ1", servicioTruco.getPuntosDeUnJugador(j1));
+            session.setAttribute("puntosJ2", servicioTruco.getPuntosDeUnJugador(j2));
+        } else {
+            return new ModelAndView("redirect:/home");
+        }
 
 
 

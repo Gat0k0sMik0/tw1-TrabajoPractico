@@ -36,4 +36,12 @@ public class Accion {
     public void setRespuesta(Boolean respuesta) {
         this.respuesta = respuesta;
     }
+
+    public Integer getNroAccion() {
+        return nroAccion;
+    }
+
+    public void setNroAccion(Integer nroAccion) {
+        this.nroAccion = nroAccion;
+    }
 }
