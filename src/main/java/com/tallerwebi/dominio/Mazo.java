@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Mazo {
-    private List<Carta> cartas;
+    private List<Carta> cartas; // one to many
 
     public Mazo() {
         this.cartas = new ArrayList<>();
@@ -113,25 +113,28 @@ public class Mazo {
         return false;
     }
 
-    public void asignarCartasAJugadores(Jugador j1, Jugador j2, List<Carta> seis) {
-        Carta c1 = seis.get(0);
-        Carta c2 = seis.get(1);
-        Carta c3 = seis.get(2);
-        List<Carta> mazo1 = new ArrayList<>();
-        mazo1.add(c1);
-        mazo1.add(c2);
-        mazo1.add(c3);
+    public void asignarCartasAJugadores(List<Jugador> jugadores, List<Carta> seis) {
+        if (jugadores.size() == 2) {
+            Carta c1 = seis.get(0);
+            Carta c2 = seis.get(1);
+            Carta c3 = seis.get(2);
+            List<Carta> mazo1 = new ArrayList<>();
+            mazo1.add(c1);
+            mazo1.add(c2);
+            mazo1.add(c3);
+            Carta c4 = seis.get(3);
+            Carta c5 = seis.get(4);
+            Carta c6 = seis.get(5);
+            List<Carta> mazo2 = new ArrayList<>();
+            mazo2.add(c4);
+            mazo2.add(c5);
+            mazo2.add(c6);
+            jugadores.get(0).setCartas(mazo1);
+            jugadores.get(1).setCartas(mazo2);
+        } else {
+            // Algo
+        }
 
-        Carta c4 = seis.get(3);
-        Carta c5 = seis.get(4);
-        Carta c6 = seis.get(5);
-        List<Carta> mazo2 = new ArrayList<>();
-        mazo2.add(c4);
-        mazo2.add(c5);
-        mazo2.add(c6);
-
-        j1.setCartas(mazo1);
-        j2.setCartas(mazo2);
     }
 
     public List<Carta> getCartas() {

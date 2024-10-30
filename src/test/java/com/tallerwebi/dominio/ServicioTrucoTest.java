@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
 import com.tallerwebi.infraestructura.RepositorioCartaImpl;
 import com.tallerwebi.infraestructura.ServicioTrucoImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,9 +18,18 @@ public class ServicioTrucoTest {
 
     RepositorioCartaImpl repositorioCarta = mock(RepositorioCartaImpl.class);
     ServicioTruco servicioTruco = new ServicioTrucoImpl(repositorioCarta);
+
     Jugador j1 = new Jugador("gonza");
     Jugador j2 = new Jugador("leo");
+    List<Jugador> jugadores = new ArrayList<>();
 
+    @BeforeEach
+    public void iniciarTest () {
+        jugadores.add(j1);
+        jugadores.add(j2);
+    }
+
+    
     @Test
     public void queSeCreeElTrucoYSeCarguenLasCartas() {
         Truco truco = new Truco();
@@ -66,7 +76,7 @@ public class ServicioTrucoTest {
     public void queSeAsignenTresCartasACadaJugador() {
         Truco truco = new Truco();
         List<Carta> seis = truco.getMazo().getSeisCartasAleatoriasSinRepetir();
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        truco.getMazo().asignarCartasAJugadores(jugadores, seis);
         Boolean esperadoEstaOk = j1.getCartas().size() == j2.getCartas().size();
         assertTrue(esperadoEstaOk);
         assertEquals(3, j1.getCartas().size());
@@ -77,7 +87,7 @@ public class ServicioTrucoTest {
     public void queLaCartaATirarNoSeaNula() throws IndiceFueraDeRangoException {
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        truco.getMazo().asignarCartasAJugadores(jugadores, seis);
         Carta tiradaDelJugador = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
         assertThat(tiradaDelJugador, notNullValue());
     }
@@ -86,7 +96,7 @@ public class ServicioTrucoTest {
     public void queLaCartaATirarSeaNula() throws IndiceFueraDeRangoException {
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        truco.getMazo().asignarCartasAJugadores(jugadores, seis);
         Carta tiradaDelJugador = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(2, "Espadas"));
         assertThat(tiradaDelJugador, nullValue());
     }
@@ -95,7 +105,7 @@ public class ServicioTrucoTest {
     public void queUnJugadorPuedaTirarUnaCarta() throws IndiceFueraDeRangoException {
         Truco truco = new Truco();
         List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        truco.getMazo().asignarCartasAJugadores(jugadores, seis);
         List<Carta> tiradas = new ArrayList<>();
         Carta tiradaDelJugador = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
         tiradas.add(tiradaDelJugador);
@@ -107,28 +117,15 @@ public class ServicioTrucoTest {
     @Test
     public void queSeRegistreElMovimiento() throws IndiceFueraDeRangoException {
         // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
         // when
-        Carta cartaTirada = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
-        truco.registrarMovimiento(j1, cartaTirada);
+        whenJuegoUnaMano(truco, seis);
         // then
-        assertEquals(1, truco.getRondasJugadas().size());
+        assertEquals(6, truco.getRondasDeManoActual().size());
     }
 
-    @Test
-    public void queLaCartaQueTiroElJugadorUnoSeaLaEsperada() throws IndiceFueraDeRangoException {
-        // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
-        // when
-        Carta cartaTirada = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
-        truco.registrarMovimiento(j1, cartaTirada);
-        // then
-        assertEquals(truco.getRondasJugadas().get(0).getNroCarta(), cartaTirada.getNumero());
-    }
 
     public List<Carta> givenSeCarganSeisCartas(Truco truco) throws IndiceFueraDeRangoException {
         List<Carta> seis = new ArrayList<>();
@@ -144,132 +141,207 @@ public class ServicioTrucoTest {
     @Test
     public void queSeHayanHechoDosRondas() throws IndiceFueraDeRangoException {
         // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
         // when
-        Carta c1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
-        Carta c2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
-        truco.registrarMovimiento(j1, c1);
-        truco.registrarMovimiento(j2, c2);
+        whenJuegoDosRondas(truco, seis);
         // then
-        assertEquals(2, truco.getRondasJugadas().size());
-        assertEquals(2, truco.getNroMovimiento());
+        assertEquals(2, truco.getNumeroDeRondasJugadasDeLaManoActual());
+        assertEquals(4, truco.getMovimientosDeLaManoActual());
+    }
+
+    @Test
+    public void queElNumeroDeRondasSeaElEsperado() throws IndiceFueraDeRangoException {
+        // given
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
+        // when
+        whenJuegoUnaMano(truco, seis);
+        // then
+        assertEquals(3, truco.getNumeroDeRondasJugadasDeLaManoActual());
+        assertEquals(6, truco.getMovimientosDeLaManoActual());
+    }
+
+    private void whenJuegoDosRondas(Truco truco, List<Carta> seis) {
+        j1.tirarCarta(seis.get(0));
+        truco.registrarJugada(j1, seis.get(0));
+        servicioTruco.determinarGanadorRonda(j1,j2);
+        j2.tirarCarta(seis.get(3));
+        truco.registrarJugada(j1, seis.get(3));
+        servicioTruco.determinarGanadorRonda(j1,j2);
+        j2.tirarCarta(seis.get(4));
+        truco.registrarJugada(j1, seis.get(4));
+        servicioTruco.determinarGanadorRonda(j1,j2);
+        j1.tirarCarta(seis.get(1));
+        truco.registrarJugada(j1, seis.get(1));
+        servicioTruco.determinarGanadorRonda(j1,j2);
     }
 
     @Test
     public void saberQuienGanoLaPrimeraRonda() throws IndiceFueraDeRangoException {
         // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
         // when
-        Carta c1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
-        Carta c2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
-
-        truco.registrarMovimiento(j1, c1);
-        truco.registrarMovimiento(j2, c2);
-        Jugador ganadorRonda = truco.saberQuienGanoNumeroDeRonda(0);
+        whenJuegoDosRondas(truco, seis);
         // then
-        assertEquals(j1.getNombre(), ganadorRonda.getNombre());
+        assertEquals("leo", truco.getGanadorDeRondaDeManoActualPorNumero(0));
     }
 
     @Test
     public void queLaPrimeraRondaLaGaneElPrimeroYLaSegundaElSegundo() throws IndiceFueraDeRangoException {
-        // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenSeCarganSeisCartas(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
         // when
-        Carta c1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
-        Carta c2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
-        Carta c3 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
-        Carta c4 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(2, "Copas"));
-        truco.registrarMovimiento(j1, c1);
-        truco.registrarMovimiento(j2, c2);
-        truco.registrarMovimiento(j1, c3);
-        truco.registrarMovimiento(j2, c4);
-        Jugador ganadorRonda1 = truco.saberQuienGanoNumeroDeRonda(0);
-        Jugador ganadorRonda2 = truco.saberQuienGanoNumeroDeRonda(1);
+        whenJuegoDosRondas(truco, seis);
         // then
-        assertEquals(j1.getNombre(), ganadorRonda1.getNombre());
-        assertEquals(j2.getNombre(), ganadorRonda2.getNombre());
+        assertEquals("leo", truco.getGanadorDeRondaDeManoActualPorNumero(0));
+        assertEquals("gonza", truco.getGanadorDeRondaDeManoActualPorNumero(1));
+    }
+
+    @Test
+    public void queElUltimoGanadorDeUnaManoNoSeaNulo() throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
+        // when
+        whenJuegoUnaMano(truco, seis);
+        // then
+        assertThat(truco.getGanadorDeManoPorNumero(0), notNullValue());
+        assertThat(truco.getManosDePartida().size(), is(1));
+        assertThat(truco.getRondasDeManoActual().size(), is(6));
     }
 
     @Test
     public void queElJugadorDosGaneDosDeTresRondas() throws IndiceFueraDeRangoException {
-        // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenAsignoCartasALosJugadores();
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
         // when
-        whenJuegoUnaMano(truco);
-        Jugador ganadorRonda1 = truco.saberQuienGanoNumeroDeRonda(0);
-        Jugador ganadorRonda2 = truco.saberQuienGanoNumeroDeRonda(1);
-        Jugador ganadorRonda3 = truco.saberQuienGanoNumeroDeRonda(2);
+        whenJuegoUnaMano(truco, seis);
         // then
-        assertEquals(j1.getNombre(), ganadorRonda1.getNombre());
-        assertEquals(j2.getNombre(), ganadorRonda2.getNombre());
-        assertEquals(j2.getNombre(), ganadorRonda3.getNombre());
+        assertEquals("leo", truco.getGanadorDeRondaDeManoActualPorNumero(0));
+        assertEquals("gonza", truco.getGanadorDeRondaDeManoActualPorNumero(1));
+        assertEquals("leo", truco.getGanadorDeRondaDeManoActualPorNumero(2));
+        assertEquals("leo", truco.getGanadorDeManoPorNumero(0).getNombre());
     }
 
-    @Test
-    public void saberQuienGanoLaPrimeraMano() throws IndiceFueraDeRangoException {
-        // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenAsignoCartasALosJugadores();
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
-        // when
-        whenJuegoUnaMano(truco);
-        Jugador ganadorMano = truco.saberQuienGanoLaPrimeraMano(j1, j2);
-        // then
-        assertEquals(j2.getNombre(), ganadorMano.getNombre());
-    }
 
     @Test
-    public void queSeRegistreQuienGanoLaPrimeraMano() throws IndiceFueraDeRangoException {
+    public void queSeGuardeUnaManoAlJugarTresRondas() throws IndiceFueraDeRangoException {
         // given
-        Truco truco = new Truco();
-        List<Carta> seis = givenAsignoCartasALosJugadores();
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        List<Carta> seis = givenAsignoCartasALosJugadores(); // cartas que yo quiero
+        servicioTruco.empezar(jugadores, seis); // truco, asigna, empieza
+        Truco truco = servicioTruco.getTruco();
         // when
-        whenJuegoUnaMano(truco);
-        Jugador ganadorMano = truco.saberQuienGanoLaPrimeraMano(j1, j2);
-        truco.guardarGanadorDeMano(ganadorMano, 1);
+        whenJuegoUnaMano(truco, seis);
         // then
         assertEquals(1, truco.getManosDePartida().size());
+    }
 
+    @Test
+    public void queSeGuardenVariasManos() throws IndiceFueraDeRangoException {
+        // given
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
+        // when
+        truco.asignarCartasJugadores(jugadores, seis);
+        truco.empezarMano(jugadores);
+        whenJuegoUnaMano(truco, seis);
+        truco.asignarCartasJugadores(jugadores, seis);
+        truco.empezarMano(jugadores);
+        whenJuegoUnaMano(truco, seis);
+        truco.asignarCartasJugadores(jugadores, seis);
+        truco.empezarMano(jugadores);
+        whenJuegoUnaMano(truco, seis);
+        // then
+        assertEquals(3, truco.getManosDePartida().size());
+    }
+
+    @Test
+    public void queSeGuardeUnaManoJugada() throws IndiceFueraDeRangoException {
+        // given
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
+        // when
+        whenJuegoUnaMano(truco, seis);
+        // then
+        assertThat(truco.getManosDePartida().get(0).getJugador(), notNullValue());
+    }
+
+
+    @Test
+    public void queObtenerElGanadorDeLaPrimeraManoNoSeaNulo() throws IndiceFueraDeRangoException {
+        // given
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
+        // when
+        whenJuegoUnaMano(truco, seis);
+        Jugador ganadorMano = truco.getGanadorDeManoPorNumero(0);
+        // then
+        assertThat(ganadorMano, notNullValue());
     }
 
     @Test
     public void queSeJueguenTresManosYQueElGanadorSeaElEsperado() throws IndiceFueraDeRangoException {
         // given
-        Truco truco = new Truco();
         List<Carta> seis = givenAsignoCartasALosJugadores();
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
         // when
-        whenJuegoUnaMano(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
-        whenJuegoUnaMano(truco);
-        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
-        whenJuegoUnaMano(truco);
+        servicioTruco.empezar(jugadores, seis);
+        truco.empezarMano(jugadores);
+        servicioTruco.empezar(jugadores, seis);
+        truco.empezarMano(jugadores);
+        servicioTruco.empezar(jugadores, seis);
+        truco.empezarMano(jugadores);
         // then
         assertEquals(j2.getNombre(), truco.saberQuienSumoMasPuntosEnLasManos(j1, j2).getNombre());
-
     }
-//    @Test
-//    public void gayElQueLee() throws IndiceFueraDeRangoException {
-//        Truco truco = new Truco();
-//        List<Carta> seis = givenAsignoCartasALosJugadores();
-//        truco.getMazo().asignarCartasAJugadores(j1, j2, seis);
-//
-//        Carta ct1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
-//        Carta ct2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
-//
-//        servicioTruco.tirarCarta(j1, ct1);
-//        servicioTruco.tirarCarta(j2, ct2);
-//
-//    }
+
+    @Test
+    public void calcularSiTieneParaEnvidoDosCartasAlMenos () throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        seis.clear();
+        seis.add(truco.getMazo().getCartaPorIndice(3)); // 4 espada xxx
+        seis.add(truco.getMazo().getCartaPorIndice(6)); // 7 espada x
+        seis.add(truco.getMazo().getCartaPorIndice(9)); // 12 espada xx
+//        assertTrue(truco.calcularEnvido(seis));
+    }
+
+    @Test
+    public void obtenerValoresDeCartaParaEnvido () throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        seis.clear();
+        seis.add(truco.getMazo().getCartaPorIndice(3)); // 4 espada xxx
+        seis.add(truco.getMazo().getCartaPorIndice(6)); // 7 espada x
+        seis.add(truco.getMazo().getCartaPorIndice(9)); // 12 espada xx
+        for (Carta c : seis) {
+            if (c.getNumero() >= 10 && c.getNumero() <= 12) {
+                c.setValorEnvido(0);
+            } else {
+                c.setValorEnvido(c.getNumero());
+            }
+        }
+        assertEquals(3, truco.tieneDosDelMismoPalo(seis).size());
+        assertEquals(31, (int) truco.obtenerSumaDeLasMasAltas(seis));
+        assertEquals(31, servicioTruco.calcularTantosDeCartasDeUnJugador(j1));
+    }
 
 
     private List<Carta> givenAsignoCartasALosJugadores() throws IndiceFueraDeRangoException {
@@ -284,22 +356,27 @@ public class ServicioTrucoTest {
         return seis;
     }
 
-    private void whenJuegoUnaMano(Truco truco) {
-        Carta ct1 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(7, "Espadas"));
-        Carta ct2 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(1, "Copas"));
+    private void whenJuegoUnaMano(Truco truco, List<Carta> seis) {
+        j1.tirarCarta(seis.get(0));
+        truco.registrarJugada(j1, seis.get(0));
+        servicioTruco.determinarGanadorRonda(j1,j2);
+        j2.tirarCarta(seis.get(3));
+        truco.registrarJugada(j1, seis.get(3));
+        servicioTruco.determinarGanadorRonda(j1,j2);
 
-        Carta ct3 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(12, "Espadas"));
-        Carta ct4 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(2, "Copas"));
+        j2.tirarCarta(seis.get(4));
+        truco.registrarJugada(j1, seis.get(4));
+        servicioTruco.determinarGanadorRonda(j1,j2);
+        j1.tirarCarta(seis.get(1));
+        truco.registrarJugada(j1, seis.get(1));
+        servicioTruco.determinarGanadorRonda(j1,j2);
 
-        Carta ct5 = j1.tirarCarta(truco.buscarCartaPorNumeroYPalo(4, "Espadas"));
-        Carta ct6 = j2.tirarCarta(truco.buscarCartaPorNumeroYPalo(3, "Copas"));
-
-        truco.registrarMovimiento(j1, ct1);
-        truco.registrarMovimiento(j2, ct2);
-        truco.registrarMovimiento(j1, ct3);
-        truco.registrarMovimiento(j2, ct4);
-        truco.registrarMovimiento(j1, ct5);
-        truco.registrarMovimiento(j2, ct6);
+        j1.tirarCarta(seis.get(2));
+        truco.registrarJugada(j1, seis.get(2));
+        servicioTruco.determinarGanadorRonda(j1,j2);
+        j2.tirarCarta(seis.get(5));
+        truco.registrarJugada(j1, seis.get(5));
+        servicioTruco.determinarGanadorRonda(j1,j2);
     }
 
 
