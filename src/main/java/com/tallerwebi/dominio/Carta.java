@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -15,15 +12,29 @@ public class Carta {
     private Integer numero;
     private String palo;
     private String img;
+    private Integer valorEnvido ;
 
     public Carta() {
+        this.valorEnvido = 0;
+    }
 
+    @Override
+    public String toString() {
+        return "Carta{" +
+                "id=" + id +
+                ", valor=" + valor +
+                ", numero=" + numero +
+                ", palo='" + palo + '\'' +
+                ", img='" + img + '\'' +
+                ", valorEnvido=" + valorEnvido +
+                '}';
     }
 
     public Carta(Integer valor, Integer numero, String palo) {
         this.valor = valor;
         this.numero = numero;
         this.palo = palo;
+        this.valorEnvido = 0;
     }
 
     public Carta(Integer valor, Integer numero, String palo, String img) {
@@ -31,6 +42,22 @@ public class Carta {
         this.numero = numero;
         this.palo = palo;
         this.img = img;
+        this.valorEnvido = 0;
+    }
+
+    private int calcularValorEnvido(int numero) {
+        // Lógica para calcular el valorEnvido
+        return (numero >= 10 && numero <= 12) ? 0 : numero; // O cualquier lógica que necesites
+    }
+
+
+
+    public Integer getValorEnvido() {
+        return this.valorEnvido;
+    }
+
+    public void setValorEnvido(Integer valorEnvido) {
+        this.valorEnvido = valorEnvido;
     }
 
     public Long getId() {

@@ -308,7 +308,39 @@ public class ServicioTrucoTest {
         truco.empezarMano(jugadores);
         // then
         assertEquals(j2.getNombre(), truco.saberQuienSumoMasPuntosEnLasManos(j1, j2).getNombre());
+    }
 
+    @Test
+    public void calcularSiTieneParaEnvidoDosCartasAlMenos () throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        seis.clear();
+        seis.add(truco.getMazo().getCartaPorIndice(3)); // 4 espada xxx
+        seis.add(truco.getMazo().getCartaPorIndice(6)); // 7 espada x
+        seis.add(truco.getMazo().getCartaPorIndice(9)); // 12 espada xx
+//        assertTrue(truco.calcularEnvido(seis));
+    }
+
+    @Test
+    public void obtenerValoresDeCartaParaEnvido () throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        seis.clear();
+        seis.add(truco.getMazo().getCartaPorIndice(3)); // 4 espada xxx
+        seis.add(truco.getMazo().getCartaPorIndice(6)); // 7 espada x
+        seis.add(truco.getMazo().getCartaPorIndice(9)); // 12 espada xx
+        for (Carta c : seis) {
+            if (c.getNumero() >= 10 && c.getNumero() <= 12) {
+                c.setValorEnvido(0);
+            } else {
+                c.setValorEnvido(c.getNumero());
+            }
+        }
+        assertEquals(3, truco.tieneDosDelMismoPalo(seis).size());
+        assertEquals(31, (int) truco.obtenerSumaDeLasMasAltas(seis));
+        assertEquals(31, servicioTruco.calcularTantosDeCartasDeUnJugador(j1));
     }
 
 
