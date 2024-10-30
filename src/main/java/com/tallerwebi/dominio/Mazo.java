@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Mazo {
-    private List<Carta> cartas;
+    private List<Carta> cartas; // one to many
 
     public Mazo() {
         this.cartas = new ArrayList<>();

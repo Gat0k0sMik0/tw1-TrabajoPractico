@@ -12,12 +12,9 @@ import java.util.List;
 public class ServicioTrucoImpl implements ServicioTruco {
 
     private Truco truco;
-    private List<Jugador> jugadores;
-    private Jugador jugador;
-    private List<Carta> mazo;
-    private List<Carta> cartasJugadas;
     private RepositorioCarta repositorioCarta;
     private Jugador turno;
+    private Jugador debeResponder;
     /*private Integer puntosJugador1;
     private Integer puntosJugador2;*/
 
@@ -32,15 +29,23 @@ public class ServicioTrucoImpl implements ServicioTruco {
     */
 
     @Autowired
-    public ServicioTrucoImpl(RepositorioCarta repositorioCarta) {
+    public ServicioTrucoImpl(RepositorioCarta repositorioCarta) { // ServicioTurno turnos
         this.repositorioCarta = repositorioCarta;
-        this.cartasJugadas = new ArrayList<>();
     }
 
     @Override
     public void empezar(List<Jugador> jugadores) {
         this.truco = new Truco();
         this.truco.getMazo().setCartas(repositorioCarta.obtenerCartas());
+        List<Carta> s = this.truco.getMazo().getCartas();
+        for (Carta c : s) {
+            if (c.getNumero() >= 10 && c.getNumero() <= 12) {
+                c.setValorEnvido(0);
+            } else {
+                c.setValorEnvido(c.getNumero());
+            }
+        }
+        this.truco.getMazo().setCartas(s);
         this.truco.asignarCartasJugadores(jugadores);
         this.truco.empezarMano(jugadores);
     }
@@ -48,16 +53,30 @@ public class ServicioTrucoImpl implements ServicioTruco {
     @Override
     public void empezar(List<Jugador> jugadores, List<Carta> cartas) {
         this.truco = new Truco();
-//        this.truco.getMazo().setCartas(repositorioCarta.obtenerCartas());
+        for (Carta c : cartas) {
+            if (c.getNumero() >= 10 && c.getNumero() <= 12) {
+                c.setValorEnvido(0);
+            } else {
+                c.setValorEnvido(c.getNumero());
+            }
+        }
         this.truco.asignarCartasJugadores(jugadores, cartas);
         this.truco.empezarMano(jugadores);
     }
 
+    @Override
+    public void accion (String accion, Jugador cantador, Jugador receptor) {
+       this.truco.guardarAccion(cantador, accion, false);
+    }
+
+    @Override
+    public Integer calcularTantosDeCartasDeUnJugador (Jugador jugador) {
+        return this.truco.calcularEnvido(jugador.getCartas());
+    }
 
 
     // Método para que el jugador tire una carta
     public void tirarCarta(Jugador jugador, Carta cartaSeleccionada) {
-
         if (!truco.getLaManoTerminada()) {
             // que va a tirar si no tiene más cartas ?
             List<Carta> cartasJugador = jugador.getCartas();
@@ -179,6 +198,11 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
     @Override
+    public List<Accion> getAcciones() {
+        return this.truco.getAcciones();
+    }
+
+    @Override
     public void verificarEnvido(Jugador jugador1, Jugador jugador2) {
         Integer tantosJ1 = verLosTantos(jugador1);
         Integer tantosJ2 = verLosTantos(jugador2);
@@ -202,7 +226,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
         List<Carta> todasLasCartas = new ArrayList<>();
 
         //Obtengo todas las cartas del jugador
-        if(cartasManoJugador.size() == 2){
+        if (cartasManoJugador.size() == 2) {
             todasLasCartas.add(cartasManoJugador.get(0));
             todasLasCartas.add(cartasManoJugador.get(1));
             todasLasCartas.add(cartasTiradasJugador.get(0));
@@ -219,12 +243,12 @@ public class ServicioTrucoImpl implements ServicioTruco {
             for (int j = i + 1; j < todasLasCartas.size(); j++) {
 
                 // Verifico si no es flor
-                if(!todasLasCartas.get(0).getPalo().equals(todasLasCartas.get(1).getPalo()) &&
-                        !todasLasCartas.get(1).getPalo().equals(todasLasCartas.get(2).getPalo())){
+                if (!todasLasCartas.get(0).getPalo().equals(todasLasCartas.get(1).getPalo()) &&
+                        !todasLasCartas.get(1).getPalo().equals(todasLasCartas.get(2).getPalo())) {
 
                     // Si no tenemos ningun palo que se repita en las 3 cartas, obtengo el numero mayor
                     // que no sea ni 10, ni 11, ni 12
-                    if(!todasLasCartas.get(i).getPalo().equals(todasLasCartas.get(j).getPalo())){
+                    if (!todasLasCartas.get(i).getPalo().equals(todasLasCartas.get(j).getPalo())) {
                         tantos = obtenerPaloMayor(todasLasCartas);
                     }
 
@@ -261,11 +285,11 @@ public class ServicioTrucoImpl implements ServicioTruco {
         Integer tantosIniciales = 20;
         Integer tantos = 0;
 
-        if (!valor1.equals(10) || !valor1.equals(11) || !valor1.equals(12) || !valor2.equals(10) || !valor2.equals(11) || !valor2.equals(12)){
+        if (!valor1.equals(10) || !valor1.equals(11) || !valor1.equals(12) || !valor2.equals(10) || !valor2.equals(11) || !valor2.equals(12)) {
             tantos = tantosIniciales + valor1 + valor2;
         }
 
-        if (valor1.equals(10) || valor1.equals(11) || valor1.equals(12) && valor2.equals(10) || valor2.equals(11) || valor2.equals(12)){
+        if (valor1.equals(10) || valor1.equals(11) || valor1.equals(12) && valor2.equals(10) || valor2.equals(11) || valor2.equals(12)) {
             tantos = tantosIniciales;
         }
 
@@ -281,7 +305,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
 
-        public List<Carta> getCartasJugadas(Jugador j) {
+    public List<Carta> getCartasJugadas(Jugador j) {
         return j.getCartasTiradas();
     }
 
@@ -352,7 +376,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }*/
 
 
-    public Jugador ganadorGeneral(){
+    public Jugador ganadorGeneral() {
         // TODO REVISAR
 //        Integer puntosGanador = 30;
 //        Jugador jugadorGanador = null;
@@ -366,7 +390,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
         return null;
     }
 
-    private void contadorPuntos(Integer puntoTotal, Jugador jugador){
+    private void contadorPuntos(Integer puntoTotal, Jugador jugador) {
         // TODO REVISAR
 //        jugador.getPuntos().add(puntoTotal);
         ganadorGeneral();

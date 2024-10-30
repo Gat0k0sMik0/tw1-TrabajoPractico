@@ -7,6 +7,7 @@ body {
     height: 100vh;
 }
 
+
 /* HEADER */
 header {
     background-color: #333;
@@ -20,22 +21,24 @@ header {
         "texto imagenes";
 }
 
-.cartaContainer {
-    width: 75px !important;
+/* CLASES PARA AYUDA DE MAQUETADO */
+.bor1 {
+    border: 5px solid red;
 }
 
-.cartaTirarBtn {
-    width: 100%
+.bor2 {
+    border: 5px solid blue;
 }
 
-.carta {
-    width: 100%;
-    cursor: pointer;
+.bor3 {
+    border: 5px solid green;
 }
 
-.cartaTirada {
-    width: 75px !important;
-}
+
+
+
+
+
 
 .texto-bienvenida {
     grid-area: texto;
@@ -83,13 +86,48 @@ h3 {
     width: 50rem;
     height: fit-content;
     position: relative; /* Para posicionar al mazo con absolute*/
-
     display: grid;
     grid-template-areas:
     "cartas_rival"
     "cartas_en_juego"
     "cartas_jugador"
     "botones";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+}
+
+/* GENERICOS PARA AMBOS */
+.cartasJugadorContainer {
+    height: 120px !important;
+    display: flex;
+    justify-content: center;
+}
+
+.cartasJugadorContainer form {
+    width: 75px;
+    height: 100% !important;
+}
+
+.cartaTirarBtn {
+    height: 100% !important;
+    width: fit-content;
+    background: unset;
+    outline: unset;
+    border: unset;
+    margin: 0;
+    padding: 0;
+    border-radius: unset;
+}
+
+.carta {
+    width: 75px;
+    height: 100%;
+    cursor: pointer;
+}
+
+.cartaTirada {
+    width: 75px !important;
+    height: 100%;
 }
 
 /* Cartas contrincante */
@@ -98,8 +136,24 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
 }
+
+/* Cartas en juego */
+#cartas-en-juego {
+    grid-area: cartas_en_juego;
+    padding: 0.5rem 0;
+    background-color: #2c3e50;
+}
+
+/* Cartas mias */
+#cartas_jugador {
+    grid-area: cartas_jugador;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
 
 .disposicion-cartas {
     display: flex;
@@ -118,10 +172,7 @@ h3 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
 }
 
-/* Cartas en juego */
-#cartas-en-juego {
-    grid-area: cartas_en_juego;
-}
+
 
 #mazo {
     width: 100%;
@@ -132,7 +183,7 @@ h3 {
     height: 120px;
 }
 
-/* Botones */
+/* Botones
 #botones {
     grid-area: botones;
     display: flex;
@@ -140,7 +191,7 @@ h3 {
     align-items: center;
     justify-content: center;
     gap: 20px;
-}
+} */
 
 .tabla-datos {
     width: 50rem;

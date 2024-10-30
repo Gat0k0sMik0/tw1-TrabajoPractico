@@ -10,16 +10,23 @@ public class Truco {
 
     private Integer nroRonda;
     private Integer testigo;
+    private Integer contadorAcciones = 0;
 
     private Boolean isLaManoTerminada;
 
     private Mano manoActual;
     private Mazo mazo;
+    // List<Carta> cartas
+
     private Jugador ultimoGanador;
 
     private List<Mano> manosDePartida;
     private List<Jugador> jugadores; // 2-4
+    private List<Accion> acciones;
 
+    /*
+    servicio repartir cartas
+    */
 
     public Truco() {
         this.nroRonda = 0;
@@ -28,6 +35,7 @@ public class Truco {
         this.mazo = new Mazo();
         this.jugadores = new ArrayList<>();
         this.manosDePartida = new ArrayList<>();
+        this.acciones = new ArrayList<>();
     }
 
     // Crear mano y asignar jugadores
@@ -41,6 +49,64 @@ public class Truco {
         List<Carta> seisCartasRandom = this.mazo.getSeisCartasAleatoriasSinRepetir();
         this.mazo.asignarCartasAJugadores(jugadores, seisCartasRandom);
         this.jugadores = jugadores;
+    }
+
+    public Integer calcularEnvido (List<Carta> cartas) {
+        List<Carta> tieneDosDelMismoPalo = this.tieneDosDelMismoPalo(cartas);
+        if (tieneDosDelMismoPalo.isEmpty()) {
+            return 0;
+        } else {
+            return this.obtenerSumaDeLasMasAltas(tieneDosDelMismoPalo);
+        }
+    }
+
+    public void guardarAccion(Jugador jugadorQueEjecuta, String accion, Boolean respuesta) {
+        this.acciones.add(new Accion(this.contadorAcciones, jugadorQueEjecuta, accion, false));
+        this.contadorAcciones++;
+    }
+
+    public Integer obtenerSumaDeLasMasAltas (List<Carta> cartas) {
+        int envidoMax = 0;
+
+        // Agrupa las cartas por palo
+        for (int i = 0; i < cartas.size(); i++) {
+            for (int j = i + 1; j < cartas.size(); j++) {
+                if (cartas.get(i).getPalo().equals(cartas.get(j).getPalo())) {
+                    // Si dos cartas tienen el mismo palo, suma sus valores y añade 20
+                    int envido = cartas.get(i).getValorEnvido() + cartas.get(j).getValorEnvido() + 20;
+                    envidoMax = Math.max(envidoMax, envido);
+                }
+            }
+        }
+
+        // Si no hay dos cartas del mismo palo, el envido es el valor más alto de la mano
+        if (envidoMax == 0) {
+            for (Carta carta : cartas) {
+                envidoMax = Math.max(envidoMax, carta.getValorEnvido());
+            }
+        }
+
+        return envidoMax;
+    }
+
+    public List<Carta> tieneDosDelMismoPalo (List<Carta> cartas) {
+        int contador = 0;
+        List<Carta> delMismoPalo = new ArrayList<>();
+        for (Carta carta : cartas) {
+            for (Carta carta2 : cartas) {
+                if (carta.getPalo().equals(carta2.getPalo())) {
+                    delMismoPalo.add(carta2);
+                }
+            }
+            if (delMismoPalo.size() >= 2) {
+                contador = 1;
+                break;
+            }
+        }
+        if (contador == 1) {
+            return delMismoPalo;
+        }
+        return new ArrayList<>();
     }
 
     // Método de test
@@ -68,25 +134,6 @@ public class Truco {
                 }
             }
         }
-
-
-        /*
-        0 j c
-        0 j c
-        1 j c
-        1 j c
-        2 j c
-        2 j c
-           r    c
-        1) 0 == 0 -> nro++ => 1
-        2) 0 == 1 -> chau
-        3) 1 == 1 -> nro++ => 2
-        4) 1 == 2 -> chau
-        5) 2 == 2 -> nro++ => 3
-        6) 2 == 3 -> chau
-
-
-        */
         return nroRondaAnalizada;
     }
 
@@ -206,6 +253,11 @@ public class Truco {
         isLaManoTerminada = laManoTerminada;
     }
 
+    public List<Accion> getAcciones() {
+        return acciones;
+    }
 
-
+    public void setAcciones(List<Accion> acciones) {
+        this.acciones = acciones;
+    }
 }

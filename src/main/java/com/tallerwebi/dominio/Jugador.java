@@ -92,4 +92,16 @@ public class Jugador {
         public void setPuntosRonda (Integer puntosRonda){
             this.puntosRonda = puntosRonda;
         }
+
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "nombre='" + nombre + '\'' +
+                ", puntosRonda=" + puntosRonda +
+                ", puntosPartida=" + puntosPartida +
+                ", cartas=" + cartas +
+                ", cartasTiradas=" + cartasTiradas +
+                ", puntos=" + puntos +
+                '}';
     }
+}
