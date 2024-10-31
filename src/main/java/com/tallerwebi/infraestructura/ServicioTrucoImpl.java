@@ -14,18 +14,11 @@ public class ServicioTrucoImpl implements ServicioTruco {
     private Truco truco;
     private RepositorioCarta repositorioCarta;
     private Jugador turno;
-    private Jugador debeResponder;
-    /*private Integer puntosJugador1;
-    private Integer puntosJugador2;*/
-
     /*
     Class truco maneja todo
     Una mano tiene rondas
     La mano termina al haber 3 rondas (6 movimientos)
     Mano (id_jugador_ganador, puntos_ganados)
-
-
-
     */
 
     @Autowired
@@ -65,8 +58,46 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
     @Override
-    public void accion (String accion, Jugador cantador, Jugador receptor) {
-       this.truco.guardarAccion(cantador, accion, false);
+    public Integer accion (String accion,
+                           Jugador cantador,
+                           Jugador receptor,
+                           Integer puntosEnJuego) {
+       return this.truco.guardarAccion(cantador, accion, false, puntosEnJuego);
+    }
+
+    @Override
+    public Accion getAccionPorNro(Integer nro) {
+        return this.truco.getAccionPorNro(nro);
+    }
+
+    // Guardar puntos luego de cantar acción
+    @Override
+    public void guardarPuntos(Jugador j, Integer nroAccion) {
+        Accion a = getAccionPorNro(nroAccion);
+        Integer puntosEnJuego = a.getPuntosEnJuego();
+        this.truco.guardarPuntosDePartida(j, puntosEnJuego);
+    }
+    @Override
+    public Integer getPuntosDeUnJugador(Jugador jugador) {
+        return this.truco.getPuntosDeUnJugador(jugador);
+    }
+
+    @Override
+    public void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta) {
+        Accion a = this.truco.getAccionPorNro(nroAccion);
+        a.setRespuesta(respuesta);
+    }
+
+    @Override
+    public Integer getPuntosEnJuegoDeAccion(Integer nroAccion) {
+        Accion a = this.getAccionPorNro(nroAccion);
+        return a.getPuntosEnJuego();
+    }
+
+    @Override
+    public void sumarPuntosEnJuego(Integer nroAccion, Integer puntosEnJuego) {
+        Accion a = this.truco.getAccionPorNro(nroAccion);
+        a.acumularPuntos(puntosEnJuego);
     }
 
     @Override
@@ -158,10 +189,6 @@ public class ServicioTrucoImpl implements ServicioTruco {
         this.turno = jugador;
     }
 
-    @Override
-    public Boolean esTurnoJugador(String nombreJugador) {
-        return (this.turno.getNombre().equals(nombreJugador));
-    }
 
     @Override
     public Jugador getTurnoJugador() {
@@ -188,11 +215,6 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
     @Override
-    public void validarCartas(List<Carta> cartasJugador) {
-        if (cartasJugador.isEmpty()) throw new TrucoException("Las cartas del jugador no existen");
-    }
-
-    @Override
     public Boolean esLaPrimerRonda() {
         return truco.getRondasDeManoActual().size() <= 1;
     }
@@ -202,23 +224,25 @@ public class ServicioTrucoImpl implements ServicioTruco {
         return this.truco.getAcciones();
     }
 
-    @Override
-    public void verificarEnvido(Jugador jugador1, Jugador jugador2) {
-        Integer tantosJ1 = verLosTantos(jugador1);
-        Integer tantosJ2 = verLosTantos(jugador2);
 
-        if (tantosJ1 > tantosJ2) {
-            //puntosJugador1++;
-        }
 
-        if (tantosJ2 > tantosJ1) {
-            //puntosJugador2++;
-        }
-
-        if (tantosJ2.equals(tantosJ1)) {
-            //Gana jugador actual
-        }
-    }
+//    @Override
+//    public void verificarEnvido(Jugador jugador1, Jugador jugador2) {
+//        Integer tantosJ1 = verLosTantos(jugador1);
+//        Integer tantosJ2 = verLosTantos(jugador2);
+//
+//        if (tantosJ1 > tantosJ2) {
+//            //puntosJugador1++;
+//        }
+//
+//        if (tantosJ2 > tantosJ1) {
+//            //puntosJugador2++;
+//        }
+//
+//        if (tantosJ2.equals(tantosJ1)) {
+//            //Gana jugador actual
+//        }
+//    }
 
     private Integer verLosTantos(Jugador jugador) {
         List<Carta> cartasManoJugador = jugador.getCartas();
@@ -302,11 +326,6 @@ public class ServicioTrucoImpl implements ServicioTruco {
         }
 
         return tantos;
-    }
-
-
-    public List<Carta> getCartasJugadas(Jugador j) {
-        return j.getCartasTiradas();
     }
 
     @Override
