@@ -198,38 +198,37 @@ public class ControladorTruco {
 
         Jugador actuador = saberJugadorPorNombre(actuadorNombre, j1, j2);
         if (actuador == null) return new ModelAndView("redirect:/home");
-
         Jugador receptor = null;
+        receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
 
-        if (actuador.getNombre().equals(j1.getNombre())) {
-            receptor = j2;
-        } else {
-            receptor = j1;
-        }
+        Integer nroAccion = servicioTruco.preguntar(accionValue, actuador, receptor);
 
+//        if (accionValue.equals("ENVIDO")) {
+//            Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
+//            Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(j2);
+//            session.setAttribute("tantoJ1", tantoJ1);
+//            session.setAttribute("tantoJ2", tantoJ2);
+//
+//            // Mostrar respuesta -> quiero/no quiero
+//            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
+//                session.setAttribute("mostrarRespuestasJ2", true);
+//            } else {
+//                session.setAttribute("mostrarRespuestasJ1", true);
+//            }
+//        }
 
-        Integer nroAccion = servicioTruco.accion(accionValue, actuador, receptor, 2);
-        session.setAttribute("nroDeAccionAResponder", nroAccion);
-
-        if (accionValue.equals("ENVIDO")) {
-            Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
-            Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(j2);
-            session.setAttribute("tantoJ1", tantoJ1);
-            session.setAttribute("tantoJ2", tantoJ2);
-
-            // Mostrar respuesta -> quiero/no quiero
-            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
-                session.setAttribute("mostrarRespuestasJ2", true);
-            } else {
-                session.setAttribute("mostrarRespuestasJ1", true);
-            }
-        }
-
+        // Utiles
         session.setAttribute("envidoValido", false);
-
+        if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
+            session.setAttribute("mostrarRespuestasJ2", true);
+        } else {
+            session.setAttribute("mostrarRespuestasJ1", true);
+        }
 
         // SOLO PARA VER EN DESARROLLO
         session.setAttribute("acciones", servicioTruco.getAcciones());
+        session.setAttribute("nroDeAccionAResponder", nroAccion);
+
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -245,53 +244,31 @@ public class ControladorTruco {
 
         if (j1 == null || j2 == null) return new ModelAndView("redirect:/home");
 
-        String accion = saberAccionEnvido(respuesta);
         Jugador actuador = saberJugadorPorNombre(actuadorNombre, j1, j2);
         Jugador receptor = null;
         Integer nroDeAccionAResponder = (int) session.getAttribute("nroDeAccionAResponder");
-        Jugador ganadorEnvido = null;
 
         if (actuador.getNombre().equals(j1.getNombre())) {
             receptor = j2;
-            session.setAttribute("mostrarRespuestasJ1", false);
         } else {
             receptor = j1;
-            session.setAttribute("mostrarRespuestasJ2", false);
         }
 
-        if (accion.equals("QUIERO")) {
-            servicioTruco.sumarPuntosEnJuego(nroDeAccionAResponder, 2);
-            servicioTruco.actualizarRespuestaDeAccion(nroDeAccionAResponder, true);
-            Integer tantoJ1 = (int) session.getAttribute("tantoJ1");
-            Integer tantoJ2 = (int) session.getAttribute("tantoJ2");
-            if (tantoJ2 > tantoJ1) {
-                ganadorEnvido = j2;
-            } else {
-                ganadorEnvido = j1;
-            }
-            servicioTruco.guardarPuntos(ganadorEnvido, nroDeAccionAResponder);
-            session.setAttribute("puntosJ1", servicioTruco.getPuntosDeUnJugador(j1));
-            session.setAttribute("puntosJ2", servicioTruco.getPuntosDeUnJugador(j2));
-        } else if (respuesta.equals("NO QUIERO")) {
-            // TODO
+        Jugador leTocaResponder = servicioTruco.responder(respuesta, actuador, receptor, nroDeAccionAResponder);
+
+        // UTILES
+        session.setAttribute("puntosJ1", servicioTruco.getPuntosDeUnJugador(j1));
+        session.setAttribute("puntosJ2", servicioTruco.getPuntosDeUnJugador(j2));
+        if (leTocaResponder == null) {
+            session.setAttribute("mostrarRespuestasJ1", false);
+            session.setAttribute("mostrarRespuestasJ2", false);
         } else {
-            if (accion.equals("ENVIDO")) {
-                servicioTruco.sumarPuntosEnJuego(nroDeAccionAResponder, 2);
-                session.setAttribute("reEnvido", receptor);
-            } else if (accion.equals("REAL ENVIDO")) {
-                servicioTruco.sumarPuntosEnJuego(nroDeAccionAResponder, 3);
-                session.setAttribute("reEnvido", actuador);
-                session.setAttribute("realEnvido", receptor);
-            } else if (accion.equals("FALTA ENVIDO")) {
-                // TODO
-            } else {
-                // No deberia entrar aca
-                return new ModelAndView("redirect:/home");
-            }
-            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
-                session.setAttribute("mostrarRespuestasJ2", true);
-            } else {
+            if (leTocaResponder.getNombre().equalsIgnoreCase(j1.getNombre())) {
                 session.setAttribute("mostrarRespuestasJ1", true);
+                session.setAttribute("mostrarRespuestasJ2", false);
+            } else {
+                session.setAttribute("mostrarRespuestasJ1", false);
+                session.setAttribute("mostrarRespuestasJ2", true);
             }
         }
 
