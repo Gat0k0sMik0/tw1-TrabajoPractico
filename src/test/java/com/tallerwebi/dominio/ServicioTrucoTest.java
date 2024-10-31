@@ -351,7 +351,7 @@ public class ServicioTrucoTest {
         truco.empezarMano(jugadores);
         Jugador ganadorEnvido = null;
         // when
-        Integer nroAccion = servicioTruco.accion("ENVIDO", j1, j2);
+        Integer nroAccion = servicioTruco.accion("ENVIDO", j1, j2, 2);
         servicioTruco.actualizarRespuestaDeAccion(nroAccion, true);
         Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
         Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(j2);

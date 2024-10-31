@@ -51,6 +51,9 @@ public class ControladorTruco {
         model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
         // handle de envido
         model.put("responde", session.getAttribute("responde"));
+        model.put("puntosEnJuego", session.getAttribute("puntosEnJuego"));
+        model.put("reEnvido" , session.getAttribute("reEnvido"));
+        model.put("realEnvido" , session.getAttribute("realEnvido"));
 
         // Para ver como va
         model.put("rondas", session.getAttribute("rondas"));
@@ -149,7 +152,7 @@ public class ControladorTruco {
         // Si ya se jugó una ronda, cambia el turno a el jugador que corresponda
         servicioTruco.determinarGanadorRonda(jugador1, jugador2);
 
-        try  {
+        try {
             servicioTruco.tirarCarta(actual, cartaSeleccionada);
             session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
         } catch (TrucoException e) {
@@ -170,10 +173,10 @@ public class ControladorTruco {
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
         session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-        session.setAttribute("envidoValido", servicioTruco.esLaPrimerRonda());
+        session.setAttribute("envidoValidoJ1", servicioTruco.esLaPrimerRonda());
+        session.setAttribute("envidoValidoJ2", servicioTruco.esLaPrimerRonda());
         session.setAttribute("mostrarRespuestasJ1", false);
         session.setAttribute("mostrarRespuestasJ2", false);
-
         // para ver como va
         session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
         session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
@@ -183,9 +186,8 @@ public class ControladorTruco {
     }
 
 
-
     @RequestMapping(path = "/accion", method = RequestMethod.POST)
-    public ModelAndView accion (
+    public ModelAndView accion(
             @RequestParam("jugador") String actuadorNombre,
             @RequestParam("accion") String accionValue,
             HttpSession session
@@ -205,7 +207,8 @@ public class ControladorTruco {
             receptor = j1;
         }
 
-        Integer nroAccion = servicioTruco.accion(accionValue, actuador, receptor);
+
+        Integer nroAccion = servicioTruco.accion(accionValue, actuador, receptor, 2);
         session.setAttribute("nroDeAccionAResponder", nroAccion);
 
         if (accionValue.equals("ENVIDO")) {
@@ -215,7 +218,7 @@ public class ControladorTruco {
             session.setAttribute("tantoJ2", tantoJ2);
 
             // Mostrar respuesta -> quiero/no quiero
-            if(actuadorNombre.equalsIgnoreCase(j1.getNombre())){
+            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
                 session.setAttribute("mostrarRespuestasJ2", true);
             } else {
                 session.setAttribute("mostrarRespuestasJ1", true);
@@ -232,7 +235,7 @@ public class ControladorTruco {
     }
 
     @RequestMapping(path = "/responder", method = RequestMethod.POST)
-    public ModelAndView responder (
+    public ModelAndView responder(
             @RequestParam("jugador") String actuadorNombre,
             @RequestParam("respuesta") String respuesta,
             HttpSession session
@@ -245,40 +248,59 @@ public class ControladorTruco {
         String accion = saberAccionEnvido(respuesta);
         Jugador actuador = saberJugadorPorNombre(actuadorNombre, j1, j2);
         Jugador receptor = null;
-        Integer nroDeAccionAResponder = (int)session.getAttribute("nroDeAccionAResponder");
+        Integer nroDeAccionAResponder = (int) session.getAttribute("nroDeAccionAResponder");
         Jugador ganadorEnvido = null;
 
         if (actuador.getNombre().equals(j1.getNombre())) {
             receptor = j2;
+            session.setAttribute("mostrarRespuestasJ1", false);
         } else {
             receptor = j1;
+            session.setAttribute("mostrarRespuestasJ2", false);
         }
 
         if (accion.equals("QUIERO")) {
+            servicioTruco.sumarPuntosEnJuego(nroDeAccionAResponder, 2);
             servicioTruco.actualizarRespuestaDeAccion(nroDeAccionAResponder, true);
-            Integer tantoJ1 = (int)session.getAttribute("tantoJ1");
-            Integer tantoJ2 = (int)session.getAttribute("tantoJ2");
+            Integer tantoJ1 = (int) session.getAttribute("tantoJ1");
+            Integer tantoJ2 = (int) session.getAttribute("tantoJ2");
             if (tantoJ2 > tantoJ1) {
-                ganadorEnvido = j1;
-            } else {
                 ganadorEnvido = j2;
+            } else {
+                ganadorEnvido = j1;
             }
-            servicioTruco.guardarPuntos(ganadorEnvido, 2);
+            servicioTruco.guardarPuntos(ganadorEnvido, nroDeAccionAResponder);
             session.setAttribute("puntosJ1", servicioTruco.getPuntosDeUnJugador(j1));
             session.setAttribute("puntosJ2", servicioTruco.getPuntosDeUnJugador(j2));
+        } else if (respuesta.equals("NO QUIERO")) {
+            // TODO
         } else {
-            return new ModelAndView("redirect:/home");
+            if (accion.equals("ENVIDO")) {
+                servicioTruco.sumarPuntosEnJuego(nroDeAccionAResponder, 2);
+                session.setAttribute("reEnvido", receptor);
+            } else if (accion.equals("REAL ENVIDO")) {
+                servicioTruco.sumarPuntosEnJuego(nroDeAccionAResponder, 3);
+                session.setAttribute("reEnvido", actuador);
+                session.setAttribute("realEnvido", receptor);
+            } else if (accion.equals("FALTA ENVIDO")) {
+                // TODO
+            } else {
+                // No deberia entrar aca
+                return new ModelAndView("redirect:/home");
+            }
+            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
+                session.setAttribute("mostrarRespuestasJ2", true);
+            } else {
+                session.setAttribute("mostrarRespuestasJ1", true);
+            }
         }
-
-
 
         // SOLO PARA VER EN DESARROLLO
         session.setAttribute("acciones", servicioTruco.getAcciones());
+        session.setAttribute("puntosEnJuego", servicioTruco.getPuntosEnJuegoDeAccion(nroDeAccionAResponder));
 
         return new ModelAndView("redirect:/partida-truco");
     }
-
-
 
 
     @RequestMapping(path = "/accion-envido", method = RequestMethod.POST)
@@ -294,7 +316,7 @@ public class ControladorTruco {
         if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
 
         // Mostrar respuesta -> quiero/no quiero
-        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
+        if (jugadorNombre.equalsIgnoreCase(jugador1.getNombre())) {
             session.setAttribute("mostrarRespuestasJ2", true);
             cantador = jugador1;
             receptor = jugador2;
@@ -304,7 +326,7 @@ public class ControladorTruco {
             receptor = jugador1;
         }
 
-        servicioTruco.accion("envido", cantador, receptor);
+        servicioTruco.accion("envido", cantador, receptor, 2);
         Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador1);
         Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador2);
 
@@ -334,7 +356,7 @@ public class ControladorTruco {
     public ModelAndView responderEnvido(
             @RequestParam("respuesta") String respuesta,
             HttpSession session,
-            @RequestParam("jugador") String jugadorNombre ) {
+            @RequestParam("jugador") String jugadorNombre) {
 
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
         Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
@@ -364,7 +386,6 @@ public class ControladorTruco {
     }
 
 
-
     @RequestMapping("/final-partida")
     public ModelAndView finalizarPartida(Jugador jugador, @RequestParam("jugador") String jugadorNombre,
                                          HttpSession session) {
@@ -377,12 +398,13 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/home", model);
     }
 
-    private Jugador saberJugadorPorNombre (String nombre, Jugador j1, Jugador j2) {
+    private Jugador saberJugadorPorNombre(String nombre, Jugador j1, Jugador j2) {
         if (j1.getNombre().equals(nombre)) return j1;
         if (j2.getNombre().equals(nombre)) return j2;
         return null;
     }
-    private String saberAccionEnvido (String respuesta) {
+
+    private String saberAccionEnvido(String respuesta) {
         String respuestaDada = "";
         switch (Integer.parseInt(respuesta)) {
             case 0:
@@ -414,7 +436,6 @@ public class ControladorTruco {
         }
         return null;
     }
-
 
 
 }

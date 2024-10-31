@@ -5,12 +5,18 @@ public class Accion {
     private String accion;
     private Boolean respuesta;
     private Integer nroAccion;
+    private Integer puntosEnJuego = 0;
 
-    public Accion(Integer nroAccion, Jugador jugadorQueEjecuta, String accion, Boolean respuesta) {
+    public Accion(Integer nroAccion, Jugador jugadorQueEjecuta, String accion, Boolean respuesta, Integer puntosEnJuego) {
         this.nroAccion = nroAccion;
+        this.puntosEnJuego += puntosEnJuego;
         this.jugadorQueEjecuta = jugadorQueEjecuta;
         this.accion = accion;
         this.respuesta = respuesta;
+    }
+
+    public void acumularPuntos(Integer puntos) {
+        puntosEnJuego += puntos;
     }
 
     public Jugador getJugadorQueEjecuta() {
@@ -43,5 +49,13 @@ public class Accion {
 
     public void setNroAccion(Integer nroAccion) {
         this.nroAccion = nroAccion;
+    }
+
+    public Integer getPuntosEnJuego() {
+        return puntosEnJuego;
+    }
+
+    public void setPuntosEnJuego(Integer puntosEnJuego) {
+        this.puntosEnJuego = puntosEnJuego;
     }
 }

@@ -55,7 +55,8 @@
                         <button type="submit"
                                 class="btn btn-primary"
                                 name="accion"
-                                value="ENVIDO">Envido
+                                value="ENVIDO"
+                                th:disabled="${envidoValidoJ1}">Envido
                         </button>
                     </form>
                     <form method="post" th:action="@{/accion}">
@@ -92,11 +93,13 @@
                         <button class="btn btn-warning"
                                 type="submit"
                                 name="respuesta"
+                                th:disabled="${reEnvido != null && reEnvido.nombre == jugador1.nombre}"
                                 value="2">Envido
                         </button>
                         <button class="btn btn-warning"
                                 type="submit"
                                 name="respuesta"
+                                th:disabled="${realEnvido != null && realEnvido.nombre == jugador1.nombre}"
                                 value="3">Real Envido
                         </button>
                         <button class="btn btn-warning"
@@ -162,7 +165,8 @@
                         <button type="submit"
                                 class="btn btn-primary"
                                 name="accion"
-                                value="ENVIDO">Envido
+                                value="ENVIDO"
+                                th:disabled="${envidoValidoJ2}">Envido
                         </button>
                     </form>
                     <form method="post" th:action="@{/accion}">
@@ -199,11 +203,13 @@
                         <button class="btn btn-warning"
                                 type="submit"
                                 name="respuesta"
+                                th:disabled="${reEnvido != null && reEnvido.nombre == jugador2.nombre}"
                                 value="2">Envido
                         </button>
                         <button class="btn btn-warning"
                                 type="submit"
                                 name="respuesta"
+                                th:disabled="${realEnvido != null && realEnvido.nombre == jugador2.nombre}"
                                 value="3">Real Envido
                         </button>
                         <button class="btn btn-warning"
@@ -221,7 +227,10 @@
                     <input type="hidden" name="jugador" th:value="${jugador2.nombre}">
                     <input type="hidden" name="cartaValor" th:value="${carta.valor}">
                     <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador2}">
-                        <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
+                        <img th:src="@{${carta.img}}"
+                             alt="Carta"
+                             th:attr="data-id=${carta.id}"
+                             class="carta"/>
                     </button>
                 </form>
             </div>
@@ -235,6 +244,7 @@
     <h3 th:text="${movimientos != null ? 'Movimientos realizados (máx 6): ' + movimientos + ' movimientos.' : 'No comenzado.'}"></h3>
     <h3 th:if="${jugador1 != null}" th:text="${'Puntos de ' + jugador1.nombre + ': ' + puntosJ1}"></h3>
     <h3 th:if="${jugador2 != null}" th:text="${'Puntos de ' + jugador2.nombre + ': ' + puntosJ2}"></h3>
+    <h3 th:if="${puntosEnJuego != null}" th:text="${'Puntos en juego: ' + puntosEnJuego}"></h3>
     <div class="tabla-datos">
         <!-- Verifica si la lista de rondas no es null ni está vacía -->
         <div th:if="${rondas != null and !rondas.isEmpty()}">

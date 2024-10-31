@@ -62,8 +62,8 @@ public class Truco {
         }
     }
 
-    public Integer guardarAccion(Jugador jugadorQueEjecuta, String accion, Boolean respuesta) {
-        this.acciones.add(new Accion(this.contadorAcciones, jugadorQueEjecuta, accion, false));
+    public Integer guardarAccion(Jugador jugadorQueEjecuta, String accion, Boolean respuesta, Integer puntosEnJuego) {
+        this.acciones.add(new Accion(this.contadorAcciones, jugadorQueEjecuta, accion, false, puntosEnJuego));
         return this.contadorAcciones++;
     }
 
