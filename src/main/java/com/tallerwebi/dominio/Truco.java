@@ -23,6 +23,7 @@ public class Truco {
     private List<Mano> manosDePartida;
     private List<Jugador> jugadores; // 2-4
     private List<Accion> acciones;
+    private Boolean trucoCantado;
 
     /*
     servicio repartir cartas
@@ -259,5 +260,13 @@ public class Truco {
 
     public void setAcciones(List<Accion> acciones) {
         this.acciones = acciones;
+    }
+
+    public Boolean getTrucoCantado() {
+        return trucoCantado;
+    }
+
+    public void setTrucoCantado(Boolean trucoCantado) {
+        this.trucoCantado = trucoCantado;
     }
 }

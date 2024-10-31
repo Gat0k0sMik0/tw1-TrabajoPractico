@@ -61,6 +61,8 @@ public class ControladorTruco {
         model.put("tantoJ1", session.getAttribute("tantoJ1"));
         model.put("tantoJ2", session.getAttribute("tantoJ2"));
         model.put("acciones", session.getAttribute("acciones"));
+        model.put("trucoCantado", session.getAttribute("trucoCantado"));
+        model.put("trucoCantadoPor", session.getAttribute("trucoCantadoPor"));
 
         return new ModelAndView("partida-truco", model);
     }
@@ -396,5 +398,28 @@ public class ControladorTruco {
     }
 
 
+    @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
+    public ModelAndView accionCantarTruco( @RequestParam("jugador") String jugadorNombre,
+                                           HttpSession session) {
 
+        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+
+        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+
+        //obtener el jugador que canto el truco
+        Jugador jugadorActual = jugador1.getNombre().equals(jugadorNombre) ? jugador1 : jugador2;
+
+        // Cantar Truco
+        Boolean trucoCantado = servicioTruco.cantarTruco();
+
+        // Actualizar el modelo con los datos de la partida
+        session.setAttribute("jugador1", jugador1);
+        session.setAttribute("jugador2", jugador2);
+        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
+        session.setAttribute("trucoCantado", trucoCantado);
+        session.setAttribute("trucoCantadoPor", jugadorActual.getNombre());
+
+        return new ModelAndView("redirect:/partida-truco");
+    }
 }

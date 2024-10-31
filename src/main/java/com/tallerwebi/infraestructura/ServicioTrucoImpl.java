@@ -17,6 +17,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
     private Jugador debeResponder;
     /*private Integer puntosJugador1;
     private Integer puntosJugador2;*/
+    private Boolean trucoCantado;
 
     /*
     Class truco maneja todo
@@ -313,6 +314,13 @@ public class ServicioTrucoImpl implements ServicioTruco {
     public List<Ronda> getRondasJugadas() {
 //        return truco.getRondasJugadas();
         return null;
+    }
+
+    @Override
+    public Boolean cantarTruco() {
+        truco.setTrucoCantado(true);
+        trucoCantado = truco.getTrucoCantado();
+        return trucoCantado;
     }
 
     /* --ENVIDO--
