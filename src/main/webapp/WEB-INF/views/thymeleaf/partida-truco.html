@@ -42,7 +42,7 @@
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
                 <div class="d-flex gap-1">
-                    <form method="post" th:action="@{/accion-truco}">
+                    <form method="post" th:action="@{/accion}">
                         <input type="hidden" name="jugador" th:value="${jugador1.nombre}">
                         <button type="submit"
                                 class="btn btn-primary"
@@ -73,18 +73,23 @@
                                 value="MAZO">Mazo</button>
                     </form>
                 </div>
-                <div>
-                    <!-- Opciones para aceptar o rechazar el truco, si ya se ha cantado -->
-                    <div th:if="${trucoCantado != null && trucoCantadoPor == jugador2.nombre}">
-                        <form method="post" th:action="@{/accion-truco/aceptar}">
-                            <input type="hidden" name="jugador" th:value="${jugador2.nombre}" />
-                            <button type="submit" class="btn btn-success">Aceptar Truco</button>
-                        </form>
-                        <form method="post" th:action="@{/accion-truco/rechazar}">
-                            <input type="hidden" name="jugador" th:value="${jugador2.nombre}" />
-                            <button type="submit" class="btn btn-danger">Rechazar Truco</button>
-                        </form>
-                    </div>
+                <form method="post" th:action="@{/accion}">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            th:disabled="${envidoTruco == false}">Truco
+                    </button>
+                    <input type="hidden" name="jugador" th:value="${jugador1.nombre}">
+                    <input type="hidden" name="accion" value="2">
+                </form>
+                <div id="respuestas1" th:if="${mostrarRespuestasTrucoJ1}">
+                    <form th:action="@{/responder}" method="post">
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="1">Quiero</button>
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="0">No quiero
+                        </button>
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="2">Re Truco</button>
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="3">Vale Cuatro</button>
+                        <input type="hidden" name="jugador" th:value="${jugador1.nombre}">
+                    </form>
                 </div>
                 <form method="post" th:action="@{/accion}">
                     <button type="submit"
@@ -94,7 +99,7 @@
                     <input type="hidden" name="jugador" th:value="${jugador1.nombre}">
                     <input type="hidden" name="accion" value="2">
                 </form>
-                <div id="respuestas" th:if="${mostrarRespuestasJ1}">
+                <div id="respuestas" th:if="${mostrarRespuestasEnvidoJ1}">
                     <form th:action="@{/responder}" method="post">
                         <button class="btn btn-warning" type="submit" name="respuesta" value="1">Quiero</button>
                         <button class="btn btn-warning" type="submit" name="respuesta" value="0">No quiero
@@ -160,9 +165,32 @@
                 </form>
             </div>
             <div class="d-flex flex-wrap gap-1 col-12 justify-content-center" th:if="${partidaIniciada}">
-                <form method="post" th:action="@{/accion-truco}">
-                    <button type="submit" class="btn btn-primary">Truco</button>
+                <form method="post" th:action="@{/accion}">
+                    <input type="hidden" name="jugador" th:value="${jugador2.nombre}">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            name="accion"
+                            value="TRUCO">Truco
+                    </button>
                 </form>
+                <form method="post" th:action="@{/accion}">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            th:disabled="${trucoValido == false}">Truco
+                    </button>
+                    <input type="hidden" name="jugador" th:value="${jugador2.nombre}">
+                    <input type="hidden" name="accion" value="2">
+                </form>
+                <div id="respuesta1" th:if="${mostrarRespuestasTrucoJ2}">
+                    <form th:action="@{/responderTruco}" method="post">
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="1">Quiero</button>
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="0">No quiero
+                        </button>
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="2">Re truco</button>
+                        <button class="btn btn-warning" type="submit" name="respuestaTruco" value="3">Vale Cuatro</button>
+                        <input type="hidden" name="jugador" th:value="${jugador2.nombre}">
+                    </form>
+                </div>
                 <form method="post" th:action="@{/accion}">
                     <button type="submit"
                             class="btn btn-primary"
@@ -171,7 +199,7 @@
                     <input type="hidden" name="jugador" th:value="${jugador2.nombre}">
                     <input type="hidden" name="accion" value="2">
                 </form>
-                <div id="respuestas2" th:if="${mostrarRespuestasJ2}">
+                <div id="respuestas2" th:if="${mostrarRespuestasEnvidoJ2}">
                     <form th:action="@{/responderEnvido}" method="post">
                         <button class="btn btn-warning" type="submit" name="respuesta" value="1">Quiero</button>
                         <button class="btn btn-warning" type="submit" name="respuesta" value="0">No quiero
@@ -189,19 +217,6 @@
                     <button type="submit" class="btn btn-primary">Ir al mazo</button>
                 </form>
                 <p class="btn btn-warning" th:text="${tantoJ2}" th:if="${tantoJ2 != null}"></p>
-            </div>
-            <div>
-                <!-- Opciones para aceptar o rechazar el truco, si ya se ha cantado -->
-                <div th:if="${trucoCantado != null && trucoCantadoPor == jugador1.nombre}">
-                    <form method="post" th:action="@{/accion-truco/aceptar}">
-                        <input type="hidden" name="jugador" th:value="${jugador1.nombre}" />
-                        <button type="submit" class="btn btn-success">Aceptar Truco</button>
-                    </form>
-                    <form method="post" th:action="@{/accion-truco/rechazar}">
-                        <input type="hidden" name="jugador" th:value="${jugador1.nombre}" />
-                        <button type="submit" class="btn btn-danger">Rechazar Truco</button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
