@@ -24,12 +24,12 @@ public class ServicioTrucoTest {
     List<Jugador> jugadores = new ArrayList<>();
 
     @BeforeEach
-    public void iniciarTest () {
+    public void iniciarTest() {
         jugadores.add(j1);
         jugadores.add(j2);
     }
 
-    
+
     @Test
     public void queSeCreeElTrucoYSeCarguenLasCartas() {
         Truco truco = new Truco();
@@ -167,16 +167,16 @@ public class ServicioTrucoTest {
     private void whenJuegoDosRondas(Truco truco, List<Carta> seis) {
         j1.tirarCarta(seis.get(0));
         truco.registrarJugada(j1, seis.get(0));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
         j2.tirarCarta(seis.get(3));
         truco.registrarJugada(j1, seis.get(3));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
         j2.tirarCarta(seis.get(4));
         truco.registrarJugada(j1, seis.get(4));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
         j1.tirarCarta(seis.get(1));
         truco.registrarJugada(j1, seis.get(1));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
     }
 
     @Test
@@ -311,7 +311,7 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void calcularSiTieneParaEnvidoDosCartasAlMenos () throws IndiceFueraDeRangoException {
+    public void calcularSiTieneParaEnvidoDosCartasAlMenos() throws IndiceFueraDeRangoException {
         List<Carta> seis = givenAsignoCartasALosJugadores();
         servicioTruco.empezar(jugadores, seis);
         Truco truco = servicioTruco.getTruco();
@@ -323,7 +323,7 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    public void obtenerValoresDeCartaParaEnvido () throws IndiceFueraDeRangoException {
+    public void obtenerValoresDeCartaParaEnvido() throws IndiceFueraDeRangoException {
         List<Carta> seis = givenAsignoCartasALosJugadores();
         servicioTruco.empezar(jugadores, seis);
         Truco truco = servicioTruco.getTruco();
@@ -343,7 +343,40 @@ public class ServicioTrucoTest {
         assertEquals(31, servicioTruco.calcularTantosDeCartasDeUnJugador(j1));
     }
 
-    @Test void queSeLeSumePuntosAlAceptarYGanarEnvido () throws IndiceFueraDeRangoException {
+    @Test
+    void queSeGenereUnaAccion() throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
+        Integer nroAccion = servicioTruco.preguntar("2", j1, j2);
+        assertEquals(0, nroAccion);
+    }
+
+    @Test
+    void queElCuandoSeLeRespondaQUIEROAlEnvidoSalgaBien () throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
+        Integer nroAccion = servicioTruco.preguntar("2", j1, j2); // envido
+        Jugador leTocaResponder = servicioTruco.responder("1", j2, j1, nroAccion); // quiero
+        assertThat(leTocaResponder, notNullValue());
+    }
+
+    @Test
+    void queSeCantenDosEnvidos () throws IndiceFueraDeRangoException {
+        List<Carta> seis = givenAsignoCartasALosJugadores();
+        servicioTruco.empezar(jugadores, seis);
+        Truco truco = servicioTruco.getTruco();
+        truco.empezarMano(jugadores);
+        Integer nroAccion = servicioTruco.preguntar("2", j1, j2);
+        Jugador leTocaResponder = servicioTruco.responder("2", j2, j1, nroAccion);
+        assertThat(leTocaResponder, notNullValue());
+    }
+
+    @Test
+    void queSeLeSumePuntosAlAceptarYGanarEnvido() throws IndiceFueraDeRangoException {
 //        // given
 //        List<Carta> seis = givenAsignoCartasALosJugadores();
 //        servicioTruco.empezar(jugadores, seis);
@@ -385,24 +418,24 @@ public class ServicioTrucoTest {
     private void whenJuegoUnaMano(Truco truco, List<Carta> seis) {
         j1.tirarCarta(seis.get(0));
         truco.registrarJugada(j1, seis.get(0));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
         j2.tirarCarta(seis.get(3));
         truco.registrarJugada(j1, seis.get(3));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
 
         j2.tirarCarta(seis.get(4));
         truco.registrarJugada(j1, seis.get(4));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
         j1.tirarCarta(seis.get(1));
         truco.registrarJugada(j1, seis.get(1));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
 
         j1.tirarCarta(seis.get(2));
         truco.registrarJugada(j1, seis.get(2));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
         j2.tirarCarta(seis.get(5));
         truco.registrarJugada(j1, seis.get(5));
-        servicioTruco.determinarGanadorRonda(j1,j2);
+        servicioTruco.determinarGanadorRonda(j1, j2);
     }
 
 

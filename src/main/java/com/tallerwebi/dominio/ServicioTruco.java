@@ -13,8 +13,10 @@ public interface ServicioTruco {
     Accion getAccionPorNro (Integer nro);
     void guardarPuntos(Jugador j, Integer puntos);
     Integer getPuntosDeUnJugador (Jugador jugador);
-    void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta)
-            ;
+    void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta);
+    Jugador responder(String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion);
+    Integer preguntar(String accion, Jugador ejecutor, Jugador receptor);
+
     void sumarPuntosEnJuego(Integer nroAccion, Integer puntosEnJuego);
 
     // de comprobación
