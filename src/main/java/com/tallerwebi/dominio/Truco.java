@@ -11,6 +11,8 @@ public class Truco {
     private Integer nroRonda;
     private Integer testigo;
     private Integer contadorAcciones = 0;
+    private Integer puntosJ1 = 0;
+    private Integer puntosJ2 = 0;
 
     private Boolean isLaManoTerminada;
 
@@ -52,7 +54,7 @@ public class Truco {
         this.jugadores = jugadores;
     }
 
-    public Integer calcularEnvido (List<Carta> cartas) {
+    public Integer calcularEnvido(List<Carta> cartas) {
         List<Carta> tieneDosDelMismoPalo = this.tieneDosDelMismoPalo(cartas);
         if (tieneDosDelMismoPalo.isEmpty()) {
             return 0;
@@ -61,12 +63,12 @@ public class Truco {
         }
     }
 
-    public void guardarAccion(Jugador jugadorQueEjecuta, String accion, Boolean respuesta) {
-        this.acciones.add(new Accion(this.contadorAcciones, jugadorQueEjecuta, accion, false));
-        this.contadorAcciones++;
+    public Integer guardarAccion(Jugador jugadorQueEjecuta, String accion, Boolean respuesta, Integer puntosEnJuego) {
+        this.acciones.add(new Accion(this.contadorAcciones, jugadorQueEjecuta, accion, false, puntosEnJuego));
+        return this.contadorAcciones++;
     }
 
-    public Integer obtenerSumaDeLasMasAltas (List<Carta> cartas) {
+    public Integer obtenerSumaDeLasMasAltas(List<Carta> cartas) {
         int envidoMax = 0;
 
         // Agrupa las cartas por palo
@@ -90,7 +92,7 @@ public class Truco {
         return envidoMax;
     }
 
-    public List<Carta> tieneDosDelMismoPalo (List<Carta> cartas) {
+    public List<Carta> tieneDosDelMismoPalo(List<Carta> cartas) {
         int contador = 0;
         List<Carta> delMismoPalo = new ArrayList<>();
         for (Carta carta : cartas) {
@@ -119,7 +121,7 @@ public class Truco {
         this.manoActual.addRonda(j, c);
     }
 
-    public List<Ronda> getRondasDeManoActual () {
+    public List<Ronda> getRondasDeManoActual() {
         return this.manoActual.getRondas();
     }
 
@@ -143,7 +145,7 @@ public class Truco {
     // Si Gonzalo ganó 1 ronda, tendrá 1 punto
     // Entonces el que se llevá un punto por ganar la mano es Franco
     // Ese punto se ve afectado si se canta truco, envido, flor, etc.
-    public void sumarPuntoDeRonda (Jugador jugador) {
+    public void sumarPuntoDeRonda(Jugador jugador) {
         this.manoActual.guardarGanadorDeRonda(jugador);
         jugador.agregarPuntoRonda();
         // Si ya se jugaronn todas las cartas
@@ -187,6 +189,7 @@ public class Truco {
             return j2;
         }
     }
+
     public String getGanadorDeRondaDeManoActualPorNumero(Integer nroRonda) {
         return this.manoActual.getGanadorDeUnaRondaPorNumero(nroRonda).getNombre();
     }
@@ -233,7 +236,6 @@ public class Truco {
     }
 
 
-
     public Integer getMovimientosDeLaManoActual() {
         return this.manoActual.getNumeroDeMovimientosRealizados();
     }
@@ -269,4 +271,39 @@ public class Truco {
     public void setTrucoCantado(Boolean trucoCantado) {
         this.trucoCantado = trucoCantado;
     }
+
+    public Accion getAccionPorNro(Integer nro) {
+        for (Accion a : this.acciones) {
+            if (a.getNroAccion().equals(nro)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public void guardarPuntosDePartida(Jugador j, Integer puntos) {
+        Jugador buscado = this.getJugador(j);
+        if (buscado != null) {
+            buscado.setPuntosPartida(puntos);
+        }
+    }
+
+
+    public Integer getPuntosDeUnJugador(Jugador jugador) {
+        Jugador buscado = this.getJugador(jugador);
+        if (buscado != null) {
+            return buscado.getPuntosPartida();
+        }
+        return -1;
+    }
+
+    private Jugador getJugador(Jugador jugador) {
+        for (Jugador j : this.jugadores) {
+            if (j.equals(jugador)) {
+                return j;
+            }
+        }
+        return null;
+    }
+
 }

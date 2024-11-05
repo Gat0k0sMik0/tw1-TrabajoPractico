@@ -9,21 +9,23 @@ public interface ServicioTruco {
     void tirarCarta(Jugador jugador, Carta cartaSeleccionada);
     void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
     void cambiarTurno(Jugador jugador1);
-    void accion (String accion, Jugador cantador, Jugador receptor);
+    Integer accion (String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego);
+    Accion getAccionPorNro (Integer nro);
+    void guardarPuntos(Jugador j, Integer puntos);
+    Integer getPuntosDeUnJugador (Jugador jugador);
+    void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta)
+            ;
+    void sumarPuntosEnJuego(Integer nroAccion, Integer puntosEnJuego);
 
     // de comprobación
     List<Ronda> getRondasJugadas();
     Integer calcularTantosDeCartasDeUnJugador(Jugador j);
     Boolean esLaPrimerRonda();
     List<Accion> getAcciones();
+    Integer getPuntosEnJuegoDeAccion(Integer nroAccion);
 
-    void verificarEnvido(Jugador jugador1, Jugador jugador2);
-
-    List<Carta> getCartasJugadas(Jugador j);
-    Boolean esTurnoJugador(String jugadorNombre);
     Jugador getTurnoJugador();
     Jugador ganadorGeneral();
-    void validarCartas(List<Carta> cartasJugador2);
     Boolean saberSiLaManoEstaTerminada();
     List<Ronda> getRondasDeLaManoActual();
     Integer getNumeroDeRondasJugadasDeLaManoActual();
