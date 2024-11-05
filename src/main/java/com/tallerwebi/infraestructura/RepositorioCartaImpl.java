@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Carta;
 import com.tallerwebi.dominio.RepositorioCarta;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,12 @@ public class RepositorioCartaImpl implements RepositorioCarta {
                 .createCriteria(Carta.class)
                 .list();
     }
+
+    @Override
+    public Carta buscarCartaPorId (Long id ) {
+       final Session session = sessionFactory.getCurrentSession();
+       return (Carta) session.get(Carta.class, id);
+    }
+
+
 }

@@ -25,6 +25,7 @@ public class Truco {
     private List<Mano> manosDePartida;
     private List<Jugador> jugadores; // 2-4
     private List<Accion> acciones;
+    private Boolean trucoCantado;
 
     /*
     servicio repartir cartas
@@ -263,6 +264,14 @@ public class Truco {
         this.acciones = acciones;
     }
 
+    public Boolean getTrucoCantado() {
+        return trucoCantado;
+    }
+
+    public void setTrucoCantado(Boolean trucoCantado) {
+        this.trucoCantado = trucoCantado;
+    }
+
     public Accion getAccionPorNro(Integer nro) {
         for (Accion a : this.acciones) {
             if (a.getNroAccion().equals(nro)) {
@@ -296,6 +305,5 @@ public class Truco {
         }
         return null;
     }
-
 
 }
