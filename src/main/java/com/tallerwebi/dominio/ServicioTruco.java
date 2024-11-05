@@ -34,4 +34,5 @@ public interface ServicioTruco {
     Integer getMovimientosDeLaManoActual();
     Truco getTruco();
     List<Mano> getManosJugadas();
+    Boolean cantarTruco();
 }
