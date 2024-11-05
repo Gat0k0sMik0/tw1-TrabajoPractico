@@ -359,8 +359,8 @@ public class ServicioTrucoTest {
         servicioTruco.empezar(jugadores, seis);
         Truco truco = servicioTruco.getTruco();
         truco.empezarMano(jugadores);
-        Integer nroAccion = servicioTruco.preguntar("2", j1, j2);
-        Jugador leTocaResponder = servicioTruco.responder("1", j2, j1, nroAccion);
+        Integer nroAccion = servicioTruco.preguntar("2", j1, j2); // envido
+        Jugador leTocaResponder = servicioTruco.responder("1", j2, j1, nroAccion); // quiero
         assertThat(leTocaResponder, notNullValue());
     }
 
