@@ -71,42 +71,65 @@ public class ServicioTrucoImpl implements ServicioTruco {
         return this.truco.guardarAccion(cantador, accion, false, puntosEnJuego);
     }
 
+    private void manejarRespuestaTruco() {
 
-    @Override
-    public Jugador responder(String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion) {
-        String accionEncontrada = saberAccion(accion);
-        Accion a = this.getAccionPorNro(nroAccion);
-        Jugador ganador = null;
+    }
+
+    private void manejarRespuestaEnvido() {
+
+    }
+
+    private Jugador manejarRespuestaDirecta(String accion, Accion a, Jugador ejecutor, Jugador receptor) {
         Jugador leTocaResponder = null;
+        Jugador ganador = null;
 
-        if (accionEncontrada.equalsIgnoreCase("QUIERO")) {
-            a.setRespuesta(true);
-            Integer tantosEjecutor = this.calcularTantosDeCartasDeUnJugador(ejecutor);
-            Integer tantosReceptor = this.calcularTantosDeCartasDeUnJugador(receptor);
-            if (tantosEjecutor > tantosReceptor) {
-                ganador = ejecutor;
+        a.setRespuesta(true);
+
+        // Respuesta positiva
+        if (accion.equals("QUIERO")) {
+            // condicionales para saber que se cantó
+            if (a.getAccion().equals("ENVIDO")) {
+                Integer tantosEjecutor = this.calcularTantosDeCartasDeUnJugador(ejecutor);
+                Integer tantosReceptor = this.calcularTantosDeCartasDeUnJugador(receptor);
+                if (tantosEjecutor > tantosReceptor) {
+                    ganador = ejecutor;
+                } else {
+                    ganador = receptor;
+                }
+                leTocaResponder = ejecutor; // cambiar despues dependiendo quien tenga el turno
+//                this.guardarPuntos(ganador, nroAccion);
+            } else if (a.getAccion().equals("REAL ENVIDO")) {
+
+            } else if (a.getAccion().equals("FALTA ENVIDO")) {
+
+            } else if (a.getAccion().equals("TRUCO")) {
+                truco.agregarPuntosEnJuegoManoActual(2);
+                leTocaResponder = receptor;
+            } else if (a.getAccion().equals("RE TRUCO")) {
+                truco.agregarPuntosEnJuegoManoActual(3);
+            } else if (a.getAccion().equals("VALE 4")) {
+                truco.agregarPuntosEnJuegoManoActual(4);
             } else {
-                ganador = receptor;
+                // no debería entrar aca
             }
-            leTocaResponder = null; // cambiar despues dependiendo quien tenga el turno
-            this.guardarPuntos(ganador, nroAccion);
-        } else if (accionEncontrada.equalsIgnoreCase("NO QUIERO")) {
-            // TODO
+        } else if (accion.equals("NO QUIERO")) {
+            leTocaResponder = ejecutor;
         } else {
-            if (accionEncontrada.equals("ENVIDO")) {
-                this.sumarPuntosEnJuego(nroAccion, 2);
-                leTocaResponder = receptor;
-            } else if (accionEncontrada.equals("REAL ENVIDO")) {
-                this.sumarPuntosEnJuego(nroAccion, 3);
-                leTocaResponder = receptor;
-            } else if (accionEncontrada.equals("FALTA ENVIDO")) {
-                // TODO
-            } else {
-                // No deberia entrar aca
-            }
+            // nada debe entrar aca
         }
         return leTocaResponder;
     }
+
+    private Jugador manejarOtraAccion(String accion, Accion a) {
+        if (a.getAccion().equals("TRUCO")) {
+            manejarRespuestaTruco();
+        } else if (a.getAccion().equals("ENVIDO")) {
+            manejarRespuestaEnvido();
+        }
+        return null;
+    }
+
+
 
     private static boolean esEnvido(String accionEncontrada) {
         return accionEncontrada.equalsIgnoreCase("envido") || accionEncontrada.equalsIgnoreCase("real envido") || accionEncontrada.equalsIgnoreCase("falta envido");
@@ -115,6 +138,8 @@ public class ServicioTrucoImpl implements ServicioTruco {
     @Override
     public Integer preguntar(String accion, Jugador ejecutor, Jugador receptor) {
         String accionEncontrada = saberAccion(accion);
+        System.out.println("servicioTruco.preguntar: recibí la acción " +
+                accionEncontrada + ".");
         if (accionEncontrada.equalsIgnoreCase("TRUCO")) {
             return manejarTruco(accionEncontrada, ejecutor, receptor);
         } else {
@@ -122,8 +147,37 @@ public class ServicioTrucoImpl implements ServicioTruco {
         }
     }
 
+    @Override
+    public Jugador responder(String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion) {
+        String accionEncontrada = saberAccion(accion);
+        Accion a = this.getAccionPorNro(nroAccion);
+        Jugador ganador = null;
+        Jugador leTocaResponder = null;
+
+        System.out.println("servicioTruco.responder: respondiendo a " + a.getAccion());
+
+        if (accionEncontrada.equals("QUIERO") || accionEncontrada.equals("NO QUIERO")) {
+            leTocaResponder = manejarRespuestaDirecta(accionEncontrada, a, ejecutor, receptor); // quiero, no quiero
+        } else {
+            leTocaResponder = manejarOtraAccion(accionEncontrada, a); // re-envido, re-truco, etc
+        }
+
+        return leTocaResponder;
+    }
+
+
     private Integer manejarTruco(String accion, Jugador cantador, Jugador receptor) {
-        return 0;
+        if (accion.equalsIgnoreCase("TRUCO")) {
+            return this.accion(accion, cantador, receptor, 2);
+        } else if (accion.equals("RE TRUCO")) {
+            return this.accion(accion, cantador, receptor, 3);
+        } else if (accion.equals("VALE 4")) {
+            return this.accion(accion, cantador, receptor, 4);
+        } else {
+            // todo
+        }
+        return null;
+
     }
 
     private Integer manejarEnvido(String accion, Jugador cantador, Jugador receptor) {
@@ -137,6 +191,12 @@ public class ServicioTrucoImpl implements ServicioTruco {
             // todo
         }
         return null;
+    }
+
+    @Override
+    public String saberAccion(Integer nroAccion) {
+        Accion a = this.getAccionPorNro(nroAccion);
+        return a.getAccion();
     }
 
     private String saberAccion(String numberValue) {
@@ -454,6 +514,8 @@ public class ServicioTrucoImpl implements ServicioTruco {
         trucoCantado = truco.getTrucoCantado();
         return trucoCantado;
     }
+
+
 
     /* --ENVIDO--
     public void verificarEnvido(Jugador jugador1, Jugador jugador2) {

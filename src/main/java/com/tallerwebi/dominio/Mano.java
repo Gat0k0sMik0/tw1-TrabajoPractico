@@ -105,6 +105,10 @@ public class Mano {
         this.puntos = puntos;
     }
 
+    public void acumularPuntosEnJuego(Integer puntos) {
+        this.puntos += puntos;
+    }
+
     public void setRondas(List<Ronda> rondas) {
         this.rondas = rondas;
     }

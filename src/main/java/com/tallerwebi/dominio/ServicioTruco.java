@@ -35,4 +35,6 @@ public interface ServicioTruco {
     Truco getTruco();
     List<Mano> getManosJugadas();
     Boolean cantarTruco();
+
+    String saberAccion(Integer nroAccion);
 }

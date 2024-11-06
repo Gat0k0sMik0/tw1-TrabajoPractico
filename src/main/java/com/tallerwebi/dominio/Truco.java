@@ -306,4 +306,11 @@ public class Truco {
         return null;
     }
 
+    public void agregarPuntosEnJuegoManoActual(Integer puntos) {
+        this.manoActual.acumularPuntosEnJuego(puntos);
+    }
+
+    public int getPuntosEnJuegoDeLaManoActual() {
+        return this.manoActual.getPuntos();
+    }
 }
