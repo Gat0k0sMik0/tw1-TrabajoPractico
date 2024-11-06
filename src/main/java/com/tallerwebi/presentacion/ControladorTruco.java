@@ -395,40 +395,6 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/partida-truco");
     }
 
-    @PostMapping("/responderEnvido")
-    public ModelAndView responderEnvido(
-            @RequestParam("respuesta") String respuesta,
-            HttpSession session,
-            @RequestParam("jugador") String jugadorNombre) {
-
-        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
-        String respuestaDada = "";
-
-        switch (Integer.parseInt(respuesta)) {
-            case 0:
-                respuestaDada = "NO QUIERO";
-                break;
-            case 1:
-                respuestaDada = "QUIERO";
-                break;
-            case 2:
-                respuestaDada = "ENVIDO";
-                break;
-            case 3:
-                respuestaDada = "REAL ENVIDO";
-                break;
-            case 4:
-                respuestaDada = "FALTA ENVIDO";
-                break;
-            default:
-                return new ModelAndView("redirect:/login");
-        }
-
-        return new ModelAndView("redirect:/partida-truco");
-    }
-
-
     @RequestMapping("/final-partida")
     public ModelAndView finalizarPartida(Jugador jugador, @RequestParam("jugador") String jugadorNombre,
                                          HttpSession session) {
@@ -441,11 +407,7 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/home", model);
     }
 
-    private Jugador saberJugadorPorNombre(String nombre, Jugador j1, Jugador j2) {
-        if (j1.getNombre().equals(nombre)) return j1;
-        if (j2.getNombre().equals(nombre)) return j2;
-        return null;
-    }
+
 
     private String saberAccionEnvido(String respuesta) {
         String respuestaDada = "";
@@ -512,101 +474,6 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/partida-truco");
     }
 
-
-//    @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
-//    public ModelAndView cantarTruco(
-//            @RequestParam("jugador") String jugadorNombre,
-//            @RequestParam("respuestaTruco") String respuesta,
-//            HttpSession session) {
-//        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-//        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
-//        Jugador cantador = null;
-//        Jugador receptor = null;
-//
-//        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
-//
-//        // Mostrar respuesta -> quiero/no quiero
-//        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
-//            session.setAttribute("mostrarRespuestasTrucoJ2", true);
-//            cantador = jugador1;
-//            receptor = jugador2;
-//        } else {
-//            session.setAttribute("mostrarRespuestasTrucoJ1", true);
-//            cantador = jugador2;
-//            receptor = jugador1;
-//        }
-//
-////        servicioTruco.accion("truco", cantador, receptor);
-//        Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador1);
-//        Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador2);
-//
-//        // Actualizar los jugadores en la sesión para mantener el estado del juego
-//        session.setAttribute("jugador1", jugador1);
-//        session.setAttribute("jugador2", jugador2);
-//        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
-//        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
-//        session.setAttribute("cartasJugador1", jugador1.getCartas());
-//        session.setAttribute("cartasJugador2", jugador2.getCartas());
-//        session.setAttribute("jugador1", jugador1);
-//        session.setAttribute("jugador2", jugador2);
-//        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-//        session.setAttribute("tantoJ1", tantoJ1);
-//        session.setAttribute("tantoJ2", tantoJ2);
-//
-//        // para ver como va
-//        session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
-//        session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
-//        session.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
-//
-//        return new ModelAndView("redirect:/partida-truco");
-//    }
-//
-//    private String saberAccionTruco (String respuesta) {
-//        String respuestaDada = "";
-//        switch (Integer.parseInt(respuesta)) {
-//            case 0:
-//                respuestaDada = "NO QUIERO";
-//                break;
-//            case 1:
-//                respuestaDada = "QUIERO";
-//                break;
-//            case 2:
-//                respuestaDada = "RE TRUCO";
-//                break;
-//            case 3:
-//                respuestaDada = "VALE CUATRO";
-//                break;
-//            default:
-//                return "";
-//        }
-//        return respuestaDada;
-//    }
-
-//   @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
-//    public ModelAndView accionCantarTruco( @RequestParam("jugador") String jugadorNombre,
-//                                           HttpSession session) {
-//
-//        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-//        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
-//
-//        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
-//
-//        //obtener el jugador que canto el truco
-//        Jugador jugadorActual = jugador1.getNombre().equals(jugadorNombre) ? jugador1 : jugador2;
-//
-//        // Cantar Truco
-//        Boolean trucoCantado = servicioTruco.cantarTruco();
-//
-//        // Actualizar el modelo con los datos de la partida
-//        session.setAttribute("jugador1", jugador1);
-//        session.setAttribute("jugador2", jugador2);
-//        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-//        session.setAttribute("trucoCantado", trucoCantado);
-//        session.setAttribute("trucoCantadoPor", jugadorActual.getNombre());
-//
-//        return new ModelAndView("redirect:/partida-truco");
-//    }
-
     // Métodos para separar responsabilidades
 
     private Boolean esEnvido (String accion) {
@@ -618,6 +485,13 @@ public class ControladorTruco {
     private Boolean esTruco (String accion) {
         return accion.equalsIgnoreCase("TRUCO") || accion.equalsIgnoreCase("RE TRUCO") || accion.equalsIgnoreCase("VALE CUATRO");
     }
+
+    private Jugador saberJugadorPorNombre(String nombre, Jugador j1, Jugador j2) {
+        if (j1.getNombre().equals(nombre)) return j1;
+        if (j2.getNombre().equals(nombre)) return j2;
+        return null;
+    }
+
 
     // Métodos para desarrollo
     private String saberAccion(String numberValue) {
