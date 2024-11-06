@@ -154,11 +154,13 @@ public class Truco {
             Jugador ganador = this.manoActual.obtenerGanador();
 
             if (!this.saberSiHuboAlgunTruco()) {
+                System.out.println("sumarPuntoDeRonda: No hubo trucos cantados");
                 this.manoActual.acumularPuntosEnJuego(1); // por ganar 2/3 rondas sin truco
             }
 
             this.manoActual.acumularPuntosEnJuego(puntosEnJuegoDeLaMano); // por ganar algún truco
 
+            System.out.println("sumarPuntoDeRonda: Puntos en juego de la mano: " + this.manoActual.getPuntos());
             ganador.acumularPuntosDePartida(this.manoActual.getPuntos());
 
             this.ultimoGanador = ganador; // el ultimo que ganó
@@ -249,7 +251,7 @@ public class Truco {
     // -- HANDLERS DE ACCIONES --
 
     // Saber si hubo algún truco
-    private Boolean saberSiHuboAlgunTruco () {
+    private Boolean saberSiHuboAlgunTruco() {
         for (Accion a : this.acciones) {
             if (a.getAccion().equals("TRUCO")) {
                 if (a.getRespuesta()) {
@@ -319,7 +321,6 @@ public class Truco {
     public void setTrucoCantado(Boolean trucoCantado) {
         this.trucoCantado = trucoCantado;
     }
-
 
 
     public void guardarPuntosDePartida(Jugador j, Integer puntos) {

@@ -98,11 +98,16 @@ public class ServicioTrucoImpl implements ServicioTruco {
         Jugador leTocaResponder = null;
 
         System.out.println("servicioTruco.responder: respondiendo a " + a.getAccion());
+        System.out.println("servicioTruco.responder: recibo " + accionEncontrada);
+        System.out.println("[LOG] Los puntos actuales en juego de esta accion son: " + a.getPuntosEnJuego());
+
+        System.out.println("servicioTruco.responder: recibo a ejecutor con " + ejecutor.getPuntosRonda() + " puntos");
+        System.out.println("servicioTruco.responder: recibo a receptor con " + receptor.getPuntosRonda() + " puntos");
 
         if (accionEncontrada.equals("QUIERO") || accionEncontrada.equals("NO QUIERO")) {
             leTocaResponder = manejarRespuestaDirecta(accionEncontrada, a, ejecutor, receptor); // quiero, no quiero
         } else {
-            leTocaResponder = manejarOtraAccion(accionEncontrada, a); // re-envido, re-truco, etc
+            leTocaResponder = manejarOtraAccion(accionEncontrada, a, ejecutor, receptor); // re-envido, re-truco, etc
         }
 
         return leTocaResponder;
@@ -154,35 +159,36 @@ public class ServicioTrucoImpl implements ServicioTruco {
 
         // Respuesta positiva
         if (accion.equals("QUIERO")) {
+            Integer puntosViejos = a.getPuntosEnJuego();
             // condicionales para saber que se cantó
             if (a.getAccion().equals("ENVIDO")) {
                 Integer tantosEjecutor = this.calcularTantosDeCartasDeUnJugador(ejecutor);
                 Integer tantosReceptor = this.calcularTantosDeCartasDeUnJugador(receptor);
                 if (tantosEjecutor > tantosReceptor) {
-                   ejecutor.acumularPuntosDePartida(2);
+                    ejecutor.acumularPuntosDePartida(puntosViejos);
                 } else {
-                    receptor.acumularPuntosDePartida(2);
+                    receptor.acumularPuntosDePartida(puntosViejos);
                 }
-                leTocaResponder = ejecutor; // cambiar despues dependiendo quien tenga el turno
-//                this.guardarPuntos(ganador, nroAccion);
+                leTocaResponder = ejecutor;
             } else if (a.getAccion().equals("REAL ENVIDO")) {
                 Integer tantosEjecutor = this.calcularTantosDeCartasDeUnJugador(ejecutor);
                 Integer tantosReceptor = this.calcularTantosDeCartasDeUnJugador(receptor);
                 if (tantosEjecutor > tantosReceptor) {
-                    ejecutor.acumularPuntosDePartida(3);
+                    ejecutor.acumularPuntosDePartida(puntosViejos);
                 } else {
-                    receptor.acumularPuntosDePartida(3);
+                    receptor.acumularPuntosDePartida(puntosViejos);
                 }
                 leTocaResponder = ejecutor;
             } else if (a.getAccion().equals("FALTA ENVIDO")) {
 
             } else if (a.getAccion().equals("TRUCO")) {
-                truco.agregarPuntosEnJuegoManoActual(2);
+                truco.agregarPuntosEnJuegoManoActual(puntosViejos);
                 leTocaResponder = receptor;
             } else if (a.getAccion().equals("RE TRUCO")) {
-                truco.agregarPuntosEnJuegoManoActual(3);
+                leTocaResponder = receptor;
+                truco.agregarPuntosEnJuegoManoActual(puntosViejos);
             } else if (a.getAccion().equals("VALE 4")) {
-                truco.agregarPuntosEnJuegoManoActual(4);
+                truco.agregarPuntosEnJuegoManoActual(puntosViejos);
             } else {
                 // no debería entrar aca
             }
@@ -194,25 +200,25 @@ public class ServicioTrucoImpl implements ServicioTruco {
         return leTocaResponder;
     }
 
-    private Jugador manejarOtraAccion(String accion, Accion a) {
-        if (a.getAccion().equals("TRUCO")) {
-            manejarRespuestaTruco();
-        } else if (a.getAccion().equals("ENVIDO")) {
+    private Jugador manejarOtraAccion(String accion, Accion a, Jugador ejecutor, Jugador receptor) {
+        if (accion.equals("RE TRUCO")) {
+            a.acumularPuntos(1);
+        } else if (accion.equals("VALE 4")) {
+            a.acumularPuntos(1);
+        } else if (accion.equals("ENVIDO")) {
+            a.acumularPuntos(2);
+        } else if (accion.equals("REAL ENVIDO")) {
+            a.acumularPuntos(3);
+        } else if (accion.equals("FALTA ENVIDO")) {
             manejarRespuestaEnvido();
         }
-        return null;
+        return receptor;
     }
-
 
 
     private static boolean esEnvido(String accionEncontrada) {
         return accionEncontrada.equalsIgnoreCase("envido") || accionEncontrada.equalsIgnoreCase("real envido") || accionEncontrada.equalsIgnoreCase("falta envido");
     }
-
-
-
-
-
 
     private Integer manejarTruco(String accion, Jugador cantador, Jugador receptor) {
         if (accion.equalsIgnoreCase("TRUCO")) {
@@ -246,7 +252,6 @@ public class ServicioTrucoImpl implements ServicioTruco {
         Accion a = this.getAccionPorNro(nroAccion);
         return a.getAccion();
     }
-
 
 
     private String saberAccion(String numberValue) {
@@ -339,8 +344,6 @@ public class ServicioTrucoImpl implements ServicioTruco {
     }
 
 
-
-
     @Override
     public List<Ronda> getRondasDeLaManoActual() {
         return this.truco.getRondasDeManoActual();
@@ -359,7 +362,6 @@ public class ServicioTrucoImpl implements ServicioTruco {
     public Truco getTruco() {
         return this.truco;
     }
-
 
 
     // -- MÉTODOS REFERENTES AL MANEJO DE LA MANO
