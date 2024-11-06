@@ -143,11 +143,8 @@ public class ServicioTrucoImpl implements ServicioTruco {
     private void acumularPuntosAlQueGanaElEnvido(Jugador ejecutor, Jugador receptor, Integer puntosViejos) {
         Integer tantosEjecutor = this.calcularTantosDeCartasDeUnJugador(ejecutor);
         Integer tantosReceptor = this.calcularTantosDeCartasDeUnJugador(receptor);
-        if (tantosEjecutor > tantosReceptor) {
-            ejecutor.acumularPuntosDePartida(puntosViejos);
-        } else {
-            receptor.acumularPuntosDePartida(puntosViejos);
-        }
+        Jugador ganador = tantosEjecutor > tantosReceptor ? ejecutor : receptor;
+        ganador.acumularPuntosDePartida(puntosViejos);
     }
 
     private Jugador manejarRespuestaDirecta(String accion, Accion a, Jugador ejecutor, Jugador receptor) {
@@ -198,7 +195,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
                 a.acumularPuntos(3);
                 break;
             case "FALTA ENVIDO":
-                manejarRespuestaEnvido();
+
                 break;
         }
         return receptor;
