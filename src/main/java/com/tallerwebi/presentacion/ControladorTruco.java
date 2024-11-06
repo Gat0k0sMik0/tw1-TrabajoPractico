@@ -35,8 +35,15 @@ public class ControladorTruco {
 
         List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
         List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
+        Boolean isLaManoTerminada = (Boolean)session.getAttribute("terminada");
 
         ModelMap model = new ModelMap();
+
+        // Saber si se terminó la mano y renderizar contenido
+        if (isLaManoTerminada != null) {
+//            return new ModelAndView("redirect:/home");
+        }
+
         model.put("cartasJugador1", cartasJugador1);
         model.put("cartasJugador2", cartasJugador2);
         model.put("jugador1", session.getAttribute("jugador1"));
@@ -51,12 +58,14 @@ public class ControladorTruco {
         model.put("mostrarRespuestasEnvidoJ2", session.getAttribute("mostrarRespuestasEnvidoJ2"));
         model.put("mostrarRespuestasTrucoJ1", session.getAttribute("mostrarRespuestasTrucoJ1"));
         model.put("mostrarRespuestasTrucoJ2", session.getAttribute("mostrarRespuestasTrucoJ2"));
+        model.put("mostrarRespuestasJ1", session.getAttribute("mostrarRespuestasJ1"));
+        model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
 
         // handle de envido
         model.put("responde", session.getAttribute("responde"));
         model.put("puntosEnJuego", session.getAttribute("puntosEnJuego"));
-        model.put("reEnvido" , session.getAttribute("reEnvido"));
-        model.put("realEnvido" , session.getAttribute("realEnvido"));
+        model.put("reEnvido", session.getAttribute("reEnvido"));
+        model.put("realEnvido", session.getAttribute("realEnvido"));
 
         // Para ver como va
         model.put("rondas", session.getAttribute("rondas"));
@@ -113,6 +122,8 @@ public class ControladorTruco {
         sesion.setAttribute("mostrarRespuestasEnvidoJ2", false);
         sesion.setAttribute("mostrarRespuestasTrucoJ1", false);
         sesion.setAttribute("mostrarRespuestasTrucoJ2", false);
+        sesion.setAttribute("mostrarRespuestasJ1", true);
+        sesion.setAttribute("mostrarRespuestasJ2", true);
 
         // para ver
         sesion.setAttribute("todasLasCartas", todasLasCartas);
@@ -147,27 +158,32 @@ public class ControladorTruco {
 
         // Determinamos que jugador va
         Jugador actual = jugadorNombre.equalsIgnoreCase(jugador1.getNombre()) ? jugador1 : jugador2;
-        servicioTruco.cambiarTurno(actual); // le damos control al que tiene el turno
+
+        // Le damos control al que tiene el turno
+        servicioTruco.cambiarTurno(actual);
 
         // Buscar la carta seleccionada en la mano del jugador
         Carta cartaSeleccionada = getCartaDeLasCartasDelJuegadorPorId(cartaId, actual);
 
-        // Tirar carta del jugador actual
-        servicioTruco.tirarCarta(actual, cartaSeleccionada);
-
-        // Si ya se jugó una ronda, cambia el turno a el jugador que corresponda
-        servicioTruco.determinarGanadorRonda(jugador1, jugador2);
-
         try {
+            // Tirar carta del jugador actual
             servicioTruco.tirarCarta(actual, cartaSeleccionada);
-            session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+            // Si ya se jugó una ronda, cambia el turno a el jugador que corresponda
+            servicioTruco.determinarGanadorRonda(jugador1, jugador2);
         } catch (TrucoException e) {
-            session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+            // TODO terminar
         }
 
-        // Inyección al modelo
-//        model.put("rondas", servicioTruco.getRondasDeLaManoActual());
-//        model.put("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        // Comprobar si ya no tienen más cartas para terminar la mano
+//        if (servicioTruco.saberSiLaManoEstaTerminada()) {
+//            servicioTruco.terminarMano();
+//        } else {
+//            // TODO terminar
+//        }
+
+        session.setAttribute("puntosJ1", servicioTruco.getPuntosDeJugador(jugador1));
+        session.setAttribute("puntosJ2", servicioTruco.getPuntosDeJugador(jugador2));
+        session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
 
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
@@ -181,14 +197,17 @@ public class ControladorTruco {
         session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
         session.setAttribute("envidoValido", servicioTruco.esLaPrimerRonda());
         session.setAttribute("trucoValido", servicioTruco.esLaPrimerRonda());
+        session.setAttribute("envidoValidoJ1", servicioTruco.esLaPrimerRonda());
+        session.setAttribute("envidoValidoJ2", servicioTruco.esLaPrimerRonda());
+
+        // Visualización de respuestas
+        session.setAttribute("mostrarRespuestasJ1", true);
+        session.setAttribute("mostrarRespuestasJ2", true);
         session.setAttribute("mostrarRespuestasEnvidoJ1", false);
         session.setAttribute("mostrarRespuestasEnvidoJ2", false);
         session.setAttribute("mostrarRespuestasTrucoJ1", false);
         session.setAttribute("mostrarRespuestasTrucoJ2", false);
-        session.setAttribute("envidoValidoJ1", servicioTruco.esLaPrimerRonda());
-        session.setAttribute("envidoValidoJ2", servicioTruco.esLaPrimerRonda());
-        session.setAttribute("mostrarRespuestasJ1", false);
-        session.setAttribute("mostrarRespuestasJ2", false);
+
         // para ver como va
         session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
         session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
@@ -211,72 +230,49 @@ public class ControladorTruco {
         Jugador actuador = saberJugadorPorNombre(actuadorNombre, j1, j2);
         if (actuador == null) return new ModelAndView("redirect:/home");
         Jugador receptor = null;
+
         receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
 
+        System.out.println("Recibi acción: " + accionValue);
         Integer nroAccion = servicioTruco.preguntar(accionValue, actuador, receptor);
-
-//        if (accionValue.equals("ENVIDO")) {
-//            Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
-//            Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(j2);
-//            session.setAttribute("tantoJ1", tantoJ1);
-//            session.setAttribute("tantoJ2", tantoJ2);
-//
-//            // Mostrar respuesta -> quiero/no quiero
-//            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
-//                session.setAttribute("mostrarRespuestasJ2", true);
-//            } else {
-//                session.setAttribute("mostrarRespuestasJ1", true);
-//            }
-//        }
+        String saberAccion = servicioTruco.saberAccion(nroAccion);
 
         // Utiles
         session.setAttribute("envidoValido", false);
-        if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
-            session.setAttribute("mostrarRespuestasJ2", true);
-        } else {
-            session.setAttribute("mostrarRespuestasJ1", true);
-        }
-      
-        if (actuador.getNombre().equals(j1.getNombre())) {
-            receptor = j2;
-        } else {
-            receptor = j1;
-        }
-
-
-        Integer nroAccion = servicioTruco.accion(accionValue, actuador, receptor, 2);
-        session.setAttribute("nroDeAccionAResponder", nroAccion);
-
-        if (accionValue.equals("ENVIDO")) {
+        if (saberAccion.equals("ENVIDO")) {
             Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
             Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(j2);
             session.setAttribute("tantoJ1", tantoJ1);
             session.setAttribute("tantoJ2", tantoJ2);
 
             // Mostrar respuesta -> quiero/no quiero
-            if(actuadorNombre.equalsIgnoreCase(j1.getNombre())){
+            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
+                session.setAttribute("mostrarRespuestasJ2", false);
                 session.setAttribute("mostrarRespuestasEnvidoJ2", true);
+                session.setAttribute("mostrarRespuestasTrucoJ2", false);
             } else {
+                session.setAttribute("mostrarRespuestasJ1", false);
                 session.setAttribute("mostrarRespuestasEnvidoJ1", true);
+                session.setAttribute("mostrarRespuestasTrucoJ1", false);
             }
         }
 
-        if(accionValue.equals("TRUCO")){
+        if (saberAccion.equals("TRUCO")) {
             // Mostrar respuesta -> quiero/no quiero
-            if(actuadorNombre.equalsIgnoreCase(j1.getNombre())){
+            if (actuadorNombre.equalsIgnoreCase(j1.getNombre())) {
+                session.setAttribute("mostrarRespuestasJ2", false);
+                session.setAttribute("mostrarRespuestasEnvidoJ2", false);
                 session.setAttribute("mostrarRespuestasTrucoJ2", true);
             } else {
+                session.setAttribute("mostrarRespuestasJ1", false);
+                session.setAttribute("mostrarRespuestasEnvidoJ1", false);
                 session.setAttribute("mostrarRespuestasTrucoJ1", true);
             }
         }
 
-        //session.setAttribute("envidoValido", false);
-      //  session.setAttribute("trucoValido", false);
-
         // SOLO PARA VER EN DESARROLLO
         session.setAttribute("acciones", servicioTruco.getAcciones());
         session.setAttribute("nroDeAccionAResponder", nroAccion);
-
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -296,29 +292,51 @@ public class ControladorTruco {
         Jugador receptor = null;
         Integer nroDeAccionAResponder = (int) session.getAttribute("nroDeAccionAResponder");
 
-        if (actuador.getNombre().equals(j1.getNombre())) {
-            receptor = j2;
-        } else {
-            receptor = j1;
-        }
+        receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
+
+        // Desarrollo (despues borrar)
+        String respuestaDada = saberAccion(respuesta);
+        System.out.println("Respondió: '" + respuestaDada + "'.");
 
         Jugador leTocaResponder = servicioTruco.responder(respuesta, actuador, receptor, nroDeAccionAResponder);
+        String saberAccion = servicioTruco.saberAccion(nroDeAccionAResponder);
 
-        // UTILES
-        session.setAttribute("puntosJ1", servicioTruco.getPuntosDeUnJugador(j1));
-        session.setAttribute("puntosJ2", servicioTruco.getPuntosDeUnJugador(j2));
-        if (leTocaResponder == null) {
-            session.setAttribute("mostrarRespuestasJ1", false);
-            session.setAttribute("mostrarRespuestasJ2", false);
+        if (respuestaDada.equals("QUIERO") || respuestaDada.equals("NO QUIERO")) {
+            session.setAttribute("mostrarRespuestasJ1", true);
+            session.setAttribute("mostrarRespuestasJ2", true);
+            session.setAttribute("mostrarRespuestasTrucoJ1", false);
+            session.setAttribute("mostrarRespuestasTrucoJ2", false);
+            session.setAttribute("mostrarRespuestasEnvidoJ1", false);
+            session.setAttribute("mostrarRespuestasEnvidoJ2", false);
         } else {
             if (leTocaResponder.getNombre().equalsIgnoreCase(j1.getNombre())) {
-                session.setAttribute("mostrarRespuestasJ1", true);
-                session.setAttribute("mostrarRespuestasJ2", false);
-            } else {
                 session.setAttribute("mostrarRespuestasJ1", false);
-                session.setAttribute("mostrarRespuestasJ2", true);
+                if (esEnvido(saberAccion)) {
+                    session.setAttribute("mostrarRespuestasEnvidoJ1", true);
+                    session.setAttribute("mostrarRespuestasEnvidoJ2", false);
+                } else if (esTruco(saberAccion)) {
+                    session.setAttribute("mostrarRespuestasTrucoJ1", true);
+                    session.setAttribute("mostrarRespuestasTrucoJ2", false);
+                } else {
+                    System.out.println("No debí entrar aca, revisame.");
+                }
+            } else {
+                session.setAttribute("mostrarRespuestasJ2", false);
+                if (esEnvido(saberAccion)) {
+                    session.setAttribute("mostrarRespuestasEnvidoJ2", true);
+                    session.setAttribute("mostrarRespuestasEnvidoJ1", false);
+                } else if (esTruco(saberAccion)) {
+                    session.setAttribute("mostrarRespuestasTrucoJ2", true);
+                    session.setAttribute("mostrarRespuestasTrucoJ1", false);
+                } else {
+                    System.out.println("No debí entrar aca, revisame.");
+                }
             }
         }
+
+        // UTILES
+        session.setAttribute("puntosJ1", servicioTruco.getPuntosDeJugador(j1));
+        session.setAttribute("puntosJ2", servicioTruco.getPuntosDeJugador(j2));
 
         // SOLO PARA VER EN DESARROLLO
         session.setAttribute("acciones", servicioTruco.getAcciones());
@@ -341,7 +359,7 @@ public class ControladorTruco {
         if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
 
         // Mostrar respuesta -> quiero/no quiero
-        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
+        if (jugadorNombre.equalsIgnoreCase(jugador1.getNombre())) {
             session.setAttribute("mostrarRespuestasEnvidoJ2", true);
             cantador = jugador1;
             receptor = jugador2;
@@ -462,13 +480,13 @@ public class ControladorTruco {
         return null;
     }
 
-/*LOGICA TRUCO*/
+    /*LOGICA TRUCO*/
 
     @PostMapping("/responderTruco")
     public ModelAndView responderTruco(
             @RequestParam("respuestaTruco") String respuesta,
             HttpSession session,
-            @RequestParam("jugador") String jugadorNombre ) {
+            @RequestParam("jugador") String jugadorNombre) {
 
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
         Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
@@ -495,57 +513,116 @@ public class ControladorTruco {
     }
 
 
-    @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
-    public ModelAndView cantarTruco(
-            @RequestParam("jugador") String jugadorNombre,
-            @RequestParam("respuestaTruco") String respuesta,
-            HttpSession session) {
-        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
-        Jugador cantador = null;
-        Jugador receptor = null;
+//    @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
+//    public ModelAndView cantarTruco(
+//            @RequestParam("jugador") String jugadorNombre,
+//            @RequestParam("respuestaTruco") String respuesta,
+//            HttpSession session) {
+//        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+//        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+//        Jugador cantador = null;
+//        Jugador receptor = null;
+//
+//        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+//
+//        // Mostrar respuesta -> quiero/no quiero
+//        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
+//            session.setAttribute("mostrarRespuestasTrucoJ2", true);
+//            cantador = jugador1;
+//            receptor = jugador2;
+//        } else {
+//            session.setAttribute("mostrarRespuestasTrucoJ1", true);
+//            cantador = jugador2;
+//            receptor = jugador1;
+//        }
+//
+////        servicioTruco.accion("truco", cantador, receptor);
+//        Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador1);
+//        Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador2);
+//
+//        // Actualizar los jugadores en la sesión para mantener el estado del juego
+//        session.setAttribute("jugador1", jugador1);
+//        session.setAttribute("jugador2", jugador2);
+//        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
+//        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
+//        session.setAttribute("cartasJugador1", jugador1.getCartas());
+//        session.setAttribute("cartasJugador2", jugador2.getCartas());
+//        session.setAttribute("jugador1", jugador1);
+//        session.setAttribute("jugador2", jugador2);
+//        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
+//        session.setAttribute("tantoJ1", tantoJ1);
+//        session.setAttribute("tantoJ2", tantoJ2);
+//
+//        // para ver como va
+//        session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+//        session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+//        session.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
+//
+//        return new ModelAndView("redirect:/partida-truco");
+//    }
+//
+//    private String saberAccionTruco (String respuesta) {
+//        String respuestaDada = "";
+//        switch (Integer.parseInt(respuesta)) {
+//            case 0:
+//                respuestaDada = "NO QUIERO";
+//                break;
+//            case 1:
+//                respuestaDada = "QUIERO";
+//                break;
+//            case 2:
+//                respuestaDada = "RE TRUCO";
+//                break;
+//            case 3:
+//                respuestaDada = "VALE CUATRO";
+//                break;
+//            default:
+//                return "";
+//        }
+//        return respuestaDada;
+//    }
 
-        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+//   @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
+//    public ModelAndView accionCantarTruco( @RequestParam("jugador") String jugadorNombre,
+//                                           HttpSession session) {
+//
+//        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
+//        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+//
+//        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
+//
+//        //obtener el jugador que canto el truco
+//        Jugador jugadorActual = jugador1.getNombre().equals(jugadorNombre) ? jugador1 : jugador2;
+//
+//        // Cantar Truco
+//        Boolean trucoCantado = servicioTruco.cantarTruco();
+//
+//        // Actualizar el modelo con los datos de la partida
+//        session.setAttribute("jugador1", jugador1);
+//        session.setAttribute("jugador2", jugador2);
+//        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
+//        session.setAttribute("trucoCantado", trucoCantado);
+//        session.setAttribute("trucoCantadoPor", jugadorActual.getNombre());
+//
+//        return new ModelAndView("redirect:/partida-truco");
+//    }
 
-        // Mostrar respuesta -> quiero/no quiero
-        if(jugadorNombre.equalsIgnoreCase(jugador1.getNombre())){
-            session.setAttribute("mostrarRespuestasTrucoJ2", true);
-            cantador = jugador1;
-            receptor = jugador2;
-        } else {
-            session.setAttribute("mostrarRespuestasTrucoJ1", true);
-            cantador = jugador2;
-            receptor = jugador1;
-        }
+    // Métodos para separar responsabilidades
 
-        servicioTruco.accion("truco", cantador, receptor);
-        Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador1);
-        Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(jugador2);
-
-        // Actualizar los jugadores en la sesión para mantener el estado del juego
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
-        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
-        session.setAttribute("cartasJugador1", jugador1.getCartas());
-        session.setAttribute("cartasJugador2", jugador2.getCartas());
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-        session.setAttribute("tantoJ1", tantoJ1);
-        session.setAttribute("tantoJ2", tantoJ2);
-
-        // para ver como va
-        session.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
-        session.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
-        session.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
-
-        return new ModelAndView("redirect:/partida-truco");
+    private Boolean esEnvido (String accion) {
+        return accion.equalsIgnoreCase("ENVIDO") ||
+                accion.equalsIgnoreCase("REAL ENVIDO") ||
+                accion.equalsIgnoreCase("FALTA ENVIDO");
     }
 
-    private String saberAccionTruco (String respuesta) {
+    private Boolean esTruco (String accion) {
+        return accion.equalsIgnoreCase("TRUCO") || accion.equalsIgnoreCase("RE TRUCO") || accion.equalsIgnoreCase("VALE CUATRO");
+    }
+
+    // Métodos para desarrollo
+    private String saberAccion(String numberValue) {
         String respuestaDada = "";
-        switch (Integer.parseInt(respuesta)) {
+        switch (Integer.parseInt(numberValue)) {
             case 0:
                 respuestaDada = "NO QUIERO";
                 break;
@@ -553,40 +630,33 @@ public class ControladorTruco {
                 respuestaDada = "QUIERO";
                 break;
             case 2:
-                respuestaDada = "RE TRUCO";
+                respuestaDada = "ENVIDO";
                 break;
             case 3:
-                respuestaDada = "VALE CUATRO";
+                respuestaDada = "REAL ENVIDO";
+                break;
+            case 4:
+                respuestaDada = "FALTA ENVIDO";
+                break;
+            case 5:
+                respuestaDada = "TRUCO";
+                break;
+            case 6:
+                respuestaDada = "RE TRUCO";
+                break;
+            case 7:
+                respuestaDada = "VALE 4";
+                break;
+            case 8:
+                respuestaDada = "FLOR";
+                break;
+            case 9:
+                respuestaDada = "MAZO";
                 break;
             default:
                 return "";
         }
         return respuestaDada;
     }
-
-   /* @RequestMapping(path = "/accion-truco", method = RequestMethod.POST)
-    public ModelAndView accionCantarTruco( @RequestParam("jugador") String jugadorNombre,
-                                           HttpSession session) {
-
-        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
-
-        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
-
-        //obtener el jugador que canto el truco
-        Jugador jugadorActual = jugador1.getNombre().equals(jugadorNombre) ? jugador1 : jugador2;
-
-        // Cantar Truco
-        Boolean trucoCantado = servicioTruco.cantarTruco();
-
-        // Actualizar el modelo con los datos de la partida
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
-        session.setAttribute("trucoCantado", trucoCantado);
-        session.setAttribute("trucoCantadoPor", jugadorActual.getNombre());
-
-        return new ModelAndView("redirect:/partida-truco");
-    }*/
 
 }

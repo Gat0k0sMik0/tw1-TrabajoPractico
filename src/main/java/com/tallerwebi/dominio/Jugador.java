@@ -26,11 +26,15 @@ public class Jugador {
     }
 
     public Integer getPuntosPartida() {
-        return puntosPartida;
+        return this.puntosPartida;
     }
 
     public void setPuntosPartida(Integer puntosPartida) {
         this.puntosPartida = puntosPartida;
+    }
+
+    public void acumularPuntosDePartida (Integer puntos) {
+        this.puntosPartida += puntos;
     }
 
 //        public List<Integer> getPuntos () {

@@ -13,6 +13,7 @@ public class Truco {
     private Integer contadorAcciones = 0;
     private Integer puntosJ1 = 0;
     private Integer puntosJ2 = 0;
+    private Integer puntosEnJuegoDeLaMano = 0;
 
     private Boolean isLaManoTerminada;
 
@@ -151,10 +152,22 @@ public class Truco {
         // Si ya se jugaronn todas las cartas
         if (this.manoActual.getRondas().size() == 6) {
             Jugador ganador = this.manoActual.obtenerGanador();
-            this.ultimoGanador = ganador;
-            this.manoActual.setJugador(ganador);
-            this.manoActual.setPuntos(1);
-            this.manosDePartida.add(this.manoActual);
+
+            if (!this.saberSiHuboAlgunTruco()) {
+                System.out.println("sumarPuntoDeRonda: No hubo trucos cantados");
+                this.manoActual.acumularPuntosEnJuego(1); // por ganar 2/3 rondas sin truco
+            }
+
+            this.manoActual.acumularPuntosEnJuego(puntosEnJuegoDeLaMano); // por ganar algún truco
+
+            System.out.println("sumarPuntoDeRonda: Puntos en juego de la mano: " + this.manoActual.getPuntos());
+            ganador.acumularPuntosDePartida(this.manoActual.getPuntos());
+
+            this.ultimoGanador = ganador; // el ultimo que ganó
+            this.manoActual.setJugador(ganador); // el que ganó más rondas
+
+            this.manosDePartida.add(this.manoActual); // guardar historico
+
 //            this.manoActual = null;
         }
     }
@@ -235,26 +248,63 @@ public class Truco {
         return true;
     }
 
+    // -- HANDLERS DE ACCIONES --
 
+    // Saber si hubo algún truco
+    private Boolean saberSiHuboAlgunTruco() {
+        for (Accion a : this.acciones) {
+            if (a.getAccion().equals("TRUCO")) {
+                if (a.getRespuesta()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Accion getAccionPorNro(Integer nro) {
+        for (Accion a : this.acciones) {
+            if (a.getNroAccion().equals(nro)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    // -- HANDLERS DE LA MANO ACTUAL --
+
+    // Obtener número de movimientos
     public Integer getMovimientosDeLaManoActual() {
         return this.manoActual.getNumeroDeMovimientosRealizados();
     }
 
+    // Saber si hubo 6 movimientos y 3 rondas.
     public boolean yaNoTieneCartas() {
         return this.manoActual.getNumeroDeMovimientosRealizados().equals(6) && this.manoActual.getRondasJugadas().equals(3);
     }
 
+    // Terminar la mano actual
     public void terminarManoActual() {
         this.isLaManoTerminada = true;
     }
 
-    public Boolean getLaManoTerminada() {
-        return isLaManoTerminada;
+    // Saber si la mano esta terminada
+    public Boolean isLaManoTerminada() {
+        return this.isLaManoTerminada;
     }
 
-    public void setLaManoTerminada(Boolean laManoTerminada) {
-        isLaManoTerminada = laManoTerminada;
+    // Retornar jugador que ganó la mano
+    public Jugador getGanadorDeLaMano() {
+        return this.manoActual.getJugador();
     }
+
+    // Retornar puntos del ganador de la mano (afectado por truco, re truco)
+    public Integer getPuntosDelGanadorDeLaMano() {
+        return this.puntosEnJuegoDeLaMano;
+    }
+
+    // -- FIN HANDLERS DE MANO ACTUAL --
+
 
     public List<Accion> getAcciones() {
         return acciones;
@@ -272,14 +322,6 @@ public class Truco {
         this.trucoCantado = trucoCantado;
     }
 
-    public Accion getAccionPorNro(Integer nro) {
-        for (Accion a : this.acciones) {
-            if (a.getNroAccion().equals(nro)) {
-                return a;
-            }
-        }
-        return null;
-    }
 
     public void guardarPuntosDePartida(Jugador j, Integer puntos) {
         Jugador buscado = this.getJugador(j);
@@ -306,4 +348,24 @@ public class Truco {
         return null;
     }
 
+    public void agregarPuntosEnJuegoManoActual(Integer puntos) {
+        this.manoActual.acumularPuntosEnJuego(puntos);
+    }
+
+    public int getPuntosEnJuegoDeLaManoActual() {
+        return this.manoActual.getPuntos();
+    }
+
+    public void guardarPuntosParaElGanadorDelTruco(Integer puntosEnJuego) {
+        this.puntosEnJuegoDeLaMano += puntosEnJuego;
+    }
+
+
+    public Integer getPuntosJ1() {
+        return this.puntosJ1;
+    }
+
+    public Integer getPuntosJ2() {
+        return this.puntosJ2;
+    }
 }
