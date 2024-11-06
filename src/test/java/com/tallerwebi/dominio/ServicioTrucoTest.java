@@ -403,35 +403,19 @@ public class ServicioTrucoTest {
     }
 
     @Test
-    void queSeCanteUnTrucoYHayaGanador() throws IndiceFueraDeRangoException {
+    void queSeCanteUnTruco() throws IndiceFueraDeRangoException {
         // given
         List<Carta> seis = givenAsignoCartasALosJugadores();
         servicioTruco.empezar(jugadores, seis);
         Truco truco = servicioTruco.getTruco();
         truco.empezarMano(jugadores);
-        Jugador ganadorEnvido = null;
         // when
         Integer nroAccion = servicioTruco.preguntar("5", j1, j2); // truco
         Jugador ahoraLeToca = servicioTruco.responder("1", j2, j1, nroAccion); // quiero
+        // then
         assertThat(ahoraLeToca, notNullValue());
         assertEquals(j1.getNombre(), ahoraLeToca.getNombre());
         assertEquals(2, truco.getPuntosEnJuegoDeLaManoActual());
-
-//        servicioTruco.actualizarRespuestaDeAccion(nroAccion, true);
-//        Integer tantoJ1 = servicioTruco.calcularTantosDeCartasDeUnJugador(j1);
-//        Integer tantoJ2 = servicioTruco.calcularTantosDeCartasDeUnJugador(j2);
-//
-//        if (tantoJ2 > tantoJ1) {
-//            ganadorEnvido = j1;
-//        } else {
-//            ganadorEnvido = j2;
-//        }
-//        servicioTruco.guardarPuntos(ganadorEnvido, 2);
-//        // then
-//        assertEquals(31, tantoJ1);
-//        assertEquals(25, tantoJ2);
-//        assertEquals(2, servicioTruco.getPuntosDeUnJugador(j2));
-//        assertEquals(0, servicioTruco.getPuntosDeUnJugador(j1));
     }
 
 

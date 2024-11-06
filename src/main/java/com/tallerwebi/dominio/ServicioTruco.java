@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import java.util.List;
 
 public interface ServicioTruco {
+
     void empezar(List<Jugador> jugadores);
     void empezar(List<Jugador> jugadores, List<Carta> cartas); // solo test
     // de juego
@@ -12,12 +13,15 @@ public interface ServicioTruco {
     Integer accion (String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego);
     Accion getAccionPorNro (Integer nro);
     void guardarPuntos(Jugador j, Integer puntos);
-    Integer getPuntosDeUnJugador (Jugador jugador);
+    Integer getPuntosDeJugador (Jugador jugador);
     void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta);
     Jugador responder(String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion);
     Integer preguntar(String accion, Jugador ejecutor, Jugador receptor);
 
     void sumarPuntosEnJuego(Integer nroAccion, Integer puntosEnJuego);
+
+    // Si se termina la mano
+
 
     // de comprobación
     List<Ronda> getRondasJugadas();
@@ -37,4 +41,6 @@ public interface ServicioTruco {
     Boolean cantarTruco();
 
     String saberAccion(Integer nroAccion);
+
+    void terminarMano();
 }
