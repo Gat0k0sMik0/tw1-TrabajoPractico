@@ -310,33 +310,25 @@ public class ControladorTruco {
             session.setAttribute("mostrarRespuestasEnvidoJ2", false);
         } else {
             if (leTocaResponder.getNombre().equalsIgnoreCase(j1.getNombre())) {
-                if (saberAccion.equals("ENVIDO") ||
-                        saberAccion.equals("REAL ENVIDO") ||
-                        saberAccion.equals("FALTA ENVIDO")) {
+                session.setAttribute("mostrarRespuestasJ1", false);
+                if (esEnvido(saberAccion)) {
                     session.setAttribute("mostrarRespuestasEnvidoJ1", true);
                     session.setAttribute("mostrarRespuestasEnvidoJ2", false);
-                } else if (saberAccion.equals("TRUCO") ||
-                        saberAccion.equals("RE TRUCO") ||
-                        saberAccion.equals("VALE 4")) {
+                } else if (esTruco(saberAccion)) {
                     session.setAttribute("mostrarRespuestasTrucoJ1", true);
                     session.setAttribute("mostrarRespuestasTrucoJ2", false);
                 } else {
-                    // no deberia entrar aca
                     System.out.println("No debí entrar aca, revisame.");
                 }
             } else {
-                if (saberAccion.equals("ENVIDO") ||
-                        saberAccion.equals("REAL ENVIDO") ||
-                        saberAccion.equals("FALTA ENVIDO")) {
+                session.setAttribute("mostrarRespuestasJ2", false);
+                if (esEnvido(saberAccion)) {
                     session.setAttribute("mostrarRespuestasEnvidoJ2", true);
                     session.setAttribute("mostrarRespuestasEnvidoJ1", false);
-                } else if (saberAccion.equals("TRUCO") ||
-                        saberAccion.equals("RE TRUCO") ||
-                        saberAccion.equals("VALE 4")) {
+                } else if (esTruco(saberAccion)) {
                     session.setAttribute("mostrarRespuestasTrucoJ2", true);
                     session.setAttribute("mostrarRespuestasTrucoJ1", false);
                 } else {
-                    // no deberia entrar aca
                     System.out.println("No debí entrar aca, revisame.");
                 }
             }
@@ -614,6 +606,18 @@ public class ControladorTruco {
 //
 //        return new ModelAndView("redirect:/partida-truco");
 //    }
+
+    // Métodos para separar responsabilidades
+
+    private Boolean esEnvido (String accion) {
+        return accion.equalsIgnoreCase("ENVIDO") ||
+                accion.equalsIgnoreCase("REAL ENVIDO") ||
+                accion.equalsIgnoreCase("FALTA ENVIDO");
+    }
+
+    private Boolean esTruco (String accion) {
+        return accion.equalsIgnoreCase("TRUCO") || accion.equalsIgnoreCase("RE TRUCO") || accion.equalsIgnoreCase("VALE CUATRO");
+    }
 
     // Métodos para desarrollo
     private String saberAccion(String numberValue) {
