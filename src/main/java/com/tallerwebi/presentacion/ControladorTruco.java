@@ -192,8 +192,6 @@ public class ControladorTruco {
         session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
         session.setAttribute("cartasJugador1", jugador1.getCartas());
         session.setAttribute("cartasJugador2", jugador2.getCartas());
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
         session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());
         session.setAttribute("envidoValido", servicioTruco.esLaPrimerRonda());
         session.setAttribute("trucoValido", servicioTruco.esLaPrimerRonda());
@@ -237,23 +235,27 @@ public class ControladorTruco {
 
         // Acción de ir al mazo
         if ("9".equals(accionValue)) {
-            actuador.irseAlMazo();
+            receptor.ganarPuntosPorIrseAlMazo();
 
-            // Limpiar las cartas de ambos jugadores
+            // Limpiar las cartas de ambos jugadores y sumar 2 puntos al receptor
             j1.getCartas().clear();
             j2.getCartas().clear();
-
-            // Sumar 2 puntos al receptor (jugador contrario)
             receptor.setPuntosRonda(receptor.getPuntosRonda() + 2);
+            if (receptor.getNombre().equals(j1.getNombre())) {
+                j1.setPuntosRonda(receptor.getPuntosRonda());
+            } else {
+                j2.setPuntosRonda(receptor.getPuntosRonda());
+            }
+            // Llamar al servicio para terminar la mano
+            servicioTruco.terminarMano();
 
             // Guardar el estado actualizado en la sesión
             session.setAttribute("jugador1", j1);
             session.setAttribute("jugador2", j2);
-
-            // Opción para mostrar un mensaje o actualizar el estado en la vista
             session.setAttribute("mensaje", actuador.getNombre() + " se fue al mazo. " +
                     receptor.getNombre() + " gana 2 puntos.");
-
+            session.setAttribute("puntosJ1", servicioTruco.getPuntosDeJugador(j1));
+            session.setAttribute("puntosJ2", servicioTruco.getPuntosDeJugador(j2));
             return new ModelAndView("redirect:/partida-truco");
         }
 

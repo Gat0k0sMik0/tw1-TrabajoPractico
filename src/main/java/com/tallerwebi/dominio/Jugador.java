@@ -109,8 +109,8 @@ public class Jugador {
                 '}';
     }
 
-    public void irseAlMazo() {
-        this.puntosPartida += 1;
+    public void ganarPuntosPorIrseAlMazo() {
+        this.puntosPartida += 2;
         this.cartasTiradas.clear();
         this.cartas.clear();
     }

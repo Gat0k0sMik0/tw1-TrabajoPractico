@@ -286,6 +286,10 @@ public class Truco {
     // Terminar la mano actual
     public void terminarManoActual() {
         this.isLaManoTerminada = true;
+        if (manoActual != null) {
+            manosDePartida.add(manoActual); // Guarda la mano en el historial
+        }
+        this.manoActual = null;
     }
 
     // Saber si la mano esta terminada
