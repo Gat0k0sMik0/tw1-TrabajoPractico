@@ -108,4 +108,10 @@ public class Jugador {
                 ", puntos=" + puntos +
                 '}';
     }
+
+    public void irseAlMazo() {
+        this.puntosPartida += 1;
+        this.cartasTiradas.clear();
+        this.cartas.clear();
+    }
 }
