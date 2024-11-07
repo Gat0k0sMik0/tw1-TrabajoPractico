@@ -232,6 +232,31 @@ public class ControladorTruco {
         Jugador receptor = null;
 
         receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
+        receptor = actuador == j1 ? j2 : j1;
+
+
+        // Acción de ir al mazo
+        if ("9".equals(accionValue)) {
+            actuador.irseAlMazo();
+
+            // Limpiar las cartas de ambos jugadores
+            j1.getCartas().clear();
+            j2.getCartas().clear();
+
+            // Sumar 2 puntos al receptor (jugador contrario)
+            receptor.setPuntosRonda(receptor.getPuntosRonda() + 2);
+
+            // Guardar el estado actualizado en la sesión
+            session.setAttribute("jugador1", j1);
+            session.setAttribute("jugador2", j2);
+
+            // Opción para mostrar un mensaje o actualizar el estado en la vista
+            session.setAttribute("mensaje", actuador.getNombre() + " se fue al mazo. " +
+                    receptor.getNombre() + " gana 2 puntos.");
+
+            return new ModelAndView("redirect:/partida-truco");
+        }
+
 
         System.out.println("Recibi acción: " + accionValue);
         Integer nroAccion = servicioTruco.preguntar(accionValue, actuador, receptor);
