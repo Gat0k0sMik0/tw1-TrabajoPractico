@@ -4,26 +4,25 @@ import java.util.List;
 
 public interface ServicioTruco {
 
+    // PRINCIPALES
     void empezar(List<Jugador> jugadores);
-    void empezar(List<Jugador> jugadores, List<Carta> cartas); // solo test
-    // de juego
-    void tirarCarta(Jugador jugador, Carta cartaSeleccionada);
-    void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
-    void cambiarTurno(Jugador jugador1);
-    Integer accion (String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego);
-    Accion getAccionPorNro (Integer nro);
-    void guardarPuntos(Jugador j, Integer puntos);
-    Integer getPuntosDeJugador (Jugador jugador);
-    void actualizarRespuestaDeAccion(Integer nroAccion, Boolean respuesta);
+    void empezar(List<Jugador> jugadores, List<Carta> cartas);
     Jugador responder(String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion);
     Integer preguntar(String accion, Jugador ejecutor, Jugador receptor);
+    Integer accion (String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego);
+    void cambiarTurno(Jugador jugador1);
+    void tirarCarta(Jugador jugador, Carta cartaSeleccionada);
 
-    void sumarPuntosEnJuego(Integer nroAccion, Integer puntosEnJuego);
+    // de juego
+    void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
+    Accion getAccionPorNro (Integer nro);
+    Integer getPuntosDeJugador (Jugador jugador);
+
 
     // Si se termina la mano
 
 
-    // de comprobación
+    // DE COMPROBACION (DESARROLLO)
     List<Ronda> getRondasJugadas();
     Integer calcularTantosDeCartasDeUnJugador(Jugador j);
     Boolean esLaPrimerRonda();
