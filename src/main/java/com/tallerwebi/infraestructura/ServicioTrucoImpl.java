@@ -123,9 +123,9 @@ public class ServicioTrucoImpl implements ServicioTruco {
 
         // Si ya no tienen más cartas, terminamos la ronda
         if (this.truco.yaNoTieneCartas()) {
-            this.truco.terminarManoActual(); // setear atributo
-            Jugador ganador = this.truco.getGanadorDeLaMano(); // buscar ganador
-            Integer puntos = this.truco.getPuntosDelGanadorDeLaMano(); // buscar puntos de ganador
+//            this.truco.terminarManoActual(); // setear atributo
+//            Jugador ganador = this.truco.getGanadorDeLaMano(); // buscar ganador
+//            Integer puntos = this.truco.getPuntosDelGanadorDeLaMano(); // buscar puntos de ganador
         }
     }
 

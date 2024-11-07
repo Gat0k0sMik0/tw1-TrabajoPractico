@@ -8,51 +8,52 @@ import java.util.List;
 @Component
 public class Truco {
 
-    private Integer nroRonda;
-    private Integer testigo;
+    // Atributos
     private Integer contadorAcciones = 0;
-    private Integer puntosJ1 = 0;
-    private Integer puntosJ2 = 0;
     private Integer puntosEnJuegoDeLaMano = 0;
+    private Boolean trucoCantado;
+    private Boolean estado = false; // terminada o no
 
-    private Boolean isLaManoTerminada;
-
+    // 1 - 1
     private Mano manoActual;
     private Mazo mazo;
+
+    // Listas 1 - N
+    private List<Mano> manosDePartida;
+    private List<Accion> acciones;
+
+    // uso necesario a futuro
+    private Integer puntosJ1 = 0;
+    private Integer puntosJ2 = 0;
     // List<Carta> cartas
 
+    // uso raro (poco o nulo)
     private Jugador ultimoGanador;
+//    private List<Jugador> jugadores; // 2-4
 
-    private List<Mano> manosDePartida;
-    private List<Jugador> jugadores; // 2-4
-    private List<Accion> acciones;
-    private Boolean trucoCantado;
 
     /*
     servicio repartir cartas
     */
 
     public Truco() {
-        this.nroRonda = 0;
-        this.testigo = 0;
-        this.isLaManoTerminada = false;
         this.mazo = new Mazo();
-        this.jugadores = new ArrayList<>();
+//        this.jugadores = new ArrayList<>();
         this.manosDePartida = new ArrayList<>();
         this.acciones = new ArrayList<>();
     }
 
     // Crear mano y asignar jugadores
     public void empezarMano(List<Jugador> jugadores) {
-        this.manoActual = new Mano(jugadores);
-        this.jugadores = jugadores;
+        this.manoActual = new Mano(jugadores); // jugadores solo para test
+//        this.jugadores = jugadores;
     }
 
     // Asignar cartas
     public void asignarCartasJugadores(List<Jugador> jugadores) {
         List<Carta> seisCartasRandom = this.mazo.getSeisCartasAleatoriasSinRepetir();
         this.mazo.asignarCartasAJugadores(jugadores, seisCartasRandom);
-        this.jugadores = jugadores;
+//        this.jugadores = jugadores;
     }
 
     public Integer calcularEnvido(List<Carta> cartas) {
@@ -163,8 +164,8 @@ public class Truco {
             System.out.println("sumarPuntoDeRonda: Puntos en juego de la mano: " + this.manoActual.getPuntos());
             ganador.acumularPuntosDePartida(this.manoActual.getPuntos());
 
-            this.ultimoGanador = ganador; // el ultimo que ganó
-            this.manoActual.setJugador(ganador); // el que ganó más rondas
+//            this.ultimoGanador = ganador; // el ultimo que ganó
+//            this.manoActual.setJugador(ganador); // el que ganó más rondas
 
             this.manosDePartida.add(this.manoActual); // guardar historico
 
@@ -172,9 +173,9 @@ public class Truco {
         }
     }
 
-    public Jugador getGanadorDeManoPorNumero(Integer nroMano) {
-        return this.manosDePartida.get(nroMano).getJugador();
-    }
+//    public Jugador getGanadorDeManoPorNumero(Integer nroMano) {
+//        return this.manosDePartida.get(nroMano).getJugador();
+//    }
 
     public Carta buscarCartaPorNumeroYPalo(Integer numero, String palo) {
         for (Carta c : this.mazo.getCartas()) {
@@ -186,34 +187,25 @@ public class Truco {
     }
 
 
-    public Jugador saberQuienSumoMasPuntosEnLasManos(Jugador j1, Jugador j2) {
-        int puntosJ1 = 0;
-        int puntosJ2 = 0;
-        for (Mano m : this.manosDePartida) {
-            if (m.getJugador().equals(j1)) {
-                puntosJ1++;
-            } else {
-                puntosJ2++;
-            }
-        }
-        if (puntosJ1 > puntosJ2) {
-            return j1;
-        } else {
-            return j2;
-        }
-    }
+//    public Jugador saberQuienSumoMasPuntosEnLasManos(Jugador j1, Jugador j2) {
+//        int puntosJ1 = 0;
+//        int puntosJ2 = 0;
+//        for (Mano m : this.manosDePartida) {
+//            if (m.getJugador().equals(j1)) {
+//                puntosJ1++;
+//            } else {
+//                puntosJ2++;
+//            }
+//        }
+//        if (puntosJ1 > puntosJ2) {
+//            return j1;
+//        } else {
+//            return j2;
+//        }
+//    }
 
     public String getGanadorDeRondaDeManoActualPorNumero(Integer nroRonda) {
         return this.manoActual.getGanadorDeUnaRondaPorNumero(nroRonda).getNombre();
-    }
-
-
-    public Integer getNroRonda() {
-        return nroRonda;
-    }
-
-    public void setNroRonda(Integer nroRonda) {
-        this.nroRonda = nroRonda;
     }
 
     public List<Mano> getManosDePartida() {
@@ -234,14 +226,6 @@ public class Truco {
 
     public void setMazo(Mazo mazo) {
         this.mazo = mazo;
-    }
-
-    public Integer getTestigo() {
-        return testigo;
-    }
-
-    public void setTestigo(Integer testigo) {
-        this.testigo = testigo;
     }
 
     public boolean saberSiEraLaUltimaCartaDeLaMano() {
@@ -283,20 +267,10 @@ public class Truco {
         return this.manoActual.getNumeroDeMovimientosRealizados().equals(6) && this.manoActual.getRondasJugadas().equals(3);
     }
 
-    // Terminar la mano actual
-    public void terminarManoActual() {
-        this.isLaManoTerminada = true;
-    }
-
-    // Saber si la mano esta terminada
-    public Boolean isLaManoTerminada() {
-        return this.isLaManoTerminada;
-    }
-
     // Retornar jugador que ganó la mano
-    public Jugador getGanadorDeLaMano() {
-        return this.manoActual.getJugador();
-    }
+//    public Jugador getGanadorDeLaMano() {
+//        return this.manoActual.getJugador();
+//    }
 
     // Retornar puntos del ganador de la mano (afectado por truco, re truco)
     public Integer getPuntosDelGanadorDeLaMano() {
@@ -323,30 +297,30 @@ public class Truco {
     }
 
 
-    public void guardarPuntosDePartida(Jugador j, Integer puntos) {
-        Jugador buscado = this.getJugador(j);
-        if (buscado != null) {
-            buscado.setPuntosPartida(puntos);
-        }
-    }
-
-
-    public Integer getPuntosDeUnJugador(Jugador jugador) {
-        Jugador buscado = this.getJugador(jugador);
-        if (buscado != null) {
-            return buscado.getPuntosPartida();
-        }
-        return -1;
-    }
-
-    private Jugador getJugador(Jugador jugador) {
-        for (Jugador j : this.jugadores) {
-            if (j.equals(jugador)) {
-                return j;
-            }
-        }
-        return null;
-    }
+//    public void guardarPuntosDePartida(Jugador j, Integer puntos) {
+//        Jugador buscado = this.getJugador(j);
+//        if (buscado != null) {
+//            buscado.setPuntosPartida(puntos);
+//        }
+//    }
+//
+//
+//    public Integer getPuntosDeUnJugador(Jugador jugador) {
+//        Jugador buscado = this.getJugador(jugador);
+//        if (buscado != null) {
+//            return buscado.getPuntosPartida();
+//        }
+//        return -1;
+//    }
+//
+//    private Jugador getJugador(Jugador jugador) {
+//        for (Jugador j : this.jugadores) {
+//            if (j.equals(jugador)) {
+//                return j;
+//            }
+//        }
+//        return null;
+//    }
 
     public void agregarPuntosEnJuegoManoActual(Integer puntos) {
         this.manoActual.acumularPuntosEnJuego(puntos);
@@ -367,5 +341,9 @@ public class Truco {
 
     public Integer getPuntosJ2() {
         return this.puntosJ2;
+    }
+
+    public Boolean isLaManoTerminada() {
+        return this.manoActual.getEstaTerminada();
     }
 }
