@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
 import com.tallerwebi.infraestructura.RepositorioCartaImpl;
+import com.tallerwebi.infraestructura.RepositorioTrucoImpl;
 import com.tallerwebi.infraestructura.ServicioTrucoImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,8 @@ import static org.mockito.Mockito.mock;
 public class ServicioTrucoTest {
 
     RepositorioCartaImpl repositorioCarta = mock(RepositorioCartaImpl.class);
-    ServicioTruco servicioTruco = new ServicioTrucoImpl(repositorioCarta);
+    RepositorioTrucoImpl repositorioTruco = mock(RepositorioTrucoImpl.class);
+    ServicioTruco servicioTruco = new ServicioTrucoImpl(repositorioCarta, repositorioTruco);
 
     Jugador j1 = new Jugador("gonza");
     Jugador j2 = new Jugador("leo");

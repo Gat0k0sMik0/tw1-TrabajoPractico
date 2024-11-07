@@ -2,11 +2,18 @@ package com.tallerwebi.dominio;
 
 import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Entity
+@Table(name = "Truco")
 public class Truco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // Atributos
     private Integer contadorAcciones = 0;
@@ -15,19 +22,29 @@ public class Truco {
     private Boolean estado = false; // terminada o no
 
     // 1 - 1
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "mano_id", referencedColumnName = "id")
     private Mano manoActual;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "mazo_id", referencedColumnName = "id")
     private Mazo mazo;
 
+
     // Listas 1 - N
+    @OneToMany(mappedBy = "truco", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mano> manosDePartida;
+
+    @Transient
     private List<Accion> acciones;
 
     // uso necesario a futuro
     private Integer puntosJ1 = 0;
     private Integer puntosJ2 = 0;
-    // List<Carta> cartas
+    // List<Carta> cartasl
 
     // uso raro (poco o nulo)
+    @Transient
     private Jugador ultimoGanador;
 //    private List<Jugador> jugadores; // 2-4
 
@@ -335,6 +352,58 @@ public class Truco {
     }
 
 
+    public Boolean isLaManoTerminada() {
+        return this.manoActual.getEstaTerminada();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getContadorAcciones() {
+        return contadorAcciones;
+    }
+
+    public void setContadorAcciones(Integer contadorAcciones) {
+        this.contadorAcciones = contadorAcciones;
+    }
+
+    public Integer getPuntosEnJuegoDeLaMano() {
+        return puntosEnJuegoDeLaMano;
+    }
+
+    public void setPuntosEnJuegoDeLaMano(Integer puntosEnJuegoDeLaMano) {
+        this.puntosEnJuegoDeLaMano = puntosEnJuegoDeLaMano;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    public Mano getManoActual() {
+        return manoActual;
+    }
+
+    public void setManoActual(Mano manoActual) {
+        this.manoActual = manoActual;
+    }
+
+    public void setPuntosJ1(Integer puntosJ1) {
+        this.puntosJ1 = puntosJ1;
+    }
+
+    public void setPuntosJ2(Integer puntosJ2) {
+        this.puntosJ2 = puntosJ2;
+    }
+
     public Integer getPuntosJ1() {
         return this.puntosJ1;
     }
@@ -343,7 +412,29 @@ public class Truco {
         return this.puntosJ2;
     }
 
-    public Boolean isLaManoTerminada() {
-        return this.manoActual.getEstaTerminada();
+    public Jugador getUltimoGanador() {
+        return ultimoGanador;
+    }
+
+    public void setUltimoGanador(Jugador ultimoGanador) {
+        this.ultimoGanador = ultimoGanador;
+    }
+
+    @Override
+    public String toString() {
+        return "Truco{" + "\n" +
+                "id=" + id + "\n" +
+                ", contadorAcciones=" + contadorAcciones + "\n" +
+                ", puntosEnJuegoDeLaMano=" + puntosEnJuegoDeLaMano + "\n" +
+                ", trucoCantado=" + trucoCantado + "\n" +
+                ", estado=" + estado + "\n" +
+                ", manoActual=" + manoActual + "\n" +
+                ", mazo=" + mazo + "\n" +
+                ", manosDePartida=" + manosDePartida + "\n" +
+                ", acciones=" + acciones + "\n" +
+                ", puntosJ1=" + puntosJ1 + "\n" +
+                ", puntosJ2=" + puntosJ2 + "\n" +
+                ", ultimoGanador=" + ultimoGanador + "\n" +
+                '}';
     }
 }

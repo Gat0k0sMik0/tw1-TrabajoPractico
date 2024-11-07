@@ -1,6 +1,9 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.*;
+
 public class Accion {
+
     private Jugador jugadorQueEjecuta;
     private String accion;
     private Boolean respuesta;

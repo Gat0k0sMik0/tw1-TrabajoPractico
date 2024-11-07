@@ -13,9 +13,11 @@ import java.util.List;
 public class ServicioTrucoImpl implements ServicioTruco {
 
     private Truco truco;
-    private RepositorioCarta repositorioCarta;
     private Jugador turno;
     private Boolean trucoCantado;
+
+    private RepositorioCarta repositorioCarta;
+    private RepositorioTruco repositorioTruco; // partida
   
     /*
     Class truco maneja todo
@@ -25,8 +27,11 @@ public class ServicioTrucoImpl implements ServicioTruco {
     */
 
     @Autowired
-    public ServicioTrucoImpl(RepositorioCarta repositorioCarta) { // ServicioTurno turnos
+    public ServicioTrucoImpl(
+            RepositorioCarta repositorioCarta,
+            RepositorioTruco repositorioTruco) { // ServicioTurno turnos
         this.repositorioCarta = repositorioCarta;
+        this.repositorioTruco = repositorioTruco;
     }
 
     // -- MÉTODOS PRINCIPALES
@@ -47,6 +52,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
         this.truco.getMazo().setCartas(s);
         this.truco.asignarCartasJugadores(jugadores);
         this.truco.empezarMano(jugadores);
+        repositorioTruco.guardarPartida(this.truco);
     }
 
     // Comenzar partida (TEST)
@@ -174,11 +180,11 @@ public class ServicioTrucoImpl implements ServicioTruco {
         return leTocaResponder;
     }
 
-    private Boolean esEnvido (String accion) {
+    private Boolean esEnvido(String accion) {
         return accion.equals("ENVIDO") || accion.equals("REAL ENVIDO");
     }
 
-    private Boolean esTruco (String accion) {
+    private Boolean esTruco(String accion) {
         return accion.equals("TRUCO") || accion.equals("RE TRUCO") || accion.equals("VALE 4");
     }
 

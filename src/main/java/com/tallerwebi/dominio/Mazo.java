@@ -2,11 +2,18 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.IndiceFueraDeRangoException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Entity
 public class Mazo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Transient
     private List<Carta> cartas; // one to many
 
     public Mazo() {
