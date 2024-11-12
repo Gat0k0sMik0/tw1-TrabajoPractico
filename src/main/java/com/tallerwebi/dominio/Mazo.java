@@ -82,9 +82,9 @@ public class Mazo {
         return cartas.get(new Random().nextInt(cartas.size()));
     }
 
-    public Carta getCartaPorIndice (Integer indice) throws IndiceFueraDeRangoException {
+    public Carta getCartaPorIndice (Integer indice) {
         if (indice < 0 || indice > cartas.size()) {
-            throw new IndiceFueraDeRangoException();
+//            throw new IndiceFueraDeRangoException();
         }
         return this.cartas.get(indice);
     }

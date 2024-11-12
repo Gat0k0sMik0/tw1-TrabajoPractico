@@ -59,4 +59,8 @@ public interface ServicioTruco {
 
     // nuevos - solo test
     Jugador getUltimoGanadorDeMano();
+
+    Integer getCartasTiradas();
+
+    String getGanadorDeRondaPorNumero(int i);
 }
