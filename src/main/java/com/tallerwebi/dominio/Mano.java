@@ -4,12 +4,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "Mano")
 public class Mano {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // Los puntos (afecta acciones como truco, envido, etc)
 
@@ -20,27 +16,24 @@ public class Mano {
     private Boolean estaTerminada = false;
 
     // Listas 1 - N ?
-    @Transient
     private List<Ronda> rondas;
 
     // Solo usado para testear
-    @Transient
     private List<Jugador> ganadoresDeRonda;
 
     // Sin uso actualmente
 
     // Uso escaso/dudoso
-    @Transient
     private List<Jugador> jugadores; // 2-4
 
     // Requeridas para relacionar por hibernate
-    @ManyToOne
-    @JoinColumn(name = "truco_id")
     private Truco truco;
 
     public Mano() {
 
     }
+
+
 
     public Mano(List<Jugador> jugadores) {
         this.rondas = new ArrayList<>();

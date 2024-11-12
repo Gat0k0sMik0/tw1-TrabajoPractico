@@ -9,8 +9,16 @@ public interface ServicioTruco {
     void empezar(List<Jugador> jugadores, List<Carta> cartas);
     Jugador responder(String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion);
     Integer preguntar(String accion, Jugador ejecutor, Jugador receptor);
+
+    // Comenzar partida (TEST)
+    void empezar(Jugador j1, Jugador j2);
+
     Integer accion (String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego);
     void cambiarTurno(Jugador jugador1);
+
+    // Comenzar partida (TEST)
+    void empezar(Jugador j1, Jugador j2, List<Carta> cartas);
+
     void tirarCarta(Jugador jugador, Carta cartaSeleccionada);
 
     // de juego
@@ -42,4 +50,13 @@ public interface ServicioTruco {
     String saberAccion(Integer nroAccion);
 
     void terminarMano();
+
+    // Nuevos
+    Integer getCantidadJugadores();
+    List<Jugador> getJugadores();
+    List<Ronda> getRondas();
+    List<Mano> getManos();
+
+    // nuevos - solo test
+    Jugador getUltimoGanadorDeMano();
 }

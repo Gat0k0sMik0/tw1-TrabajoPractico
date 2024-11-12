@@ -141,7 +141,6 @@ public class Mazo {
         } else {
             // Algo
         }
-
     }
 
     public List<Carta> getCartas() {

@@ -4,10 +4,10 @@ import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ServicioTrucoImpl implements ServicioTruco {
@@ -18,6 +18,21 @@ public class ServicioTrucoImpl implements ServicioTruco {
 
     private RepositorioCarta repositorioCarta;
     private RepositorioTruco repositorioTruco; // partida
+
+    // LISTAS
+    private List<Jugador> jugadores;
+    private List<Ronda> rondas;
+    private List<Mano> manos;
+
+    // ATRIBUTOS
+    private Boolean estaEmpezada = false;
+    private Boolean estaLaManoTerminada = false;
+    private Integer nroRonda = 0;
+    private Integer nroMovimientos = 0;
+
+    // ATRIBUTOS CON CLASES
+    private Mano manoActual;
+    private Jugador ultimoGanadorDeMano;
   
     /*
     Class truco maneja todo
@@ -26,12 +41,26 @@ public class ServicioTrucoImpl implements ServicioTruco {
     Mano (id_jugador_ganador, puntos_ganados)
     */
 
+    /*
+    - MÉTODOS PRINCIPALES
+
+    - MÉTODOS CARTA
+    - MÉTODOS JUGADORES
+    - MÉTODOS RONDA
+    - MÉTODOS MANO
+
+    */
+
     @Autowired
     public ServicioTrucoImpl(
             RepositorioCarta repositorioCarta,
             RepositorioTruco repositorioTruco) { // ServicioTurno turnos
         this.repositorioCarta = repositorioCarta;
         this.repositorioTruco = repositorioTruco;
+        this.jugadores = new ArrayList<>();
+        this.rondas = new ArrayList<>();
+        this.manos = new ArrayList<>();
+        this.ultimoGanadorDeMano = null;
     }
 
     // -- MÉTODOS PRINCIPALES
@@ -70,6 +99,225 @@ public class ServicioTrucoImpl implements ServicioTruco {
         this.truco.empezarMano(jugadores);
     }
 
+
+    // Comenzar partida (TEST)
+    @Override
+    public void empezar(Jugador j1, Jugador j2, List<Carta> cartas) {
+        this.jugadores.add(j1);
+        this.jugadores.add(j2);
+        this.estaEmpezada = true;
+        this.manoActual = new Mano();
+//        List<Carta> cartas = this.getCartas(); // 6 cartas random
+        this.asignarCartasAJugadores(this.jugadores, cartas);
+//        this.truco.asignarCartasJugadores(jugadores, cartas);
+//        this.truco.empezarMano(jugadores);
+    }
+
+    @Override
+    public void empezar(Jugador j1, Jugador j2) {
+
+    }
+
+    // Método para que el jugador tire una carta
+    public void tirarCarta(Jugador jugador, Carta cartaSeleccionada) {
+        if (!this.estaLaManoTerminada) {
+            // Si la mano no esta terminada
+            List<Carta> cartasJugador = jugador.getCartas();
+            if (cartasJugador.contains(cartaSeleccionada)) {
+                jugador.tirarCarta(cartaSeleccionada);
+                this.guardarRonda(jugador, cartaSeleccionada);
+            } else {
+                throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
+            }
+        } else {
+            // No debería entrar aca
+            System.out.println("Error.");
+        }
+
+        // Si ya no tienen más cartas, terminamos la ronda
+//        if (this.truco.yaNoTieneCartas()) {
+//            this.truco.terminarManoActual(); // setear atributo
+//            Jugador ganador = this.truco.getGanadorDeLaMano(); // buscar ganador
+//            Integer puntos = this.truco.getPuntosDelGanadorDeLaMano(); // buscar puntos de ganador
+//        }
+    }
+
+    // --- MANEJO DE CARTAS ---
+
+    // Obtener 6 aleatorias y asigna valor de envido.
+    private List<Carta> getCartas() {
+//        List<Carta> cartasBD = this.repositorioCarta.obtenerCartas();
+        // SOLO TEST
+        this.truco = new Truco();
+        List<Carta> cartasBD = this.truco.getMazo().getCartas();
+        System.out.println("Longitud cartas: " + cartasBD.size());
+        // FIN SOLO TEST
+
+        List<Carta> cartasBuscadas = new ArrayList<>();
+        int indice = 0;
+        int random = 0;
+        Random r = new Random();
+        while (indice < 6) {
+            random = r.nextInt(cartasBD.size());
+            Carta cartaRandom = cartasBD.get(random);
+            if (cartasBuscadas.isEmpty()) {
+                cartasBuscadas.add(cartaRandom);
+                indice++;
+            } else {
+                if (!saberSiLaCartaSeRepiteEnMazo(cartasBuscadas, cartaRandom.getNumero(), cartaRandom.getPalo())) {
+                    cartasBuscadas.add(cartaRandom);
+                    indice++;
+                }
+            }
+
+        }
+
+        // Asignar valor de envido.
+        for (Carta c : cartasBuscadas) {
+            if (c.getNumero() >= 10 && c.getNumero() <= 12) {
+                c.setValorEnvido(0);
+            } else {
+                c.setValorEnvido(c.getNumero());
+            }
+        }
+
+        return cartasBuscadas;
+    }
+
+    // Validación para no repetir
+    private Boolean saberSiLaCartaSeRepiteEnMazo(List<Carta> cartas, Integer numero, String palo) {
+        for (Carta carta : cartas) {
+            if (carta.getNumero().equals(numero) && carta.getPalo().equalsIgnoreCase(palo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Asignar a jugadores de lista
+    private void asignarCartasAJugadores(List<Jugador> jugadores, List<Carta> seis) {
+        if (jugadores.size() == 2) {
+            Carta c1 = seis.get(0);
+            Carta c2 = seis.get(1);
+            Carta c3 = seis.get(2);
+            List<Carta> mazo1 = new ArrayList<>();
+            mazo1.add(c1);
+            mazo1.add(c2);
+            mazo1.add(c3);
+            Carta c4 = seis.get(3);
+            Carta c5 = seis.get(4);
+            Carta c6 = seis.get(5);
+            List<Carta> mazo2 = new ArrayList<>();
+            mazo2.add(c4);
+            mazo2.add(c5);
+            mazo2.add(c6);
+            jugadores.get(0).setCartas(mazo1);
+            jugadores.get(1).setCartas(mazo2);
+        } else {
+            // Algo
+        }
+    }
+
+
+    // --- MANEJO DE JUGADORES ---
+
+    @Override
+    public Integer getCantidadJugadores() {
+        return this.jugadores.size();
+    }
+
+    @Override
+    public List<Jugador> getJugadores() {
+        return this.jugadores;
+    }
+
+    // --- MANEJO DE RONDAS ---
+
+    // Compara las cartas tiradas y suma punto de ronda al que tiro la de mayor valor
+    // Si se llegaron a las 6 rondas, ya se determina el ganador
+    // TODO: que pasa si se termina antes? (ejemplo: gano las 2 primeras rondas yo)
+    @Override
+    public void determinarGanadorRonda(Jugador jugador1, Jugador jugador2) {
+        // Si ya tiraron los 2
+        if (jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
+            // Conseguimos las últimas tiradas.
+            Carta cartaJ1 = jugador1.getCartasTiradas().get(jugador1.getCartasTiradas().size() - 1);
+            Carta cartaJ2 = jugador2.getCartasTiradas().get(jugador2.getCartasTiradas().size() - 1);
+
+            // Comparamos quien tiró la más alta, en base a eso damos poder
+            if (cartaJ1.getValor() > cartaJ2.getValor()) {
+                this.sumarPuntoDeRonda(jugador1);
+                cambiarTurno(jugador2);
+            } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
+                cambiarTurno(jugador1);
+                this.sumarPuntoDeRonda(jugador2);
+            }
+        }
+
+        if (this.rondas.size() == 6) {
+            if (jugador1.getPuntosRonda() > jugador2.getPuntosRonda()) {
+                this.ultimoGanadorDeMano = jugador1;
+            } else {
+                this.ultimoGanadorDeMano = jugador2;
+            }
+        }
+    }
+
+    private void guardarRonda(Jugador j1, Carta cartaTirada) {
+        this.rondas.add(new Ronda(nroRonda, j1, cartaTirada));
+        if (this.nroMovimientos++ % 2 != 0) {
+            this.nroRonda++;
+        }
+    }
+
+    @Override
+    public List<Ronda> getRondas() {
+        return this.rondas;
+    }
+
+    // Suma punto para saber que jugador ganó la ronda
+    // Sí Franco gano 2 rondas, tendrá 2 puntos.
+    // Si Gonzalo ganó 1 ronda, tendrá 1 punto
+    // Entonces el que se llevá un punto por ganar la mano es Franco
+    // Ese punto se ve afectado si se canta truco, envido, flor, etc.
+    private void sumarPuntoDeRonda(Jugador jugador) {
+//        this.manoActual.guardarGanadorDeRonda(jugador);
+        jugador.agregarPuntoRonda();
+//        // Si ya se jugaronn todas las cartas
+//        if (this.rondas.size() == 6) {
+//            Jugador ganador = this.manoActual.obtenerGanador();
+//
+//            if (!this.saberSiHuboAlgunTruco()) {
+//                System.out.println("sumarPuntoDeRonda: No hubo trucos cantados");
+//                this.manoActual.acumularPuntosEnJuego(1); // por ganar 2/3 rondas sin truco
+//            }
+//
+//            this.manoActual.acumularPuntosEnJuego(puntosEnJuegoDeLaMano); // por ganar algún truco
+//
+//            System.out.println("sumarPuntoDeRonda: Puntos en juego de la mano: " + this.manoActual.getPuntos());
+//            ganador.acumularPuntosDePartida(this.manoActual.getPuntos());
+//
+////            this.ultimoGanador = ganador; // el ultimo que ganó
+////            this.manoActual.setJugador(ganador); // el que ganó más rondas
+//
+//            this.manosDePartida.add(this.manoActual); // guardar historico
+//
+////            this.manoActual = null;
+//        }
+    }
+
+    private void guardarGanadorDeRonda(Jugador jugador) {
+        jugador.agregarPuntoRonda();
+//        this.ganadoresDeRonda.add(jugador);
+    }
+
+    // --- MANEJO DE MANOS ---
+
+    @Override
+    public List<Mano> getManos() {
+        return this.manos;
+    }
+
     // Generar acción (truco, envido, real envido, vale 4)
     @Override
     public Integer accion(String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego) {
@@ -87,6 +335,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
             return manejarEnvido(accionEncontrada, ejecutor, receptor);
         }
     }
+
 
     // Responder a la acción propuesta (quiero, no quiero, envido, re truco)
     @Override
@@ -112,34 +361,12 @@ public class ServicioTrucoImpl implements ServicioTruco {
         return leTocaResponder;
     }
 
-    // Método para que el jugador tire una carta
-    public void tirarCarta(Jugador jugador, Carta cartaSeleccionada) {
-        if (!truco.isLaManoTerminada()) {
-            // Si la mano no esta terminada
-            List<Carta> cartasJugador = jugador.getCartas();
-            if (cartasJugador.contains(cartaSeleccionada)) {
-                jugador.tirarCarta(cartaSeleccionada); // Sacar carta de la mano al jugador
-                truco.registrarJugada(jugador, cartaSeleccionada);
-            } else {
-                throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
-            }
-        } else {
-            // No debería entrar aca
-        }
-
-        // Si ya no tienen más cartas, terminamos la ronda
-        if (this.truco.yaNoTieneCartas()) {
-//            this.truco.terminarManoActual(); // setear atributo
-//            Jugador ganador = this.truco.getGanadorDeLaMano(); // buscar ganador
-//            Integer puntos = this.truco.getPuntosDelGanadorDeLaMano(); // buscar puntos de ganador
-        }
-    }
 
     // Terminar la mano cuando no tengan cartas
     // TODO: que se corte antes -> EJ: truco en la segunda ronda y la respuesta es "NO QUIERO"
     @Override
     public void terminarMano() {
-        this.truco.terminarManoActual();
+//        this.truco.terminarManoActual();
     }
 
     private void manejarRespuestaTruco() {
@@ -391,23 +618,11 @@ public class ServicioTrucoImpl implements ServicioTruco {
     // Determinar quien gano la ronda
     // sumarPuntoDeRonda() -> suma punto para llevar control de quien ganará la mano.
     // cambiarTrurno() -> Depende quien la gano, es quien le toca ahora
-    @Override
-    public void determinarGanadorRonda(Jugador jugador1, Jugador jugador2) {
-        // Si ya tiraron los 2
-        if (jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
-            // Conseguimos las últimas tiradas.
-            Carta cartaJ1 = jugador1.getCartasTiradas().get(jugador1.getCartasTiradas().size() - 1);
-            Carta cartaJ2 = jugador2.getCartasTiradas().get(jugador2.getCartasTiradas().size() - 1);
 
-            // Comparamos quien tiró la más alta, en base a eso damos poder
-            if (cartaJ1.getValor() > cartaJ2.getValor()) {
-                this.truco.sumarPuntoDeRonda(jugador1);
-                cambiarTurno(jugador2);
-            } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
-                cambiarTurno(jugador1);
-                this.truco.sumarPuntoDeRonda(jugador2);
-            }
-        }
+
+    @Override
+    public Jugador getUltimoGanadorDeMano() {
+        return this.ultimoGanadorDeMano;
     }
 
     @Override
