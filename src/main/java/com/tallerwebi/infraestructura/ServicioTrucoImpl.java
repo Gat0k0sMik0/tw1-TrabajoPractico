@@ -139,7 +139,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
     // TODO: que se corte antes -> EJ: truco en la segunda ronda y la respuesta es "NO QUIERO"
     @Override
     public void terminarMano() {
-
+        this.truco.terminarManoActual();
     }
 
     private void manejarRespuestaTruco() {
