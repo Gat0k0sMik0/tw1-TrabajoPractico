@@ -22,7 +22,7 @@ public interface ServicioMano {
 
     Jugador getGanadorDeManoActual();
 
-    void setGanadorDeRonda(Jugador jugador1);
+    void setGanadorDeMano(Jugador jugador1);
 
     String getGanadorDeRondaPorNumero(int i);
 }

@@ -39,6 +39,7 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public void guardarRonda(Jugador jugador, Carta cartaSeleccionada) {
+        System.out.println("Guardé una ronda");
         servicioRonda.crearRonda(jugador, cartaSeleccionada);
     }
 
@@ -62,11 +63,12 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public Jugador getGanadorDeManoActual() {
+        System.out.println("Me piden ganador de mano actual.");
         return this.ganadorDeManoActual;
     }
 
     @Override
-    public void setGanadorDeRonda(Jugador j) {
+    public void setGanadorDeMano(Jugador j) {
         this.ganadorDeManoActual = j;
         j.acumularPuntosDePartida(1);
     }

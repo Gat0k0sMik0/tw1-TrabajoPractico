@@ -133,6 +133,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
             if (cartasJugador.contains(cartaSeleccionada)) {
                 jugador.tirarCarta(cartaSeleccionada);
                 servicioMano.guardarRonda(jugador, cartaSeleccionada);
+                System.out.println("GUARDE RONDA PA");
                 this.cartasTiradas++;
             } else {
                 throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
@@ -247,21 +248,24 @@ public class ServicioTrucoImpl implements ServicioTruco {
             // Comparamos quien tiró la más alta, en base a eso damos poder
             if (cartaJ1.getValor() > cartaJ2.getValor()) {
                 servicioMano.sumarPuntoDeRonda(jugador1);
+                System.out.println("PuntoRonda para J1");
 //                this.sumarPuntoDeRonda(jugador1);
                 cambiarTurno(jugador2);
             } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
                 servicioMano.sumarPuntoDeRonda(jugador2);
+                System.out.println("PuntoRonda para J2");
                 cambiarTurno(jugador1);
 //                this.sumarPuntoDeRonda(jugador2);
             }
         }
-
-        if (this.rondas.size() == 6) {
+        System.out.println(servicioMano.getRondas().size());
+        if (servicioMano.getRondas().size() == 6) {
+            System.out.println("Ya se hicieron 6 rondas");
             if (jugador1.getPuntosRonda() > jugador2.getPuntosRonda()) {
-                servicioMano.setGanadorDeRonda(jugador1);
+                servicioMano.setGanadorDeMano(jugador1);
                 this.ultimoGanadorDeMano = jugador1;
             } else {
-                servicioMano.setGanadorDeRonda(jugador2);
+                servicioMano.setGanadorDeMano(jugador2);
                 this.ultimoGanadorDeMano = jugador2;
             }
         }

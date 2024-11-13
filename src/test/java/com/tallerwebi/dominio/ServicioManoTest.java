@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.infraestructura.ServicioManoImpl;
-import com.tallerwebi.infraestructura.ServicioRondaImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +54,7 @@ public class ServicioManoTest {
 
     @Test
     public void queSeLeGuardeUnPuntoPorHaberGanadoLaMano () {
-        servicioMano.setGanadorDeRonda(j1);
+        servicioMano.setGanadorDeMano(j1);
         assertThat(servicioMano.getGanadorDeManoActual().getPuntosPartida(), equalTo(1));
     }
 

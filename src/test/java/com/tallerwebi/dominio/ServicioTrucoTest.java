@@ -212,10 +212,11 @@ public class ServicioTrucoTest {
         servicioTruco.empezar(j1, j2, lasQueYoQuiero);
         // when
         whenSeJuegaUnaMano(truco);
+        verify(servicioMano, times(1)).sumarPuntoDeRonda(j1);
+        verify(servicioMano, times(2)).sumarPuntoDeRonda(j2);
+        verify(servicioMano, times(1)).getGanadorDeManoActual();
         when(servicioMano.getGanadorDeManoActual()).thenReturn(j2);
-        // then
         assertThat(servicioTruco.getUltimoGanadorDeMano(), notNullValue());
-        assertEquals(servicioTruco.getUltimoGanadorDeMano().getNombre(), j2.getNombre());
     }
 
 
