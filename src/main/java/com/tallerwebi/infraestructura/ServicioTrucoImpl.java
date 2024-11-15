@@ -60,6 +60,7 @@ public class ServicioTrucoImpl implements ServicioTruco {
             ServicioMano servicioMano) { // ServicioTurno turnos
         this.repositorioCarta = repositorioCarta;
         this.repositorioTruco = repositorioTruco;
+
         this.servicioMano = servicioMano;
 
         this.jugadores = new ArrayList<>();
@@ -87,6 +88,14 @@ public class ServicioTrucoImpl implements ServicioTruco {
         this.truco.asignarCartasJugadores(jugadores);
         this.truco.empezarMano(jugadores);
         repositorioTruco.guardarPartida(this.truco);
+
+      truco truco  =    new Truco ();
+      truco.setJugador1(j1);
+      truco.setJugador2(j1);
+
+
+      this.repositorioTruco.guardarPartida(truco);
+      return truco;
     }
 
     // Comenzar partida (TEST)

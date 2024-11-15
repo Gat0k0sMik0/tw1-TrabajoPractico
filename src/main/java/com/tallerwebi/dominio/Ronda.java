@@ -1,5 +1,9 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
+
 public class Ronda {
 
     private Integer nroRonda;
@@ -8,13 +12,20 @@ public class Ronda {
     private Integer nroCarta;
     private String palo;
 
-    public Ronda(Integer nroRonda, Jugador jugador, Carta carta) {
-        this.nroRonda = nroRonda;
-        this.jugador = jugador;
-        this.valorCarta = carta.getValor();
-        this.nroCarta = carta.getNumero();
-        this.palo = carta.getPalo();
-    }
+    @ManyToOne
+    private Mano mano;
+
+    @OneToMany
+    private List<Carta> cartasJ1;
+    @OneToMany
+    private List<Carta> cartasJ2;
+
+    @OneToMany
+    private List<Carta> cartasTiradasJ1;
+    @OneToMany
+    private List<Carta> cartasTiradasJ2;
+
+
 
     public Integer getNroRonda() {
         return nroRonda;

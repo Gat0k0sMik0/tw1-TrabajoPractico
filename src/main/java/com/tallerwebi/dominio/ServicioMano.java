@@ -25,4 +25,6 @@ public interface ServicioMano {
     void setGanadorDeMano(Jugador jugador1);
 
     String getGanadorDeRondaPorNumero(int i);
+
+    void jugarCarta(Long idMano, Long idCartaJugada, Integer idJugador);
 }

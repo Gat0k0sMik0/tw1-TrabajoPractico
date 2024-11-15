@@ -67,6 +67,8 @@ public class ControladorTruco {
         model.put("reEnvido", session.getAttribute("reEnvido"));
         model.put("realEnvido", session.getAttribute("realEnvido"));
 
+        model.put("mano", servicioMano.getMano(0));
+
         // Para ver como va
         model.put("rondas", session.getAttribute("rondas"));
         model.put("manos", session.getAttribute("manos"));
@@ -91,15 +93,27 @@ public class ControladorTruco {
         // Asignamos usuario como jugador
         Jugador jugador1 = new Jugador(usuario.getNombreUsuario());
         Jugador jugador2 = new Jugador("Juan ElComeChancho");
-        System.out.println(jugador1.getNombre());
-        System.out.println(jugador2.getNombre());
+        usuario1.setNumero(1);
+        usuario2.setNumero(2);
+
+
+        Jugador j1  = this.servicioJgador.BuscarJugadorPorId(idj1);
+        Jugador j2 = this.servicioJgador.BuscarJugadorPorId(idj2);
+
+        this.servicioTruco.iniciarJuego(j1,j2);
+
+
+
 
         List<Jugador> jugadores = new ArrayList<>();
         jugadores.add(jugador1);
         jugadores.add(jugador2);
 //
         // Empezamos la partida
-        servicioTruco.empezar(jugadores);
+        Truco truco  = servicioTruco.empezar(j1,j2);
+        Ronda ronda  = this.servicioRonda.crearRonda(truco);
+        Mano mano= thisservicioMano.cearmanop(ronda)
+
 
         // Obtenemos las cartas de los jugadores
         List<Carta> cartasJugador1 = jugador1.getCartas();

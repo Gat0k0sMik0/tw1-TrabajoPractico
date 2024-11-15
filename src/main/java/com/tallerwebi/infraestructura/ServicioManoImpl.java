@@ -77,6 +77,38 @@ public class ServicioManoImpl implements ServicioMano {
     public String getGanadorDeRondaPorNumero(int i) {
         return servicioRonda.getGanadorDeRondaPorNumero(i);
     }
+
+    @Override
+    public void jugarCarta(Long idMano, Long idCartaJugada, Integer nrojugador) {
+        Mano mano = servicioMano.getManoPorId(idMano);
+        List<Carta> cartas = null;
+        List<Carta> cartasJugadas = null;
+        mano.getRonda().getTruco().getJ1()
+        if (nrojugador.equals(1)) {
+            cartas = mano.getCartasJ1();
+            cartasJugadas= mano.getCartasTiradasJ1();
+        } else {
+            // es el 2
+            cartas = mano.getCartasJ2();
+            cartasJugadas = mano.getCartasTiradasJ2();
+        }
+
+        for (Carta carta : cartas) {
+            if (carta.getId().equals(idCartaJugada)) {
+                cartasJugadas.add(carta);
+                cartas.remove(carta);
+            }
+        }
+
+        repositorioMano.guardar(mano);
+    }
+
+    private void juegoCarta(Mano mano, Long idCartaJugada, int i) {
+        if (i ==  1) {
+            mano.getCartasNoJugadas(i)
+        }
+    }
+
     @Override
     public List<Mano> getManos() {
         return this.manos;

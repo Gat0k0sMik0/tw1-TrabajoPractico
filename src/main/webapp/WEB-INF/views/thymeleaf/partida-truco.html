@@ -126,9 +126,15 @@
             </div>
             <!-- CARTAS  -->
             <div class="gap-2 cartasJugadorContainer col-4">
+                <div th:each="carta : ${mano.getCartasJ1()}">
+                <a th:href="@{/jugarCarta?ronda={ronda.id}&idCarta={carta.id}&nroJugador=1}" >
+
+                </a>
+                </div>
+                <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
                 <form method="post" th:action="@{/accion-tirar}" th:each="carta : ${cartasJugador1}">
                     <input type="hidden" name="cartaId" th:value="${carta.id}">
-                    <input type="hidden" name="jugador" th:value="${jugador1.nombre}">
+                    <input type="hidden" name="jugador" th:value="1">
                     <input type="hidden" name="cartaValor" th:value="${carta.valor}">
                     <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador1}">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
