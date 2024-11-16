@@ -1,8 +1,6 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioTruco;
-import com.tallerwebi.dominio.Truco;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -11,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 
-@SuppressWarnings("unchecked")
 @Repository
 public class RepositorioTrucoImpl implements RepositorioTruco {
+
     private SessionFactory sessionFactory;
 
     @Autowired
@@ -23,14 +21,15 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
 
     @Transactional
     @Override
-    public void guardarPartida(Truco truco) {
+    public void guardarPartida(Truco2 truco) {
         sessionFactory.getCurrentSession().save(truco);
     }
 
+    @Transactional
     @Override
-    public Truco buscarPartidaPorId(Long id) {
+    public Truco2 buscarPartidaPorId(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        return (Truco) session.createCriteria(Truco.class)
+        return (Truco2) session.createCriteria(Truco2.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
     }

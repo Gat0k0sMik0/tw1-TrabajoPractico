@@ -2,7 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.TrucoException;
-import com.tallerwebi.infraestructura.ServicioTrucoImpl;
+import com.tallerwebi.infraestructura.ServicioManoImpl2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +22,18 @@ import java.util.List;
 public class ControladorTruco {
 
     @Autowired
-    private ServicioTruco servicioTruco;
+    private ServicioPartida2 servicioTruco;
+    @Autowired
+    private ServicioMano2 servicioMano2;
+    @Autowired
+    private ServicioRonda2 servicioRonda2;
 
-    public ControladorTruco(ServicioTruco servicioTruco) {
+    public ControladorTruco(ServicioPartida2 servicioTruco,
+                            ServicioMano2 servicioMano2,
+                            ServicioRonda2 servicioRonda2) {
         this.servicioTruco = servicioTruco;
+        this.servicioMano2 = servicioMano2;
+        this.servicioRonda2 = servicioRonda2;
     }
 
     @RequestMapping("/partida-truco")
@@ -35,7 +43,7 @@ public class ControladorTruco {
 
         List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
         List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
-        Boolean isLaManoTerminada = (Boolean)session.getAttribute("terminada");
+        Boolean isLaManoTerminada = (Boolean) session.getAttribute("terminada");
 
         ModelMap model = new ModelMap();
 
@@ -91,18 +99,15 @@ public class ControladorTruco {
         if (usuario == null) return new ModelAndView("redirect:/login");
 
         // Asignamos usuario como jugador
-        Jugador jugador1 = new Jugador(usuario.getNombreUsuario());
-        Jugador jugador2 = new Jugador("Juan ElComeChancho");
-        usuario1.setNumero(1);
-        usuario2.setNumero(2);
+        Jugador jugador1 = new Jugador();
+        Jugador jugador2 = new Jugador();
+        jugador1.setNombre(usuario.getNombreUsuario());
+        jugador2.setNombre("Juancito");
+        jugador1.setNumero(1);
+        jugador2.setNumero(2);
 
-
-        Jugador j1  = this.servicioJgador.BuscarJugadorPorId(idj1);
-        Jugador j2 = this.servicioJgador.BuscarJugadorPorId(idj2);
-
-        this.servicioTruco.iniciarJuego(j1,j2);
-
-
+//        Jugador j1  = this.servicioJgador.BuscarJugadorPorId(idj1);
+//        Jugador j2 = this.servicioJgador.BuscarJugadorPorId(idj2);
 
 
         List<Jugador> jugadores = new ArrayList<>();
@@ -110,9 +115,9 @@ public class ControladorTruco {
         jugadores.add(jugador2);
 //
         // Empezamos la partida
-        Truco truco  = servicioTruco.empezar(j1,j2);
-        Ronda ronda  = this.servicioRonda.crearRonda(truco);
-        Mano mano= thisservicioMano.cearmanop(ronda)
+        Truco2 truco = this.servicioTruco.empezar(jugador1, jugador2);
+        Mano2 mano = this.servicioMano2.empezar(truco);
+//        Ronda2 ronda = this.servicioRonda.crearRonda(mano); SE CREA LA RONDA CUANDO TIRA UN JUGADOR
 
 
         // Obtenemos las cartas de los jugadores
@@ -154,14 +159,8 @@ public class ControladorTruco {
     public ModelAndView accionTirarCarta(
             @RequestParam("cartaId") Long cartaId,
             @RequestParam("jugador") String jugadorNombre,
+            @RequestParam("id_mano") String manoId,
             HttpSession session) {
-
-        ModelMap model = new ModelMap();
-
-        //if que serviciotrucoSabersillegoa30
-        /*if (servicioTruco.ganadorGeneral() != null){
-
-        }*/
 
         // Obtener jugadores de la sesión
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
@@ -173,11 +172,22 @@ public class ControladorTruco {
         // Determinamos que jugador va
         Jugador actual = jugadorNombre.equalsIgnoreCase(jugador1.getNombre()) ? jugador1 : jugador2;
 
-        // Le damos control al que tiene el turno
-        servicioTruco.cambiarTurno(actual);
+        // NUEVA LÓGICA
 
         // Buscar la carta seleccionada en la mano del jugador
         Carta cartaSeleccionada = getCartaDeLasCartasDelJuegadorPorId(cartaId, actual);
+
+        Mano2 mano = servicioMano2.obtenerManoPorId(Long.getLong(manoId));
+        servicioRonda2.registrarRonda(mano, actual, cartaSeleccionada);
+        servicioTruco.tirarCarta(actual, cartaSeleccionada);
+
+
+        // FIN DE NUEVA LOGICA
+
+        // Le damos control al que tiene el turno
+        servicioTruco.cambiarTurno(actual);
+
+
 
         try {
             // Tirar carta del jugador actual
@@ -449,7 +459,6 @@ public class ControladorTruco {
     }
 
 
-
     private String saberAccionEnvido(String respuesta) {
         String respuestaDada = "";
         switch (Integer.parseInt(respuesta)) {
@@ -517,13 +526,13 @@ public class ControladorTruco {
 
     // Métodos para separar responsabilidades
 
-    private Boolean esEnvido (String accion) {
+    private Boolean esEnvido(String accion) {
         return accion.equalsIgnoreCase("ENVIDO") ||
                 accion.equalsIgnoreCase("REAL ENVIDO") ||
                 accion.equalsIgnoreCase("FALTA ENVIDO");
     }
 
-    private Boolean esTruco (String accion) {
+    private Boolean esTruco(String accion) {
         return accion.equalsIgnoreCase("TRUCO") || accion.equalsIgnoreCase("RE TRUCO") || accion.equalsIgnoreCase("VALE CUATRO");
     }
 
