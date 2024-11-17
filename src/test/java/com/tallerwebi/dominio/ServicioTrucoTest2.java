@@ -38,6 +38,8 @@ public class ServicioTrucoTest2 {
         esperadas.add(new Carta(0, 3, "Copas"));
         j1.setNombre("gonza");
         j2.setNombre("leo");
+        j1.setCartas(new ArrayList<>(esperadas));
+        j2.setCartas(new ArrayList<>(esperadas));
     }
 
     @Test
@@ -57,6 +59,34 @@ public class ServicioTrucoTest2 {
         // then
         verify(repositorioCarta, times(1)).obtenerCartas();
         assertThat(j1.getCartas().size(), equalTo(3));
+    }
+
+    @Test
+    public void queTireUnaCarta() {
+        // given
+        Mano2 m = new Mano2();
+        m.setEstaTerminada(false);
+        Carta c = esperadas.get(0); // 4 ESPADA
+        // when
+        whenAsignoTresCartasAlJugador(j1, esperadas);
+        Ronda2 r = servicioTruco.tirarCarta(m, j1, c, "1");
+        // then
+        assertNotNull(r);
+    }
+
+
+
+    private void whenAsignoTresCartasAlJugador(Jugador j1, CopyOnWriteArrayList<Carta> esperadas) {
+        int contador = 0;
+        for (Carta carta : esperadas) {
+            if (contador < 3) {
+                if (j1.getCartas().size() < 3) {
+                    j1.agregarCarta(carta);
+                    esperadas.remove(carta);
+                    contador++;
+                } else break;
+            }
+        }
     }
 
     private void whenAsignoCartasAlJugador(Jugador jugador, List<Carta> cartas) {

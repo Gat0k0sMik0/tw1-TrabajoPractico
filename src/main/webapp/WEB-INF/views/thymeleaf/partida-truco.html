@@ -42,6 +42,32 @@
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
                 <div class="d-flex gap-1" th:if="${mostrarRespuestasJ1}">
+                    <!-- NUEVA LÓGICA -->
+                    <!--
+                        Usamos GET en vez de POST con los <a>
+                        Pasamos:
+                            Id Mano
+                            Id Ronda
+                            Accion número (asociada a string, ej 5 -> envido)
+                            Nro Jugador (1 o 2)
+                    -->
+                    <a class="btn btn-primary"
+                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                                  + '&accion=5&jugador=1'}">Envido
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                                  + '&accion=2&jugador=1'}">Truco
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                                  + '&accion=8&jugador=1'}">FLOR
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                                  + '&accion=9&jugador=1'}">MAZO
+                    </a>
+                    <!-- FIN NUEVA LÓGICA -->
                     <form method="post" th:action="@{/accion}">
                         <input type="hidden" name="jugador" th:value="${jugador1.nombre}">
                         <button type="submit"

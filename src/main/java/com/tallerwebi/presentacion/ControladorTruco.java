@@ -155,11 +155,13 @@ public class ControladorTruco {
     }
 
 
-    @RequestMapping(path = "/accion-tirar", method = RequestMethod.POST)
+    // accion-tirar?id-partida={X}&id-mano={X}&id-carta={X}&jugador={X}
+    @GetMapping(path = "/accion-tirar")
     public ModelAndView accionTirarCarta(
             @RequestParam("cartaId") Long cartaId,
             @RequestParam("jugador") String jugadorNombre,
-            @RequestParam("id_mano") String manoId,
+            @RequestParam("id-mano") String manoId,
+            @RequestParam("nro-jugador") String nroJugador,
             HttpSession session) {
 
         // Obtener jugadores de la sesión
@@ -176,28 +178,23 @@ public class ControladorTruco {
 
         // Buscar la carta seleccionada en la mano del jugador
         Carta cartaSeleccionada = getCartaDeLasCartasDelJuegadorPorId(cartaId, actual);
-
+        // Buscar id_mano de parametro en BD
         Mano2 mano = servicioMano2.obtenerManoPorId(Long.getLong(manoId));
-        servicioRonda2.registrarRonda(mano, actual, cartaSeleccionada);
-        servicioTruco.tirarCarta(actual, cartaSeleccionada);
+        // Tiramos carta, retorna ronda creada
+        Ronda2 ronda = servicioTruco.tirarCarta(mano, actual, cartaSeleccionada, nroJugador);
 
+        // Agregamos datos a la ronda y la guardamos
+        servicioRonda2.registrarRonda(mano, ronda);
 
-        // FIN DE NUEVA LOGICA
+        // Asigna punto (de funcionamiento interno) para saber quien tira la proxima ronda y si no hay truco, dar el punto extra por ganar rondas.
+        servicioTruco.determinarGanadorRonda(jugador1, jugador2);
 
         // Le damos control al que tiene el turno
         servicioTruco.cambiarTurno(actual);
 
+        // FIN DE NUEVA LOGICA
 
-
-        try {
-            // Tirar carta del jugador actual
-            servicioTruco.tirarCarta(actual, cartaSeleccionada);
-            // Si ya se jugó una ronda, cambia el turno a el jugador que corresponda
-            servicioTruco.determinarGanadorRonda(jugador1, jugador2);
-        } catch (TrucoException e) {
-            // TODO terminar
-        }
-
+        // TODO: manejar mano terminada
         // Comprobar si ya no tienen más cartas para terminar la mano
 //        if (servicioTruco.saberSiLaManoEstaTerminada()) {
 //            servicioTruco.terminarMano();
@@ -205,9 +202,9 @@ public class ControladorTruco {
 //            // TODO terminar
 //        }
 
-        session.setAttribute("puntosJ1", servicioTruco.getPuntosDeJugador(jugador1));
-        session.setAttribute("puntosJ2", servicioTruco.getPuntosDeJugador(jugador2));
-        session.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+        session.setAttribute("puntosJ1", jugador1.getPuntosPartida());
+        session.setAttribute("puntosJ2", jugador2.getPuntosPartida());
+        session.setAttribute("terminada", null);
 
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
@@ -254,7 +251,9 @@ public class ControladorTruco {
         Jugador receptor = null;
 
         receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
-        receptor = actuador == j1 ? j2 : j1;
+
+        // NUEVA LOGICA
+        Integer nroAccion = servicioTruco.preguntar(accionValue, actuador, receptor);
 
 
         // Acción de ir al mazo

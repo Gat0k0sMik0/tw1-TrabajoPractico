@@ -5,7 +5,6 @@ import com.tallerwebi.infraestructura.RepositorioRondaImpl;
 import com.tallerwebi.infraestructura.ServicioRondaImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,8 @@ public class ServicioRondaTest {
 
     @Test
     public void queSeCreeLaRonda() {
-        Truco2 t = new Truco2();
-        Ronda2 r = servicioRonda.empezar(t);
+        Mano2 m = new Mano2();
+        Ronda2 r = servicioRonda.empezar(m);
         assertThat(r, notNullValue());
     }
 
@@ -45,40 +44,45 @@ public class ServicioRondaTest {
     public void queSeRegistreUnaRonda() {
         // given
         Mano2 m = new Mano2();
-        m.setId(0L);
         Jugador jugador = new Jugador();
-        jugador.setNombre("gonza");
         Carta carta = new Carta();
-        carta.setValor(0);
-        carta.setPalo("Espadas");
-        carta.setNumero(4);
+        List<Ronda2> rondas = new ArrayList<>();
         Integer contadorNroRonda = -1;
         Integer contadorMovimientos = 0;
-        List<Ronda2> rondas = new ArrayList<>();
+        Ronda2 rondaCreadaCuandoTiras = new Ronda2();
+
+        givenTiroUnaCarta(m, jugador, carta, rondaCreadaCuandoTiras);
+
         // ronda (id, nro, jug, valor_carta, nro_carta, palo_carta)
         when(repositorioMano.obtenerManoPorId(0L)).thenReturn(m);
         Mano2 manoParaAgregarleRonda = repositorioMano.obtenerManoPorId(m.getId());
         // when
         if (manoParaAgregarleRonda != null) {
-            Ronda2 r = new Ronda2();
-            r.setNombreJugador(jugador.getNombre());
-            r.setNroCarta(carta.getNumero());
-            r.setValorCarta(carta.getValor());
-            r.setPaloCarta(carta.getPalo());
-            r.setMano(manoParaAgregarleRonda);
-
+            rondaCreadaCuandoTiras.setMano(manoParaAgregarleRonda);
             if (contadorMovimientos++ % 2 == 0) {
                 contadorNroRonda++;
             }
-
-            r.setNroRonda(contadorNroRonda);
-            rondas.add(r);
+            rondaCreadaCuandoTiras.setNroRonda(contadorNroRonda);
+            rondas.add(rondaCreadaCuandoTiras);
         }
         // then
         assertThat(rondas.size(), equalTo(1));
         assertThat(contadorMovimientos, equalTo(1));
         assertThat(contadorNroRonda, equalTo(0));
     }
+
+    private void givenTiroUnaCarta(Mano2 m, Jugador jugador, Carta carta, Ronda2 rondaCreadaCuandoTiras) {
+        m.setId(0L);
+        jugador.setNombre("gonza");
+        carta.setValor(0);
+        carta.setPalo("Espadas");
+        carta.setNumero(4);
+        rondaCreadaCuandoTiras.setNombreJugador(jugador.getNombre());
+        rondaCreadaCuandoTiras.setNroCarta(carta.getNumero());
+        rondaCreadaCuandoTiras.setValorCarta(carta.getValor());
+        rondaCreadaCuandoTiras.setPaloCarta(carta.getPalo());
+    }
+
 
     private void algo() {
 //        Truco truco = new Truco();

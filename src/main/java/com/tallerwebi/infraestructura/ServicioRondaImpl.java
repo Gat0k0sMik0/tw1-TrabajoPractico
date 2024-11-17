@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,22 +38,20 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     }
 
     @Override
-    public void registrarRonda(Mano2 mano, Jugador jugador, Carta carta) {
+    public void registrarRonda(Mano2 mano, Ronda2 ronda) {
+        if (ronda == null) {
+            throw new TrucoException("La ronda que me llegó es nula");
+        }
         // ronda (nro, jug, valor_carta, nro_carta, palo_carta)
         Mano2 manoParaAgregarleRonda = this.repositorioMano.obtenerManoPorId(mano.getId());
         if (manoParaAgregarleRonda != null) {
-            Ronda2 r = new Ronda2();
-            r.setNombreJugador(jugador.getNombre());
-            r.setNroCarta(carta.getNumero());
-            r.setValorCarta(carta.getValor());
-            r.setPaloCarta(carta.getPalo());
-            r.setNroRonda(this.contadorNroRonda);
-            r.setMano(manoParaAgregarleRonda);
+            ronda.setNroRonda(this.contadorNroRonda);
+            ronda.setMano(manoParaAgregarleRonda);
             if (contadorMovimientos++ % 2 == 0) {
                 contadorNroRonda++;
             }
-            r.setNroRonda(contadorNroRonda);
-            rondas.add(r);
+            ronda.setNroRonda(contadorNroRonda);
+            rondas.add(ronda);
         }
     }
 

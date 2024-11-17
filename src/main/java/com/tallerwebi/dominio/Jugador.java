@@ -142,4 +142,18 @@ public class Jugador {
     public void setNumero(Integer numero) {
         this.numero = numero;
     }
+
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "id=" + id +
+                ", truco=" + truco +
+                ", nombre='" + nombre + '\'' +
+                ", puntosRonda=" + puntosRonda +
+                ", puntosPartida=" + puntosPartida +
+                ", numero=" + numero +
+                ", cartas=" + cartas +
+                ", cartasTiradas=" + cartasTiradas +
+                '}';
+    }
 }

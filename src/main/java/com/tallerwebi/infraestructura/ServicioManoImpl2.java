@@ -26,10 +26,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     @Override
     public Mano2 obtenerManoPorId(Long id) {
-        Mano2 buscada = repositorioMano.obtenerManoPorId(id);
-        if (buscada != null) {
-            return buscada;
-        }
-        return null;
+        return repositorioMano.obtenerManoPorId(id);
     }
 }

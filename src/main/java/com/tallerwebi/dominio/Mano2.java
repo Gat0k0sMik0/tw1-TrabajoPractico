@@ -17,8 +17,18 @@ public class Mano2 {
     @OneToMany(mappedBy = "mano", cascade = CascadeType.ALL)
     private List<Ronda2> rondas;  // Relación uno a muchos con Ronda
 
+    private Boolean estaTerminada;
+
     public Mano2() {
 
+    }
+
+    public Boolean getEstaTerminada() {
+        return estaTerminada;
+    }
+
+    public void setEstaTerminada(Boolean estaTerminada) {
+        this.estaTerminada = estaTerminada;
     }
 
     public Long getId() {
