@@ -56,6 +56,11 @@ public class ServicioRondaImpl implements ServicioRonda2 {
         }
     }
 
+    @Override
+    public Ronda2 obtenerRondaPorId(Long id) {
+        return null;
+    }
+
 //    @Override
 //    public void crearRonda(Jugador jugador, Carta carta) {
 //        Ronda nueva = new Ronda(0, jugador, carta);
