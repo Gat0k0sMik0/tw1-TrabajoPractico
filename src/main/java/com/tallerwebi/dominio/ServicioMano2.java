@@ -4,7 +4,9 @@ public interface ServicioMano2 {
     Mano2 empezar(Truco2 truco);
     Mano2 obtenerManoPorId(Long id);
 
-    Integer preguntar(Truco2 truco, String accion, Jugador ejecutor, Jugador receptor);
+    Integer obtenerPuntosEnJuegoPorTruco();
+
+    Jugador preguntar(Truco2 truco, String accion, Jugador ejecutor, Jugador receptor);
 
     Integer obtenerPuntosEnJuegoDelEnvido();
 

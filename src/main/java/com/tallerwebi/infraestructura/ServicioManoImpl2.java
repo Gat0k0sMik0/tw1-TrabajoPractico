@@ -18,12 +18,14 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     private Integer nroAccion;
     private Integer puntosEnJuegoEnvido;
+    private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
 
     Jugador diceEnvidoJ1;
     Jugador diceEnvidoJ2;
     Jugador diceRealEnvido;
     Jugador diceFaltaEnvido;
     Jugador jugadorMano;
+    private Integer puntosEnJuegoMano;
 
     public ServicioManoImpl2(RepositorioMano repositorioMano) {
         this.acciones = new ArrayList<>();
@@ -34,6 +36,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         this.diceRealEnvido = null;
         this.diceFaltaEnvido = null;
         this.puntosEnJuegoEnvido = 0;
+        this.indicadorTruco = 0;
+        this.puntosEnJuegoMano = 0;
     }
 
     @Override
@@ -49,38 +53,70 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
     @Override
-    public Integer preguntar(Truco2 truco, String accion, Jugador ejecutor, Jugador receptor) {
-        String accionEncontrada = saberAccion(accion);
+    public Integer obtenerPuntosEnJuegoPorTruco() {
+        return this.puntosEnJuegoMano;
+    }
+
+    private void preguntarEnvido(String accionEncontrada, Jugador ejecutor, Jugador receptor) {
+        switch (accionEncontrada) {
+            case "ENVIDO":
+                if (ejecutor.getNumero().equals(1)) {
+                    this.diceEnvidoJ1 = ejecutor;
+                } else {
+                    this.diceEnvidoJ2 = ejecutor;
+                }
+                puntosEnJuegoEnvido += 2;
+                break;
+            case "REAL ENVIDO":
+                diceRealEnvido = ejecutor;
+                puntosEnJuegoEnvido += 3;
+                break;
+            case "FALTA ENVIDO":
+                diceFaltaEnvido = ejecutor;
+                break;
+            default:
+                throw new TrucoException("PreguntarEnvido: ocurrió un error.");
+        }
+    }
+
+    private void preguntarTruco(String accionEncontrada, Jugador ejecutor, Jugador receptor) {
+        if (accionEncontrada.equals("TRUCO")) {
+            indicadorTruco++;
+        } else if (accionEncontrada.equals("RE TRUCO")) {
+            throw new TrucoException("Re truco");
+        } else if (accionEncontrada.equals("VALE 4")) {
+           throw new TrucoException("Cantó vale 4");
+        }
+    }
+
+    @Override
+    public Jugador preguntar(Truco2 truco, String accion, Jugador ejecutor, Jugador receptor) {
+        String accionRealizada = saberAccion(accion);
+        if (esTruco(accionRealizada)) {
+            preguntarTruco(accionRealizada, ejecutor, receptor);
+            return receptor;
+        } else if (esEnvido(accionRealizada)) {
+            preguntarEnvido(accionRealizada, ejecutor, receptor);
+            return receptor;
+        } else if (esFlor(accionRealizada)) {
+            // TODO: calcular flor
+            return null;
+        } else if (accionRealizada.equals("MAZO")) {
+
+        } else {
+            throw new TrucoException("Preguntar: ocurrió un error.");
+        }
 
         // TODO: si la ronda no es la primera, no puede cantar envido
 
-        if (accionEncontrada.equals("ENVIDO")) {
-            if (ejecutor.getNumero().equals(1)) {
-                this.diceEnvidoJ1 = ejecutor;
-            } else {
-                this.diceEnvidoJ2 = ejecutor;
-            }
-            puntosEnJuegoEnvido += 2;
-        } else if (accionEncontrada.equals("REAL ENVIDO")) {
-            diceRealEnvido = ejecutor;
-            puntosEnJuegoEnvido += 3;
-        } else if (accionEncontrada.equals("FALTA ENVIDO")) {
-            diceFaltaEnvido = ejecutor;
-            // TODO: CALCULAR
-        } else {
-
-        }
-        return this.puntosEnJuegoEnvido;
+        return null;
     }
 
     @Override
     public Jugador responder(Truco2 truco, String accion, String respuesta, Jugador ejecutor, Jugador receptor) {
         String accionQueResponde = saberAccion(accion);
         String respuestaDeLaAccion = saberAccion(respuesta);
-        System.out.println(accionQueResponde);
-        System.out.println(respuestaDeLaAccion);
         Jugador respondeAhora;
-
         if (esTruco(accionQueResponde)) {
             respondeAhora = manejarRespuestaTruco(truco, respuestaDeLaAccion, ejecutor, receptor);
         } else if (esEnvido(accionQueResponde)) {
@@ -88,7 +124,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         } else {
             throw new TrucoException("Responder: ocurrió un error");
         }
-
         return respondeAhora;
     }
 
@@ -162,88 +197,42 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         }
     }
 
-
-
-
-
-
-
     private Jugador manejarRespuestaTruco(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor)
     {
-        return null;
-    }
-
-//    // Responder a la acción propuesta (quiero, no quiero, envido, re truco)
-//    @Override
-//    public Jugador responder(Truco2 truco, String accion, Jugador ejecutor, Jugador receptor, Integer nroAccion) {
-//
-//
-//        String accionEncontrada = saberAccion(accion);
-//        Accion a = this.getAccionPorNro(nroAccion);
-//        Jugador ganador = null;
-//        Jugador leTocaResponder = null;
-//
-//        if (accionEncontrada.equals("QUIERO") || accionEncontrada.equals("NO QUIERO")) {
-//            leTocaResponder = manejarRespuestaDirecta(accionEncontrada, a, ejecutor, receptor); // quiero, no quiero
-//        } else {
-//            leTocaResponder = manejarOtraAccion(accionEncontrada, a, ejecutor, receptor); // re-envido, re-truco, etc
-//        }
-//
-//        return leTocaResponder;
-//    }
-
-    private Jugador manejarOtraAccion(String accion, Accion a, Jugador ejecutor, Jugador receptor) {
-        switch (accion) {
-            case "RE TRUCO":
-            case "VALE 4":
-                a.acumularPuntos(1);
-                break;
-            case "ENVIDO":
-                a.acumularPuntos(2);
-                break;
-            case "REAL ENVIDO":
-                a.acumularPuntos(3);
-                break;
-            case "FALTA ENVIDO":
-
-                break;
-        }
-        return receptor;
-    }
-
-    private Jugador manejarRespuestaDirecta(String accion, Accion a, Jugador ejecutor, Jugador receptor) {
-        Jugador leTocaResponder = null;
-        a.setRespuesta(true);
-
-        // Respuesta positiva
-        if (accion.equals("QUIERO")) {
-            Integer puntosViejos = a.getPuntosEnJuego();
-            // condicionales para saber que se cantó
-            if (esEnvido(a.getAccion())) { // SOLO ENVIDO/RE ENVIDO/REAL ENVIDO
-                acumularPuntosAlQueGanaElEnvido(ejecutor, receptor, puntosViejos);
-                leTocaResponder = ejecutor;
-            } else if (a.getAccion().equals("FALTA ENVIDO")) {
-
-            } else if (esTruco(a.getAccion())) { // TRUCO/RE TRUCO/VALE 4
-//                servicioMano.agregarPuntosEnJuegoManoActual(puntosViejos);
-//                truco.agregarPuntosEnJuegoManoActual(puntosViejos);
-                leTocaResponder = receptor;
-            } else {
-                // no debería entrar aca
+        System.out.println("ManejoRespuestaTruco()");
+        if (respuestaDeLaAccion.equals("QUIERO")) {
+            System.out.println("ManeJajrRespuestaTruco: quiere truco");
+            if (this.indicadorTruco.equals(1)) {
+                System.out.println("Solo se cantó truco");
+            } else if (this.indicadorTruco.equals(2)) {
+                System.out.println("Se cantó re truco");
+            } else if (this.indicadorTruco.equals(3)) {
+                System.out.println("Se cantó vale 4");
             }
-        } else if (accion.equals("NO QUIERO")) {
-            leTocaResponder = ejecutor;
+            return null;
+        } else if (respuestaDeLaAccion.equals("NO QUIERO")) {
+            System.out.println("ManeJajrRespuestaTruco: no quiere truco");
+            if (ejecutor.getNumero().equals(1)) {
+                truco.setPuntosJ1(truco.getPuntosJ1() + 1);
+            } else {
+                truco.setPuntosJ2(truco.getPuntosJ2() + 1);
+            }
+            return null;
         } else {
-            // nada debe entrar aca
+            if (this.indicadorTruco.equals(1) && respuestaDeLaAccion.equals("RE TRUCO")) {
+                this.indicadorTruco++;
+                this.puntosEnJuegoMano = 3;
+                System.out.println("ManeJajrRespuestaTruco: quiere re truco");
+                return receptor;
+            } else if (this.indicadorTruco.equals(2) && respuestaDeLaAccion.equals("VALE 4")) {
+                this.indicadorTruco++;
+                this.puntosEnJuegoMano = 4;
+                System.out.println("ManeJajrRespuestaTruco: quiere vale 4");
+                return receptor;
+            } else {
+                throw new TrucoException("ManejarRespuestaTruco: ocurrió un error.");
+            }
         }
-        return leTocaResponder;
-    }
-
-    private void acumularPuntosAlQueGanaElEnvido(Jugador ejecutor, Jugador receptor, Integer puntosViejos) {
-        Integer tantosEjecutor = this.calcularTantosDeCartasDeUnJugador(ejecutor);
-        Integer tantosReceptor = this.calcularTantosDeCartasDeUnJugador(receptor);
-        Jugador ganador = tantosEjecutor > tantosReceptor ? ejecutor : receptor;
-        ganador.acumularPuntosDePartida(puntosViejos);
     }
 
     private Integer calcularTantosDeCartasDeUnJugador(Jugador jugador) {
@@ -264,32 +253,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         } else {
             return this.obtenerSumaDeLasMasAltas(tieneDosDelMismoPalo);
         }
-    }
-
-    private Integer manejarTruco(String accion, Jugador cantador, Jugador receptor) {
-        if (accion.equalsIgnoreCase("TRUCO")) {
-            return this.crearAccion(accion, cantador, receptor, 2);
-        } else if (accion.equals("RE TRUCO")) {
-            return this.crearAccion(accion, cantador, receptor, 3);
-        } else if (accion.equals("VALE 4")) {
-            return this.crearAccion(accion, cantador, receptor, 4);
-        } else {
-            // todo
-        }
-        return null;
-    }
-
-    private Integer manejarEnvido(String accion, Jugador cantador, Jugador receptor) {
-        if (accion.equalsIgnoreCase("ENVIDO")) {
-            return this.crearAccion(accion, cantador, receptor, 2);
-        } else if (accion.equals("REAL ENVIDO")) {
-            return this.crearAccion(accion, cantador, receptor, 3);
-        } else if (accion.equals("FALTA ENVIDO")) {
-            // todo
-        } else {
-            // todo
-        }
-        return null;
     }
 
     private Integer obtenerSumaDeLasMasAltas(List<Carta> cartas) {
@@ -344,19 +307,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         return accion.equals("TRUCO") || accion.equals("RE TRUCO") || accion.equals("VALE 4");
     }
 
-    private Accion getAccionPorNro(Integer nro) {
-        for (Accion a : this.acciones) {
-            if (a.getNroAccion().equals(nro)) {
-                return a;
-            }
-        }
-        return null;
-    }
-
-    private Integer crearAccion(String accion, Jugador cantador, Jugador receptor, Integer puntosEnJuego) {
-        Accion a = new Accion(this.nroAccion++, cantador, accion, false, puntosEnJuego);
-        this.acciones.add(a);
-        return a.getNroAccion();
+    private Boolean esFlor(String accion) {
+        return accion.equals("FLOR") || accion.equals("CONTRAFLOR AL RESTO") || accion.equals("CONTRAFLOR");
     }
 
     private String saberAccion(String numberValue) {
