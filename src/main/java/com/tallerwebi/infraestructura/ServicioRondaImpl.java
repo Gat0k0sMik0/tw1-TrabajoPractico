@@ -53,6 +53,7 @@ public class ServicioRondaImpl implements ServicioRonda2 {
             }
             ronda.setNroRonda(contadorNroRonda);
             rondas.add(ronda);
+            this.repositorioRonda.guardar(ronda);
         }
     }
 

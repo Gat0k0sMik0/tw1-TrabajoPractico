@@ -13,10 +13,11 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     @Autowired
     RepositorioMano repositorioMano;
+    @Autowired
+    RepositorioRonda2 repositorioRonda;
+    @Autowired
+    RepositorioTruco repositorioTruco;
 
-    private List<Accion> acciones;
-
-    private Integer nroAccion;
     private Integer puntosEnJuegoEnvido;
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
 
@@ -27,10 +28,10 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     Jugador jugadorMano;
     private Integer puntosEnJuegoMano;
 
-    public ServicioManoImpl2(RepositorioMano repositorioMano) {
-        this.acciones = new ArrayList<>();
+    public ServicioManoImpl2(RepositorioMano repositorioMano, RepositorioRonda2 repositorioRonda, RepositorioTruco repositorioTruco) {
         this.repositorioMano = repositorioMano;
-        this.nroAccion = 0;
+        this.repositorioRonda = repositorioRonda;
+        this.repositorioTruco = repositorioTruco;
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -57,7 +58,49 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         return this.puntosEnJuegoMano;
     }
 
-    private void preguntarEnvido(String accionEncontrada, Jugador ejecutor, Jugador receptor) {
+    @Override
+    public Integer obtenerPuntosEnJuegoDelEnvido() {
+        return this.puntosEnJuegoEnvido;
+    }
+
+    @Override
+    public Integer obtenerMovimientosDeLaMano(Mano2 mano) {
+        return mano.getMovimientos();
+    }
+
+    @Override
+    public Jugador preguntar(Truco2 truco, Mano2 mano, String accion, Jugador ejecutor, Jugador receptor) {
+        String accionRealizada = saberAccion(accion);
+        if (esTruco(accionRealizada)) {
+            preguntarTruco(accionRealizada);
+            return receptor;
+        } else if (esEnvido(accionRealizada)) {
+            preguntarEnvido(accionRealizada, ejecutor);
+            return receptor;
+        } else if (esFlor(accionRealizada)) {
+            // TODO: calcular flor
+            return null;
+        } else if (accionRealizada.equals("MAZO")) {
+            List<Ronda2> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(mano.getId());
+            Integer puntosEnJuego = 1;
+            if (rondasMano.isEmpty()) {
+                puntosEnJuego = 2;
+            }
+            if (ejecutor.getNumero().equals(1)) {
+                truco.setPuntosJ2(truco.getPuntosJ2() + puntosEnJuego);
+            } else {
+                truco.setPuntosJ1(truco.getPuntosJ1() + puntosEnJuego);
+            }
+            this.repositorioTruco.guardarPartida(truco);
+            return null;
+        } else {
+            throw new TrucoException("Preguntar: ocurrió un error.");
+        }
+
+        // TODO: si la ronda no es la primera, no puede cantar envido
+    }
+
+    private void preguntarEnvido(String accionEncontrada, Jugador ejecutor) {
         switch (accionEncontrada) {
             case "ENVIDO":
                 if (ejecutor.getNumero().equals(1)) {
@@ -79,37 +122,12 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         }
     }
 
-    private void preguntarTruco(String accionEncontrada, Jugador ejecutor, Jugador receptor) {
+    private void preguntarTruco(String accionEncontrada) {
         if (accionEncontrada.equals("TRUCO")) {
-            indicadorTruco++;
-        } else if (accionEncontrada.equals("RE TRUCO")) {
-            throw new TrucoException("Re truco");
-        } else if (accionEncontrada.equals("VALE 4")) {
-           throw new TrucoException("Cantó vale 4");
-        }
-    }
-
-    @Override
-    public Jugador preguntar(Truco2 truco, String accion, Jugador ejecutor, Jugador receptor) {
-        String accionRealizada = saberAccion(accion);
-        if (esTruco(accionRealizada)) {
-            preguntarTruco(accionRealizada, ejecutor, receptor);
-            return receptor;
-        } else if (esEnvido(accionRealizada)) {
-            preguntarEnvido(accionRealizada, ejecutor, receptor);
-            return receptor;
-        } else if (esFlor(accionRealizada)) {
-            // TODO: calcular flor
-            return null;
-        } else if (accionRealizada.equals("MAZO")) {
-
+            this.indicadorTruco++;
         } else {
-            throw new TrucoException("Preguntar: ocurrió un error.");
+            throw new TrucoException("PreguntarTruco: ocurrió un error");
         }
-
-        // TODO: si la ronda no es la primera, no puede cantar envido
-
-        return null;
     }
 
     @Override
@@ -125,11 +143,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
             throw new TrucoException("Responder: ocurrió un error");
         }
         return respondeAhora;
-    }
-
-    @Override
-    public Integer obtenerPuntosEnJuegoDelEnvido() {
-        return this.puntosEnJuegoEnvido;
     }
 
     private Jugador manejarRespuestaEnvido(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor) {
@@ -199,19 +212,9 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     private Jugador manejarRespuestaTruco(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor)
     {
-        System.out.println("ManejoRespuestaTruco()");
         if (respuestaDeLaAccion.equals("QUIERO")) {
-            System.out.println("ManeJajrRespuestaTruco: quiere truco");
-            if (this.indicadorTruco.equals(1)) {
-                System.out.println("Solo se cantó truco");
-            } else if (this.indicadorTruco.equals(2)) {
-                System.out.println("Se cantó re truco");
-            } else if (this.indicadorTruco.equals(3)) {
-                System.out.println("Se cantó vale 4");
-            }
             return null;
         } else if (respuestaDeLaAccion.equals("NO QUIERO")) {
-            System.out.println("ManeJajrRespuestaTruco: no quiere truco");
             if (ejecutor.getNumero().equals(1)) {
                 truco.setPuntosJ1(truco.getPuntosJ1() + 1);
             } else {
@@ -222,12 +225,10 @@ public class ServicioManoImpl2 implements ServicioMano2 {
             if (this.indicadorTruco.equals(1) && respuestaDeLaAccion.equals("RE TRUCO")) {
                 this.indicadorTruco++;
                 this.puntosEnJuegoMano = 3;
-                System.out.println("ManeJajrRespuestaTruco: quiere re truco");
                 return receptor;
             } else if (this.indicadorTruco.equals(2) && respuestaDeLaAccion.equals("VALE 4")) {
                 this.indicadorTruco++;
                 this.puntosEnJuegoMano = 4;
-                System.out.println("ManeJajrRespuestaTruco: quiere vale 4");
                 return receptor;
             } else {
                 throw new TrucoException("ManejarRespuestaTruco: ocurrió un error.");

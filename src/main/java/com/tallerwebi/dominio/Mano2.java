@@ -18,9 +18,18 @@ public class Mano2 {
     private List<Ronda2> rondas;  // Relación uno a muchos con Ronda
 
     private Boolean estaTerminada;
+    private Integer movimientos;
 
     public Mano2() {
 
+    }
+
+    public Integer getMovimientos() {
+        return movimientos;
+    }
+
+    public void setMovimientos(Integer movimientos) {
+        this.movimientos = movimientos;
     }
 
     public Boolean getEstaTerminada() {

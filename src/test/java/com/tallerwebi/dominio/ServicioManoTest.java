@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.infraestructura.RepositorioManoImpl;
+import com.tallerwebi.infraestructura.RepositorioRondaImpl;
+import com.tallerwebi.infraestructura.RepositorioTrucoImpl;
 import com.tallerwebi.infraestructura.ServicioManoImpl2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +14,15 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ServicioManoTest {
 
     RepositorioMano repositorioMano = mock(RepositorioManoImpl.class);
-    ServicioMano2 servicioMano = new ServicioManoImpl2(repositorioMano);
+    RepositorioTruco repositorioTruco = mock(RepositorioTrucoImpl.class);
+    RepositorioRonda2 repositorioRonda = mock(RepositorioRondaImpl.class);
+
+    ServicioMano2 servicioMano = new ServicioManoImpl2(repositorioMano, repositorioRonda, repositorioTruco);
 
     Jugador j1 = new Jugador();
     Jugador j2 = new Jugador();
@@ -71,14 +77,16 @@ public class ServicioManoTest {
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean2() {
         Truco2 t = new Truco2();
-        servicioMano.preguntar(t, "2", j1, j2);
+        Mano2 m = new Mano2();
+        servicioMano.preguntar(t, m,"2", j1, j2);
         assertThat(servicioMano.obtenerPuntosEnJuegoDelEnvido(), equalTo(2));
     }
 
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean4() {
         Truco2 t = new Truco2();
-        servicioMano.preguntar(t, "2", j1, j2);
+        Mano2 m = new Mano2();
+        servicioMano.preguntar(t, m, "2", j1, j2);
         Jugador leToca = servicioMano.responder(t,"2", "2", j1, j2);
         assertThat(servicioMano.obtenerPuntosEnJuegoDelEnvido(), equalTo(4));
         assertThat(leToca, notNullValue());
@@ -87,7 +95,8 @@ public class ServicioManoTest {
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean5() {
         Truco2 t = new Truco2();
-        servicioMano.preguntar(t, "2", j1, j2);
+        Mano2 m = new Mano2();
+        servicioMano.preguntar(t,m, "2", j1, j2);
         Jugador leToca = servicioMano.responder(t,"2","3", j2, j1);
         assertThat(servicioMano.obtenerPuntosEnJuegoDelEnvido(), equalTo(5));
         assertThat(leToca, notNullValue());
@@ -96,7 +105,8 @@ public class ServicioManoTest {
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean7() {
         Truco2 t = new Truco2();
-        servicioMano.preguntar(t, "2", j1, j2);
+        Mano2 m = new Mano2();
+        servicioMano.preguntar(t, m,"2", j1, j2);
         servicioMano.responder(t,"2","2", j2, j1);
         Jugador leToca = servicioMano.responder(t,"2","3", j1, j2);
         assertThat(servicioMano.obtenerPuntosEnJuegoDelEnvido(), equalTo(7));
@@ -107,13 +117,14 @@ public class ServicioManoTest {
     public void queElFaltaEnvidoLoGaneElJugadorUno() {
         // given
         Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
         whenAsignoTresCartasAlJugador(j1, esperadas);
         whenAsignoTresCartasAlJugador(j2, esperadas);
         // When
-        servicioMano.preguntar(t, "4", j1, j2);
+        servicioMano.preguntar(t,m,"4", j1, j2);
         servicioMano.responder(t,"4","1", j2, j1);
         // Then
         assertThat(j1.getPuntosPartida(), equalTo(30));
@@ -123,13 +134,14 @@ public class ServicioManoTest {
     public void queCanteTrucoYQueSeGuardenLosPuntosQueRecibiraSiGanaLaManoYSean2 () {
         // given
         Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
         whenAsignoTresCartasAlJugador(j1, esperadas);
         whenAsignoTresCartasAlJugador(j2, esperadas);
         // When
-        servicioMano.preguntar(t, "5", j1, j2);
+        servicioMano.preguntar(t,m, "5", j1, j2);
         servicioMano.responder(t,"5","1", j2, j1);
         // Then
         assertThat(servicioMano.obtenerPuntosEnJuegoPorTruco(), equalTo(2));
@@ -139,13 +151,14 @@ public class ServicioManoTest {
     public void queCanteTrucoYQueSeGuardenLosPuntosQueRecibiraSiGanaLaManoYSean3 () {
         // given
         Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
         whenAsignoTresCartasAlJugador(j1, esperadas);
         whenAsignoTresCartasAlJugador(j2, esperadas);
         // When
-        servicioMano.preguntar(t, "5", j1, j2);
+        servicioMano.preguntar(t, m,"5", j1, j2);
         servicioMano.responder(t,"5","6", j2, j1);
         servicioMano.responder(t,"6","1", j1, j2);
         // Then
@@ -156,13 +169,14 @@ public class ServicioManoTest {
     public void queCanteTrucoYQueSeGuardenLosPuntosQueRecibiraSiGanaLaManoYSean5 () {
         // given
         Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
         whenAsignoTresCartasAlJugador(j1, esperadas);
         whenAsignoTresCartasAlJugador(j2, esperadas);
         // When
-        Jugador respondeAhora = servicioMano.preguntar(t, "5", j1, j2);
+        Jugador respondeAhora = servicioMano.preguntar(t,m, "5", j1, j2);
         assertThat(respondeAhora.getNombre(), equalToIgnoringCase(j2.getNombre()));
         respondeAhora = servicioMano.responder(t,"5","6", j2, j1);
         assertThat(respondeAhora.getNombre(), equalToIgnoringCase(j1.getNombre()));
@@ -178,13 +192,14 @@ public class ServicioManoTest {
     public void queElQueLeTocaResponderSeaElEsperadoTrasUnaSecuenciaDeAcciones () {
         // given
         Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
         whenAsignoTresCartasAlJugador(j1, esperadas);
         whenAsignoTresCartasAlJugador(j2, esperadas);
         // When/then
-        Jugador respondeAhora = servicioMano.preguntar(t, "5", j1, j2);
+        Jugador respondeAhora = servicioMano.preguntar(t, m,"5", j1, j2);
         assertThat(respondeAhora.getNombre(), equalToIgnoringCase(j2.getNombre()));
         respondeAhora = servicioMano.responder(t,"5","6", j2, j1);
         assertThat(respondeAhora.getNombre(), equalToIgnoringCase(j1.getNombre()));
@@ -192,6 +207,70 @@ public class ServicioManoTest {
         assertThat(respondeAhora.getNombre(), equalToIgnoringCase(j2.getNombre()));
         respondeAhora = servicioMano.responder(t,"7","1", j2, j1);
         assertThat(respondeAhora, nullValue());
+    }
+
+    @Test
+    public void queSeLeAsigneUnPuntoAlRivalPorIrseAlMazo() {
+        // given
+        Ronda2 r1 = new Ronda2();
+        Ronda2 r2 = new Ronda2();
+        List<Ronda2> rs = new ArrayList<>();
+        rs.add(r1);
+        rs.add(r2);
+        Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
+        m.setId(0L);
+        Jugador j1 = new Jugador();
+        j1.setNumero(1);
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        when(repositorioRonda.obtenerRondasDeUnaMano(0L)).thenReturn(new ArrayList<>());
+        // when
+        List<Ronda2> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(m.getId());
+        Integer puntosEnJuego = 1;
+        if (rondasMano.isEmpty()) {
+            puntosEnJuego = 2;
+        }
+        if (j1.getNumero().equals(1)) {
+            t.setPuntosJ2(t.getPuntosJ2() + puntosEnJuego);
+        } else {
+            t.setPuntosJ1(t.getPuntosJ1() + puntosEnJuego);
+        }
+        // then
+        assertThat(t.getPuntosJ2(), equalTo(2));
+    }
+
+    @Test
+    public void queSeLeAsigneDosPuntosAlRivalPorIrseAlMazo() {
+        // given
+        Ronda2 r1 = new Ronda2();
+        Ronda2 r2 = new Ronda2();
+        List<Ronda2> rs = new ArrayList<>();
+        rs.add(r1);
+        rs.add(r2);
+        Truco2 t = new Truco2();
+        Mano2 m = new Mano2();
+        m.setId(0L);
+        Jugador j1 = new Jugador();
+        j1.setNumero(1);
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        when(repositorioRonda.obtenerRondasDeUnaMano(0L)).thenReturn(rs);
+        // when
+        List<Ronda2> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(m.getId());
+        Integer puntosEnJuego = 1;
+        if (rondasMano.isEmpty()) {
+            puntosEnJuego = 2;
+        }
+        if (j1.getNumero().equals(1)) {
+            t.setPuntosJ2(t.getPuntosJ2() + puntosEnJuego);
+        } else {
+            t.setPuntosJ1(t.getPuntosJ1() + puntosEnJuego);
+        }
+        // then
+        assertThat(t.getPuntosJ2(), equalTo(1));
     }
 
 

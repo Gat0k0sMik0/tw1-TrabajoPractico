@@ -9,7 +9,7 @@ public interface ServicioPartida2 {
 
     Ronda2 tirarCarta(Mano2 mano, Jugador jugador, Carta carta, String nroJugador);
 
-    void determinarGanadorRonda(Jugador jugador1, Jugador jugador2);
+    void determinarGanadorRonda(Truco2 truco, Jugador jugador1, Jugador jugador2);
 
     void cambiarTurno(Jugador jugador);
     ;

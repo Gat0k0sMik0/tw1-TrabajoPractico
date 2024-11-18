@@ -43,9 +43,28 @@
 //
 //        List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
 //        List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
+//        Jugador j1 = (Jugador)session.getAttribute("jugador1");
+//        Jugador j2 = (Jugador)session.getAttribute("jugador2");
 //        Boolean isLaManoTerminada = (Boolean) session.getAttribute("terminada");
+//        Long idPartida = (Long) session.getAttribute("idPartida");
 //
 //        ModelMap model = new ModelMap();
+//
+//        // NUEVA LÓGICA
+//        Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
+//        Mano2 mano = servicioMano2.obtenerManoPorId(idPartida);
+//
+//        // FUNCIONAL
+//        model.put("puntosJ1", truco.getPuntosJ1());
+//        model.put("puntosJ2", truco.getPuntosJ2());
+//        model.put("mano", servicioMano2.obtenerManoPorId(0L)); // TODO revisar (mano sin terminar?) ANALIZAR
+//        model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
+//
+//        // PARA DESARROLLO
+//        model.put("movimientos", servicioMano2.obtenerMovimientosDeLaMano());
+//
+//
+//        // FIN NUEVA LÓGICA
 //
 //        // Saber si se terminó la mano y renderizar contenido
 //        if (isLaManoTerminada != null) {
@@ -75,7 +94,6 @@
 //        model.put("reEnvido", session.getAttribute("reEnvido"));
 //        model.put("realEnvido", session.getAttribute("realEnvido"));
 //
-//        model.put("mano", servicioMano.getMano(0));
 //
 //        // Para ver como va
 //        model.put("rondas", session.getAttribute("rondas"));
@@ -87,8 +105,7 @@
 //        model.put("tantoJ2", session.getAttribute("tantoJ2"));
 //        model.put("acciones", session.getAttribute("acciones"));
 //        model.put("trucoValido", session.getAttribute("trucoValido"));
-//        model.put("puntosJ1", session.getAttribute("puntosJ1"));
-//        model.put("puntosJ2", session.getAttribute("puntosJ2"));
+//
 //
 //        return new ModelAndView("partida-truco", model);
 //    }
@@ -172,6 +189,7 @@
 //        // Obtener jugadores de la sesión
 //        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
 //        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
+//        Long idPartida = (Long)session.getAttribute("idPartida");
 //
 //        // Redirigir si no existen
 //        if (jugador1 == null || jugador2 == null) return new ModelAndView("redirect:/home");
@@ -180,6 +198,9 @@
 //        Jugador actual = jugadorNombre.equalsIgnoreCase(jugador1.getNombre()) ? jugador1 : jugador2;
 //
 //        // NUEVA LÓGICA
+//
+//        // Obtener partida
+//        Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
 //
 //        // Buscar la carta seleccionada en la mano del jugador
 //        Carta cartaSeleccionada = getCartaDeLasCartasDelJuegadorPorId(cartaId, actual);
@@ -193,7 +214,7 @@
 //
 //        // Asigna punto (de funcionamiento interno) para saber quien tira la proxima ronda
 //        // y si no hay truco, dar el punto extra por ganar rondas.
-//        servicioTruco.determinarGanadorRonda(jugador1, jugador2);
+//        servicioTruco.determinarGanadorRonda(truco, jugador1, jugador2);
 //
 //        // Le damos control al que tiene el turno
 //        servicioTruco.cambiarTurno(actual);
@@ -262,8 +283,13 @@
 //        receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
 //
 //        // NUEVA LOGICA
+//
+//        // Obtener partida
 //        Truco2 truco = servicioTruco.obtenerPartidaPorId(Long.getLong(idPartida.toString()));
+//
+//        // Saber quien reponde -> null si se va al mazo
 //        Jugador respondeAhora = servicioMano2.preguntar(truco, accionValue, actuador, receptor);
+//
 //        model.put("leTocaResponder", respondeAhora);
 //
 //
