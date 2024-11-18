@@ -21,11 +21,9 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     private Integer movimientos;
     private Integer puntosJ1;
     private Integer puntosJ2;
-    private Integer nroAccion;
 
     private Jugador turno;
 
-    private List<Accion> acciones;
 
     public ServicioPartida2Impl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta) {
         this.repositorioTruco = repositorioTruco;
@@ -33,10 +31,13 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         this.movimientos = 0;
         this.puntosJ1 = 0;
         this.puntosJ2 = 0;
-        this.nroAccion = 0;
         this.turno = null;
-        this.acciones = new ArrayList<>();
         this.turno = null;
+    }
+
+    @Override
+    public Truco2 obtenerPartidaPorId(Long id) {
+        return this.repositorioTruco.buscarPartidaPorId(id);
     }
 
     @Override
@@ -95,51 +96,57 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         this.turno = jugador;
     }
 
-    @Override
-    public Integer preguntar(String accion, Jugador ejecutor, Jugador receptor) {
-        String accionEncontrada = saberAccion(accion);
-        if (accionEncontrada.equalsIgnoreCase("TRUCO")) {
-            return manejarTruco(accionEncontrada, ejecutor, receptor);
-        } else {
-            return manejarEnvido(accionEncontrada, ejecutor, receptor);
+    private Integer obtenerSumaDeLasMasAltas(List<Carta> cartas) {
+        int envidoMax = 0;
+
+        // Agrupa las cartas por palo
+        for (int i = 0; i < cartas.size(); i++) {
+            for (int j = i + 1; j < cartas.size(); j++) {
+                if (cartas.get(i).getPalo().equals(cartas.get(j).getPalo())) {
+                    // Si dos cartas tienen el mismo palo, suma sus valores y añade 20
+                    int envido = cartas.get(i).getValorEnvido() + cartas.get(j).getValorEnvido() + 20;
+                    envidoMax = Math.max(envidoMax, envido);
+                }
+            }
         }
-    }
 
-    private Integer manejarTruco(String accion, Jugador cantador, Jugador receptor) {
-        if (accion.equalsIgnoreCase("TRUCO")) {
-            return this.crearAccion(accion, cantador, receptor, 2);
-        } else if (accion.equals("RE TRUCO")) {
-            return this.crearAccion(accion, cantador, receptor, 3);
-        } else if (accion.equals("VALE 4")) {
-            return this.crearAccion(accion, cantador, receptor, 4);
-        } else {
-            // todo
+        // Si no hay dos cartas del mismo palo, el envido es el valor más alto de la mano
+        if (envidoMax == 0) {
+            for (Carta carta : cartas) {
+                envidoMax = Math.max(envidoMax, carta.getValorEnvido());
+            }
         }
-        return null;
+
+        return envidoMax;
     }
 
-    private Integer manejarEnvido(String accion, Jugador cantador, Jugador receptor) {
-        if (accion.equalsIgnoreCase("ENVIDO")) {
-            return this.crearAccion(accion, cantador, receptor, 2);
-        } else if (accion.equals("REAL ENVIDO")) {
-            return this.crearAccion(accion, cantador, receptor, 3);
-        } else if (accion.equals("FALTA ENVIDO")) {
-            // todo
-        } else {
-            // todo
+    private List<Carta> tieneDosDelMismoPalo(List<Carta> cartas) {
+        int contador = 0;
+        List<Carta> delMismoPalo = new ArrayList<>();
+        for (Carta carta : cartas) {
+            for (Carta carta2 : cartas) {
+                if (carta.getPalo().equals(carta2.getPalo())) {
+                    delMismoPalo.add(carta2);
+                }
+            }
+            if (delMismoPalo.size() >= 2) {
+                contador = 1;
+                break;
+            }
         }
-        return null;
+        if (contador == 1) {
+            return delMismoPalo;
+        }
+        return new ArrayList<>();
     }
 
-    private Integer crearAccion (String accion,
-                                 Jugador cantador,
-                                 Jugador receptor,
-                                 Integer puntosEnJuego) {
-        Accion a = new Accion(this.nroAccion++, cantador, accion, false, puntosEnJuego);
-        this.acciones.add(a);
-        return a.getNroAccion();
+    private Boolean esEnvido(String accion) {
+        return accion.equals("ENVIDO") || accion.equals("REAL ENVIDO");
     }
 
+    private Boolean esTruco(String accion) {
+        return accion.equals("TRUCO") || accion.equals("RE TRUCO") || accion.equals("VALE 4");
+    }
 
     private Jugador obtenerGanadorDeRonda(Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
@@ -159,44 +166,6 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         throw new TrucoException("No hay ganador, empate o error.");
     }
 
-    private String saberAccion(String numberValue) {
-        String respuestaDada = "";
-        switch (Integer.parseInt(numberValue)) {
-            case 0:
-                respuestaDada = "NO QUIERO";
-                break;
-            case 1:
-                respuestaDada = "QUIERO";
-                break;
-            case 2:
-                respuestaDada = "ENVIDO";
-                break;
-            case 3:
-                respuestaDada = "REAL ENVIDO";
-                break;
-            case 4:
-                respuestaDada = "FALTA ENVIDO";
-                break;
-            case 5:
-                respuestaDada = "TRUCO";
-                break;
-            case 6:
-                respuestaDada = "RE TRUCO";
-                break;
-            case 7:
-                respuestaDada = "VALE 4";
-                break;
-            case 8:
-                respuestaDada = "FLOR";
-                break;
-            case 9:
-                respuestaDada = "MAZO";
-                break;
-            default:
-                return "";
-        }
-        return respuestaDada;
-    }
 
     private void asignarCartasJugadores (Jugador j1, Jugador j2) {
         List<Carta> cartas = repositorioCarta.obtenerCartas();

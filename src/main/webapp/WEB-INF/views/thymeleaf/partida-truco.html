@@ -105,6 +105,40 @@
 
                 <!-- RESPUESTAS TRUCO -->
                 <div id="respuestas1" th:if="${mostrarRespuestasTrucoJ1}">
+                    <!-- NUEVA LÓGICA -->
+                    <!--
+                        Usamos GET en vez de POST con los <a>
+                        Pasamos:
+                            Id Mano
+                            Id Ronda
+                            Accion número (asociada a string, ej 5 -> envido)
+                            Nro Jugador (1 o 2)
+                    -->
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
+                                  + '&mano=' + mano.getId()
+                                  + '&ronda= ' + ronda.getId()
+                                  + '&respuesta=1&jugador=1'}">Quiero
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
+                                  + '&mano=' + mano.getId()
+                                  + '&ronda= ' + ronda.getId()
+                                  + '&respuesta=0&jugador=1'}">No Quiero
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
+                                  + '&mano=' + mano.getId()
+                                  + '&ronda= ' + ronda.getId()
+                                  + '&respuesta=6&jugador=1'}">Re Truco
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
+                                  + '&mano=' + mano.getId()
+                                  + '&ronda= ' + ronda.getId()
+                                  + '&respuesta=7&jugador=1'}">Vale Cuatro
+                    </a>
+                    <!-- FIN NUEVA LÓGICA -->
                     <form th:action="@{/responder}" method="post">
                         <button class="btn btn-warning" type="submit" name="respuesta" value="1">Quiero</button>
                         <button class="btn btn-warning" type="submit" name="respuesta" value="0">No quiero

@@ -14,8 +14,36 @@ public class Truco2 {
     @ManyToOne
     private Jugador j2;
 
+    private Integer puntosJ1;
+    private Integer puntosJ2;
+    private Integer puntosParaGanar;
+
     public Truco2() {
 
+    }
+
+    public Integer getPuntosParaGanar() {
+        return puntosParaGanar;
+    }
+
+    public void setPuntosParaGanar(Integer puntosParaGanar) {
+        this.puntosParaGanar = puntosParaGanar;
+    }
+
+    public Integer getPuntosJ1() {
+        return puntosJ1;
+    }
+
+    public void setPuntosJ1(Integer puntosJ1) {
+        this.puntosJ1 = puntosJ1;
+    }
+
+    public Integer getPuntosJ2() {
+        return puntosJ2;
+    }
+
+    public void setPuntosJ2(Integer puntosJ2) {
+        this.puntosJ2 = puntosJ2;
     }
 
     public Jugador getJ1() {

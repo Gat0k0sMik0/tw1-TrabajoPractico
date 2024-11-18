@@ -131,7 +131,6 @@ public class Jugador {
     }
 
     public void agregarCarta(Carta carta) {
-        System.out.println("Carta agregada al jugador.");
         this.cartas.add(carta);
     }
 
