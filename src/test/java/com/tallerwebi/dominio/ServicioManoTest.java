@@ -212,9 +212,9 @@ public class ServicioManoTest {
     @Test
     public void queSeLeAsigneUnPuntoAlRivalPorIrseAlMazo() {
         // given
-        Ronda2 r1 = new Ronda2();
-        Ronda2 r2 = new Ronda2();
-        List<Ronda2> rs = new ArrayList<>();
+        Ronda r1 = new Ronda();
+        Ronda r2 = new Ronda();
+        List<Ronda> rs = new ArrayList<>();
         rs.add(r1);
         rs.add(r2);
         Truco2 t = new Truco2();
@@ -227,7 +227,7 @@ public class ServicioManoTest {
         t.setPuntosJ2(0);
         when(repositorioRonda.obtenerRondasDeUnaMano(0L)).thenReturn(new ArrayList<>());
         // when
-        List<Ronda2> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(m.getId());
+        List<Ronda> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(m.getId());
         Integer puntosEnJuego = 1;
         if (rondasMano.isEmpty()) {
             puntosEnJuego = 2;
@@ -244,9 +244,9 @@ public class ServicioManoTest {
     @Test
     public void queSeLeAsigneDosPuntosAlRivalPorIrseAlMazo() {
         // given
-        Ronda2 r1 = new Ronda2();
-        Ronda2 r2 = new Ronda2();
-        List<Ronda2> rs = new ArrayList<>();
+        Ronda r1 = new Ronda();
+        Ronda r2 = new Ronda();
+        List<Ronda> rs = new ArrayList<>();
         rs.add(r1);
         rs.add(r2);
         Truco2 t = new Truco2();
@@ -259,7 +259,7 @@ public class ServicioManoTest {
         t.setPuntosJ2(0);
         when(repositorioRonda.obtenerRondasDeUnaMano(0L)).thenReturn(rs);
         // when
-        List<Ronda2> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(m.getId());
+        List<Ronda> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(m.getId());
         Integer puntosEnJuego = 1;
         if (rondasMano.isEmpty()) {
             puntosEnJuego = 2;
@@ -271,6 +271,21 @@ public class ServicioManoTest {
         }
         // then
         assertThat(t.getPuntosJ2(), equalTo(1));
+    }
+
+    @Test
+    public void siSeVaAlMazoQueSeaNullElQueLeToqueResponder() {
+        // given
+        Mano2 m = new Mano2();
+        m.setId(0L);
+        Truco2 t = new Truco2();
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        // when
+        Jugador respondeAhora = servicioMano.preguntar(t, m, "9", j1, j2);
+        // then
+        assertThat(respondeAhora, nullValue());
+
     }
 
 

@@ -36,7 +36,7 @@ public class ServicioRondaTest {
     @Test
     public void queSeCreeLaRonda() {
         Mano2 m = new Mano2();
-        Ronda2 r = servicioRonda.empezar(m);
+        Ronda r = servicioRonda.empezar(m);
         assertThat(r, notNullValue());
     }
 
@@ -46,10 +46,10 @@ public class ServicioRondaTest {
         Mano2 m = new Mano2();
         Jugador jugador = new Jugador();
         Carta carta = new Carta();
-        List<Ronda2> rondas = new ArrayList<>();
+        List<Ronda> rondas = new ArrayList<>();
         Integer contadorNroRonda = -1;
         Integer contadorMovimientos = 0;
-        Ronda2 rondaCreadaCuandoTiras = new Ronda2();
+        Ronda rondaCreadaCuandoTiras = new Ronda();
 
         givenTiroUnaCarta(m, jugador, carta, rondaCreadaCuandoTiras);
 
@@ -71,7 +71,7 @@ public class ServicioRondaTest {
         assertThat(contadorNroRonda, equalTo(0));
     }
 
-    private void givenTiroUnaCarta(Mano2 m, Jugador jugador, Carta carta, Ronda2 rondaCreadaCuandoTiras) {
+    private void givenTiroUnaCarta(Mano2 m, Jugador jugador, Carta carta, Ronda rondaCreadaCuandoTiras) {
         m.setId(0L);
         jugador.setNombre("gonza");
         carta.setValor(0);

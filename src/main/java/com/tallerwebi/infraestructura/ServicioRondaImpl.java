@@ -11,10 +11,9 @@ import java.util.List;
 @Service
 public class ServicioRondaImpl implements ServicioRonda2 {
 
-    private List<Ronda2> rondas;
+    private List<Ronda> rondas;
     private Integer contadorNroRonda;
     private Integer contadorMovimientos;
-//    private List<Jugador> ganadoresDeRonda;
 
     @Autowired
     private RepositorioRonda2 repositorioRonda;
@@ -22,7 +21,6 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     private RepositorioMano repositorioMano;
 
     public ServicioRondaImpl(RepositorioRonda2 repositorioRonda, RepositorioMano repositorioMano) {
-//        this.ganadoresDeRonda = new ArrayList<>();
         this.repositorioRonda = repositorioRonda;
         this.repositorioMano = repositorioMano;
         this.rondas = new ArrayList<>();
@@ -31,15 +29,22 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     }
 
     @Override
-    public Ronda2 empezar(Mano2 mano) {
-        Ronda2 r = new Ronda2();
+    public Ronda empezar(Mano2 mano) {
+        Ronda r = new Ronda();
         r.setNroRonda(0);
         repositorioRonda.guardar(r);
         return r;
     }
 
     @Override
-    public void registrarRonda(Mano2 mano, Ronda2 ronda) {
+    public void reset() {
+        this.rondas = new ArrayList<>();
+        this.contadorNroRonda = -1;
+        this.contadorMovimientos = 0;
+    }
+
+    @Override
+    public void registrarRonda(Mano2 mano, Ronda ronda) {
         if (ronda == null) {
             throw new TrucoException("La ronda que me llegó es nula");
         }

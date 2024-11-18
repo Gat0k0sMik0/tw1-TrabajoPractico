@@ -15,7 +15,7 @@ public class Mano2 {
     private Truco2 partida;  // Relación con Partida (muchos a uno)
 
     @OneToMany(mappedBy = "mano", cascade = CascadeType.ALL)
-    private List<Ronda2> rondas;  // Relación uno a muchos con Ronda
+    private List<Ronda> rondas;  // Relación uno a muchos con Ronda
 
     private Boolean estaTerminada;
     private Integer movimientos;
@@ -56,11 +56,11 @@ public class Mano2 {
         this.partida = partida;
     }
 
-    public List<Ronda2> getRondas() {
+    public List<Ronda> getRondas() {
         return rondas;
     }
 
-    public void setRondas(List<Ronda2> rondas) {
+    public void setRondas(List<Ronda> rondas) {
         this.rondas = rondas;
     }
 }

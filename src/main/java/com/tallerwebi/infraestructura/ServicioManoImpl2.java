@@ -25,7 +25,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     Jugador diceEnvidoJ2;
     Jugador diceRealEnvido;
     Jugador diceFaltaEnvido;
-    Jugador jugadorMano;
     private Integer puntosEnJuegoMano;
 
     public ServicioManoImpl2(RepositorioMano repositorioMano, RepositorioRonda2 repositorioRonda, RepositorioTruco repositorioTruco) {
@@ -44,8 +43,25 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     @Override
     public Mano2 empezar(Truco2 t) {
         Mano2 m = new Mano2();
+        m.setEstaTerminada(false);
         repositorioMano.guardar(m);
         return m;
+    }
+
+    @Override
+    public Mano2 reset(Truco2 truco) {
+        this.diceEnvidoJ1 = null;
+        this.diceEnvidoJ2 = null;
+        this.diceRealEnvido = null;
+        this.diceFaltaEnvido = null;
+        this.puntosEnJuegoEnvido = 0;
+        this.indicadorTruco = 0;
+        this.puntosEnJuegoMano = 0;
+        Mano2 nueva = new Mano2();
+        nueva.setEstaTerminada(false);
+        nueva.setPartida(truco);
+        this.repositorioMano.guardar(nueva);
+        return nueva;
     }
 
     @Override
@@ -69,7 +85,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
     @Override
-    public Jugador preguntar(Truco2 truco, Mano2 mano, String accion, Jugador ejecutor, Jugador receptor) {
+    public Jugador preguntar(Mano2 mano, String accion, Jugador ejecutor, Jugador receptor) {
+        Truco2 truco = mano.getPartida();
         String accionRealizada = saberAccion(accion);
         if (esTruco(accionRealizada)) {
             preguntarTruco(accionRealizada);
@@ -81,7 +98,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
             // TODO: calcular flor
             return null;
         } else if (accionRealizada.equals("MAZO")) {
-            List<Ronda2> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(mano.getId());
+            List<Ronda> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(mano.getId());
             Integer puntosEnJuego = 1;
             if (rondasMano.isEmpty()) {
                 puntosEnJuego = 2;
@@ -91,7 +108,9 @@ public class ServicioManoImpl2 implements ServicioMano2 {
             } else {
                 truco.setPuntosJ1(truco.getPuntosJ1() + puntosEnJuego);
             }
+            mano.setEstaTerminada(true);
             this.repositorioTruco.guardarPartida(truco);
+            this.repositorioMano.guardar(mano);
             return null;
         } else {
             throw new TrucoException("Preguntar: ocurrió un error.");

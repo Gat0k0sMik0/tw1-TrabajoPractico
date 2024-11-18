@@ -2,8 +2,6 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Mano2;
 import com.tallerwebi.dominio.RepositorioMano;
-import com.tallerwebi.dominio.Ronda2;
-import com.tallerwebi.dominio.Usuario;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;

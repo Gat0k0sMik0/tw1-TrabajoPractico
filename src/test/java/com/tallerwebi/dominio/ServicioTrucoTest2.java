@@ -71,7 +71,7 @@ public class ServicioTrucoTest2 {
         Carta c = esperadas.get(0); // 4 ESPADA
         // when
         whenAsignoTresCartasAlJugador(j1, esperadas);
-        Ronda2 r = servicioTruco.tirarCarta(m, j1, c, "1");
+        Ronda r = servicioTruco.tirarCarta(m, j1, c, "1");
         // then
         assertNotNull(r);
     }

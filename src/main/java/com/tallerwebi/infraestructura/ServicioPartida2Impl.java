@@ -24,8 +24,6 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     private Integer puntosJ1;
     private Integer puntosJ2;
 
-    private Jugador turno;
-
 
     public ServicioPartida2Impl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
         this.repositorioTruco = repositorioTruco;
@@ -34,8 +32,6 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         this.movimientos = 0;
         this.puntosJ1 = 0;
         this.puntosJ2 = 0;
-        this.turno = null;
-        this.turno = null;
     }
 
     @Override
@@ -53,6 +49,18 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         return truco;
     }
 
+    @Override
+    public void reset(Jugador j1, Jugador j2) {
+        this.vaciarCartasDeJugadores(j1, j2);
+        this.asignarCartasJugadores(j1, j2);
+    }
+
+    private void vaciarCartasDeJugadores(Jugador j1, Jugador j2) {
+        j1.getCartas().clear();
+        j2.getCartas().clear();
+    }
+
+
     @Override // BORRAR DESPUÉS
     public Truco2 empezarTest(Jugador j1, Jugador j2) {
         Truco2 truco = new Truco2();
@@ -62,13 +70,13 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     }
 
     @Override
-    public Ronda2 tirarCarta(Mano2 mano, Jugador jugador, Carta carta, String nroJugador) {
+    public Ronda tirarCarta(Mano2 mano, Jugador jugador, Carta carta, String nroJugador) {
         if (!mano.getEstaTerminada()) {
             List<Carta> cartasJugador = jugador.getCartas();
             if (cartasJugador.contains(carta)) {
                 jugador.tirarCarta(carta);
                 sumarMovimientoMano(mano);
-                Ronda2 r = new Ronda2();
+                Ronda r = new Ronda();
                 r.setNombreJugador(jugador.getNombre());
                 r.setPaloCarta(carta.getPalo());
                 r.setValorCarta(carta.getValor());
@@ -95,11 +103,6 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
             truco.setPuntosJ2(jugador2.getPuntosPartida());
         }
         this.repositorioTruco.guardarPartida(truco);
-    }
-
-    @Override
-    public void cambiarTurno(Jugador jugador) {
-        this.turno = jugador;
     }
 
     private Integer obtenerSumaDeLasMasAltas(List<Carta> cartas) {
@@ -172,7 +175,7 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         throw new TrucoException("No hay ganador, empate o error.");
     }
 
-    private void asignarCartasJugadores (Jugador j1, Jugador j2) {
+    private void asignarCartasJugadores(Jugador j1, Jugador j2) {
         List<Carta> cartas = repositorioCarta.obtenerCartas();
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom);
@@ -220,7 +223,7 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         return false;
     }
 
-    private void sumarMovimientoMano (Mano2 mano) {
+    private void sumarMovimientoMano(Mano2 mano) {
         mano.setMovimientos(mano.getMovimientos() + 1);
         repositorioMano.guardar(mano);
     }

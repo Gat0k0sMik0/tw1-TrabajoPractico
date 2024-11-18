@@ -18,14 +18,14 @@ public class RepositorioRondaImpl implements RepositorioRonda2 {
     }
 
     @Override
-    public void guardar(Ronda2 ronda) {
+    public void guardar(Ronda ronda) {
         sessionFactory.getCurrentSession().saveOrUpdate(ronda);
     }
 
     @Override
-    public List<Ronda2> obtenerRondasDeUnaMano(Long manoId) {
-        return (List<Ronda2>) sessionFactory.getCurrentSession()
-                .createCriteria(Ronda2.class)
+    public List<Ronda> obtenerRondasDeUnaMano(Long manoId) {
+        return (List<Ronda>) sessionFactory.getCurrentSession()
+                .createCriteria(Ronda.class)
                 .add(Restrictions.eq("mano_id", manoId))
                 .list();
     }

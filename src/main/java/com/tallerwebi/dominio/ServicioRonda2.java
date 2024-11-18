@@ -1,6 +1,9 @@
 package com.tallerwebi.dominio;
 
 public interface ServicioRonda2 {
-    Ronda2 empezar(Mano2 mano);
-    void registrarRonda(Mano2 mano, Ronda2 ronda);
+    Ronda empezar(Mano2 mano);
+
+    void reset();
+
+    void registrarRonda(Mano2 mano, Ronda ronda);
 }
