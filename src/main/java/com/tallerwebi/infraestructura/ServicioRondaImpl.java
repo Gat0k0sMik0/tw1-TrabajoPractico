@@ -33,6 +33,7 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     @Override
     public Ronda2 empezar(Mano2 mano) {
         Ronda2 r = new Ronda2();
+        r.setNroRonda(0);
         repositorioRonda.guardar(r);
         return r;
     }
