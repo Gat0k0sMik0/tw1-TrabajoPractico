@@ -6,6 +6,7 @@ import com.tallerwebi.infraestructura.RepositorioTrucoImpl;
 import com.tallerwebi.infraestructura.ServicioPartida2Impl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class ServicioTrucoTest2 {
         j1.setCartas(new ArrayList<>(esperadas));
         j2.setCartas(new ArrayList<>(esperadas));
     }
+
+
 
     @Test
     @Transactional

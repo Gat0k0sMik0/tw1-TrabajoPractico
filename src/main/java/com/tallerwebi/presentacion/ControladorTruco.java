@@ -1,14 +1,19 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
+import com.tallerwebi.infraestructura.ServicioManoImpl2;
+import com.tallerwebi.infraestructura.ServicioPartida2Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,8 @@ public class ControladorTruco {
     private ServicioMano2 servicioMano2;
     @Autowired
     private ServicioRonda2 servicioRonda2;
+    @Autowired
+    private ServicioPartida2Impl servicioPartida2Impl;
 
     public ControladorTruco(ServicioPartida2 servicioTruco,
                             ServicioMano2 servicioMano2,
@@ -33,18 +40,29 @@ public class ControladorTruco {
     }
 
     @RequestMapping("/partida-truco")
-    public ModelAndView irAPartidaTruco(HttpSession session) {
-        // Si no hay usuario, lo echamos de acá
-        if (session.getAttribute("usuarioActivo") == null) return new ModelAndView("redirect:/login");
-
-        List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
-        List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
-        Jugador j1 = (Jugador)session.getAttribute("jugador1");
-        Jugador j2 = (Jugador)session.getAttribute("jugador2");
-        Boolean isLaManoTerminada = (Boolean) session.getAttribute("terminada");
-        Long idPartida = (Long) session.getAttribute("idPartida");
-
+    public ModelAndView irAPartidaTruco(@RequestParam(value = "partidaId", required = false) Long partidaId) {
         ModelMap model = new ModelMap();
+        Truco2 partida;
+
+        if(partidaId != null) {
+            partida = servicioTruco.obtenerPartidaPorId(partidaId);
+            Mano2 manos = servicioMano2.obtenerManoPorId(partidaId);
+            Ronda rondas = servicioRonda2.obtenerRondaPorId(partidaId);
+
+            model.put("cartasJugador1", partida.getJ1().getCartas());
+            model.put("cartasJugador2", partida.getJ2().getCartas());
+            model.put("jugador1", partida.getJ1());
+            model.put("jugador2", partida.getJ2());
+            model.put("cartasTiradasJ1", partida.getJ1().getCartasTiradas());
+            model.put("cartasTiradasJ2", partida.getJ2().getCartasTiradas());
+            model.put("puntosParaGanar", partida.getPuntosParaGanar());
+            model.put("manos", manos);
+            model.put("rondas", rondas);
+            model.put("puntosJ1", partida.getPuntosJ1());
+            model.put("puntosJ2", partida.getPuntosJ2());
+        }
+        return new ModelAndView("partida-truco", model);
+
 
         // NUEVA LÓGICA
         Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
@@ -63,47 +81,38 @@ public class ControladorTruco {
         // FIN NUEVA LÓGICA
 
         // Saber si se terminó la mano y renderizar contenido
-        if (isLaManoTerminada != null) {
+       /* if (isLaManoTerminada != null) {
 //            return new ModelAndView("redirect:/home");
-        }
+        }*/
 
-        model.put("cartasJugador1", cartasJugador1);
-        model.put("cartasJugador2", cartasJugador2);
-        model.put("jugador1", session.getAttribute("jugador1"));
-        model.put("jugador2", session.getAttribute("jugador2"));
-        model.put("cartasTiradasJ1", session.getAttribute("cartasTiradasJ1"));
-        model.put("cartasTiradasJ2", session.getAttribute("cartasTiradasJ2"));
-        model.put("turnoJugador", session.getAttribute("turnoJugador"));
-        model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
-        model.put("partidaIniciada", session.getAttribute("partidaIniciada"));
-        model.put("terminada", session.getAttribute("terminada"));
-        model.put("mostrarRespuestasEnvidoJ1", session.getAttribute("mostrarRespuestasEnvidoJ1"));
-        model.put("mostrarRespuestasEnvidoJ2", session.getAttribute("mostrarRespuestasEnvidoJ2"));
-        model.put("mostrarRespuestasTrucoJ1", session.getAttribute("mostrarRespuestasTrucoJ1"));
-        model.put("mostrarRespuestasTrucoJ2", session.getAttribute("mostrarRespuestasTrucoJ2"));
-        model.put("mostrarRespuestasJ1", session.getAttribute("mostrarRespuestasJ1"));
-        model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
+        //   model.put("turnoJugador", session.getAttribute("turnoJugador"));
+     //   model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
+     //   model.put("partidaIniciada", session.getAttribute("partidaIniciada"));
+     //   model.put("terminada", session.getAttribute("terminada"));
+//        model.put("mostrarRespuestasEnvidoJ1", session.getAttribute("mostrarRespuestasEnvidoJ1"));
+//        model.put("mostrarRespuestasEnvidoJ2", session.getAttribute("mostrarRespuestasEnvidoJ2"));
+//        model.put("mostrarRespuestasTrucoJ1", session.getAttribute("mostrarRespuestasTrucoJ1"));
+//        model.put("mostrarRespuestasTrucoJ2", session.getAttribute("mostrarRespuestasTrucoJ2"));
+//        model.put("mostrarRespuestasJ1", session.getAttribute("mostrarRespuestasJ1"));
+//        model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
 
         // handle de envido
-        model.put("responde", session.getAttribute("responde"));
-        model.put("puntosEnJuego", session.getAttribute("puntosEnJuego"));
-        model.put("reEnvido", session.getAttribute("reEnvido"));
-        model.put("realEnvido", session.getAttribute("realEnvido"));
+//        model.put("responde", session.getAttribute("responde"));
+//        model.put("puntosEnJuego", session.getAttribute("puntosEnJuego"));
+//        model.put("reEnvido", session.getAttribute("reEnvido"));
+//        model.put("realEnvido", session.getAttribute("realEnvido"));
 
+//        model.put("mano", servicioMano.getMano(0));
+//
+//        // Para ver como va
+//        model.put("movimientos", session.getAttribute("movimientos"));
+//        model.put("nroRondas", session.getAttribute("nroRondas"));
+//        model.put("envidoValido", session.getAttribute("envidoValido"));
+//        model.put("tantoJ1", session.getAttribute("tantoJ1"));
+//        model.put("tantoJ2", session.getAttribute("tantoJ2"));
+//        model.put("acciones", session.getAttribute("acciones"));
+//        model.put("trucoValido", session.getAttribute("trucoValido"));
 
-        // Para ver como va
-        model.put("rondas", session.getAttribute("rondas"));
-        model.put("manos", session.getAttribute("manos"));
-        model.put("movimientos", session.getAttribute("movimientos"));
-        model.put("nroRondas", session.getAttribute("nroRondas"));
-        model.put("envidoValido", session.getAttribute("envidoValido"));
-        model.put("tantoJ1", session.getAttribute("tantoJ1"));
-        model.put("tantoJ2", session.getAttribute("tantoJ2"));
-        model.put("acciones", session.getAttribute("acciones"));
-        model.put("trucoValido", session.getAttribute("trucoValido"));
-
-
-        return new ModelAndView("partida-truco", model);
     }
 
     @RequestMapping("/comenzar-truco")
