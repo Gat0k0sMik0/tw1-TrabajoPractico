@@ -1,117 +1,114 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Jugador {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private Truco2 truco;
+
     private String nombre;
     private Integer puntosRonda = 0;
     private Integer puntosPartida = 0;
-    private List<Carta> cartas = new ArrayList<>();
-    private List<Carta> cartasTiradas = new ArrayList<>();
-    //    private List<Integer> puntos;
-    private Integer puntos;
+    private Integer numero;
 
-    public Jugador(String nombre) {
+    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
+    private List<Carta> cartas;  // Relación uno a muchos con Carta
+
+    @OneToOne
+    private Truco2 partida;
+
+//    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
+//    private List<Carta> cartasTiradas = new ArrayList<>();
+
+    public Jugador() {
+
+    }
+
+    public Truco2 getPartida() {
+        return partida;
+    }
+
+    public void setPartida(Truco2 partida) {
+        this.partida = partida;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Truco2 getTruco() {
+        return truco;
+    }
+
+    public void setTruco(Truco2 truco) {
+        this.truco = truco;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public Carta tirarCarta(Carta carta) {
-        boolean existeLaCartaEnCartas = cartas.contains(carta);
-        if (existeLaCartaEnCartas) {
-            cartas.remove(carta);
-            cartasTiradas.add(carta);
-            return carta;
-        } else return null;
+    public Integer getPuntosRonda() {
+        return puntosRonda;
+    }
+
+    public void setPuntosRonda(Integer puntosRonda) {
+        this.puntosRonda = puntosRonda;
     }
 
     public Integer getPuntosPartida() {
-        return this.puntosPartida;
+        return puntosPartida;
     }
 
     public void setPuntosPartida(Integer puntosPartida) {
         this.puntosPartida = puntosPartida;
     }
 
-    public void acumularPuntosDePartida (Integer puntos) {
-        this.puntosPartida += puntos;
+    public Integer getNumero() {
+        return numero;
     }
 
-//        public List<Integer> getPuntos () {
-//            return puntos;
-//        }
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
 
-//        public void setPuntos (List < Integer > puntos) {
-//            this.puntos = puntos;
-//        }
+    public List<Carta> getCartas() {
+        return cartas;
+    }
 
-        public List<Carta> getCartasTiradas () {
-            return cartasTiradas;
-        }
-
-        public void setCartasTiradas (List < Carta > cartasTiradas) {
-            this.cartasTiradas = cartasTiradas;
-        }
-
-
-        public List<Carta> getCartas () {
-            return cartas;
-        }
-
-        public void setCartas (List < Carta > cartas) {
-            this.cartas = cartas;
-        }
-
-        public String getNombre () {
-            return nombre;
-        }
-
-        public void setNombre (String nombre){
-            this.nombre = nombre;
-        }
-
-        private int getIndiceDeCartaBuscada (Carta carta){
-            return cartas.indexOf(carta);
-
-        }
-
-        public Boolean saberSiExiste (Carta carta){
-            return cartas.contains(carta);
-        }
-
-
-        // Añadir carta a la mano
-        public void recibirCarta (Carta carta){
-            this.cartas.add(carta);
-        }
-
-        public void agregarPuntoRonda () {
-            this.puntosRonda++;
-        }
-
-        public Integer getPuntosRonda () {
-            return puntosRonda;
-        }
-
-        public void setPuntosRonda (Integer puntosRonda){
-            this.puntosRonda = puntosRonda;
-        }
+    public void setCartas(List<Carta> cartas) {
+        this.cartas = cartas;
+    }
 
     @Override
     public String toString() {
         return "Jugador{" +
-                "nombre='" + nombre + '\'' +
-                ", puntosRonda=" + puntosRonda +
-                ", puntosPartida=" + puntosPartida +
-                ", cartas=" + cartas +
-                ", cartasTiradas=" + cartasTiradas +
-                ", puntos=" + puntos +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
                 '}';
     }
 
-    public void ganarPuntosPorIrseAlMazo() {
-        this.puntosPartida += 2;
-        this.cartasTiradas.clear();
-        this.cartas.clear();
-    }
+    //
+//    public List<Carta> getCartasTiradas() {
+//        return cartasTiradas;
+//    }
+//
+//    public void setCartasTiradas(List<Carta> cartasTiradas) {
+//        this.cartasTiradas = cartasTiradas;
 }

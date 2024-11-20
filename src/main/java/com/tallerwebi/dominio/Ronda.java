@@ -1,35 +1,51 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.*;
+
+@Entity
 public class Ronda {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Integer nroRonda;
-    private Jugador jugador;
+
+    private String nombreJugador;
+
     private Integer valorCarta;
     private Integer nroCarta;
-    private String palo;
+    private String paloCarta;
 
-    public Ronda(Integer nroRonda, Jugador jugador, Carta carta) {
-        this.nroRonda = nroRonda;
-        this.jugador = jugador;
-        this.valorCarta = carta.getValor();
-        this.nroCarta = carta.getNumero();
-        this.palo = carta.getPalo();
+    @ManyToOne
+    @JoinColumn(name = "mano_id")
+    private Mano2 mano;  // Relación muchos a uno con Mano
+
+    public Ronda() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getNroRonda() {
         return nroRonda;
     }
 
-    public void setNroRonda(Integer nroRonda) {
-        this.nroRonda = nroRonda;
+    public void setNroRonda(Integer nroMano) {
+        this.nroRonda = nroMano;
     }
 
-    public Jugador getJugador() {
-        return jugador;
+    public String getNombreJugador() {
+        return nombreJugador;
     }
 
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
+    public void setNombreJugador(String nombreJugador) {
+        this.nombreJugador = nombreJugador;
     }
 
     public Integer getValorCarta() {
@@ -48,11 +64,19 @@ public class Ronda {
         this.nroCarta = nroCarta;
     }
 
-    public String getPalo() {
-        return palo;
+    public String getPaloCarta() {
+        return paloCarta;
     }
 
-    public void setPalo(String palo) {
-        this.palo = palo;
+    public void setPaloCarta(String paloCarta) {
+        this.paloCarta = paloCarta;
+    }
+
+    public Mano2 getMano() {
+        return mano;
+    }
+
+    public void setMano(Mano2 mano) {
+        this.mano = mano;
     }
 }
