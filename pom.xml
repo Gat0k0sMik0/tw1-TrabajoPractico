@@ -1,12 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
     <groupId>com.tallerwebi</groupId>
     <artifactId>tallerwebi-base</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>spring web mvc</name>
-
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>11</jdk.version>
@@ -23,7 +34,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
@@ -108,6 +118,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- MAILER -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- SOCKETS -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -183,6 +199,8 @@
             </plugin>
 
         </plugins>
+
+
     </build>
 
 </project>
