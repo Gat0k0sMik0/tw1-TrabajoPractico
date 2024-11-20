@@ -63,7 +63,7 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     }
 
     @Override
-    public Ronda2 obtenerRondaPorId(Long id) {
+    public Ronda obtenerRondaPorId(Long id) {
         return null;
     }
 
