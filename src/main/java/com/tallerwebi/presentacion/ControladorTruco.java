@@ -39,9 +39,10 @@ public class ControladorTruco {
 
         List<Carta> cartasJugador1 = (List<Carta>) session.getAttribute("cartasJugador1");
         List<Carta> cartasJugador2 = (List<Carta>) session.getAttribute("cartasJugador2");
-        Jugador j1 = (Jugador)session.getAttribute("jugador1");
+        /*Jugador j1 = (Jugador)session.getAttribute("jugador1");
         Jugador j2 = (Jugador)session.getAttribute("jugador2");
-        Boolean isLaManoTerminada = (Boolean) session.getAttribute("terminada");
+
+        Boolean isLaManoTerminada = (Boolean) session.getAttribute("terminada");*/
         Long idPartida = (Long) session.getAttribute("idPartida");
 
         ModelMap model = new ModelMap();
@@ -50,11 +51,13 @@ public class ControladorTruco {
         Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano2 mano = servicioMano2.obtenerManoPorId(idPartida);
 
+        Boolean isLaManoTerminada = mano.getEstaTerminada();
+
         // FUNCIONAL
         model.put("puntosJ1", truco.getPuntosJ1());
         model.put("puntosJ2", truco.getPuntosJ2());
         model.put("mano", servicioMano2.obtenerManoPorId(0L)); // TODO revisar (mano sin terminar?) ANALIZAR
-        model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
+        //model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
 
         // PARA DESARROLLO
         model.put("movimientos", mano.getMovimientos());
@@ -144,32 +147,57 @@ public class ControladorTruco {
         // Solo para desarrollo
         sesion.setAttribute("todasLasCartas", todasLasCartas);
 
+        //CAMBIO LO QUE ESTÁ EN SESIONES
+        //sesion.setAttribute("cartasRepartidas", true); // se repartió
+        model.put("cartasRepartidas", true);
+
+        //sesion.setAttribute("cartasJugador1", cartasJugador1);
+        //sesion.setAttribute("cartasJugador2", cartasJugador2);
+        model.put("cartasJugador1", cartasJugador1);
+        model.put("cartasJugador2", cartasJugador2);
+
+        //sesion.setAttribute("jugador1", jugador1);
+        //sesion.setAttribute("jugador2", jugador2);
+        model.put("jugador1", jugador1);
+        model.put("jugador2", jugador2);
+
+        //sesion.setAttribute("partidaIniciada", true);
+        model.put("partidaIniciada", true);
+
+        //sesion.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+        model.put("terminada", mano.getEstaTerminada());
+
+//        sesion.setAttribute("mostrarRespuestasEnvidoJ1", false);
+//        sesion.setAttribute("mostrarRespuestasEnvidoJ2", false);
+//        sesion.setAttribute("mostrarRespuestasTrucoJ1", false);
+//        sesion.setAttribute("mostrarRespuestasTrucoJ2", false);
+//        sesion.setAttribute("mostrarRespuestasJ1", true);
+//        sesion.setAttribute("mostrarRespuestasJ2", true);
+
+        model.put("mostrarRespuestasEnvidoJ1", false);
+        model.put("mostrarRespuestasEnvidoJ2", false);
+        model.put("mostrarRespuestasTrucoJ1", false);
+        model.put("mostrarRespuestasTrucoJ2", false);
+        model.put("mostrarRespuestasJ1", true);
+        model.put("mostrarRespuestasJ2", true);
+
+        // para ver
+        //sesion.setAttribute("todasLasCartas", todasLasCartas);
+        model.put("todasLasCartas", todasLasCartas);
+
+        //sesion.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        model.put("movimientos", servicioMano2.obtenerMovimientosDeLaMano(mano));
+
+        //sesion.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+
+        //sesion.setAttribute("manos", servicioTruco.getManosJugadas());
+
+        //sesion.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());*/
+        model.put("rondas", mano.getRondas().size());
+
         // FIN LOGICA NUEVA
 
-
-
-        // Guardado de sesiones
-        sesion.setAttribute("cartasRepartidas", true); // se repartió
-        sesion.setAttribute("cartasJugador1", cartasJugador1);
-        sesion.setAttribute("cartasJugador2", cartasJugador2);
-        sesion.setAttribute("jugador1", jugador1);
-        sesion.setAttribute("jugador2", jugador2);
-        sesion.setAttribute("partidaIniciada", true);
-//        sesion.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
-        sesion.setAttribute("mostrarRespuestasEnvidoJ1", false);
-        sesion.setAttribute("mostrarRespuestasEnvidoJ2", false);
-        sesion.setAttribute("mostrarRespuestasTrucoJ1", false);
-        sesion.setAttribute("mostrarRespuestasTrucoJ2", false);
-        sesion.setAttribute("mostrarRespuestasJ1", true);
-        sesion.setAttribute("mostrarRespuestasJ2", true);
-
-
-//        sesion.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
-//        sesion.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
-//        sesion.setAttribute("manos", servicioTruco.getManosJugadas());
-//        sesion.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
-
-        return new ModelAndView("redirect:/partida-truco");
+        return new ModelAndView("redirect:/partida-truco", model);
     }
 
 
