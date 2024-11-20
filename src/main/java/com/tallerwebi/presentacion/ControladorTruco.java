@@ -1,19 +1,14 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
-import com.tallerwebi.dominio.excepcion.TrucoException;
-import com.tallerwebi.infraestructura.ServicioManoImpl2;
-import com.tallerwebi.infraestructura.ServicioPartida2Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +39,12 @@ public class ControladorTruco {
 
         if(partidaId != null) {
             partida = servicioTruco.obtenerPartidaPorId(partidaId);
-            Mano2 manos = servicioMano2.obtenerManoPorId(partidaId);
+            Mano2 mano = servicioMano2.obtenerManoPorId(partidaId);
             Ronda rondas = servicioRonda2.obtenerRondaPorId(partidaId);
 
+        Boolean isLaManoTerminada = mano.getEstaTerminada();
+
+        //model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
             model.put("cartasJugador1", partida.getJ1().getCartas());
             model.put("cartasJugador2", partida.getJ2().getCartas());
             model.put("jugador1", partida.getJ1());
@@ -54,7 +52,7 @@ public class ControladorTruco {
             model.put("cartasTiradasJ1", partida.getJ1().getCartasTiradas());
             model.put("cartasTiradasJ2", partida.getJ2().getCartasTiradas());
             model.put("puntosParaGanar", partida.getPuntosParaGanar());
-            model.put("manos", manos);
+            model.put("mano", mano);
             model.put("rondas", rondas);
             model.put("puntosJ1", partida.getPuntosJ1());
             model.put("puntosJ2", partida.getPuntosJ2());
@@ -151,32 +149,57 @@ public class ControladorTruco {
         // Solo para desarrollo
         sesion.setAttribute("todasLasCartas", todasLasCartas);
 
+        //CAMBIO LO QUE ESTÁ EN SESIONES
+        //sesion.setAttribute("cartasRepartidas", true); // se repartió
+        model.put("cartasRepartidas", true);
+
+        //sesion.setAttribute("cartasJugador1", cartasJugador1);
+        //sesion.setAttribute("cartasJugador2", cartasJugador2);
+        model.put("cartasJugador1", cartasJugador1);
+        model.put("cartasJugador2", cartasJugador2);
+
+        //sesion.setAttribute("jugador1", jugador1);
+        //sesion.setAttribute("jugador2", jugador2);
+        model.put("jugador1", jugador1);
+        model.put("jugador2", jugador2);
+
+        //sesion.setAttribute("partidaIniciada", true);
+        model.put("partidaIniciada", true);
+
+        //sesion.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
+        model.put("terminada", mano.getEstaTerminada());
+
+//        sesion.setAttribute("mostrarRespuestasEnvidoJ1", false);
+//        sesion.setAttribute("mostrarRespuestasEnvidoJ2", false);
+//        sesion.setAttribute("mostrarRespuestasTrucoJ1", false);
+//        sesion.setAttribute("mostrarRespuestasTrucoJ2", false);
+//        sesion.setAttribute("mostrarRespuestasJ1", true);
+//        sesion.setAttribute("mostrarRespuestasJ2", true);
+
+        model.put("mostrarRespuestasEnvidoJ1", false);
+        model.put("mostrarRespuestasEnvidoJ2", false);
+        model.put("mostrarRespuestasTrucoJ1", false);
+        model.put("mostrarRespuestasTrucoJ2", false);
+        model.put("mostrarRespuestasJ1", true);
+        model.put("mostrarRespuestasJ2", true);
+
+        // para ver
+        //sesion.setAttribute("todasLasCartas", todasLasCartas);
+        model.put("todasLasCartas", todasLasCartas);
+
+        //sesion.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
+        model.put("movimientos", servicioMano2.obtenerMovimientosDeLaMano(mano));
+
+        //sesion.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
+
+        //sesion.setAttribute("manos", servicioTruco.getManosJugadas());
+
+        //sesion.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());*/
+        model.put("rondas", mano.getRondas().size());
+
         // FIN LOGICA NUEVA
 
-
-
-        // Guardado de sesiones
-        sesion.setAttribute("cartasRepartidas", true); // se repartió
-        sesion.setAttribute("cartasJugador1", cartasJugador1);
-        sesion.setAttribute("cartasJugador2", cartasJugador2);
-        sesion.setAttribute("jugador1", jugador1);
-        sesion.setAttribute("jugador2", jugador2);
-        sesion.setAttribute("partidaIniciada", true);
-//        sesion.setAttribute("terminada", servicioTruco.saberSiLaManoEstaTerminada());
-        sesion.setAttribute("mostrarRespuestasEnvidoJ1", false);
-        sesion.setAttribute("mostrarRespuestasEnvidoJ2", false);
-        sesion.setAttribute("mostrarRespuestasTrucoJ1", false);
-        sesion.setAttribute("mostrarRespuestasTrucoJ2", false);
-        sesion.setAttribute("mostrarRespuestasJ1", true);
-        sesion.setAttribute("mostrarRespuestasJ2", true);
-
-
-//        sesion.setAttribute("movimientos", servicioTruco.getMovimientosDeLaManoActual());
-//        sesion.setAttribute("rondas", servicioTruco.getRondasDeLaManoActual());
-//        sesion.setAttribute("manos", servicioTruco.getManosJugadas());
-//        sesion.setAttribute("nroRondas", servicioTruco.getNumeroDeRondasJugadasDeLaManoActual());
-
-        return new ModelAndView("redirect:/partida-truco");
+        return new ModelAndView("redirect:/partida-truco", model);
     }
 
 
