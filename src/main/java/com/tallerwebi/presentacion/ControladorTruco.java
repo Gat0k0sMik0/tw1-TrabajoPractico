@@ -53,13 +53,12 @@ public class ControladorTruco {
             model.put("cartasJugador1", partida.getJ1().getCartas());
             model.put("cartasJugador2", partida.getJ2().getCartas());
 
-            System.out.println("jugador 1 tiene: " + partida.getJ1().getCartas().size());
 
             model.put("jugador1", partida.getJ1());
             model.put("jugador2", partida.getJ2());
 
-            model.put("cartasTiradasJ1", partida.getJ1().getCartasTiradas());
-            model.put("cartasTiradasJ2", partida.getJ2().getCartasTiradas());
+//            model.put("cartasTiradasJ1", partida.getJ1().getCartasTiradas());
+//            model.put("cartasTiradasJ2", partida.getJ2().getCartasTiradas());
 
             model.put("puntosJ1", partida.getPuntosJ1());
             model.put("puntosJ2", partida.getPuntosJ2());
@@ -149,8 +148,10 @@ public class ControladorTruco {
         Truco2 truco = this.servicioTruco.empezar(jugador1, jugador2);
         Mano2 mano = this.servicioMano2.empezar(truco);
 //        Ronda ronda = this.servicioRonda2.empezar(mano);
-        System.out.println("ID TRUCO: " + truco.getId());
         sesion.setAttribute("idPartida", truco.getId());
+        sesion.setAttribute("idJ1", jugador1.getId());
+        sesion.setAttribute("idJ2", jugador2.getId());
+
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -212,8 +213,8 @@ public class ControladorTruco {
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
-        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
-        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
+//        session.setAttribute("cartasTiradasJ1", jugador1.getCartasTiradas());
+//        session.setAttribute("cartasTiradasJ2", jugador2.getCartasTiradas());
         session.setAttribute("cartasJugador1", jugador1.getCartas());
         session.setAttribute("cartasJugador2", jugador2.getCartas());
 //        session.setAttribute("turnoJugador", servicioTruco.getTurnoJugador());

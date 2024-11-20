@@ -6,6 +6,7 @@ import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,8 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     private Integer puntosJ2;
     private List<Carta> cartasJ1;
     private List<Carta> cartasJ2;
+    private List<Carta> cartasTiradasJ1;
+    private List<Carta> cartasTiradasJ2;
     private Jugador j1;
     private Jugador j2;
 
@@ -36,6 +39,8 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         this.repositorioMano = repositorioMano;
         this.cartasJ1 = new ArrayList<>();
         this.cartasJ2 = new ArrayList<>();
+        this.cartasTiradasJ1 = new ArrayList<>();
+        this.cartasTiradasJ2 = new ArrayList<>();
         this.j1 = null;
         this.j2 = null;
         this.movimientos = 0;
@@ -43,29 +48,57 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         this.puntosJ2 = 0;
     }
 
+    // TODO: despues cambiar
+    @Override
+    public List<Carta> getCartasTiradasJ1() {
+        return this.cartasTiradasJ1;
+    }
+    @Override
+    public List<Carta> getCartasTiradasJ2() {
+        return this.cartasTiradasJ2;
+    }
+
+
+
+    @Transactional
     @Override
     public Truco2 obtenerPartidaPorId(Long id) {
         Truco2 partida = this.repositorioTruco.buscarPartidaPorId(id);
+        List<Carta> cartasJ1 = repositorioCarta.obtenerCartasDeJugadorPorId(partida.getJ1().getId());
+        List<Carta> cartasJ2 = repositorioCarta.obtenerCartasDeJugadorPorId(partida.getJ2().getId());
+        Jugador j1 = this.repositorioTruco.obtenerJugadorPorID(partida.getJ1().getId());
+        Jugador j2 = this.repositorioTruco.obtenerJugadorPorID(partida.getJ2().getId());
+
         this.j1 = partida.getJ1();
         this.j2 = partida.getJ2();
         this.puntosJ1 = partida.getPuntosJ1();
         this.puntosJ2 = partida.getPuntosJ2();
-        Jugador j1 = this.repositorioTruco.obtenerJugadorPorID(this.j1.getId());
-        Jugador j2 = this.repositorioTruco.obtenerJugadorPorID(this.j2.getId());
-        this.j1 = j1;
-        this.j2 = j2;
+        this.cartasJ1.addAll(cartasJ1);
+        this.cartasJ2.addAll(cartasJ2);
+
+        System.out.println("Del repo j1 vino con: " + j1.getCartas().size());
+        this.j1.setCartas(j1.getCartas());
+        this.j2.setCartas(j2.getCartas());
+
         return partida;
     }
 
     @Override
     public Truco2 empezar(Jugador j1, Jugador j2) {
         Truco2 truco = new Truco2();
+        this.repositorioTruco.guardarJugador(j1);
+        this.repositorioTruco.guardarJugador(j2);
         truco.setJ1(j1);
         truco.setJ2(j2);
+        truco.setPuntosParaGanar(0);
+        truco.setPuntosJ1(0);
+        truco.setPuntosJ1(0);
+        this.repositorioTruco.guardarPartida(truco);
         j1.setCartas(new ArrayList<>());
         j2.setCartas(new ArrayList<>());
+        j1.setPartida(truco);
+        j2.setPartida(truco);
         this.asignarCartasJugadores(j1, j2);
-        this.repositorioTruco.guardarPartida(truco);
         return truco;
     }
 
@@ -94,6 +127,11 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         List<Carta> cartasJugador = j.getCartas();
         if (existeLaCartaEnCartas) {
             cartasJugador.remove(c);
+            if (j.getNumero().equals(1)) {
+                this.cartasJ1.add(c);
+            } else {
+                this.cartasJ2.add(c);
+            }
 //            cartasTiradas.add(carta);
         }
         j.setCartas(cartasJugador);
@@ -191,10 +229,10 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
 
     private Jugador obtenerGanadorDeRonda(Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
-        if (jugador1.getCartasTiradas().size() == jugador2.getCartasTiradas().size()) {
+        if (this.cartasTiradasJ1.size() == this.cartasTiradasJ2.size()) {
             // Conseguimos las últimas tiradas.
-            Carta cartaJ1 = jugador1.getCartasTiradas().get(jugador1.getCartasTiradas().size() - 1);
-            Carta cartaJ2 = jugador2.getCartasTiradas().get(jugador2.getCartasTiradas().size() - 1);
+            Carta cartaJ1 = this.cartasTiradasJ1.get(this.cartasTiradasJ2.size() - 1);
+            Carta cartaJ2 = this.cartasTiradasJ2.get(this.cartasTiradasJ1.size() - 1);
             // Comparamos quien tiró la más alta, en base a eso damos poder
             if (cartaJ1.getValor() > cartaJ2.getValor()) {
                 jugador1.setPuntosRonda(jugador1.getPuntosRonda() + 1);
@@ -212,10 +250,8 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom);
         asignarCartasJugador(j2, seisCartasRandom);
-        System.out.println("asignarCartasJugadores: j1 tiene " + j1.getCartas());
-        System.out.println("asignarCartasJugadores: j2 tiene " + j2.getCartas());
-        repositorioTruco.guardarJugador(j1);
-        repositorioTruco.guardarJugador(j2);
+        System.out.println("guardo: " + j1);
+        System.out.println("tenia: " + j1.getCartas().size() + " cartas");
     }
 
     private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom) {
@@ -224,7 +260,8 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
             while (iterator.hasNext() && this.cartasJ1.size() < 3) {
                 Carta carta = iterator.next();
                 this.cartasJ1.add(carta);
-                iterator.remove(); // Elimina de forma segura del iterador
+                iterator.remove();
+                carta.setJugador(j);
             }
             j.setCartas(this.cartasJ1);
         } else {
@@ -236,6 +273,9 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
             }
             j.setCartas(this.cartasJ2);
         }
+        System.out.println("Guardo jugador: " + j);
+        repositorioCarta.guardarVariasCartas(j.getCartas());
+        repositorioTruco.guardarJugador(j);
     }
 
     private List<Carta> obtenerSeisCartasRandom(List<Carta> cartas) {

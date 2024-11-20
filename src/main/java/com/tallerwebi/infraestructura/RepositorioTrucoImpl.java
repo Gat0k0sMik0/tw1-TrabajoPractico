@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -29,9 +30,11 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Override
     public Truco2 buscarPartidaPorId(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        return (Truco2) session.createCriteria(Truco2.class)
+        Truco2 t = (Truco2) session.createCriteria(Truco2.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
+        System.out.println("Encontre:" + t);
+        return t;
     }
 
     @Transactional
@@ -44,10 +47,11 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Override
     public Jugador obtenerJugadorPorID(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        return (Jugador) session.createCriteria(Jugador.class)
+        Jugador j = (Jugador) session.createCriteria(Jugador.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
-
+        Hibernate.initialize(j.getCartas());
+        return j;
     }
 
 

@@ -9,9 +9,10 @@ public class Truco2 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(mappedBy = "partida")
     private Jugador j1;
-    @ManyToOne
+
+    @OneToOne(mappedBy = "partida")
     private Jugador j2;
 
     private Integer puntosJ1;
@@ -76,6 +77,9 @@ public class Truco2 {
                 "id=" + id +
                 ", j1=" + j1 +
                 ", j2=" + j2 +
+                ", puntosJ1=" + puntosJ1 +
+                ", puntosJ2=" + puntosJ2 +
+                ", puntosParaGanar=" + puntosParaGanar +
                 '}';
     }
 }

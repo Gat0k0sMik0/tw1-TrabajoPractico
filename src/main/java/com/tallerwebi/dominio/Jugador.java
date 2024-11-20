@@ -22,11 +22,22 @@ public class Jugador {
     @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
     private List<Carta> cartas;  // Relación uno a muchos con Carta
 
-    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-    private List<Carta> cartasTiradas = new ArrayList<>();
+    @OneToOne
+    private Truco2 partida;
+
+//    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
+//    private List<Carta> cartasTiradas = new ArrayList<>();
 
     public Jugador() {
 
+    }
+
+    public Truco2 getPartida() {
+        return partida;
+    }
+
+    public void setPartida(Truco2 partida) {
+        this.partida = partida;
     }
 
     public Long getId() {
@@ -85,25 +96,19 @@ public class Jugador {
         this.cartas = cartas;
     }
 
-    public List<Carta> getCartasTiradas() {
-        return cartasTiradas;
-    }
-
-    public void setCartasTiradas(List<Carta> cartasTiradas) {
-        this.cartasTiradas = cartasTiradas;
-    }
-
     @Override
     public String toString() {
         return "Jugador{" +
                 "id=" + id +
-                ", truco=" + truco +
                 ", nombre='" + nombre + '\'' +
-                ", puntosRonda=" + puntosRonda +
-                ", puntosPartida=" + puntosPartida +
-                ", numero=" + numero +
-                ", cartas=" + cartas +
-                ", cartasTiradas=" + cartasTiradas +
                 '}';
     }
+
+    //
+//    public List<Carta> getCartasTiradas() {
+//        return cartasTiradas;
+//    }
+//
+//    public void setCartasTiradas(List<Carta> cartasTiradas) {
+//        this.cartasTiradas = cartasTiradas;
 }

@@ -1,6 +1,13 @@
 package com.tallerwebi.dominio;
 
+import java.util.List;
+
 public interface ServicioPartida2 {
+    // TODO: despues cambiar
+    List<Carta> getCartasTiradasJ1();
+
+    List<Carta> getCartasTiradasJ2();
+
     Truco2 obtenerPartidaPorId(Long id);
 
     Truco2 empezar(Jugador j1, Jugador j2);
