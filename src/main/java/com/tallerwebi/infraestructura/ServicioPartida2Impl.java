@@ -76,7 +76,6 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         this.cartasJ1.addAll(cartasJ1);
         this.cartasJ2.addAll(cartasJ2);
 
-        System.out.println("Del repo j1 vino con: " + j1.getCartas().size());
         this.j1.setCartas(j1.getCartas());
         this.j2.setCartas(j2.getCartas());
 
