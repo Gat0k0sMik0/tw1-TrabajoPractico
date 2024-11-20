@@ -7,6 +7,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
+
 @Repository
 public class RepositorioManoImpl implements RepositorioMano {
 
@@ -17,12 +19,14 @@ public class RepositorioManoImpl implements RepositorioMano {
         this.sessionFactory = sessionFactory;
     }
 
+    @Transactional
     @Override
     public void guardar(Mano2 mano) {
         sessionFactory.getCurrentSession().saveOrUpdate(mano);
 
     }
 
+    @Transactional
     @Override
     public Mano2 obtenerManoPorId(Long id) {
         return (Mano2) sessionFactory.getCurrentSession()

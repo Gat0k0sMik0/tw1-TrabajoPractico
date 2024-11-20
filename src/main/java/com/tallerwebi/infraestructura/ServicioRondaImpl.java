@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     public Ronda empezar(Mano2 mano) {
         Ronda r = new Ronda();
         r.setNroRonda(0);
+        r.setMano(mano);
         repositorioRonda.guardar(r);
         return r;
     }

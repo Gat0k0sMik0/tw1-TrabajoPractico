@@ -44,6 +44,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     public Mano2 empezar(Truco2 t) {
         Mano2 m = new Mano2();
         m.setEstaTerminada(false);
+        m.setPartida(t);
         repositorioMano.guardar(m);
         return m;
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -23,12 +24,20 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     private Integer movimientos;
     private Integer puntosJ1;
     private Integer puntosJ2;
+    private List<Carta> cartasJ1;
+    private List<Carta> cartasJ2;
+    private Jugador j1;
+    private Jugador j2;
 
 
     public ServicioPartida2Impl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
         this.repositorioTruco = repositorioTruco;
         this.repositorioCarta = repositorioCarta;
         this.repositorioMano = repositorioMano;
+        this.cartasJ1 = new ArrayList<>();
+        this.cartasJ2 = new ArrayList<>();
+        this.j1 = null;
+        this.j2 = null;
         this.movimientos = 0;
         this.puntosJ1 = 0;
         this.puntosJ2 = 0;
@@ -36,7 +45,16 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
 
     @Override
     public Truco2 obtenerPartidaPorId(Long id) {
-        return this.repositorioTruco.buscarPartidaPorId(id);
+        Truco2 partida = this.repositorioTruco.buscarPartidaPorId(id);
+        this.j1 = partida.getJ1();
+        this.j2 = partida.getJ2();
+        this.puntosJ1 = partida.getPuntosJ1();
+        this.puntosJ2 = partida.getPuntosJ2();
+        Jugador j1 = this.repositorioTruco.obtenerJugadorPorID(this.j1.getId());
+        Jugador j2 = this.repositorioTruco.obtenerJugadorPorID(this.j2.getId());
+        this.j1 = j1;
+        this.j2 = j2;
+        return partida;
     }
 
     @Override
@@ -44,6 +62,8 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         Truco2 truco = new Truco2();
         truco.setJ1(j1);
         truco.setJ2(j2);
+        j1.setCartas(new ArrayList<>());
+        j2.setCartas(new ArrayList<>());
         this.asignarCartasJugadores(j1, j2);
         this.repositorioTruco.guardarPartida(truco);
         return truco;
@@ -69,12 +89,24 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         return truco;
     }
 
+    private void sacarCartaDeJugador(Jugador j, Carta c) {
+        boolean existeLaCartaEnCartas = j.getCartas().contains(c);
+        List<Carta> cartasJugador = j.getCartas();
+        if (existeLaCartaEnCartas) {
+            cartasJugador.remove(c);
+//            cartasTiradas.add(carta);
+        }
+        j.setCartas(cartasJugador);
+        System.out.println("Le quedan " + j.getCartas().size() + " cartas.");
+//        } else return null;
+    }
+
     @Override
     public Ronda tirarCarta(Mano2 mano, Jugador jugador, Carta carta, String nroJugador) {
         if (!mano.getEstaTerminada()) {
             List<Carta> cartasJugador = jugador.getCartas();
             if (cartasJugador.contains(carta)) {
-                jugador.tirarCarta(carta);
+                sacarCartaDeJugador(jugador, carta);
                 sumarMovimientoMano(mano);
                 Ronda r = new Ronda();
                 r.setNombreJugador(jugador.getNombre());
@@ -180,14 +212,29 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom);
         asignarCartasJugador(j2, seisCartasRandom);
+        System.out.println("asignarCartasJugadores: j1 tiene " + j1.getCartas());
+        System.out.println("asignarCartasJugadores: j2 tiene " + j2.getCartas());
+        repositorioTruco.guardarJugador(j1);
+        repositorioTruco.guardarJugador(j2);
     }
 
     private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom) {
-        for (Carta carta : seisCartasRandom) {
-            if (j.getCartas().size() < 3) {
-                j.agregarCarta(carta);
-                seisCartasRandom.remove(carta);
-            } else break;
+        if (j.getNumero().equals(1)) {
+            Iterator<Carta> iterator = seisCartasRandom.iterator();
+            while (iterator.hasNext() && this.cartasJ1.size() < 3) {
+                Carta carta = iterator.next();
+                this.cartasJ1.add(carta);
+                iterator.remove(); // Elimina de forma segura del iterador
+            }
+            j.setCartas(this.cartasJ1);
+        } else {
+            Iterator<Carta> iterator = seisCartasRandom.iterator();
+            while (iterator.hasNext() && this.cartasJ2.size() < 3) {
+                Carta carta = iterator.next();
+                this.cartasJ2.add(carta);
+                iterator.remove(); // Elimina de forma segura del iterador
+            }
+            j.setCartas(this.cartasJ2);
         }
     }
 
@@ -227,4 +274,6 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         mano.setMovimientos(mano.getMovimientos() + 1);
         repositorioMano.guardar(mano);
     }
+
+
 }

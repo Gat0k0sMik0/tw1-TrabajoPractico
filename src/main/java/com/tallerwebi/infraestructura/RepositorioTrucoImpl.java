@@ -33,4 +33,23 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
     }
+
+    @Transactional
+    @Override
+    public void guardarJugador(Jugador jugador) {
+        sessionFactory.getCurrentSession().save(jugador);
+    }
+
+    @Transactional
+    @Override
+    public Jugador obtenerJugadorPorID(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        return (Jugador) session.createCriteria(Jugador.class)
+                .add(Restrictions.eq("id", id))
+                .uniqueResult();
+
+    }
+
+
+
 }

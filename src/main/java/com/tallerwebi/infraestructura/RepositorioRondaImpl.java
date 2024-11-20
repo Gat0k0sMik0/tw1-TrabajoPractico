@@ -6,6 +6,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -17,11 +18,13 @@ public class RepositorioRondaImpl implements RepositorioRonda2 {
         this.sessionFactory = sessionFactory;
     }
 
+    @Transactional
     @Override
     public void guardar(Ronda ronda) {
         sessionFactory.getCurrentSession().saveOrUpdate(ronda);
     }
 
+    @Transactional
     @Override
     public List<Ronda> obtenerRondasDeUnaMano(Long manoId) {
         return (List<Ronda>) sessionFactory.getCurrentSession()
