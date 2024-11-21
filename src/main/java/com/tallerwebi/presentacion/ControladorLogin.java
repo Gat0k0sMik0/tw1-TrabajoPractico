@@ -61,7 +61,8 @@ public class ControladorLogin {
 
     // METODOS PARA EL REGISTRO
     @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
-    public ModelAndView registrarme(@ModelAttribute("nuevoUsuario") Usuario usuario, RedirectAttributes redirectAttributes, HttpSession sesion) {
+    public ModelAndView registrarme(@ModelAttribute("nuevoUsuario") Usuario usuario,
+                                    RedirectAttributes redirectAttributes, HttpSession sesion) {
         ModelMap model = new ModelMap();
 
         // Manejo de excepciones
@@ -89,13 +90,14 @@ public class ControladorLogin {
 
         sesion.setAttribute("usuarioTemporal", usuario);
         redirectAttributes.addFlashAttribute("contrasenia", usuario.getPassword());
-        redirectAttributes.addFlashAttribute("email", usuario.getEmail());
-        return new ModelAndView("redirect:/verificacion-cuenta");
+        redirectAttributes.addFlashAttribute("email", usuario.getEmail());  // Usar addFlashAttribute para el email
+        return new ModelAndView("redirect:/verificacion-correo");
     }
 
-    @PostMapping("/verificacion-cuenta")
-    public ModelAndView enviarCodigoVerificacion(@RequestParam String email, @RequestParam String password, HttpSession sesion) {
+    @RequestMapping("/verificacion-correo")
+    public ModelAndView enviarCodigoVerificacion(@ModelAttribute("email") String email, HttpSession sesion) {
         ModelMap model = new ModelMap();
+        model.addAttribute("email", email);
 
         // Generar el código de validación de 6 dígitos
         String validationCode = servicioEmail.generateValidationCode();
@@ -104,34 +106,47 @@ public class ControladorLogin {
         // Enviar el correo con el código de validación
         try {
             servicioEmail.sendValidationCode(email, validationCode);
-        } catch (MessagingException e) {
+        } catch (jakarta.mail.MessagingException e) {
             model.addAttribute("error", "No se pudo enviar el correo electrónico.");
             return new ModelAndView("nuevo-usuario", model);
-        } catch (jakarta.mail.MessagingException e) {
-            throw new RuntimeException(e);
         }
 
-        // Mostrar la vista para que el usuario ingrese el código de validación
-        model.addAttribute("email", email);  // Pasar el correo al siguiente paso
-        return new ModelAndView("inicioDeSesion", model);
+        return new ModelAndView("verificacionCorreo", model);  // Asegúrate de que redirige a la página de verificación
     }
 
-    @PostMapping("/verificar")
-    public ModelAndView verificarCodigo(@RequestParam String codigo, @RequestParam String email, RedirectAttributes redirectAttrs, HttpSession sesion) {
+    @RequestMapping("/verificar-correo")
+    public ModelAndView verificarCodigo(@RequestParam String codigo1, @RequestParam String codigo2,
+                                        @RequestParam String codigo3, @RequestParam String codigo4,
+                                        @RequestParam String codigo5, @RequestParam String codigo6,
+                                        @RequestParam String email,
+                                        RedirectAttributes redirectAttrs, HttpSession sesion) {
+
+        String codigo = codigo1 + codigo2 + codigo3 + codigo4 + codigo5 + codigo6;
+        // Recuperar el código de validación y el usuario temporal de la sesión
         String validationCode = (String) sesion.getAttribute("validationCode");
         Usuario usuario = (Usuario) sesion.getAttribute("usuarioTemporal");
-        if (validationCode.equals(codigo)) {
-            // Si el código es correcto, crear la cuenta
-            servicioLogin.guardarUsuario(usuario); // Cambiar el proceso de creación de usuario según tu lógica
-            redirectAttrs.addFlashAttribute("message", "Cuenta creada exitosamente!");
+
+        System.out.println("Código ingresado: " + codigo);
+        System.out.println("Código esperado: " + validationCode);
+
+        // Verificar si el código ingresado es correcto
+        if (codigo.trim().equals(validationCode.trim())) {
+            // Si el código es correcto, guardar al usuario
+            servicioLogin.guardarUsuario(usuario); // Lógica para guardar al usuario
+            redirectAttrs.addFlashAttribute("message", "!Cuenta creada exitosamente!");
             return new ModelAndView("redirect:/login");
         } else {
-            // Si el código es incorrecto
+            // Si el código es incorrecto, redirigir con mensaje de error
             redirectAttrs.addFlashAttribute("error", "Código de validación incorrecto.");
             redirectAttrs.addFlashAttribute("contrasenia", usuario.getPassword());
-            redirectAttrs.addFlashAttribute("email", usuario.getEmail());
-            return new ModelAndView("redirect:/verificacion-cuenta");
+            redirectAttrs.addFlashAttribute("email", email);  // Usar el email recibido en el formulario
+            return new ModelAndView("redirect:/nuevo-usuario");
         }
+    }
+
+    @RequestMapping("/verificar")
+    public ModelAndView v() {
+        return new ModelAndView("verificacionCorreo");
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
