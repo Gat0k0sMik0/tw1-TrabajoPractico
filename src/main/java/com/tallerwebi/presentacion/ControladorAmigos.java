@@ -29,6 +29,40 @@ public class ControladorAmigos {
         this.servicioUsuario = servicioUsuario;
     }
 
+
+    @GetMapping("/home")
+    public String mostrarHome(Model model, HttpServletRequest request) {
+        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
+
+        // Verifica que el usuario esté logueado
+        if (usuarioSesion == null) {
+            return "redirect:/login"; // Redirige al login si no hay sesión activa
+        }
+
+        // Obtén las recomendaciones de amigos
+        List<Usuario> usuariosSugeridos = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
+
+        // Agrega las recomendaciones al modelo
+        model.addAttribute("usuariosSugeridos", usuariosSugeridos);
+
+        return "home";  // Retorna la vista home.html
+    }
+
+    @RequestMapping("/amigos")
+    public ModelAndView irAChatAmigos(HttpServletRequest request) throws AmistadesException {
+        ModelMap model = new ModelMap();
+        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
+        List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioSesion.getId());
+        List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
+        model.put("amigosSugeridos", filtrados);  // Se pasa la lista correctamente al modelo
+        if (amigosDelUsuario.isEmpty()) {
+            model.put("error", "No tienes amigos, ¡empieza a agregar algunos!");
+        } else {
+            model.put("amigos", amigosDelUsuario);
+        }
+        return new ModelAndView("amigos", model);
+    }
+/*
     @RequestMapping("/amigos")
     public ModelAndView irAChatAmigos(HttpServletRequest request) throws AmistadesException {
         ModelMap model = new ModelMap();
@@ -42,7 +76,7 @@ public class ControladorAmigos {
             model.put("amigos", amigosDelUsuario);
         }
         return new ModelAndView("amigos", model);
-    }
+    }*/
 
     @RequestMapping(path = "/agregar-amigo", method = RequestMethod.POST)
     public ModelAndView agregarAmigo(@RequestParam("idAmigo") Long idAmigo, HttpServletRequest request) {
