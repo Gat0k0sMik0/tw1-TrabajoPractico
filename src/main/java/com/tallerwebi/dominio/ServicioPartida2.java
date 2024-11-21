@@ -20,5 +20,7 @@ public interface ServicioPartida2 {
 
     void determinarGanadorRonda(Truco2 truco, Jugador jugador1, Jugador jugador2);
 
+    void guardarJugador(Jugador jugador1);
+
     ;
 }
