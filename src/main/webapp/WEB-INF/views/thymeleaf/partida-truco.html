@@ -115,14 +115,13 @@
             <!-- CARTAS  -->
             <div class="gap-2 cartasJugadorContainer col-4">
                 <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
-                <form method="post" th:action="@{/accion-tirar}" th:each="carta : ${cartasJugador1}">
-                    <input type="hidden" name="cartaId" th:value="${carta.id}">
-                    <input type="hidden" name="jugador" th:value="1">
-                    <input type="hidden" name="cartaValor" th:value="${carta.valor}">
-                    <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador1}">
+                <th:block th:each="carta : ${cartasJugador1}">
+                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, jugador=${jugador1.nombre}, id-mano=${mano.id}, nro-jugador=1, cartaValor=${carta.valor})}"
+                       class="cartaTirarBtn"
+                       th:attr="disabled=${turnoJugador == jugador1}">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
-                    </button>
-                </form>
+                    </a>
+                </th:block>
             </div>
         </div>
 
@@ -264,14 +263,13 @@
             <!-- CARTAS -->
             <div class="gap-2 cartasJugadorContainer col-4">
                 <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
-                <form method="post" th:action="@{/accion-tirar}" th:each="carta : ${cartasJugador2}">
-                    <input type="hidden" name="cartaId" th:value="${carta.id}">
-                    <input type="hidden" name="jugador" th:value="1">
-                    <input type="hidden" name="cartaValor" th:value="${carta.valor}">
-                    <button type="submit" class="cartaTirarBtn" th:disabled="${turnoJugador == jugador2}">
+                <th:block th:each="carta : ${cartasJugador2}">
+                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, jugador=${jugador2.nombre}, id-mano=${mano.id}, nro-jugador=2, cartaValor=${carta.valor})}"
+                       class="cartaTirarBtn"
+                       th:attr="disabled=${turnoJugador == jugador2}">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
-                    </button>
-                </form>
+                    </a>
+                </th:block>
             </div>
         </div>
     </div>

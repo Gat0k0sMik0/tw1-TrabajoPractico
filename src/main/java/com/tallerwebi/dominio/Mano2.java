@@ -18,7 +18,7 @@ public class Mano2 {
     private List<Ronda> rondas;  // Relación uno a muchos con Ronda
 
     private Boolean estaTerminada;
-    private Integer movimientos;
+    private Integer movimientos = 0;
 
     public Mano2() {
 

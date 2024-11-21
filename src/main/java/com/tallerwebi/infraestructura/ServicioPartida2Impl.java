@@ -83,21 +83,37 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     }
 
     @Override
+    @Transactional
     public Truco2 empezar(Jugador j1, Jugador j2) {
         Truco2 truco = new Truco2();
+
+        // Guardar jugadores en la base de datos
         this.repositorioTruco.guardarJugador(j1);
         this.repositorioTruco.guardarJugador(j2);
+
+        // Verificar que los jugadores se guardaron correctamente
+        System.out.println("Jugador 1 guardado con ID: " + j1.getId());
+        System.out.println("Jugador 2 guardado con ID: " + j2.getId());
+
         truco.setJ1(j1);
         truco.setJ2(j2);
         truco.setPuntosParaGanar(0);
         truco.setPuntosJ1(0);
-        truco.setPuntosJ1(0);
+        truco.setPuntosJ2(0); // Corregido: Estabas configurando puntosJ1 dos veces
+
+        // Guardar partida en la base de datos
         this.repositorioTruco.guardarPartida(truco);
+
+        // Verificar que la partida se guardó correctamente
+        System.out.println("Partida guardada con ID: " + truco.getId());
+
         j1.setCartas(new ArrayList<>());
         j2.setCartas(new ArrayList<>());
         j1.setPartida(truco);
         j2.setPartida(truco);
+
         this.asignarCartasJugadores(j1, j2);
+
         return truco;
     }
 
@@ -140,6 +156,16 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
 
     @Override
     public Ronda tirarCarta(Mano2 mano, Jugador jugador, Carta carta, String nroJugador) {
+        if (mano == null) {
+            throw new TrucoException("La mano es nula.");
+        }
+        if (jugador == null) {
+            throw new TrucoException("El jugador es nulo.");
+        }
+        if (carta == null) {
+            throw new TrucoException("La carta es nula.");
+        }
+
         if (!mano.getEstaTerminada()) {
             List<Carta> cartasJugador = jugador.getCartas();
             if (cartasJugador.contains(carta)) {
@@ -155,12 +181,22 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
                 throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
             }
         } else {
-            throw new TrucoException("Estas tirando estando la mano terminada.");
+            throw new TrucoException("Estás tirando estando la mano terminada.");
         }
     }
 
     @Override
     public void determinarGanadorRonda(Truco2 truco, Jugador jugador1, Jugador jugador2) {
+        if (truco == null) {
+            throw new TrucoException("La partida es nula.");
+        }
+        if (jugador1 == null) {
+            throw new TrucoException("El jugador 1 es nulo.");
+        }
+        if (jugador2 == null) {
+            throw new TrucoException("El jugador 2 es nulo.");
+        }
+
         Jugador ganador = obtenerGanadorDeRonda(jugador1, jugador2);
         if (ganador.getNombre().equals(jugador1.getNombre())) {
             puntosJ1++;
@@ -172,6 +208,11 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
             truco.setPuntosJ2(jugador2.getPuntosPartida());
         }
         this.repositorioTruco.guardarPartida(truco);
+    }
+
+    @Override
+    public void guardarJugador(Jugador jugador) {
+        repositorioTruco.guardarJugador(jugador);
     }
 
     private Integer obtenerSumaDeLasMasAltas(List<Carta> cartas) {
@@ -229,6 +270,14 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     private Jugador obtenerGanadorDeRonda(Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
         if (this.cartasTiradasJ1.size() == this.cartasTiradasJ2.size()) {
+            // Suponiendo que tienes una lista de cartas jugadas por cada jugador
+            List<Carta> cartasJugador1 = this.cartasJ1;
+            List<Carta> cartasJugador2 = this.cartasJ2;
+
+            // Verificar que las listas no estén vacías y que los índices sean válidos
+            if (cartasJugador1.isEmpty() || cartasJugador2.isEmpty()) {
+                throw new TrucoException("No hay cartas tiradas por uno de los jugadores.");
+            }
             // Conseguimos las últimas tiradas.
             Carta cartaJ1 = this.cartasTiradasJ1.get(this.cartasTiradasJ2.size() - 1);
             Carta cartaJ2 = this.cartasTiradasJ2.get(this.cartasTiradasJ1.size() - 1);
@@ -310,8 +359,20 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     }
 
     private void sumarMovimientoMano(Mano2 mano) {
+        if (mano == null) {
+            throw new TrucoException("La mano es nula.");
+        }
+
+        // Verificar que los movimientos no sean nulos
+        if (mano.getMovimientos() == null) {
+            throw new TrucoException("Los movimientos de la mano son nulos.");
+        }
+
         mano.setMovimientos(mano.getMovimientos() + 1);
         repositorioMano.guardar(mano);
+
+        // Log para verificar que la mano se guardó correctamente
+        System.out.println("Movimiento sumado a la mano con ID: " + mano.getId() + ", movimientos: " + mano.getMovimientos());
     }
 
 

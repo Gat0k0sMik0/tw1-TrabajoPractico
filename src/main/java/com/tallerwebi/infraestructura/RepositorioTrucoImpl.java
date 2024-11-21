@@ -33,14 +33,16 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
         Truco2 t = (Truco2) session.createCriteria(Truco2.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
-        System.out.println("Encontre:" + t);
+        System.out.println("Encontre: " + t);
         return t;
     }
 
     @Transactional
     @Override
     public void guardarJugador(Jugador jugador) {
-        sessionFactory.getCurrentSession().save(jugador);
+        Session session = sessionFactory.getCurrentSession();
+        session.save(jugador);
+        System.out.println("Jugador guardado en repo con ID: " + jugador.getId());
     }
 
     @Transactional
