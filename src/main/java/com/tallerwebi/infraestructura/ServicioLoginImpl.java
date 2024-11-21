@@ -55,10 +55,13 @@ public class ServicioLoginImpl implements ServicioLogin {
         if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5) {
             throw new ContraseniaInvalidaException();
         }
+    }
 
-
+    @Override
+    public void guardarUsuario(Usuario usuario) {
         repositorioUsuario.guardar(usuario);
     }
+
 
 }
 

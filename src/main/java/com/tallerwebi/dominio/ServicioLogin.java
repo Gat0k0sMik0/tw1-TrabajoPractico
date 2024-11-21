@@ -7,4 +7,5 @@ public interface ServicioLogin {
     Usuario consultarUsuario(String email, String password);
     void registrar(Usuario usuario) throws MailExistenteException, ContraseniaInvalidaException, UsuarioInvalidoException, UsuarioExistenteException, EmailInvalidoException, ContraseniasDiferentesException;
 
+    void guardarUsuario(Usuario usuario);
 }
