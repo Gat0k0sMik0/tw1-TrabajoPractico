@@ -4,7 +4,6 @@ import com.tallerwebi.dominio.ServicioEmail;
 import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.*;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Controller;
@@ -57,7 +56,7 @@ public class ControladorLogin {
     public ModelAndView nuevoUsuario() {
         ModelMap model = new ModelMap();
         model.put("nuevoUsuario", new Usuario());
-        return new ModelAndView("registro", model);
+        return new ModelAndView("nuevo-usuario", model);
     }
 
     // METODOS PARA EL REGISTRO
@@ -70,22 +69,22 @@ public class ControladorLogin {
             servicioLogin.registrar(usuario);
         } catch (EmailInvalidoException e) {
             model.put("error", "El correo no es válido");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         } catch (MailExistenteException e) {
             model.put("error", "El correo ya existe");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         } catch (UsuarioInvalidoException e) {
             model.put("error", "El usuario debe contener entre 4 y 16 caracteres");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         } catch (UsuarioExistenteException e) {
             model.put("error", "El usuario ya existe");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         } catch (ContraseniaInvalidaException e) {
             model.put("error", "La contraseña debe contener entre 5 y 15 caracteres");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         } catch (ContraseniasDiferentesException e) {
             model.put("error", "Las contraseñas no coinciden");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         }
 
         sesion.setAttribute("usuarioTemporal", usuario);
@@ -107,14 +106,14 @@ public class ControladorLogin {
             servicioEmail.sendValidationCode(email, validationCode);
         } catch (MessagingException e) {
             model.addAttribute("error", "No se pudo enviar el correo electrónico.");
-            return new ModelAndView("registro", model);
+            return new ModelAndView("nuevo-usuario", model);
         } catch (jakarta.mail.MessagingException e) {
             throw new RuntimeException(e);
         }
 
         // Mostrar la vista para que el usuario ingrese el código de validación
         model.addAttribute("email", email);  // Pasar el correo al siguiente paso
-        return new ModelAndView("VerificarCorreo", model);
+        return new ModelAndView("inicioDeSesion", model);
     }
 
     @PostMapping("/verificar")
