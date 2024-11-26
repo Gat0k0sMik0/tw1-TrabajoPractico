@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Truco2 {
@@ -9,11 +10,16 @@ public class Truco2 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "partida")
+    @ManyToOne
+    @JoinColumn(name = "j1_id")
     private Jugador j1;
 
-    @OneToOne(mappedBy = "partida")
+    @ManyToOne
+    @JoinColumn(name = "j2_id")
     private Jugador j2;
+
+    @OneToMany
+    private List<Mano2> manos;
 
     private Integer puntosJ1;
     private Integer puntosJ2;

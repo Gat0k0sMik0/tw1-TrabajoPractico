@@ -52,7 +52,6 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
         Jugador j = (Jugador) session.createCriteria(Jugador.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
-        Hibernate.initialize(j.getCartas());
         return j;
     }
 

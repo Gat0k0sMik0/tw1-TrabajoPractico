@@ -9,10 +9,6 @@ public class Carta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "jugador_id")  // Se asocia con la tabla Jugador
-    private Jugador jugador;  // Relación muchos a uno con Jugador
-
     private Integer valor;
     private Integer numero;
     private String palo;
@@ -23,13 +19,6 @@ public class Carta {
 
     }
 
-    public Jugador getJugador() {
-        return jugador;
-    }
-
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
-    }
 
     @Override
     public String toString() {

@@ -1,7 +1,9 @@
 package com.tallerwebi.dominio;
 
 public interface ServicioMano2 {
-    Mano2 empezar(Truco2 truco);
+    Mano2 empezar(Truco2 truco, Jugador j1, Jugador j2 );
+
+    Ronda tirarCarta(Mano2 mano, Jugador jugador, Long idCarta, String nroJugador);
 
     Mano2 reset(Truco2 truco);
 

@@ -79,4 +79,17 @@ public class Ronda {
     public void setMano(Mano2 mano) {
         this.mano = mano;
     }
+
+    @Override
+    public String toString() {
+        return "Ronda{" +
+                "id=" + id +
+                ", nroRonda=" + nroRonda +
+                ", nombreJugador='" + nombreJugador + '\'' +
+                ", valorCarta=" + valorCarta +
+                ", nroCarta=" + nroCarta +
+                ", paloCarta='" + paloCarta + '\'' +
+                ", mano=" + mano +
+                '}';
+    }
 }

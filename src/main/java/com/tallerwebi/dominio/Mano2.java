@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,14 +15,73 @@ public class Mano2 {
     @JoinColumn(name = "partida_id")
     private Truco2 partida;  // Relación con Partida (muchos a uno)
 
-    @OneToMany(mappedBy = "mano", cascade = CascadeType.ALL)
-    private List<Ronda> rondas;  // Relación uno a muchos con Ronda
-
     private Boolean estaTerminada;
     private Integer movimientos = 0;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Carta> cartasJ1;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Carta> cartasJ2;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Carta> cartasTiradasJ1;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Carta> cartasTiradasJ2;
+
     public Mano2() {
 
+    }
+
+
+
+    public List<Carta> getCartasTiradasJ1() {
+        return cartasTiradasJ1;
+    }
+
+    public void setCartasTiradasJ1(List<Carta> cartasTiradasJ1) {
+        this.cartasTiradasJ1 = cartasTiradasJ1;
+    }
+
+    public List<Carta> getCartasTiradasJ2() {
+        return cartasTiradasJ2;
+    }
+
+    public void setCartasTiradasJ2(List<Carta> cartasTiradasJ2) {
+        this.cartasTiradasJ2 = cartasTiradasJ2;
+    }
+
+    public void agregarCartaTiradaJ1(Carta carta) {
+        cartasTiradasJ1.add(carta);
+    }
+
+    public void agregarCartaTiradaJ2(Carta carta) {
+        cartasTiradasJ2.add(carta);
+    }
+
+    public void agregarCartaJ1(Carta carta) {
+        cartasJ1.add(carta);
+    }
+
+    public void agregarCartaJ2(Carta carta) {
+        cartasJ2.add(carta);
+    }
+
+    public List<Carta> getCartasJ1() {
+        return cartasJ1;
+    }
+
+    public void setCartasJ1(List<Carta> cartasJ1) {
+        this.cartasJ1 = cartasJ1;
+    }
+
+    public List<Carta> getCartasJ2() {
+        return cartasJ2;
+    }
+
+    public void setCartasJ2(List<Carta> cartasJ2) {
+        this.cartasJ2 = cartasJ2;
     }
 
     public Integer getMovimientos() {
@@ -56,14 +116,18 @@ public class Mano2 {
         this.partida = partida;
     }
 
-    public List<Ronda> getRondas() {
-        return rondas;
-    }
-
-    public void setRondas(List<Ronda> rondas) {
-        this.rondas = rondas;
+    @Override
+    public String toString() {
+        return "Mano2{" +
+                "id=" + id +
+                ", partida=" + partida +
+                ", estaTerminada=" + estaTerminada +
+                ", movimientos=" + movimientos +
+                ", cartasJ1=" + cartasJ1 +
+                ", cartasJ2=" + cartasJ2 +
+                ", cartasTiradasJ1=" + cartasTiradasJ1 +
+                ", cartasTiradasJ2=" + cartasTiradasJ2 +
+                '}';
     }
 }
 
-// creo una mano
-// la guardo

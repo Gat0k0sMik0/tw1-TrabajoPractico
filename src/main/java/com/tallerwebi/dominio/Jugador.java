@@ -11,33 +11,35 @@ public class Jugador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Truco2 truco;
-
     private String nombre;
     private Integer puntosRonda = 0;
     private Integer puntosPartida = 0;
     private Integer numero;
 
-    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-    private List<Carta> cartas;  // Relación uno a muchos con Carta
+    @OneToMany(mappedBy = "j1", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Truco2> partidasComoJ1 = new ArrayList<>();
 
-    @OneToOne
-    private Truco2 partida;
-
-//    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-//    private List<Carta> cartasTiradas = new ArrayList<>();
+    @OneToMany(mappedBy = "j2", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Truco2> partidasComoJ2 = new ArrayList<>();
 
     public Jugador() {
 
     }
 
-    public Truco2 getPartida() {
-        return partida;
+    public List<Truco2> getPartidasComoJ1() {
+        return partidasComoJ1;
     }
 
-    public void setPartida(Truco2 partida) {
-        this.partida = partida;
+    public void setPartidasComoJ1(List<Truco2> partidasComoJ1) {
+        this.partidasComoJ1 = partidasComoJ1;
+    }
+
+    public List<Truco2> getPartidasComoJ2() {
+        return partidasComoJ2;
+    }
+
+    public void setPartidasComoJ2(List<Truco2> partidasComoJ2) {
+        this.partidasComoJ2 = partidasComoJ2;
     }
 
     public Long getId() {
@@ -46,14 +48,6 @@ public class Jugador {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Truco2 getTruco() {
-        return truco;
-    }
-
-    public void setTruco(Truco2 truco) {
-        this.truco = truco;
     }
 
     public String getNombre() {
@@ -86,14 +80,6 @@ public class Jugador {
 
     public void setNumero(Integer numero) {
         this.numero = numero;
-    }
-
-    public List<Carta> getCartas() {
-        return cartas;
-    }
-
-    public void setCartas(List<Carta> cartas) {
-        this.cartas = cartas;
     }
 
     @Override

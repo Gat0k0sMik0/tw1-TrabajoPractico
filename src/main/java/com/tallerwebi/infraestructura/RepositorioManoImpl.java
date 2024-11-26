@@ -23,7 +23,7 @@ public class RepositorioManoImpl implements RepositorioMano {
     @Override
     public void guardar(Mano2 mano) {
         sessionFactory.getCurrentSession().saveOrUpdate(mano);
-
+        System.out.println("Ya guardé la mano");
     }
 
     @Transactional

@@ -45,21 +45,31 @@ public class ControladorTruco {
 
         if (partidaId != null) {
             partida = servicioTruco.obtenerPartidaPorId(partidaId);
+            System.out.println(partida);
             Mano2 mano = servicioMano2.obtenerManoPorId(partidaId);
-            Ronda rondas = servicioRonda2.obtenerRondaPorId(partidaId);
+            System.out.println(mano);
+            Ronda ronda = null;
 
-            Boolean isLaManoTerminada = mano.getEstaTerminada();
+            // empezar por ronda, mano y partida
+
+            /*
+            creo partida, truco, jugador por id
+
+
+            */
 
             //model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
-            model.put("cartasJugador1", partida.getJ1().getCartas());
-            model.put("cartasJugador2", partida.getJ2().getCartas());
-
+            model.put("cartasJugador1", mano.getCartasJ1());
+            model.put("cartasJugador2", mano.getCartasJ1());
 
             model.put("jugador1", partida.getJ1());
             model.put("jugador2", partida.getJ2());
 
-//            model.put("cartasTiradasJ1", partida.getJ1().getCartasTiradas());
-//            model.put("cartasTiradasJ2", partida.getJ2().getCartasTiradas());
+            System.out.println(partida.getJ1());
+            System.out.println(partida.getJ2());
+
+            model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
+            model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
 
             model.put("puntosJ1", partida.getPuntosJ1());
             model.put("puntosJ2", partida.getPuntosJ2());
@@ -73,62 +83,12 @@ public class ControladorTruco {
 
             model.put("puntosParaGanar", partida.getPuntosParaGanar());
             model.put("mano", mano);
-            model.put("rondas", rondas);
+            model.put("ronda", ronda);
+            model.put("partida", partida);
             model.put("partidaIniciada", true);
         }
 
         return new ModelAndView("partida-truco", model);
-
-
-//        // NUEVA LÓGICA
-//        Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
-//        Mano2 mano = servicioMano2.obtenerManoPorId(idPartida);
-//
-//        // FUNCIONAL
-//        model.put("puntosJ1", truco.getPuntosJ1());
-//        model.put("puntosJ2", truco.getPuntosJ2());
-//        model.put("mano", servicioMano2.obtenerManoPorId(0L)); // TODO revisar (mano sin terminar?) ANALIZAR
-//        model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
-//
-//        // PARA DESARROLLO
-//        model.put("movimientos", mano.getMovimientos());
-
-
-        // FIN NUEVA LÓGICA
-
-        // Saber si se terminó la mano y renderizar contenido
-       /* if (isLaManoTerminada != null) {
-//            return new ModelAndView("redirect:/home");
-        }*/
-
-        //   model.put("turnoJugador", session.getAttribute("turnoJugador"));
-        //   model.put("todasLasCartas", session.getAttribute("todasLasCartas"));
-        //   model.put("partidaIniciada", session.getAttribute("partidaIniciada"));
-        //   model.put("terminada", session.getAttribute("terminada"));
-//        model.put("mostrarRespuestasEnvidoJ1", session.getAttribute("mostrarRespuestasEnvidoJ1"));
-//        model.put("mostrarRespuestasEnvidoJ2", session.getAttribute("mostrarRespuestasEnvidoJ2"));
-//        model.put("mostrarRespuestasTrucoJ1", session.getAttribute("mostrarRespuestasTrucoJ1"));
-//        model.put("mostrarRespuestasTrucoJ2", session.getAttribute("mostrarRespuestasTrucoJ2"));
-//        model.put("mostrarRespuestasJ1", session.getAttribute("mostrarRespuestasJ1"));
-//        model.put("mostrarRespuestasJ2", session.getAttribute("mostrarRespuestasJ2"));
-
-        // handle de envido
-//        model.put("responde", session.getAttribute("responde"));
-//        model.put("puntosEnJuego", session.getAttribute("puntosEnJuego"));
-//        model.put("reEnvido", session.getAttribute("reEnvido"));
-//        model.put("realEnvido", session.getAttribute("realEnvido"));
-
-//        model.put("mano", servicioMano.getMano(0));
-//
-//        // Para ver como va
-//        model.put("movimientos", session.getAttribute("movimientos"));
-//        model.put("nroRondas", session.getAttribute("nroRondas"));
-//        model.put("envidoValido", session.getAttribute("envidoValido"));
-//        model.put("tantoJ1", session.getAttribute("tantoJ1"));
-//        model.put("tantoJ2", session.getAttribute("tantoJ2"));
-//        model.put("acciones", session.getAttribute("acciones"));
-//        model.put("trucoValido", session.getAttribute("trucoValido"));
-
     }
 
     @GetMapping("/comenzar-truco")
@@ -147,17 +107,14 @@ public class ControladorTruco {
 
         // Empezamos la partida
         Truco2 truco = this.servicioTruco.empezar(jugador1, jugador2);
-        Mano2 mano = this.servicioMano2.empezar(truco);
 
-        // Guardar jugadores en la sesión
-        sesion.setAttribute("jugador1", jugador1);
-        sesion.setAttribute("jugador2", jugador2);
+        // Empezamos mano
+        Mano2 m = servicioMano2.empezar(truco, jugador1, jugador2);
+        System.out.println(m);
+        System.out.println(truco);
 
         // Guardar IDs en la sesión
         sesion.setAttribute("idPartida", truco.getId());
-        sesion.setAttribute("idJ1", jugador1.getId());
-        sesion.setAttribute("idJ2", jugador2.getId());
-
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -189,6 +146,7 @@ public class ControladorTruco {
 
         // Determinamos que jugador va
         Jugador actual = jugadorNombre.equalsIgnoreCase(jugador1.getNombre()) ? jugador1 : jugador2;
+
         if (actual == null) {
             System.out.println("Jugador actual no encontrado");
             return new ModelAndView("redirect:/home");
@@ -203,12 +161,12 @@ public class ControladorTruco {
             return new ModelAndView("redirect:/home");
         }
 
-        // Buscar la carta seleccionada en la mano del jugador
-        Carta cartaSeleccionada = getCartaDeLasCartasDelJugadorPorId(cartaId, actual);
-        if (cartaSeleccionada == null) {
-            System.out.println("Carta no encontrada con ID: " + cartaId);
-            return new ModelAndView("redirect:/home");
-        }
+//        // Buscar la carta seleccionada en la mano del jugador
+//        Carta cartaSeleccionada = getCartaDeLasCartasDelJugadorPorId(cartaId, actual);
+//        if (cartaSeleccionada == null) {
+//            System.out.println("Carta no encontrada con ID: " + cartaId);
+//            return new ModelAndView("redirect:/home");
+//        }
 
         // Buscar id_mano de parametro en BD
         Mano2 mano = servicioMano2.obtenerManoPorId(Long.parseLong(manoId));
@@ -218,7 +176,7 @@ public class ControladorTruco {
         }
 
         // Tiramos carta, retorna ronda creada
-        Ronda ronda = servicioTruco.tirarCarta(mano, actual, cartaSeleccionada, nroJugador);
+        Ronda ronda = servicioMano2.tirarCarta(mano, actual, cartaId, nroJugador);
         if (ronda == null) {
             System.out.println("Error al tirar la carta");
             return new ModelAndView("redirect:/home");
@@ -240,9 +198,6 @@ public class ControladorTruco {
         // Actualizar los jugadores en la sesión para mantener el estado del juego
         session.setAttribute("jugador1", jugador1);
         session.setAttribute("jugador2", jugador2);
-
-        session.setAttribute("cartasJugador1", jugador1.getCartas());
-        session.setAttribute("cartasJugador2", jugador2.getCartas());
 
         // Visualización de respuestas
         session.setAttribute("mostrarRespuestasJ1", true);
@@ -541,14 +496,14 @@ public class ControladorTruco {
         return respuestaDada;
     }
 
-    private Carta getCartaDeLasCartasDelJugadorPorId(Long idCarta, Jugador jugador) {
-        for (Carta carta : jugador.getCartas()) {
-            if (carta.getId().equals(idCarta)) {
-                return carta;
-            }
-        }
-        return null;
-    }
+//    private Carta getCartaDeLasCartasDelJugadorPorId(Long idCarta, Jugador jugador) {
+//        for (Carta carta : jugador.getCartas()) {
+//            if (carta.getId().equals(idCarta)) {
+//                return carta;
+//            }
+//        }
+//        return null;
+//    }
 
     /*LOGICA TRUCO*/
 

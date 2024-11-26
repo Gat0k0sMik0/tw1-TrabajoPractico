@@ -159,28 +159,10 @@
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
                 <div class="d-flex gap-1" th:if="${mostrarRespuestasJ2}">
-                    <!-- NUEVA LÓGICA -->
-                    <a class="btn btn-primary"
-                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=5&jugador=2'}">Envido
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=2&jugador=2'}">Truco
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=8&jugador=2'}">FLOR
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{'/envido?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=9&jugador=2'}">MAZO
-                    </a>
-
                     <!-- BOTONERA -->
                     <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
                          th:if="${partidaIniciada}">
-                        < <!-- NORMALES -->
+                        <!-- NORMALES -->
                         <div class="d-flex gap-1" th:if="${mostrarRespuestasJ2}">
                             <a class="btn btn-primary"
                                th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
@@ -273,86 +255,92 @@
             </div>
         </div>
     </div>
+
     <!--  INFORMACIÓN PARA DESARROLLO  -->
     <h3 th:text="${nroRondas != null ? 'Rondas jugadas (máx 3): ' + nroRondas + ' rondas.' : 'No comenzado.'}"></h3>
     <h3 th:text="${movimientos != null ? 'Movimientos realizados (máx 6): ' + movimientos + ' movimientos.' : 'No comenzado.'}"></h3>
-    <h3 th:if="${jugador1 != null}" th:text="${'Puntos de ' + jugador1.nombre + ': ' + puntosJ1}"></h3>
-    <h3 th:if="${jugador2 != null}" th:text="${'Puntos de ' + jugador2.nombre + ': ' + puntosJ2}"></h3>
     <h3 th:if="${puntosEnJuego != null}" th:text="${'Puntos en juego: ' + puntosEnJuego}"></h3>
     <h3 th:if="${terminada != null}"
         th:text="${terminada ? 'Listo, se terminó' : 'Continuar jugando.'}"></h3>
     <div class="tabla-datos">
         <!-- Verifica si la lista de rondas no es null ni está vacía -->
-        <div th:if="${rondas != null and !rondas.isEmpty()}">
-            <table class="table table-striped table-bordered">
-                <thead class="thead-dark">
-                <tr>
-                    <th>NRO RONDA</th>
-                    <th>ID JUGADOR</th>
-                    <th>VALOR</th>
-                    <th>NRO + PALO</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="ronda : ${rondas}">
-                    <td th:text="${ronda.nroRonda}"></td>
-                    <td th:text="${ronda.jugador.nombre}"></td>
-                    <td th:text="${ronda.valorCarta}"></td>
-                    <!-- Concatenación con Thymeleaf usando |...| -->
-                    <td th:text="|${ronda.nroCarta} ${ronda.palo}|"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- Mensaje cuando la lista está vacía o es null -->
-        <div th:if="${rondas == null or rondas.isEmpty()}">
-            <p>No hay rondas jugadas aún.</p>
-        </div>
+<!--        <div th:if="${rondas != null and !rondas.isEmpty()}">-->
+<!--            <table class="table table-striped table-bordered">-->
+<!--                <thead class="thead-dark">-->
+<!--                <tr>-->
+<!--                    <th>NRO RONDA</th>-->
+<!--                    <th>ID JUGADOR</th>-->
+<!--                    <th>VALOR</th>-->
+<!--                    <th>NRO + PALO</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="ronda : ${rondas}">-->
+<!--                    <td th:text="${ronda.nroRonda}"></td>-->
+<!--                    <td th:text="${ronda.jugador.nombre}"></td>-->
+<!--                    <td th:text="${ronda.valorCarta}"></td>-->
+<!--                    &lt;!&ndash; Concatenación con Thymeleaf usando |...| &ndash;&gt;-->
+<!--                    <td th:text="|${ronda.nroCarta} ${ronda.palo}|"></td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; Mensaje cuando la lista está vacía o es null &ndash;&gt;-->
+<!--        <div th:if="${rondas == null or rondas.isEmpty()}">-->
+<!--            <p>No hay rondas jugadas aún.</p>-->
+<!--        </div>-->
     </div>
     <!-- Mensaje cuando la lista está vacía o es null -->
     <div th:if="${manos == null or manos.isEmpty()}">
         <p>No hay ganador de mano aún</p>
     </div>
-    <div class="tabla-datos">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-            <tr>
-                <th>ID CARTA</th>
-                <th>VALOR</th>
-                <th>NÚMERO</th>
-                <th>PALO</th>
-                <th>VALOR ENVIDO</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="carta : ${todasLasCartas}">
-                <td th:text="${carta.id}"></td>
-                <td th:text="${carta.valor}"></td>
-                <td th:text="${carta.numero}"></td>
-                <td th:text="${carta.palo}"></td>
-                <td th:text="${carta.valorEnvido}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="tabla-datos">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-            <tr>
-                <th>EJECUTOR</th>
-                <th>ACCION</th>
-                <th>RESPUESTA</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="a : ${acciones}">
-                <td th:text="${a.jugadorQueEjecuta.nombre}"></td>
-                <td th:text="${a.accion}"></td>
-                <td th:text="${a.respuesta}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+
+    <p th:if="${jugador1 != null}" th:text="${jugador1}"></p>
+    <p th:if="${jugador2 != null}" th:text="${jugador2}"></p>
+    <p th:if="${partida != null}" th:text="${partida}"></p>
+<!--    <p th:if="${mano != null}" th:text="${mano}"></p>-->
+    <p th:if="${ronda != null}" th:text="${ronda}"></p>
+
+    <!--    <div class="tabla-datos">-->
+    <!--        <table class="table table-striped table-bordered">-->
+    <!--            <thead class="thead-dark">-->
+    <!--            <tr>-->
+    <!--                <th>ID CARTA</th>-->
+    <!--                <th>VALOR</th>-->
+    <!--                <th>NÚMERO</th>-->
+    <!--                <th>PALO</th>-->
+    <!--                <th>VALOR ENVIDO</th>-->
+    <!--            </tr>-->
+    <!--            </thead>-->
+    <!--            <tbody>-->
+    <!--            <tr th:each="carta : ${todasLasCartas}">-->
+    <!--                <td th:text="${carta.id}"></td>-->
+    <!--                <td th:text="${carta.valor}"></td>-->
+    <!--                <td th:text="${carta.numero}"></td>-->
+    <!--                <td th:text="${carta.palo}"></td>-->
+    <!--                <td th:text="${carta.valorEnvido}"></td>-->
+    <!--            </tr>-->
+    <!--            </tbody>-->
+    <!--        </table>-->
+    <!--    </div>-->
+    <!--    <div class="tabla-datos">-->
+    <!--        <table class="table table-striped table-bordered">-->
+    <!--            <thead class="thead-dark">-->
+    <!--            <tr>-->
+    <!--                <th>EJECUTOR</th>-->
+    <!--                <th>ACCION</th>-->
+    <!--                <th>RESPUESTA</th>-->
+    <!--            </tr>-->
+    <!--            </thead>-->
+    <!--            <tbody>-->
+    <!--            <tr th:each="a : ${acciones}">-->
+    <!--                <td th:text="${a.jugadorQueEjecuta.nombre}"></td>-->
+    <!--                <td th:text="${a.accion}"></td>-->
+    <!--                <td th:text="${a.respuesta}"></td>-->
+    <!--            </tr>-->
+    <!--            </tbody>-->
+    <!--        </table>-->
+    <!--    </div>-->
 
 
 </main>

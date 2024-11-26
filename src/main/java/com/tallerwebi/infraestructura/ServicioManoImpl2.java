@@ -5,32 +5,49 @@ import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 @Service
+@Transactional
 public class ServicioManoImpl2 implements ServicioMano2 {
 
-    @Autowired
     RepositorioMano repositorioMano;
-    @Autowired
     RepositorioRonda2 repositorioRonda;
-    @Autowired
     RepositorioTruco repositorioTruco;
+    RepositorioCarta repositorioCarta;
 
     private Integer puntosEnJuegoEnvido;
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
+    private Integer puntosEnJuegoMano;
 
     Jugador diceEnvidoJ1;
     Jugador diceEnvidoJ2;
     Jugador diceRealEnvido;
     Jugador diceFaltaEnvido;
-    private Integer puntosEnJuegoMano;
 
-    public ServicioManoImpl2(RepositorioMano repositorioMano, RepositorioRonda2 repositorioRonda, RepositorioTruco repositorioTruco) {
+    private List<Carta> cartasJ1;
+    private List<Carta> cartasJ2;
+    private List<Carta> cartasTiradasJ1;
+    private List<Carta> cartasTiradasJ2;
+
+    @Autowired
+    public ServicioManoImpl2(
+            RepositorioMano repositorioMano,
+            RepositorioRonda2 repositorioRonda,
+            RepositorioTruco repositorioTruco,
+            RepositorioCarta repositorioCarta) {
         this.repositorioMano = repositorioMano;
         this.repositorioRonda = repositorioRonda;
         this.repositorioTruco = repositorioTruco;
+        this.repositorioCarta = repositorioCarta;
+        this.cartasJ1 = new ArrayList<>();
+        this.cartasJ2 = new ArrayList<>();
+        this.cartasTiradasJ1 = new ArrayList<>();
+        this.cartasTiradasJ2 = new ArrayList<>();
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -40,13 +57,166 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         this.puntosEnJuegoMano = 0;
     }
 
+    @Transactional
     @Override
-    public Mano2 empezar(Truco2 t) {
+    public Mano2 empezar(Truco2 t, Jugador j1, Jugador j2) {
         Mano2 m = new Mano2();
         m.setEstaTerminada(false);
         m.setPartida(t);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setCartasTiradasJ1(null);
+        m.setCartasTiradasJ2(null);
+        this.asignarCartasJugadores(j1, j2, m);
         repositorioMano.guardar(m);
+        System.out.println(m);
         return m;
+    }
+
+    @Transactional
+    @Override
+    public Mano2 obtenerManoPorId(Long id) {
+        Mano2 m = repositorioMano.obtenerManoPorId(id);
+        this.cartasJ1 = m.getCartasJ1();
+        this.cartasJ2 = m.getCartasJ2();
+        return m;
+    }
+
+    private void sacarCartaDeJugador(Jugador j, Carta c, Mano2 m) {
+        if (j.getNumero().equals(1)) {
+            if (this.cartasJ1.contains(c)) {
+                this.cartasJ1.remove(c);
+                this.cartasTiradasJ1.add(c);
+                m.setCartasTiradasJ1(this.cartasTiradasJ1);
+                m.setCartasJ1(this.cartasJ1);
+            } else throw new TrucoException("No existe esa carta en la mano del jugador");
+        } else {
+            if (this.cartasJ2.contains(c)) {
+                this.cartasJ2.remove(c);
+                this.cartasTiradasJ2.add(c);
+                m.setCartasTiradasJ2(this.cartasTiradasJ2);
+                m.setCartasJ2(this.cartasJ2);
+            } else throw new TrucoException("No existe esa carta en la mano del jugador");
+        }
+    }
+
+    @Override
+    public Ronda tirarCarta(Mano2 mano, Jugador jugador, Long idCarta, String nroJugador) {
+        Carta cartaElegidaParaTirar = this.repositorioCarta.buscarCartaPorId(idCarta);
+        if (mano == null) {
+            throw new TrucoException("La mano es nula.");
+        }
+        if (jugador == null) {
+            throw new TrucoException("El jugador es nulo.");
+        }
+        if (cartaElegidaParaTirar == null) {
+            throw new TrucoException("La carta es nula.");
+        }
+
+        Jugador j = null;
+        List<Carta> cartasJugador = new ArrayList<>();
+        if (jugador.getNumero().equals(1)) {
+            cartasJugador = mano.getCartasJ1();
+        } else {
+            cartasJugador = mano.getCartasJ2();
+        }
+
+        if (!mano.getEstaTerminada()) {
+            if (cartasJugador.contains(cartaElegidaParaTirar)) {
+                sacarCartaDeJugador(jugador, cartaElegidaParaTirar, mano);
+                sumarMovimientoMano(mano);
+                Ronda r = new Ronda();
+                r.setNombreJugador(jugador.getNombre());
+                r.setPaloCarta(cartaElegidaParaTirar.getPalo());
+                r.setValorCarta(cartaElegidaParaTirar.getValor());
+                r.setNroCarta(cartaElegidaParaTirar.getNumero());
+                this.repositorioMano.guardar(mano);
+                return r;
+            } else {
+                throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
+            }
+        } else {
+            throw new TrucoException("Estás tirando estando la mano terminada.");
+        }
+    }
+
+    private void sumarMovimientoMano(Mano2 mano) {
+        if (mano == null) {
+            throw new TrucoException("La mano es nula.");
+        }
+
+        // Verificar que los movimientos no sean nulos
+        if (mano.getMovimientos() == null) {
+            throw new TrucoException("Los movimientos de la mano son nulos.");
+        }
+
+        mano.setMovimientos(mano.getMovimientos() + 1);
+        repositorioMano.guardar(mano);
+
+        // Log para verificar que la mano se guardó correctamente
+        System.out.println("Movimiento sumado a la mano con ID: " + mano.getId() + ", movimientos: " + mano.getMovimientos());
+    }
+
+
+    private void asignarCartasJugadores(Jugador j1, Jugador j2, Mano2 m) {
+        List<Carta> cartas = repositorioCarta.obtenerCartas();
+        List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
+        asignarCartasJugador(j1, seisCartasRandom, m);
+        asignarCartasJugador(j2, seisCartasRandom, m);
+    }
+
+    private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano2 m) {
+        if (j.getNumero().equals(1)) {
+            Iterator<Carta> iterator = seisCartasRandom.iterator();
+            while (iterator.hasNext() && this.cartasJ1.size() < 3) {
+                Carta carta = iterator.next();
+                this.cartasJ1.add(carta);
+                iterator.remove();
+            }
+            m.setCartasJ1(this.cartasJ1);
+            System.out.println("Le asigné " + m.getCartasJ1().size() + " a J1");
+        } else {
+            Iterator<Carta> iterator = seisCartasRandom.iterator();
+            while (iterator.hasNext() && this.cartasJ2.size() < 3) {
+                Carta carta = iterator.next();
+                this.cartasJ2.add(carta);
+                iterator.remove();
+            }
+            m.setCartasJ2(this.cartasJ2);
+            System.out.println("Le asigné " + m.getCartasJ2().size() + " a J2");
+        }
+    }
+
+    private List<Carta> obtenerSeisCartasRandom(List<Carta> cartas) {
+        System.out.println("Largo de cartas: " + cartas.size());
+        List<Carta> cartasBuscadas = new ArrayList<>();
+        int indice = 0;
+        int random = 0;
+        Random r = new Random();
+        while (indice < 6) {
+            random = r.nextInt(cartas.size());
+            Carta cartaRandom = cartas.get(random);
+            if (cartasBuscadas.isEmpty()) {
+                cartasBuscadas.add(cartaRandom);
+                indice++;
+            } else {
+                if (!saberSiLaCartaSeRepiteEnMazo(cartasBuscadas, cartaRandom.getNumero(), cartaRandom.getPalo())) {
+                    cartasBuscadas.add(cartaRandom);
+                    indice++;
+                }
+            }
+
+        }
+        return cartasBuscadas;
+    }
+
+    private Boolean saberSiLaCartaSeRepiteEnMazo(List<Carta> cartas, Integer numero, String palo) {
+        for (Carta carta : cartas) {
+            if (carta.getNumero().equals(numero) && carta.getPalo().equalsIgnoreCase(palo)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -65,10 +235,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         return nueva;
     }
 
-    @Override
-    public Mano2 obtenerManoPorId(Long id) {
-        return repositorioMano.obtenerManoPorId(id);
-    }
 
     @Override
     public Integer obtenerPuntosEnJuegoPorTruco() {
@@ -230,8 +396,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         }
     }
 
-    private Jugador manejarRespuestaTruco(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor)
-    {
+    private Jugador manejarRespuestaTruco(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor) {
         if (respuestaDeLaAccion.equals("QUIERO")) {
             return null;
         } else if (respuestaDeLaAccion.equals("NO QUIERO")) {
@@ -257,14 +422,21 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
     private Integer calcularTantosDeCartasDeUnJugador(Jugador jugador) {
-        for (Carta c : jugador.getCartas()) {
+        List<Carta> cartasJugador = new ArrayList<>();
+        if (jugador.getNumero().equals(1)) {
+            cartasJugador = this.cartasJ1;
+        } else {
+            cartasJugador = this.cartasJ2;
+        }
+
+        for (Carta c : cartasJugador) {
             if (c.getNumero() >= 10 && c.getNumero() <= 12) {
                 c.setValorEnvido(0);
             } else {
                 c.setValorEnvido(c.getNumero());
             }
         }
-        return this.calcularEnvido(jugador.getCartas());
+        return this.calcularEnvido(cartasJugador);
     }
 
     public Integer calcularEnvido(List<Carta> cartas) {
