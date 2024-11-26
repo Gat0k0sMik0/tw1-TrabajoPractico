@@ -1,19 +1,13 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Controller
@@ -46,7 +40,7 @@ public class ControladorTruco {
         if (partidaId != null) {
             partida = servicioTruco.obtenerPartidaPorId(partidaId);
             System.out.println(partida);
-            Mano2 mano = servicioMano2.obtenerManoPorId(partidaId);
+            Mano mano = servicioMano2.obtenerManoPorId(partidaId);
             System.out.println(mano);
             Ronda ronda = null;
 
@@ -68,8 +62,8 @@ public class ControladorTruco {
             System.out.println(partida.getJ1());
             System.out.println(partida.getJ2());
 
-            model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
-            model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
+//            model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
+//            model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
 
             model.put("puntosJ1", partida.getPuntosJ1());
             model.put("puntosJ2", partida.getPuntosJ2());
@@ -109,7 +103,7 @@ public class ControladorTruco {
         Truco2 truco = this.servicioTruco.empezar(jugador1, jugador2);
 
         // Empezamos mano
-        Mano2 m = servicioMano2.empezar(truco, jugador1, jugador2);
+        Mano m = servicioMano2.empezar(truco, jugador1, jugador2);
         System.out.println(m);
         System.out.println(truco);
 
@@ -169,7 +163,7 @@ public class ControladorTruco {
 //        }
 
         // Buscar id_mano de parametro en BD
-        Mano2 mano = servicioMano2.obtenerManoPorId(Long.parseLong(manoId));
+        Mano mano = servicioMano2.obtenerManoPorId(Long.parseLong(manoId));
         if (mano == null) {
             System.out.println("Mano no encontrada con ID: " + manoId);
             return new ModelAndView("redirect:/home");

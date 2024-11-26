@@ -59,49 +59,50 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     @Transactional
     @Override
-    public Mano2 empezar(Truco2 t, Jugador j1, Jugador j2) {
-        Mano2 m = new Mano2();
+    public Mano empezar(Truco2 t, Jugador j1, Jugador j2) {
+        Mano m = new Mano();
         m.setEstaTerminada(false);
         m.setPartida(t);
-        m.setCartasJ1(new ArrayList<>());
-        m.setCartasJ2(new ArrayList<>());
-        m.setCartasTiradasJ1(null);
-        m.setCartasTiradasJ2(null);
+//        m.setCartasJ1(new ArrayList<>());
+//        m.setCartasJ2(new ArrayList<>());
+//        m.setCartasTiradasJ1(new ArrayList<>());
+//        m.setCartasTiradasJ2(new ArrayList<>());
         this.asignarCartasJugadores(j1, j2, m);
         repositorioMano.guardar(m);
         System.out.println(m);
         return m;
     }
 
+
     @Transactional
     @Override
-    public Mano2 obtenerManoPorId(Long id) {
-        Mano2 m = repositorioMano.obtenerManoPorId(id);
+    public Mano obtenerManoPorId(Long id) {
+        Mano m = repositorioMano.obtenerManoPorId(id);
         this.cartasJ1 = m.getCartasJ1();
         this.cartasJ2 = m.getCartasJ2();
         return m;
     }
 
-    private void sacarCartaDeJugador(Jugador j, Carta c, Mano2 m) {
+    private void sacarCartaDeJugador(Jugador j, Carta c, Mano m) {
         if (j.getNumero().equals(1)) {
             if (this.cartasJ1.contains(c)) {
                 this.cartasJ1.remove(c);
                 this.cartasTiradasJ1.add(c);
-                m.setCartasTiradasJ1(this.cartasTiradasJ1);
+//                m.setCartasTiradasJ1(this.cartasTiradasJ1);
                 m.setCartasJ1(this.cartasJ1);
             } else throw new TrucoException("No existe esa carta en la mano del jugador");
         } else {
             if (this.cartasJ2.contains(c)) {
                 this.cartasJ2.remove(c);
                 this.cartasTiradasJ2.add(c);
-                m.setCartasTiradasJ2(this.cartasTiradasJ2);
+//                m.setCartasTiradasJ2(this.cartasTiradasJ2);
                 m.setCartasJ2(this.cartasJ2);
             } else throw new TrucoException("No existe esa carta en la mano del jugador");
         }
     }
 
     @Override
-    public Ronda tirarCarta(Mano2 mano, Jugador jugador, Long idCarta, String nroJugador) {
+    public Ronda tirarCarta(Mano mano, Jugador jugador, Long idCarta, String nroJugador) {
         Carta cartaElegidaParaTirar = this.repositorioCarta.buscarCartaPorId(idCarta);
         if (mano == null) {
             throw new TrucoException("La mano es nula.");
@@ -140,7 +141,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         }
     }
 
-    private void sumarMovimientoMano(Mano2 mano) {
+    private void sumarMovimientoMano(Mano mano) {
         if (mano == null) {
             throw new TrucoException("La mano es nula.");
         }
@@ -158,14 +159,14 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
 
-    private void asignarCartasJugadores(Jugador j1, Jugador j2, Mano2 m) {
+    private void asignarCartasJugadores(Jugador j1, Jugador j2, Mano m) {
         List<Carta> cartas = repositorioCarta.obtenerCartas();
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom, m);
         asignarCartasJugador(j2, seisCartasRandom, m);
     }
 
-    private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano2 m) {
+    private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano m) {
         if (j.getNumero().equals(1)) {
             Iterator<Carta> iterator = seisCartasRandom.iterator();
             while (iterator.hasNext() && this.cartasJ1.size() < 3) {
@@ -220,7 +221,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
     @Override
-    public Mano2 reset(Truco2 truco) {
+    public Mano reset(Truco2 truco) {
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -228,7 +229,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         this.puntosEnJuegoEnvido = 0;
         this.indicadorTruco = 0;
         this.puntosEnJuegoMano = 0;
-        Mano2 nueva = new Mano2();
+        Mano nueva = new Mano();
         nueva.setEstaTerminada(false);
         nueva.setPartida(truco);
         this.repositorioMano.guardar(nueva);
@@ -247,12 +248,12 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
     @Override
-    public Integer obtenerMovimientosDeLaMano(Mano2 mano) {
+    public Integer obtenerMovimientosDeLaMano(Mano mano) {
         return mano.getMovimientos();
     }
 
     @Override
-    public Jugador preguntar(Mano2 mano, String accion, Jugador ejecutor, Jugador receptor) {
+    public Jugador preguntar(Mano mano, String accion, Jugador ejecutor, Jugador receptor) {
         Truco2 truco = mano.getPartida();
         String accionRealizada = saberAccion(accion);
         if (esTruco(accionRealizada)) {
@@ -331,7 +332,9 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         return respondeAhora;
     }
 
-    private Jugador manejarRespuestaEnvido(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor) {
+    private Jugador manejarRespuestaEnvido(Truco2 truco, String respuestaDeLaAccion,
+                                           Jugador ejecutor, Jugador receptor) {
+        // Saber quien es el j1 y j2
         Jugador j1 = ejecutor.getNumero().equals(1) ? ejecutor : receptor;
         Jugador j2 = receptor.getNumero().equals(2) ? receptor : ejecutor;
 
@@ -350,12 +353,15 @@ public class ServicioManoImpl2 implements ServicioMano2 {
                     if (tantosJ1 > tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ2;
                         truco.setPuntosJ1(truco.getPuntosJ2() + puntosParaElGanador);
-                        j1.setPuntosPartida(truco.getPuntosJ1());
+                        System.out.println("Asigno puntos a J1");
                     } else if (tantosJ1 < tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ1;
                         truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
-                        j2.setPuntosPartida(truco.getPuntosJ2());
+                        System.out.println("Asigno puntos a J2");
                     } else {
+                        System.out.println("TJ1: " + tantosJ1);
+                        System.out.println("TJ2: " + tantosJ2);
+                        System.out.println("Entre donde no debía");
                         // TODO: manejar solucion cuando tienen los mismos tantos
                     }
                     return null;
@@ -398,7 +404,10 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     private Jugador manejarRespuestaTruco(Truco2 truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor) {
         if (respuestaDeLaAccion.equals("QUIERO")) {
-            return null;
+            if (indicadorTruco.equals(1)) {
+                this.puntosEnJuegoMano = 2;
+            }
+           return null;
         } else if (respuestaDeLaAccion.equals("NO QUIERO")) {
             if (ejecutor.getNumero().equals(1)) {
                 truco.setPuntosJ1(truco.getPuntosJ1() + 1);
@@ -422,7 +431,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     }
 
     private Integer calcularTantosDeCartasDeUnJugador(Jugador jugador) {
-        List<Carta> cartasJugador = new ArrayList<>();
+        List<Carta> cartasJugador = null;
         if (jugador.getNumero().equals(1)) {
             cartasJugador = this.cartasJ1;
         } else {

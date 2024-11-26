@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio;
 
 public interface RepositorioMano {
-    void guardar(Mano2 mano);
-    Mano2 obtenerManoPorId(Long id);
+    void guardar(Mano mano);
+    Mano obtenerManoPorId(Long id);
 }

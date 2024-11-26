@@ -1,6 +1,6 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.Mano2;
+import com.tallerwebi.dominio.Mano;
 import com.tallerwebi.dominio.RepositorioMano;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -21,16 +21,16 @@ public class RepositorioManoImpl implements RepositorioMano {
 
     @Transactional
     @Override
-    public void guardar(Mano2 mano) {
+    public void guardar(Mano mano) {
         sessionFactory.getCurrentSession().saveOrUpdate(mano);
         System.out.println("Ya guardé la mano");
     }
 
     @Transactional
     @Override
-    public Mano2 obtenerManoPorId(Long id) {
-        return (Mano2) sessionFactory.getCurrentSession()
-                .createCriteria(Mano2.class)
+    public Mano obtenerManoPorId(Long id) {
+        return (Mano) sessionFactory.getCurrentSession()
+                .createCriteria(Mano.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
     }

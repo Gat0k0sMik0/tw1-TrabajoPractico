@@ -19,7 +19,7 @@ public class Truco2 {
     private Jugador j2;
 
     @OneToMany
-    private List<Mano2> manos;
+    private List<Mano> manos;
 
     private Integer puntosJ1;
     private Integer puntosJ2;
