@@ -31,26 +31,16 @@ public class ControladorTruco {
 
     @RequestMapping("/partida-truco")
     public ModelAndView irAPartidaTruco(HttpSession session) {
+
         ModelMap model = new ModelMap();
-        Truco2 partida;
         Long partidaId = (Long) session.getAttribute("idPartida");
 
-        System.out.println("id de partida: " + partidaId);
-
         if (partidaId != null) {
-            partida = servicioTruco.obtenerPartidaPorId(partidaId);
-            System.out.println(partida);
+            Truco2 partida = servicioTruco.obtenerPartidaPorId(partidaId);
             Mano mano = servicioMano2.obtenerManoPorId(partidaId);
-            System.out.println(mano);
-            Ronda ronda = null;
-
-            // empezar por ronda, mano y partida
-
-            /*
-            creo partida, truco, jugador por id
-
-
-            */
+            Jugador leTocaTirar = servicioMano2.saberQuienTiraAhora();
+            Ronda ronda = new Ronda();
+            ronda.setId(0L);
 
             //model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
             model.put("cartasJugador1", mano.getCartasJ1());
@@ -77,6 +67,13 @@ public class ControladorTruco {
             model.put("ronda", ronda);
             model.put("partida", partida);
             model.put("partidaIniciada", true);
+
+            model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
+
+            if (leTocaTirar != null) {
+                System.out.println("Le toca tirar a: " + leTocaTirar.getNumero());
+
+            }
         }
 
         return new ModelAndView("partida-truco", model);
@@ -108,8 +105,6 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/partida-truco");
     }
 
-
-    // accion-tirar?id-partida={X}&id-mano={X}&id-carta={X}&jugador={X}
     @GetMapping(path = "/accion-tirar")
     public ModelAndView accionTirarCarta(
             @RequestParam("cartaId") Long cartaId,
@@ -117,69 +112,22 @@ public class ControladorTruco {
             @RequestParam("nroJugador") String nroJugador,
             HttpSession session) {
 
-        // Obtener jugadores de la sesión
-        Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
-        Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
         Long idPartida = (Long) session.getAttribute("idPartida");
-
-
-        // NUEVA LÓGICA
 
         // Obtener partida
         Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
-        if (truco == null) {
-            System.out.println("Partida no encontrada con ID: " + idPartida);
-            return new ModelAndView("redirect:/home");
-        }
-
-//        // Buscar la carta seleccionada en la mano del jugador
-//        Carta cartaSeleccionada = getCartaDeLasCartasDelJugadorPorId(cartaId, actual);
-//        if (cartaSeleccionada == null) {
-//            System.out.println("Carta no encontrada con ID: " + cartaId);
-//            return new ModelAndView("redirect:/home");
-//        }
+        if (truco == null) return new ModelAndView("redirect:/home");
 
         // Buscar id_mano de parametro en BD
         Mano mano = servicioMano2.obtenerManoPorId(Long.parseLong(manoId));
-        if (mano == null) {
-            System.out.println("Mano no encontrada con ID: " + manoId);
-            return new ModelAndView("redirect:/home");
-        }
-
-        System.out.println("La mano es: ");
-        System.out.println(mano);
+        if (mano == null) return new ModelAndView("redirect:/home");
 
         // Tiramos carta, retorna ronda creada
         Ronda ronda = servicioMano2.tirarCarta(truco, mano, cartaId, nroJugador);
-        if (ronda == null) {
-            System.out.println("Error al tirar la carta");
-            return new ModelAndView("redirect:/home");
-        }
+        if (ronda == null) return new ModelAndView("redirect:/home");
 
-        // Agregamos datos a la ronda y la guardamos
-//        servicioRonda2.registrarRonda(mano, ronda);
-
-        // Asigna punto (de funcionamiento interno) para saber quien tira la proxima ronda
-        // y si no hay truco, dar el punto extra por ganar rondas.
-//        servicioTruco.determinarGanadorRonda(truco, jugador1, jugador2);
-
-        // FIN DE NUEVA LOGICA
-
-//        session.setAttribute("puntosJ1", jugador1.getPuntosPartida());
-//        session.setAttribute("puntosJ2", jugador2.getPuntosPartida());
-//        session.setAttribute("terminada", null);
-//
-//        // Actualizar los jugadores en la sesión para mantener el estado del juego
-//        session.setAttribute("jugador1", jugador1);
-//        session.setAttribute("jugador2", jugador2);
-//
-//        // Visualización de respuestas
-//        session.setAttribute("mostrarRespuestasJ1", true);
-//        session.setAttribute("mostrarRespuestasJ2", true);
-//        session.setAttribute("mostrarRespuestasEnvidoJ1", false);
-//        session.setAttribute("mostrarRespuestasEnvidoJ2", false);
-//        session.setAttribute("mostrarRespuestasTrucoJ1", false);
-//        session.setAttribute("mostrarRespuestasTrucoJ2", false);
+        // Para saber quien tira la proxima ronda. Si es null, hay parda
+        servicioMano2.determinarGanadorRonda(truco, mano);
 
         return new ModelAndView("redirect:/partida-truco");
     }

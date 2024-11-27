@@ -10,8 +10,6 @@ public class Jugador {
     private Long id;
 
     private String nombre;
-    private Integer puntosRonda = 0;
-    private Integer puntosPartida = 0;
     private Integer numero;
 
     public Jugador() {
@@ -32,22 +30,6 @@ public class Jugador {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Integer getPuntosRonda() {
-        return puntosRonda;
-    }
-
-    public void setPuntosRonda(Integer puntosRonda) {
-        this.puntosRonda = puntosRonda;
-    }
-
-    public Integer getPuntosPartida() {
-        return puntosPartida;
-    }
-
-    public void setPuntosPartida(Integer puntosPartida) {
-        this.puntosPartida = puntosPartida;
     }
 
     public Integer getNumero() {

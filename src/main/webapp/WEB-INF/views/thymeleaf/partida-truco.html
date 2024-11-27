@@ -115,13 +115,13 @@
             <!-- CARTAS  -->
             <div class="gap-2 cartasJugadorContainer col-4">
                 <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
-                <th:block th:each="carta : ${cartasJugador1}">
+                <th:block th:each="carta : ${cartasJugador1}" th:if="${turnoJugador == 1}">
                     <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=1)}"
-                       class="cartaTirarBtn"
-                       th:attr="disabled=${turnoJugador == jugador1}">
+                       class="cartaTirarBtn">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                     </a>
                 </th:block>
+
             </div>
         </div>
 
@@ -148,6 +148,7 @@
                    th:text="|${jugador1.nombre}: ${puntosJ1 != null ? puntosJ1 : 0}|"></p>
                 <p th:if="${jugador2 != null}"
                    th:text="|${jugador2.nombre}: ${puntosJ2 != null ? puntosJ2 : 0}|"></p>
+                <p th:if="${turnoJugador != null}" th:text="'Turno de jugador ' + ${turnoJugador}"></p>
             </div>
         </div>
 
@@ -243,20 +244,18 @@
             </div>
             <!-- CARTAS -->
             <div class="gap-2 cartasJugadorContainer col-4">
-                <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
-                <th:block th:each="carta : ${cartasJugador2}">
+                <th:block th:each="carta : ${cartasJugador2}" th:if="${turnoJugador == 2}">
                     <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=2)}"
-                       class="cartaTirarBtn"
-                       th:attr="disabled=${turnoJugador == jugador2}">
+                       class="cartaTirarBtn">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                     </a>
                 </th:block>
+
             </div>
         </div>
     </div>
 
     <!--  INFORMACIÓN PARA DESARROLLO  -->
-    <h3 th:text="${nroRondas != null ? 'Rondas jugadas (máx 3): ' + nroRondas + ' rondas.' : 'No comenzado.'}"></h3>
     <h3 th:text="${movimientos != null ? 'Movimientos realizados (máx 6): ' + movimientos + ' movimientos.' : 'No comenzado.'}"></h3>
     <h3 th:if="${puntosEnJuego != null}" th:text="${'Puntos en juego: ' + puntosEnJuego}"></h3>
     <h3 th:if="${terminada != null}"

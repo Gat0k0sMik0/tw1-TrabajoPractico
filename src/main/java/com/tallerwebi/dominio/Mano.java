@@ -19,6 +19,8 @@ public class Mano {
 
     private Boolean estaTerminada;
     private Integer movimientos = 0;
+    private Integer puntosRondaJ1 = 0;
+    private Integer puntosRondaJ2 = 0;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
@@ -61,23 +63,24 @@ public class Mano {
 
     }
 
-//    public List<Long> getCartasTiradasJ1() {
-//        return cartasTiradasJ1;
-//    }
-//
-//    public void setCartasTiradasJ1(List<Long> cartasTiradasJ1) {
-//        this.cartasTiradasJ1 = cartasTiradasJ1;
-//    }
-//
-//    public List<Long> getCartasTiradasJ2() {
-//        return cartasTiradasJ2;
-//    }
-//
-//    public void setCartasTiradasJ2(List<Long> cartasTiradasJ2) {
-//        this.cartasTiradasJ2 = cartasTiradasJ2;
-//    }
+    public Integer getPuntosRondaJ1() {
+        return puntosRondaJ1;
+    }
 
-        public List<Carta> getCartasTiradasJ1() {
+    public void setPuntosRondaJ1(Integer puntosRondaJ1) {
+        this.puntosRondaJ1 = puntosRondaJ1;
+    }
+
+    public Integer getPuntosRondaJ2() {
+        return puntosRondaJ2;
+    }
+
+    public void setPuntosRondaJ2(Integer puntosRondaJ2) {
+        this.puntosRondaJ2 = puntosRondaJ2;
+    }
+
+
+    public List<Carta> getCartasTiradasJ1() {
         return cartasTiradasJ1;
     }
 

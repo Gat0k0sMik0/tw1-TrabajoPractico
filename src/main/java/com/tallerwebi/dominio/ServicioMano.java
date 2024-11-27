@@ -9,6 +9,8 @@ public interface ServicioMano {
 
     Mano obtenerManoPorId(Long id);
 
+    Jugador saberQuienTiraAhora();
+
     Integer obtenerPuntosEnJuegoPorTruco();
 
     Integer obtenerMovimientosDeLaMano(Mano mano);
@@ -16,6 +18,8 @@ public interface ServicioMano {
     Jugador preguntar(Mano mano, String accion, Jugador ejecutor, Jugador receptor);
 
     Integer obtenerPuntosEnJuegoDelEnvido();
+
+    void determinarGanadorRonda(Truco2 truco, Mano mano);
 
     Jugador responder(Truco2 truco, String accion, String respuesta, Jugador ejecutor, Jugador receptor);
 }
