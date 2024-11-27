@@ -71,7 +71,7 @@ public class ServicioManoTest {
     @Test
     void queSeGuardeLaMano() {
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano mano = servicioMano.empezar(t, j1, j2);
         assertThat(mano, notNullValue());
     }
@@ -97,7 +97,7 @@ public class ServicioManoTest {
 
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean2() {
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         servicioMano.preguntar(m, "2", j1, j2);
         assertThat(servicioMano.obtenerPuntosEnJuegoDelEnvido(), equalTo(2));
@@ -105,7 +105,7 @@ public class ServicioManoTest {
 
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean4() {
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         servicioMano.preguntar(m, "2", j1, j2);
         Jugador leToca = servicioMano.responder(t, "2", "2", j1, j2);
@@ -115,7 +115,7 @@ public class ServicioManoTest {
 
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean5() {
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         servicioMano.preguntar(m, "2", j1, j2);
         Jugador leToca = servicioMano.responder(t, "2", "3", j2, j1);
@@ -125,7 +125,7 @@ public class ServicioManoTest {
 
     @Test
     public void queLosPuntosEnJuegoDelEnvidoSean7() {
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         servicioMano.preguntar(m, "2", j1, j2);
         servicioMano.responder(t, "2", "2", j2, j1);
@@ -138,7 +138,7 @@ public class ServicioManoTest {
     public void queSeCalculeBienLosTantosDeUnJugador () {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
@@ -157,7 +157,7 @@ public class ServicioManoTest {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         when(repositorioMano.obtenerManoPorId(0L)).thenReturn(mano);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
@@ -176,7 +176,7 @@ public class ServicioManoTest {
     @Test
     public void queCanteTrucoYQueSeGuardenLosPuntosQueRecibiraSiGanaLaManoYSean2() {
         // given
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
@@ -195,7 +195,7 @@ public class ServicioManoTest {
     @Test
     public void queCanteTrucoYQueSeGuardenLosPuntosQueRecibiraSiGanaLaManoYSean3() {
         // given
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
@@ -215,7 +215,7 @@ public class ServicioManoTest {
     @Test
     public void queCanteTrucoYQueSeGuardenLosPuntosQueRecibiraSiGanaLaManoYSean5() {
         // given
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
@@ -240,7 +240,7 @@ public class ServicioManoTest {
     @Test
     public void queElQueLeTocaResponderSeaElEsperadoTrasUnaSecuenciaDeAcciones() {
         // given
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
@@ -268,7 +268,7 @@ public class ServicioManoTest {
         List<Ronda> rs = new ArrayList<>();
         rs.add(r1);
         rs.add(r2);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         m.setId(0L);
         Jugador j1 = new Jugador();
@@ -300,7 +300,7 @@ public class ServicioManoTest {
         List<Ronda> rs = new ArrayList<>();
         rs.add(r1);
         rs.add(r2);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = new Mano();
         m.setId(0L);
         Jugador j1 = new Jugador();
@@ -329,7 +329,7 @@ public class ServicioManoTest {
         // given
         Mano m = new Mano();
         m.setId(0L);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
         m.setPartida(t);
@@ -343,7 +343,7 @@ public class ServicioManoTest {
     public void queSeLeAsignenLasCartas() {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         Mano m = servicioMano.empezar(t, j1, j2);
         // then
         assertThat(m.getCartasJ1().size(), equalTo(3));
@@ -354,7 +354,7 @@ public class ServicioManoTest {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         when(repositorioCarta.buscarCartaPorId(0L)).thenReturn(esperadas.get(0));
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         t.setJ1(j1);
         t.setJ2(j2);
         Mano m = servicioMano.empezar(t, j1, j2);

@@ -36,13 +36,17 @@ public class ControladorTruco {
         Long partidaId = (Long) session.getAttribute("idPartida");
 
         if (partidaId != null) {
-            Truco2 partida = servicioTruco.obtenerPartidaPorId(partidaId);
+            Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
             Mano mano = servicioMano2.obtenerManoPorId(partidaId);
+
+            System.out.println("Estado de la ronda: " + (mano.getEstaTerminada() ? "terminada" : "en curso"));
+
+            model.put("seTermino", mano.getEstaTerminada());
+
             Jugador leTocaTirar = servicioMano2.saberQuienTiraAhora();
             Ronda ronda = new Ronda();
             ronda.setId(0L);
 
-            //model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
             model.put("cartasJugador1", mano.getCartasJ1());
             model.put("cartasJugador2", mano.getCartasJ2());
 
@@ -69,20 +73,15 @@ public class ControladorTruco {
             model.put("partidaIniciada", true);
 
             model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
-
-            if (leTocaTirar != null) {
-                System.out.println("Le toca tirar a: " + leTocaTirar.getNumero());
-
-            }
         }
 
         return new ModelAndView("partida-truco", model);
     }
 
     @GetMapping("/comenzar-truco")
-    public ModelAndView comenzarTruco(HttpSession sesion) {
+    public ModelAndView comenzarTruco(HttpSession session) {
         System.out.println("Empezado");
-        Usuario usuario = (Usuario) sesion.getAttribute("usuarioActivo");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) return new ModelAndView("redirect:/login");
 
         // Asignamos usuario como jugador
@@ -94,13 +93,13 @@ public class ControladorTruco {
         jugador2.setNumero(2);
 
         // Empezamos la partida
-        Truco2 truco = this.servicioTruco.empezar(jugador1, jugador2);
+        Partida truco = this.servicioTruco.empezar(jugador1, jugador2);
 
         // Empezamos mano
         Mano m = servicioMano2.empezar(truco, jugador1, jugador2);
 
         // Guardar IDs en la sesión
-        sesion.setAttribute("idPartida", truco.getId());
+        session.setAttribute("idPartida", truco.getId());
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -115,7 +114,7 @@ public class ControladorTruco {
         Long idPartida = (Long) session.getAttribute("idPartida");
 
         // Obtener partida
-        Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
+        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
         if (truco == null) return new ModelAndView("redirect:/home");
 
         // Buscar id_mano de parametro en BD
@@ -128,6 +127,21 @@ public class ControladorTruco {
 
         // Para saber quien tira la proxima ronda. Si es null, hay parda
         servicioMano2.determinarGanadorRonda(truco, mano);
+
+        return new ModelAndView("redirect:/partida-truco");
+    }
+
+    @RequestMapping("/cambiar-mano")
+    public ModelAndView cambiarMano(
+            HttpSession session
+    ) {
+        Long idPartida = (Long) session.getAttribute("idPartida");
+
+        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
+        servicioMano2.reset(truco);
+
+        // Guardar IDs en la sesión
+        session.setAttribute("idPartida", truco.getId());
 
         return new ModelAndView("redirect:/partida-truco");
     }
@@ -239,22 +253,6 @@ public class ControladorTruco {
 //        return new ModelAndView("redirect:/partida-truco");
 //    }
 
-
-//    @RequestMapping("/cambiar-mano")
-//    public ModelAndView cambiarMano (
-//            @ModelAttribute("j1") Jugador j1,
-//            @ModelAttribute("j2") Jugador j2,
-//            RedirectAttributes redirectAttributes,
-//            HttpSession session
-//    ) {
-//        Long idPartida =  (Long) session.getAttribute("idPartida");
-//        Truco2 truco = servicioTruco.obtenerPartidaPorId(idPartida);
-//        servicioTruco.reset(j1, j2);
-//        servicioMano2.reset(truco);
-//        servicioRonda2.reset();
-//        redirectAttributes.addFlashAttribute("partida", truco);
-//        // hacer
-//    }
 
 //    @GetMapping(path = "/respuesta")
 //    public ModelAndView responder(

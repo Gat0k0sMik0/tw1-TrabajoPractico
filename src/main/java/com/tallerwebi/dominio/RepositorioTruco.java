@@ -4,10 +4,10 @@ import javax.transaction.Transactional;
 
 public interface RepositorioTruco {
     @Transactional
-    void guardarPartida(Truco2 truco);
+    void guardarPartida(Partida truco);
 
     @Transactional
-    Truco2 buscarPartidaPorId (Long id);
+    Partida buscarPartidaPorId (Long id);
 
     @Transactional
     void guardarJugador(Jugador jugador);

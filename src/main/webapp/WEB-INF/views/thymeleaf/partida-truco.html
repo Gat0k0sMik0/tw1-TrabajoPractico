@@ -149,6 +149,10 @@
                 <p th:if="${jugador2 != null}"
                    th:text="|${jugador2.nombre}: ${puntosJ2 != null ? puntosJ2 : 0}|"></p>
                 <p th:if="${turnoJugador != null}" th:text="'Turno de jugador ' + ${turnoJugador}"></p>
+                <a th:if="${seTermino}"
+                   class="btn btn-danger"
+                   th:text="'Jugar otra mano'"
+                   th:href="@{/cambiar-mano}"></a>
             </div>
         </div>
 

@@ -3,6 +3,7 @@ package com.tallerwebi.infraestructura;
 import com.tallerwebi.dominio.Mano;
 import com.tallerwebi.dominio.RepositorioMano;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,18 @@ public class RepositorioManoImpl implements RepositorioMano {
         sessionFactory.getCurrentSession().saveOrUpdate(mano);
     }
 
+    @Transactional
+    @Override
+    public Mano obtenerUltimaMano(Long idPartida) {
+        System.out.println("Buscando mano con partida ID: " + idPartida);
+        return (Mano) sessionFactory.getCurrentSession()
+                .createCriteria(Mano.class)
+                .add(Restrictions.eq("estaTerminada", false))
+                .add(Restrictions.eq("truco2.id", idPartida))
+                .addOrder(Order.desc("id"))
+                .setMaxResults(1)
+                .uniqueResult();
+    }
 
 
     @Transactional

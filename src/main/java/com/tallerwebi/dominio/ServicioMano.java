@@ -1,11 +1,11 @@
 package com.tallerwebi.dominio;
 
 public interface ServicioMano {
-    Mano empezar(Truco2 truco, Jugador j1, Jugador j2 );
+    Mano empezar(Partida truco, Jugador j1, Jugador j2 );
 
-    Ronda tirarCarta(Truco2 truco, Mano mano, Long idCarta, String nroJugador);
+    Ronda tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador);
 
-    Mano reset(Truco2 truco);
+    Mano reset(Partida truco);
 
     Mano obtenerManoPorId(Long id);
 
@@ -19,7 +19,7 @@ public interface ServicioMano {
 
     Integer obtenerPuntosEnJuegoDelEnvido();
 
-    void determinarGanadorRonda(Truco2 truco, Mano mano);
+    void determinarGanadorRonda(Partida truco, Mano mano);
 
-    Jugador responder(Truco2 truco, String accion, String respuesta, Jugador ejecutor, Jugador receptor);
+    Jugador responder(Partida truco, String accion, String respuesta, Jugador ejecutor, Jugador receptor);
 }

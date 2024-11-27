@@ -1,8 +1,5 @@
 package com.tallerwebi.dominio;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,7 +12,7 @@ public class Mano {
 
     @ManyToOne
     @JoinColumn(name = "partida_id")
-    private Truco2 partida;  // Relación con Partida (muchos a uno)
+    private Partida partida;  // Relación con Partida (muchos a uno)
 
     private Boolean estaTerminada;
     private Integer movimientos = 0;
@@ -152,11 +149,11 @@ public class Mano {
         this.id = id;
     }
 
-    public Truco2 getPartida() {
+    public Partida getPartida() {
         return partida;
     }
 
-    public void setPartida(Truco2 partida) {
+    public void setPartida(Partida partida) {
         this.partida = partida;
     }
 

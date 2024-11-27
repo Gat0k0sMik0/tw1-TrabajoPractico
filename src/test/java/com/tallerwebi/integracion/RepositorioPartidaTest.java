@@ -2,8 +2,7 @@ package com.tallerwebi.integracion;
 
 import com.tallerwebi.dominio.Jugador;
 import com.tallerwebi.dominio.RepositorioTruco;
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Truco2;
+import com.tallerwebi.dominio.Partida;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
 import org.hibernate.SessionFactory;
@@ -34,7 +33,7 @@ public class RepositorioPartidaTest {
     @Transactional
     @Rollback
     public void queSeGuardeLaPartida() {
-        Truco2 t = new Truco2();
+        Partida t = new Partida();
         t.setJ1(new Jugador());
         t.setJ2(new Jugador());
 

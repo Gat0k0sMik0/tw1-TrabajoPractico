@@ -27,14 +27,14 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
 
     @Transactional
     @Override
-    public Truco2 obtenerPartidaPorId(Long id) {
+    public Partida obtenerPartidaPorId(Long id) {
         return this.repositorioTruco.buscarPartidaPorId(id);
     }
 
     @Override
     @Transactional
-    public Truco2 empezar(Jugador j1, Jugador j2) {
-        Truco2 truco = new Truco2();
+    public Partida empezar(Jugador j1, Jugador j2) {
+        Partida truco = new Partida();
 
         truco.setJ1(j1);
         truco.setJ2(j2);
