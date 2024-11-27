@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-public class ServicioPartida2Impl implements ServicioPartida2 {
+public class ServicioPartidaImpl implements ServicioPartida2 {
 
     @Autowired
     RepositorioTruco repositorioTruco;
@@ -18,7 +18,7 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     RepositorioCarta repositorioCarta;
 
 
-    public ServicioPartida2Impl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
+    public ServicioPartidaImpl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
         this.repositorioTruco = repositorioTruco;
         this.repositorioCarta = repositorioCarta;
         this.repositorioMano = repositorioMano;

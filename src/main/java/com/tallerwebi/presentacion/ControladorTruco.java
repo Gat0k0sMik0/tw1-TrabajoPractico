@@ -152,32 +152,24 @@ public class ControladorTruco {
     }
 
 
-//    @GetMapping(path = "/accion")
-//    public ModelAndView accion(
-//            @RequestParam("mano") String manoId,
-//            @RequestParam("ronda") String rondaNro,
-//            @RequestParam("accion") String accionValue,
-//            @RequestParam("jugador") String nroJugador,
-//            HttpSession session,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        Jugador j1 = (Jugador) session.getAttribute("jugador1");
-//        Jugador j2 = (Jugador) session.getAttribute("jugador2");
-//        Integer idPartida = (Integer)session.getAttribute("idPartida");
-//        if (j1 == null || j2 == null) return new ModelAndView("redirect:/home");
-//
-//        Jugador actuador = j1.getNumero().toString().equals(nroJugador) ? j1 : j2;
-//        Jugador receptor = actuador.getNombre().equals(j1.getNombre()) ? j2 : j1;
-//
+    @GetMapping(path = "/accion")
+    public ModelAndView accion(
+            @RequestParam("mano") String manoId,
+            @RequestParam("ronda") String rondaNro,
+            @RequestParam("accion") String accionValue,
+            @RequestParam("jugador") String nroJugador,
+            HttpSession session
+    ) {
+
+//        Long idPartida = (Long)session.getAttribute("idPartida");
 //        ModelMap model = new ModelMap();
 //
-//        // NUEVA LOGICA
-//
-//        // Obtener partida
-//        Mano2 mano = servicioMano2.obtenerManoPorId(Long.getLong(manoId));
+//        // Obtener partida y mano
+//        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
+//        Mano mano = servicioMano2.obtenerManoPorId(Long.getLong(manoId));
 //
 //        // Saber quien reponde -> null si se va al mazo
-//        Jugador respondeAhora = servicioMano2.preguntar(mano, accionValue, actuador, receptor);
+//        Jugador respondeAhora = servicioMano2.preguntar(mano, accionValue, nroJugador);
 //
 //        if (respondeAhora == null) {
 //            redirectAttributes.addFlashAttribute("j1", j1);
@@ -254,9 +246,9 @@ public class ControladorTruco {
 //        // SOLO PARA VER EN DESARROLLO
 //        session.setAttribute("acciones", servicioTruco.getAcciones());
 //        session.setAttribute("nroDeAccionAResponder", nroAccion);
-//
-//        return new ModelAndView("redirect:/partida-truco");
-//    }
+
+        return new ModelAndView("redirect:/partida-truco");
+    }
 
 
 //    @GetMapping(path = "/respuesta")

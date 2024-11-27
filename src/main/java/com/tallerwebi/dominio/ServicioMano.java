@@ -17,11 +17,11 @@ public interface ServicioMano {
 
     Integer obtenerMovimientosDeLaMano(Mano mano);
 
-    Jugador preguntar(Mano mano, String accion, Jugador ejecutor, Jugador receptor);
+    Jugador preguntar(Mano mano, String accion, Integer nroJugador);
 
     Integer obtenerPuntosEnJuegoDelEnvido();
 
     void determinarGanadorRonda(Partida truco, Mano mano);
 
-    Jugador responder(Partida truco, String accion, String respuesta, Jugador ejecutor, Jugador receptor);
+    Jugador responder(Mano mano, String accion, String respuesta, Integer nroJugador);
 }
