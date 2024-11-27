@@ -12,7 +12,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 public class ServicioManoTest {
 
@@ -21,7 +20,7 @@ public class ServicioManoTest {
     RepositorioRonda2 repositorioRonda = mock(RepositorioRondaImpl.class);
     RepositorioCarta repositorioCarta = mock(RepositorioCartaImpl.class);
 
-    ServicioMano2 servicioMano = new ServicioManoImpl2(
+    ServicioMano servicioMano = new ServicioManoImpl2(
             repositorioMano, repositorioRonda, repositorioTruco, repositorioCarta);
 
     Jugador j1 = new Jugador();
@@ -136,7 +135,7 @@ public class ServicioManoTest {
     }
 
     @Test
-    public void queElFaltaEnvidoLoGaneElJugadorUno() {
+    public void queSeCalculeBienLosTantosDeUnJugador () {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         Truco2 t = new Truco2();
@@ -144,13 +143,29 @@ public class ServicioManoTest {
         t.setPuntosParaGanar(30);
         t.setPuntosJ1(0);
         t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
         m.setCartasJ1(new ArrayList<>());
         m.setCartasJ2(new ArrayList<>());
         servicioMano.empezar(t, j1, j2);
         whenAsignoTresCartasAlJugador(j1, esperadas, m);
         whenAsignoTresCartasAlJugador(j2, esperadas, m);
-        System.out.println(m.getCartasJ1().size() + " tiene el j1");
-        System.out.println(m.getCartasJ2().size() + " tiene el j2");
+    }
+
+    @Test
+    public void queElFaltaEnvidoLoGaneElJugadorUno() {
+        // given
+        when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
+        when(repositorioMano.obtenerManoPorId(0L)).thenReturn(mano);
+        Truco2 t = new Truco2();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        Mano m = servicioMano.obtenerManoPorId(0L);
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
         // When
         servicioMano.preguntar(m, "4", j1, j2);
         servicioMano.responder(t, "4", "1", j2, j1);
@@ -340,18 +355,18 @@ public class ServicioManoTest {
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         when(repositorioCarta.buscarCartaPorId(0L)).thenReturn(esperadas.get(0));
         Truco2 t = new Truco2();
+        t.setJ1(j1);
+        t.setJ2(j2);
         Mano m = servicioMano.empezar(t, j1, j2);
         // when
         whenAsignoTresCartasAlJugador(j1, esperadas, m);
-        Ronda r = servicioMano.tirarCarta(m, j1, 0L, "1");
+        Ronda r = servicioMano.tirarCarta(t, m, 0L, j1.getNumero().toString());
         // then
         assertNotNull(r);
     }
 
 
     private void whenAsignoTresCartasAlJugador(Jugador j, List<Carta> esperadas, Mano mano) {
-
-
         int contador = 0;
         Iterator<Carta> iterator = esperadas.iterator();
         while (iterator.hasNext() && contador < 3) {
@@ -363,8 +378,6 @@ public class ServicioManoTest {
             }
             iterator.remove(); // Elimina de la lista principal.
             contador++;
-            System.out.println("Asigno a " + j.getNombre()
-                    + " la carta " + carta.getNumero() + " " + carta.getPalo() + ".");
         }
     }
 

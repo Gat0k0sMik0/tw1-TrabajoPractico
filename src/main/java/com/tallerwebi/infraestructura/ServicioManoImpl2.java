@@ -6,20 +6,21 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Transactional
-public class ServicioManoImpl2 implements ServicioMano2 {
+public class ServicioManoImpl2 implements ServicioMano {
 
     RepositorioMano repositorioMano;
     RepositorioRonda2 repositorioRonda;
     RepositorioTruco repositorioTruco;
     RepositorioCarta repositorioCarta;
+    @PersistenceContext
+    EntityManager entityManager;
 
     private Integer puntosEnJuegoEnvido;
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
@@ -32,8 +33,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
 
     private List<Carta> cartasJ1;
     private List<Carta> cartasJ2;
-    private List<Carta> cartasTiradasJ1;
-    private List<Carta> cartasTiradasJ2;
 
     @Autowired
     public ServicioManoImpl2(
@@ -47,8 +46,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         this.repositorioCarta = repositorioCarta;
         this.cartasJ1 = new ArrayList<>();
         this.cartasJ2 = new ArrayList<>();
-        this.cartasTiradasJ1 = new ArrayList<>();
-        this.cartasTiradasJ2 = new ArrayList<>();
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -65,8 +62,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         m.setPartida(t);
         m.setCartasJ1(new ArrayList<>());
         m.setCartasJ2(new ArrayList<>());
-//        m.setCartasTiradasJ1(new ArrayList<>());
-//        m.setCartasTiradasJ2(new ArrayList<>());
+        m.setCartasTiradasJ1(new ArrayList<>());
+        m.setCartasTiradasJ2(new ArrayList<>());
         this.asignarCartasJugadores(j1, j2, m);
         repositorioMano.guardar(m);
         return m;
@@ -79,32 +76,39 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         Mano m = repositorioMano.obtenerManoPorId(id);
         Hibernate.initialize(m.getCartasJ1());
         Hibernate.initialize(m.getCartasJ2());
+        Hibernate.initialize(m.getCartasTiradasJ1());
+        Hibernate.initialize(m.getCartasTiradasJ2());
         this.cartasJ1 = m.getCartasJ1();
         this.cartasJ2 = m.getCartasJ2();
         return m;
     }
 
-    private void sacarCartaDeJugador(Jugador j, Carta c, Mano m) {
+    @Transactional
+    public void sacarCartaDeJugador(Jugador j, Carta c, Mano m) {
         if (j.getNumero().equals(1)) {
-            if (this.cartasJ1.contains(c)) {
-                this.cartasJ1.remove(c);
-                this.cartasTiradasJ1.add(c);
-//                m.setCartasTiradasJ1(this.cartasTiradasJ1);
-                m.setCartasJ1(this.cartasJ1);
+            if (m.getCartasJ1().contains(c)) {
+                m.getCartasJ1().remove(c);
+                m.getCartasTiradasJ1().add(c);
             } else throw new TrucoException("No existe esa carta en la mano del jugador");
         } else {
-            if (this.cartasJ2.contains(c)) {
-                this.cartasJ2.remove(c);
-                this.cartasTiradasJ2.add(c);
-//                m.setCartasTiradasJ2(this.cartasTiradasJ2);
-                m.setCartasJ2(this.cartasJ2);
+            if (m.getCartasJ2().contains(c)) {
+                m.getCartasJ2().remove(c);
+                m.getCartasTiradasJ2().add(c);
             } else throw new TrucoException("No existe esa carta en la mano del jugador");
         }
     }
 
     @Override
-    public Ronda tirarCarta(Mano mano, Jugador jugador, Long idCarta, String nroJugador) {
+    public Ronda tirarCarta(Truco2 truco, Mano mano, Long idCarta, String nroJugador) {
         Carta cartaElegidaParaTirar = this.repositorioCarta.buscarCartaPorId(idCarta);
+        Jugador jugador;
+
+        if (truco.getJ1().getNumero().toString().equals(nroJugador)) {
+            jugador = truco.getJ1();
+        } else {
+            jugador = truco.getJ2();
+        }
+
         if (mano == null) {
             throw new TrucoException("La mano es nula.");
         }
@@ -115,13 +119,16 @@ public class ServicioManoImpl2 implements ServicioMano2 {
             throw new TrucoException("La carta es nula.");
         }
 
-        Jugador j = null;
         List<Carta> cartasJugador = new ArrayList<>();
         if (jugador.getNumero().equals(1)) {
             cartasJugador = mano.getCartasJ1();
         } else {
             cartasJugador = mano.getCartasJ2();
         }
+
+        System.out.println("Tiró: J" + jugador.getNumero());
+        System.out.println("Tiene: " + cartasJugador.size() + " cartas.");
+        System.out.println("Va a tirar " + cartaElegidaParaTirar.getNumero() + " " + cartaElegidaParaTirar.getPalo());
 
         if (!mano.getEstaTerminada()) {
             if (cartasJugador.contains(cartaElegidaParaTirar)) {
@@ -132,7 +139,9 @@ public class ServicioManoImpl2 implements ServicioMano2 {
                 r.setPaloCarta(cartaElegidaParaTirar.getPalo());
                 r.setValorCarta(cartaElegidaParaTirar.getValor());
                 r.setNroCarta(cartaElegidaParaTirar.getNumero());
-                this.repositorioMano.guardar(mano);
+                r.setMano(mano);
+                this.repositorioRonda.guardar(r);
+                entityManager.merge(mano);
                 return r;
             } else {
                 throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
@@ -153,7 +162,6 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         }
 
         mano.setMovimientos(mano.getMovimientos() + 1);
-        repositorioMano.guardar(mano);
 
         // Log para verificar que la mano se guardó correctamente
         System.out.println("Movimiento sumado a la mano con ID: " + mano.getId() + ", movimientos: " + mano.getMovimientos());
@@ -338,6 +346,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         // Saber quien es el j1 y j2
         Jugador j1 = ejecutor.getNumero().equals(1) ? ejecutor : receptor;
         Jugador j2 = receptor.getNumero().equals(2) ? receptor : ejecutor;
+        System.out.println("manejarRespuestaEnvido: j1 es " + j1.getNombre());
+        System.out.println("manejarRespuestaEnvido: j2 es " + j2.getNombre());
 
         if (respuestaDeLaAccion.equals("QUIERO") || respuestaDeLaAccion.equals("NO QUIERO")) {
             // RESPUESTAS DIRECTAS
@@ -345,6 +355,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
                 // ACEPTA Y CALCULAMOS TANTOS
                 Integer tantosJ1 = this.calcularTantosDeCartasDeUnJugador(j1);
                 Integer tantosJ2 = this.calcularTantosDeCartasDeUnJugador(j2);
+                System.out.println("manejarRespuestaEnvido: Envido J1 " + tantosJ1);
+                System.out.println("manejarRespuestaEnvido: Envido J2 " + tantosJ2);
                 if (this.diceFaltaEnvido != null) {
                     // falta envido (anula todos los anteriores)
                     Integer puntosParaGanar = truco.getPuntosParaGanar();
@@ -354,11 +366,9 @@ public class ServicioManoImpl2 implements ServicioMano2 {
                     if (tantosJ1 > tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ2;
                         truco.setPuntosJ1(truco.getPuntosJ2() + puntosParaElGanador);
-                        System.out.println("Asigno puntos a J1");
                     } else if (tantosJ1 < tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ1;
                         truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
-                        System.out.println("Asigno puntos a J2");
                     } else {
                         System.out.println("TJ1: " + tantosJ1);
                         System.out.println("TJ2: " + tantosJ2);
@@ -445,7 +455,9 @@ public class ServicioManoImpl2 implements ServicioMano2 {
             } else {
                 c.setValorEnvido(c.getNumero());
             }
+            System.out.println("Carta de: " + jugador.getNombre() + " " + c.getPalo() + " " + c.getNumero() + " V.E: " + c.getValorEnvido());
         }
+
         return this.calcularEnvido(cartasJugador);
     }
 
@@ -454,6 +466,7 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         if (tieneDosDelMismoPalo.isEmpty()) {
             return 0;
         } else {
+            System.out.println("Encontré dos o más con el mismo palo");
             return this.obtenerSumaDeLasMasAltas(tieneDosDelMismoPalo);
         }
     }
@@ -478,6 +491,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
                 envidoMax = Math.max(envidoMax, carta.getValorEnvido());
             }
         }
+
+        System.out.println("Sumé " + envidoMax);
 
         return envidoMax;
     }

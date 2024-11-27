@@ -2,15 +2,10 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Jugador;
 import com.tallerwebi.dominio.*;
-import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
 
 @Service
 public class ServicioPartida2Impl implements ServicioPartida2 {

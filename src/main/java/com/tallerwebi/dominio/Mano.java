@@ -20,20 +20,36 @@ public class Mano {
     private Boolean estaTerminada;
     private Integer movimientos = 0;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
-    // Clave foránea en la tabla `Carta`
     private List<Carta> cartasJ1;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
-// Clave foránea en la tabla `Carta`
     private List<Carta> cartasJ2;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @JoinTable(name = "mano_cartasTiradas_j1",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    private List<Carta> cartasTiradasJ1;
+
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @JoinTable(name = "mano_cartasTiradas_j2",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    private List<Carta> cartasTiradasJ2;
+
+//    @ElementCollection
+//    private List<Long> cartasTiradasJ1;
+//
+//    @ElementCollection
+//    private List<Long> cartasTiradasJ2;
 
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Carta> cartasTiradasJ1;
@@ -45,30 +61,45 @@ public class Mano {
 
     }
 
-
-//    public List<Carta> getCartasTiradasJ1() {
+//    public List<Long> getCartasTiradasJ1() {
 //        return cartasTiradasJ1;
 //    }
 //
-//    public void setCartasTiradasJ1(List<Carta> cartasTiradasJ1) {
+//    public void setCartasTiradasJ1(List<Long> cartasTiradasJ1) {
 //        this.cartasTiradasJ1 = cartasTiradasJ1;
 //    }
 //
-//    public List<Carta> getCartasTiradasJ2() {
+//    public List<Long> getCartasTiradasJ2() {
 //        return cartasTiradasJ2;
 //    }
 //
-//    public void setCartasTiradasJ2(List<Carta> cartasTiradasJ2) {
+//    public void setCartasTiradasJ2(List<Long> cartasTiradasJ2) {
 //        this.cartasTiradasJ2 = cartasTiradasJ2;
 //    }
-//
-//    public void agregarCartaTiradaJ1(Carta carta) {
-//        cartasTiradasJ1.add(carta);
-//    }
-//
-//    public void agregarCartaTiradaJ2(Carta carta) {
-//        cartasTiradasJ2.add(carta);
-//    }
+
+        public List<Carta> getCartasTiradasJ1() {
+        return cartasTiradasJ1;
+    }
+
+    public void setCartasTiradasJ1(List<Carta> cartasTiradasJ1) {
+        this.cartasTiradasJ1 = cartasTiradasJ1;
+    }
+
+    public List<Carta> getCartasTiradasJ2() {
+        return cartasTiradasJ2;
+    }
+
+    public void setCartasTiradasJ2(List<Carta> cartasTiradasJ2) {
+        this.cartasTiradasJ2 = cartasTiradasJ2;
+    }
+
+    public void agregarCartaTiradaJ1(Carta carta) {
+        cartasTiradasJ1.add(carta);
+    }
+
+    public void agregarCartaTiradaJ2(Carta carta) {
+        cartasTiradasJ2.add(carta);
+    }
 
     public void agregarCartaJ1(Carta carta) {
         cartasJ1.add(carta);

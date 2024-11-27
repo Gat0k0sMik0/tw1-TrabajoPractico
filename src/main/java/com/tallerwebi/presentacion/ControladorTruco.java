@@ -16,13 +16,13 @@ public class ControladorTruco {
     @Autowired
     private ServicioPartida2 servicioTruco;
     @Autowired
-    private ServicioMano2 servicioMano2;
+    private ServicioMano servicioMano2;
     @Autowired
     private ServicioRonda2 servicioRonda2;
 
 
     public ControladorTruco(ServicioPartida2 servicioTruco,
-                            ServicioMano2 servicioMano2,
+                            ServicioMano servicioMano2,
                             ServicioRonda2 servicioRonda2) {
         this.servicioTruco = servicioTruco;
         this.servicioMano2 = servicioMano2;
@@ -59,8 +59,8 @@ public class ControladorTruco {
             model.put("jugador1", partida.getJ1());
             model.put("jugador2", partida.getJ2());
 
-//            model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
-//            model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
+            model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
+            model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
 
             model.put("puntosJ1", partida.getPuntosJ1());
             model.put("puntosJ2", partida.getPuntosJ2());
@@ -113,33 +113,15 @@ public class ControladorTruco {
     @GetMapping(path = "/accion-tirar")
     public ModelAndView accionTirarCarta(
             @RequestParam("cartaId") Long cartaId,
-            @RequestParam("jugador") String jugadorNombre,
-            @RequestParam("id-mano") String manoId,
-            @RequestParam("nro-jugador") String nroJugador,
+            @RequestParam("manoId") String manoId,
+            @RequestParam("nroJugador") String nroJugador,
             HttpSession session) {
+
         // Obtener jugadores de la sesión
         Jugador jugador1 = (Jugador) session.getAttribute("jugador1");
         Jugador jugador2 = (Jugador) session.getAttribute("jugador2");
         Long idPartida = (Long) session.getAttribute("idPartida");
 
-        // Log para verificar los atributos de la sesión
-        System.out.println("jugador1: " + jugador1);
-        System.out.println("jugador2: " + jugador2);
-        System.out.println("idPartida: " + idPartida);
-
-        // Redirigir si no existen
-        if (jugador1 == null || jugador2 == null) {
-            System.out.println("Jugadores no encontrados en la sesión, redirigiendo a /home");
-            return new ModelAndView("redirect:/home");
-        }
-
-        // Determinamos que jugador va
-        Jugador actual = jugadorNombre.equalsIgnoreCase(jugador1.getNombre()) ? jugador1 : jugador2;
-
-        if (actual == null) {
-            System.out.println("Jugador actual no encontrado");
-            return new ModelAndView("redirect:/home");
-        }
 
         // NUEVA LÓGICA
 
@@ -164,37 +146,40 @@ public class ControladorTruco {
             return new ModelAndView("redirect:/home");
         }
 
+        System.out.println("La mano es: ");
+        System.out.println(mano);
+
         // Tiramos carta, retorna ronda creada
-        Ronda ronda = servicioMano2.tirarCarta(mano, actual, cartaId, nroJugador);
+        Ronda ronda = servicioMano2.tirarCarta(truco, mano, cartaId, nroJugador);
         if (ronda == null) {
             System.out.println("Error al tirar la carta");
             return new ModelAndView("redirect:/home");
         }
 
         // Agregamos datos a la ronda y la guardamos
-        servicioRonda2.registrarRonda(mano, ronda);
+//        servicioRonda2.registrarRonda(mano, ronda);
 
         // Asigna punto (de funcionamiento interno) para saber quien tira la proxima ronda
         // y si no hay truco, dar el punto extra por ganar rondas.
-        servicioTruco.determinarGanadorRonda(truco, jugador1, jugador2);
+//        servicioTruco.determinarGanadorRonda(truco, jugador1, jugador2);
 
         // FIN DE NUEVA LOGICA
 
-        session.setAttribute("puntosJ1", jugador1.getPuntosPartida());
-        session.setAttribute("puntosJ2", jugador2.getPuntosPartida());
-        session.setAttribute("terminada", null);
-
-        // Actualizar los jugadores en la sesión para mantener el estado del juego
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("jugador2", jugador2);
-
-        // Visualización de respuestas
-        session.setAttribute("mostrarRespuestasJ1", true);
-        session.setAttribute("mostrarRespuestasJ2", true);
-        session.setAttribute("mostrarRespuestasEnvidoJ1", false);
-        session.setAttribute("mostrarRespuestasEnvidoJ2", false);
-        session.setAttribute("mostrarRespuestasTrucoJ1", false);
-        session.setAttribute("mostrarRespuestasTrucoJ2", false);
+//        session.setAttribute("puntosJ1", jugador1.getPuntosPartida());
+//        session.setAttribute("puntosJ2", jugador2.getPuntosPartida());
+//        session.setAttribute("terminada", null);
+//
+//        // Actualizar los jugadores en la sesión para mantener el estado del juego
+//        session.setAttribute("jugador1", jugador1);
+//        session.setAttribute("jugador2", jugador2);
+//
+//        // Visualización de respuestas
+//        session.setAttribute("mostrarRespuestasJ1", true);
+//        session.setAttribute("mostrarRespuestasJ2", true);
+//        session.setAttribute("mostrarRespuestasEnvidoJ1", false);
+//        session.setAttribute("mostrarRespuestasEnvidoJ2", false);
+//        session.setAttribute("mostrarRespuestasTrucoJ1", false);
+//        session.setAttribute("mostrarRespuestasTrucoJ2", false);
 
         return new ModelAndView("redirect:/partida-truco");
     }

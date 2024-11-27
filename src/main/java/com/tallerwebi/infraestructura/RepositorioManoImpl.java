@@ -7,12 +7,16 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 @Repository
 public class RepositorioManoImpl implements RepositorioMano {
 
     private SessionFactory sessionFactory;
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     public RepositorioManoImpl(SessionFactory sessionFactory) {
@@ -23,8 +27,9 @@ public class RepositorioManoImpl implements RepositorioMano {
     @Override
     public void guardar(Mano mano) {
         sessionFactory.getCurrentSession().saveOrUpdate(mano);
-        System.out.println("Ya guardé la mano");
     }
+
+
 
     @Transactional
     @Override

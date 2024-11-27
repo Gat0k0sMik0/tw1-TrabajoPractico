@@ -116,7 +116,7 @@
             <div class="gap-2 cartasJugadorContainer col-4">
                 <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
                 <th:block th:each="carta : ${cartasJugador1}">
-                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, jugador=${jugador1.nombre}, id-mano=${mano.id}, nro-jugador=1, cartaValor=${carta.valor})}"
+                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=1)}"
                        class="cartaTirarBtn"
                        th:attr="disabled=${turnoJugador == jugador1}">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
@@ -245,7 +245,7 @@
             <div class="gap-2 cartasJugadorContainer col-4">
                 <!--     ?ronda={id}&idCarta={id}&nroJugador=1           -->
                 <th:block th:each="carta : ${cartasJugador2}">
-                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, jugador=${jugador2.nombre}, id-mano=${mano.id}, nro-jugador=2, cartaValor=${carta.valor})}"
+                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=2)}"
                        class="cartaTirarBtn"
                        th:attr="disabled=${turnoJugador == jugador2}">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
