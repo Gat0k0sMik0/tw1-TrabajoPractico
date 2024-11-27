@@ -19,7 +19,7 @@ public class Ronda {
 
     @ManyToOne
     @JoinColumn(name = "mano_id")
-    private Mano2 mano;  // Relación muchos a uno con Mano
+    private Mano mano;  // Relación muchos a uno con Mano
 
     public Ronda() {
     }
@@ -72,11 +72,24 @@ public class Ronda {
         this.paloCarta = paloCarta;
     }
 
-    public Mano2 getMano() {
+    public Mano getMano() {
         return mano;
     }
 
-    public void setMano(Mano2 mano) {
+    public void setMano(Mano mano) {
         this.mano = mano;
+    }
+
+    @Override
+    public String toString() {
+        return "Ronda{" +
+                "id=" + id +
+                ", nroRonda=" + nroRonda +
+                ", nombreJugador='" + nombreJugador + '\'' +
+                ", valorCarta=" + valorCarta +
+                ", nroCarta=" + nroCarta +
+                ", paloCarta='" + paloCarta + '\'' +
+                ", mano=" + mano +
+                '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -22,25 +21,27 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
 
     @Transactional
     @Override
-    public void guardarPartida(Truco2 truco) {
+    public void guardarPartida(Partida truco) {
         sessionFactory.getCurrentSession().save(truco);
     }
 
     @Transactional
     @Override
-    public Truco2 buscarPartidaPorId(Long id) {
+    public Partida buscarPartidaPorId(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Truco2 t = (Truco2) session.createCriteria(Truco2.class)
+        Partida t = (Partida) session.createCriteria(Partida.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
-        System.out.println("Encontre:" + t);
+        System.out.println("Encontre: " + t);
         return t;
     }
 
     @Transactional
     @Override
     public void guardarJugador(Jugador jugador) {
-        sessionFactory.getCurrentSession().save(jugador);
+        Session session = sessionFactory.getCurrentSession();
+        session.save(jugador);
+        System.out.println("Jugador guardado en repo con ID: " + jugador.getId());
     }
 
     @Transactional
@@ -50,7 +51,6 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
         Jugador j = (Jugador) session.createCriteria(Jugador.class)
                 .add(Restrictions.eq("id", id))
                 .uniqueResult();
-        Hibernate.initialize(j.getCartas());
         return j;
     }
 

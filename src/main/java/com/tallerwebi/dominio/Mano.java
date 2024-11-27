@@ -1,146 +1,165 @@
-//package com.tallerwebi.dominio;
+package com.tallerwebi.dominio;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+public class Mano {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "partida_id")
+    private Partida partida;  // Relación con Partida (muchos a uno)
+
+    private Boolean estaTerminada;
+    private Integer movimientos = 0;
+    private Integer puntosRondaJ1 = 0;
+    private Integer puntosRondaJ2 = 0;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @JoinTable(name = "mano_cartas_j1",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    private List<Carta> cartasJ1;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @JoinTable(name = "mano_cartas_j2",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    private List<Carta> cartasJ2;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @JoinTable(name = "mano_cartasTiradas_j1",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    private List<Carta> cartasTiradasJ1;
+
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @JoinTable(name = "mano_cartasTiradas_j2",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    private List<Carta> cartasTiradasJ2;
+
+//    @ElementCollection
+//    private List<Long> cartasTiradasJ1;
 //
-//import javax.persistence.*;
-//import java.util.ArrayList;
-//import java.util.List;
+//    @ElementCollection
+//    private List<Long> cartasTiradasJ2;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Carta> cartasTiradasJ1;
 //
-//public class Mano {
-//
-//    private Long id;
-//    // Los puntos (afecta acciones como truco, envido, etc)
-//
-//    // Atributos
-//    private Integer nroMovimientos; // contador
-//    private Integer nroRonda; // contador
-//    private Integer puntos = 0; // en juego por truco
-//    private Boolean estaTerminada = false;
-//
-//    // Listas 1 - N ?
-//    private List<Ronda> rondas;
-//
-//    // Solo usado para testear
-//    private List<Jugador> ganadoresDeRonda;
-//
-//    // Sin uso actualmente
-//
-//    // Uso escaso/dudoso
-//    private List<Jugador> jugadores; // 2-4
-//
-//    // Requeridas para relacionar por hibernate
-//    private Truco truco;
-//
-//    public Mano() {
-//
-//    }
-//
-//
-//
-//    public Mano(List<Jugador> jugadores) {
-//        this.rondas = new ArrayList<>();
-//        this.nroMovimientos = 0;
-//        this.nroRonda = 0;
-//        this.ganadoresDeRonda = new ArrayList<>();
-//        this.jugadores = jugadores;
-//    }
-//
-//
-//
-//    public Jugador getGanadorDeUnaRondaPorNumero (Integer nroRonda) {
-//        return this.ganadoresDeRonda.get(nroRonda);
-//    }
-//
-//    private List<Ronda> getRondasPorNumero(Integer numero) {
-//        List<Ronda> r = new ArrayList<>();
-//        for (Ronda ronda : this.rondas) {
-//            if (ronda.getNroRonda().equals(numero)) {
-//                r.add(ronda);
-//            }
-//        }
-//        return r;
-//    }
-//
-//    public void guardarGanadorDeRonda(Jugador jugador) {
-//        jugador.agregarPuntoRonda();
-//        this.ganadoresDeRonda.add(jugador);
-//    }
-//
-//
-//    public Jugador obtenerGanador() {
-//        Jugador ganadorActual = null;
-//        for (Jugador jugador : this.ganadoresDeRonda) {
-//            if (ganadorActual == null) {
-//                ganadorActual = jugador;
-//            } else {
-//                if (jugador.getPuntosRonda() > ganadorActual.getPuntosRonda()) {
-//                    ganadorActual = jugador;
-//                }
-//            }
-//        }
-//        return ganadorActual;
-//    }
-//
-//
-//    public void addRonda(Jugador j, Carta c) {
-//        this.rondas.add(new Ronda(nroRonda, j, c));
-//        if (this.nroMovimientos++ % 2 != 0) {
-//            this.nroRonda++;
-//        }
-//    }
-//
-//    public List<Ronda> getRondas() {
-//        return this.rondas;
-//    }
-//
-//    public Integer getRondasJugadas() {
-//        int nroRondaActual = 0;
-//        int counter = 0;
-//        for (Ronda r : rondas) {
-//            if (r.getNroRonda().equals(nroRondaActual)) {
-//                counter++;
-//                nroRondaActual++;
-//            }
-//        }
-//        return counter;
-//    }
-//
-//    public Integer getPuntos() {
-//        return puntos;
-//    }
-//
-//    public void setPuntos(Integer puntos) {
-//        this.puntos = puntos;
-//    }
-//
-//    public void acumularPuntosEnJuego(Integer puntos) {
-//        this.puntos += puntos;
-//    }
-//
-//    public void setRondas(List<Ronda> rondas) {
-//        this.rondas = rondas;
-//    }
-//
-//    public Integer getNroRonda() {
-//        return nroRonda;
-//    }
-//
-//    public void setNroRonda(Integer nroRonda) {
-//        this.nroRonda = nroRonda;
-//    }
-//
-//    public Integer getNumeroDeMovimientosRealizados() {
-//        return this.nroMovimientos;
-//    }
-//
-//    public void setNroMovimiento(Integer nroMovimiento) {
-//        this.nroMovimientos = nroMovimiento;
-//    }
-//
-//    public Boolean getEstaTerminada() {
-//        return estaTerminada;
-//    }
-//
-//    public void setEstaTerminada(Boolean estaTerminada) {
-//        this.estaTerminada = estaTerminada;
-//    }
-//
-//}
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Carta> cartasTiradasJ2;
+
+    public Mano() {
+
+    }
+
+    public Integer getPuntosRondaJ1() {
+        return puntosRondaJ1;
+    }
+
+    public void setPuntosRondaJ1(Integer puntosRondaJ1) {
+        this.puntosRondaJ1 = puntosRondaJ1;
+    }
+
+    public Integer getPuntosRondaJ2() {
+        return puntosRondaJ2;
+    }
+
+    public void setPuntosRondaJ2(Integer puntosRondaJ2) {
+        this.puntosRondaJ2 = puntosRondaJ2;
+    }
+
+
+    public List<Carta> getCartasTiradasJ1() {
+        return cartasTiradasJ1;
+    }
+
+    public void setCartasTiradasJ1(List<Carta> cartasTiradasJ1) {
+        this.cartasTiradasJ1 = cartasTiradasJ1;
+    }
+
+    public List<Carta> getCartasTiradasJ2() {
+        return cartasTiradasJ2;
+    }
+
+    public void setCartasTiradasJ2(List<Carta> cartasTiradasJ2) {
+        this.cartasTiradasJ2 = cartasTiradasJ2;
+    }
+
+    public void agregarCartaTiradaJ1(Carta carta) {
+        cartasTiradasJ1.add(carta);
+    }
+
+    public void agregarCartaTiradaJ2(Carta carta) {
+        cartasTiradasJ2.add(carta);
+    }
+
+    public void agregarCartaJ1(Carta carta) {
+        cartasJ1.add(carta);
+    }
+
+    public void agregarCartaJ2(Carta carta) {
+        cartasJ2.add(carta);
+    }
+
+    public List<Carta> getCartasJ1() {
+        return cartasJ1;
+    }
+
+    public void setCartasJ1(List<Carta> cartasJ1) {
+        this.cartasJ1 = cartasJ1;
+    }
+
+    public List<Carta> getCartasJ2() {
+        return cartasJ2;
+    }
+
+    public void setCartasJ2(List<Carta> cartasJ2) {
+        this.cartasJ2 = cartasJ2;
+    }
+
+    public Integer getMovimientos() {
+        return movimientos;
+    }
+
+    public void setMovimientos(Integer movimientos) {
+        this.movimientos = movimientos;
+    }
+
+    public Boolean getEstaTerminada() {
+        return estaTerminada;
+    }
+
+    public void setEstaTerminada(Boolean estaTerminada) {
+        this.estaTerminada = estaTerminada;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Partida getPartida() {
+        return partida;
+    }
+
+    public void setPartida(Partida partida) {
+        this.partida = partida;
+    }
+
+    @Override
+    public String toString() {
+        return "Mano2{" + "id=" + id + ", partida=" + partida + ", estaTerminada=" + estaTerminada + ", movimientos=" + movimientos + ", cartasJ1=" + cartasJ1 + ", cartasJ2=" + cartasJ2 + '}';
+    }
+}
+
