@@ -61,6 +61,7 @@ public class ServicioManoImpl2 implements ServicioMano {
     public Mano empezar(Partida t, Jugador j1, Jugador j2) {
         Mano m = new Mano();
         m.setEstaTerminada(false);
+        m.setConfirmacionTerminada(false);
         m.setPartida(t);
         m.setCartasJ1(new ArrayList<>());
         m.setCartasJ2(new ArrayList<>());
@@ -84,6 +85,7 @@ public class ServicioManoImpl2 implements ServicioMano {
 
         Mano nueva = new Mano();
         nueva.setEstaTerminada(false);
+        nueva.setConfirmacionTerminada(false);
         nueva.setPartida(truco);
         nueva.setCartasJ1(new ArrayList<>());
         nueva.setCartasJ2(new ArrayList<>());
@@ -91,6 +93,7 @@ public class ServicioManoImpl2 implements ServicioMano {
         nueva.setCartasTiradasJ2(new ArrayList<>());
 
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
+
         this.repositorioMano.guardar(nueva);
         return nueva;
     }
@@ -98,7 +101,7 @@ public class ServicioManoImpl2 implements ServicioMano {
     @Override
     public Mano obtenerManoPorId(Long idPartida) {
         Mano m = repositorioMano.obtenerUltimaMano(idPartida);
-        if (m == null) throw new TrucoException("No se encontró una mano asociada a esa partida que este sin terminar");
+        if (m == null) return null;
 
         Hibernate.initialize(m.getCartasJ1());
         Hibernate.initialize(m.getCartasJ2());
@@ -107,6 +110,11 @@ public class ServicioManoImpl2 implements ServicioMano {
         this.cartasJ1 = m.getCartasJ1();
         this.cartasJ2 = m.getCartasJ2();
         return m;
+    }
+
+    @Override
+    public void guardar(Mano mano) {
+        this.repositorioMano.guardar(mano);
     }
 
     public void sacarCartaDeJugador(Jugador j, Carta c, Mano m) {
@@ -313,10 +321,7 @@ public class ServicioManoImpl2 implements ServicioMano {
             }
         }
 
-        if (mano.getEstaTerminada()) {
-
-        }
-
+        System.out.println(truco);
         entityManager.merge(mano);
         this.repositorioTruco.guardarPartida(truco);
     }

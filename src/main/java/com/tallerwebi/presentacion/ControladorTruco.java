@@ -96,7 +96,7 @@ public class ControladorTruco {
         Partida truco = this.servicioTruco.empezar(jugador1, jugador2);
 
         // Empezamos mano
-        Mano m = servicioMano2.empezar(truco, jugador1, jugador2);
+        servicioMano2.empezar(truco, jugador1, jugador2);
 
         // Guardar IDs en la sesión
         session.setAttribute("idPartida", truco.getId());
@@ -138,7 +138,13 @@ public class ControladorTruco {
         Long idPartida = (Long) session.getAttribute("idPartida");
 
         Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
+        Mano ultimaMano = servicioMano2.obtenerManoPorId(idPartida);
+        ultimaMano.setConfirmacionTerminada(true);
+        servicioMano2.guardar(ultimaMano);
         servicioMano2.reset(truco);
+
+        System.out.println("El truco que encontré al cambiar de mano");
+        System.out.println(truco);
 
         // Guardar IDs en la sesión
         session.setAttribute("idPartida", truco.getId());

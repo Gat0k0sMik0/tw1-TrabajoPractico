@@ -3,6 +3,8 @@ package com.tallerwebi.dominio;
 public interface ServicioMano {
     Mano empezar(Partida truco, Jugador j1, Jugador j2 );
 
+    void guardar(Mano mano);
+
     Ronda tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador);
 
     Mano reset(Partida truco);

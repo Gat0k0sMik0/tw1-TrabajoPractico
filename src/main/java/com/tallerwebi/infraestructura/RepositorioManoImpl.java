@@ -27,6 +27,8 @@ public class RepositorioManoImpl implements RepositorioMano {
     @Transactional
     @Override
     public void guardar(Mano mano) {
+        System.out.println("Guardando Mano");
+        System.out.println(mano);
         sessionFactory.getCurrentSession().saveOrUpdate(mano);
     }
 
@@ -36,8 +38,8 @@ public class RepositorioManoImpl implements RepositorioMano {
         System.out.println("Buscando mano con partida ID: " + idPartida);
         return (Mano) sessionFactory.getCurrentSession()
                 .createCriteria(Mano.class)
-                .add(Restrictions.eq("estaTerminada", false))
-                .add(Restrictions.eq("truco2.id", idPartida))
+                .add(Restrictions.eq("confirmacionTerminada", false))
+                .add(Restrictions.eq("partida.id", idPartida))
                 .addOrder(Order.desc("id"))
                 .setMaxResults(1)
                 .uniqueResult();
