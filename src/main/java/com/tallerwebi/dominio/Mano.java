@@ -15,6 +15,7 @@ public class Mano {
     private Partida partida;  // Relación con Partida (muchos a uno)
 
     private Boolean estaTerminada;
+    private Boolean confirmacionTerminada;
     private Integer movimientos = 0;
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
@@ -58,6 +59,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Boolean getConfirmacionTerminada() {
+        return confirmacionTerminada;
+    }
+
+    public void setConfirmacionTerminada(Boolean confirmacionTerminada) {
+        this.confirmacionTerminada = confirmacionTerminada;
     }
 
     public Integer getPuntosRondaJ1() {
