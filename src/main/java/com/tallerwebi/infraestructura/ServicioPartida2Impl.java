@@ -43,6 +43,8 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         truco.setPuntosJ2(0);
 
         // Guardar partida en la base de datos
+        this.repositorioTruco.guardarJugador(j1);
+        this.repositorioTruco.guardarJugador(j2);
         this.repositorioTruco.guardarPartida(truco);
 
         return truco;
