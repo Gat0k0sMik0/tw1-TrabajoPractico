@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.TrucoException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,19 +58,17 @@ public class ServicioManoImpl2 implements ServicioMano2 {
         this.puntosEnJuegoMano = 0;
     }
 
-    @Transactional
     @Override
     public Mano empezar(Truco2 t, Jugador j1, Jugador j2) {
         Mano m = new Mano();
         m.setEstaTerminada(false);
         m.setPartida(t);
-//        m.setCartasJ1(new ArrayList<>());
-//        m.setCartasJ2(new ArrayList<>());
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
 //        m.setCartasTiradasJ1(new ArrayList<>());
 //        m.setCartasTiradasJ2(new ArrayList<>());
         this.asignarCartasJugadores(j1, j2, m);
         repositorioMano.guardar(m);
-        System.out.println(m);
         return m;
     }
 
@@ -78,6 +77,8 @@ public class ServicioManoImpl2 implements ServicioMano2 {
     @Override
     public Mano obtenerManoPorId(Long id) {
         Mano m = repositorioMano.obtenerManoPorId(id);
+        Hibernate.initialize(m.getCartasJ1());
+        Hibernate.initialize(m.getCartasJ2());
         this.cartasJ1 = m.getCartasJ1();
         this.cartasJ2 = m.getCartasJ2();
         return m;

@@ -54,13 +54,10 @@ public class ControladorTruco {
 
             //model.put("responde", servicioMano2.saberQuienResponde(j1, j2)); // TODO: terminar
             model.put("cartasJugador1", mano.getCartasJ1());
-            model.put("cartasJugador2", mano.getCartasJ1());
+            model.put("cartasJugador2", mano.getCartasJ2());
 
             model.put("jugador1", partida.getJ1());
             model.put("jugador2", partida.getJ2());
-
-            System.out.println(partida.getJ1());
-            System.out.println(partida.getJ2());
 
 //            model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
 //            model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
@@ -104,8 +101,6 @@ public class ControladorTruco {
 
         // Empezamos mano
         Mano m = servicioMano2.empezar(truco, jugador1, jugador2);
-        System.out.println(m);
-        System.out.println(truco);
 
         // Guardar IDs en la sesión
         sesion.setAttribute("idPartida", truco.getId());

@@ -1,5 +1,8 @@
 package com.tallerwebi.dominio;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -18,9 +21,18 @@ public class Mano {
     private Integer movimientos = 0;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinTable(name = "mano_cartas_j1",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+    // Clave foránea en la tabla `Carta`
     private List<Carta> cartasJ1;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "mano_cartas_j2",
+            joinColumns = @JoinColumn(name = "mano_id"),
+            inverseJoinColumns = @JoinColumn(name = "carta_id"))
+// Clave foránea en la tabla `Carta`
     private List<Carta> cartasJ2;
 
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -32,7 +44,6 @@ public class Mano {
     public Mano() {
 
     }
-
 
 
 //    public List<Carta> getCartasTiradasJ1() {
@@ -117,14 +128,7 @@ public class Mano {
 
     @Override
     public String toString() {
-        return "Mano2{" +
-                "id=" + id +
-                ", partida=" + partida +
-                ", estaTerminada=" + estaTerminada +
-                ", movimientos=" + movimientos +
-                ", cartasJ1=" + cartasJ1 +
-                ", cartasJ2=" + cartasJ2 +
-                '}';
+        return "Mano2{" + "id=" + id + ", partida=" + partida + ", estaTerminada=" + estaTerminada + ", movimientos=" + movimientos + ", cartasJ1=" + cartasJ1 + ", cartasJ2=" + cartasJ2 + '}';
     }
 }
 

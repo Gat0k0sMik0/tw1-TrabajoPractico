@@ -45,18 +45,10 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     @Override
     public Truco2 obtenerPartidaPorId(Long id) {
         Truco2 partida = this.repositorioTruco.buscarPartidaPorId(id);
-        Jugador j1 = this.repositorioTruco.obtenerJugadorPorID(partida.getJ1().getId());
-        Jugador j2 = this.repositorioTruco.obtenerJugadorPorID(partida.getJ2().getId());
-
         this.j1 = partida.getJ1();
         this.j2 = partida.getJ2();
         this.puntosJ1 = partida.getPuntosJ1();
         this.puntosJ2 = partida.getPuntosJ2();
-//        this.cartasJ1.addAll(cartasJ1);
-//        this.cartasJ2.addAll(cartasJ2);
-//        this.j1.setCartas(j1.getCartas());
-//        this.j2.setCartas(j2.getCartas());
-
         return partida;
     }
 
@@ -71,15 +63,11 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         truco.setPuntosJ1(0);
         truco.setPuntosJ2(0);
 
-        j1.getPartidasComoJ1().add(truco);
-        j2.getPartidasComoJ2().add(truco);
-
         // Guardar partida en la base de datos
         this.repositorioTruco.guardarJugador(j1);
         this.repositorioTruco.guardarJugador(j2);
         this.repositorioTruco.guardarPartida(truco);
 
-        System.out.println(truco);
         return truco;
     }
 

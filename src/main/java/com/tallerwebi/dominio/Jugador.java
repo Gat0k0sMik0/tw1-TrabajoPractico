@@ -1,8 +1,6 @@
 package com.tallerwebi.dominio;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Jugador {
@@ -16,30 +14,8 @@ public class Jugador {
     private Integer puntosPartida = 0;
     private Integer numero;
 
-    @OneToMany(mappedBy = "j1", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Truco2> partidasComoJ1 = new ArrayList<>();
-
-    @OneToMany(mappedBy = "j2", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Truco2> partidasComoJ2 = new ArrayList<>();
-
     public Jugador() {
 
-    }
-
-    public List<Truco2> getPartidasComoJ1() {
-        return partidasComoJ1;
-    }
-
-    public void setPartidasComoJ1(List<Truco2> partidasComoJ1) {
-        this.partidasComoJ1 = partidasComoJ1;
-    }
-
-    public List<Truco2> getPartidasComoJ2() {
-        return partidasComoJ2;
-    }
-
-    public void setPartidasComoJ2(List<Truco2> partidasComoJ2) {
-        this.partidasComoJ2 = partidasComoJ2;
     }
 
     public Long getId() {
