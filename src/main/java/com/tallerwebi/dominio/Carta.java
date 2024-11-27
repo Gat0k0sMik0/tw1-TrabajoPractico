@@ -4,14 +4,10 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Carta {
+public class Carta implements Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "jugador_id")  // Se asocia con la tabla Jugador
-    private Jugador jugador;  // Relación muchos a uno con Jugador
 
     private Integer valor;
     private Integer numero;
@@ -23,13 +19,6 @@ public class Carta {
 
     }
 
-    public Jugador getJugador() {
-        return jugador;
-    }
-
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
-    }
 
     @Override
     public String toString() {
@@ -124,5 +113,16 @@ public class Carta {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    @Override
+    public Carta clone() {
+        try {
+            Carta clone = (Carta) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

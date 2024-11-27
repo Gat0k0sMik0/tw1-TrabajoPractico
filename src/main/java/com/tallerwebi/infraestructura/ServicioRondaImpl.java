@@ -5,7 +5,6 @@ import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     }
 
     @Override
-    public Ronda empezar(Mano2 mano) {
+    public Ronda empezar(Mano mano) {
         Ronda r = new Ronda();
         r.setNroRonda(0);
         r.setMano(mano);
@@ -46,12 +45,12 @@ public class ServicioRondaImpl implements ServicioRonda2 {
     }
 
     @Override
-    public void registrarRonda(Mano2 mano, Ronda ronda) {
+    public void registrarRonda(Mano mano, Ronda ronda) {
         if (ronda == null) {
             throw new TrucoException("La ronda que me llegó es nula");
         }
         // ronda (nro, jug, valor_carta, nro_carta, palo_carta)
-        Mano2 manoParaAgregarleRonda = this.repositorioMano.obtenerManoPorId(mano.getId());
+        Mano manoParaAgregarleRonda = this.repositorioMano.obtenerManoPorId(mano.getId());
         if (manoParaAgregarleRonda != null) {
             ronda.setNroRonda(this.contadorNroRonda);
             ronda.setMano(manoParaAgregarleRonda);

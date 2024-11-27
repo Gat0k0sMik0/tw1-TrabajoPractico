@@ -31,7 +31,7 @@ public class RepositorioManoTest {
     @Transactional
     @Rollback
     public void queSeGuardeUnaMano() {
-        Mano2 m = new Mano2();
+        Mano m = new Mano();
         sessionFactory.getCurrentSession().save(m);
         assertThat(m.getId(), notNullValue());
     }
