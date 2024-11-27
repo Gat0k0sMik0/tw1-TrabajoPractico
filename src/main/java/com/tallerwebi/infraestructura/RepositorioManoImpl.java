@@ -34,6 +34,12 @@ public class RepositorioManoImpl implements RepositorioMano {
 
     @Transactional
     @Override
+    public void merge(Mano mano) {
+        entityManager.merge(mano);
+    }
+
+    @Transactional
+    @Override
     public Mano obtenerUltimaMano(Long idPartida) {
         System.out.println("Buscando mano con partida ID: " + idPartida);
         return (Mano) sessionFactory.getCurrentSession()

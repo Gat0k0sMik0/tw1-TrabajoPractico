@@ -22,6 +22,8 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Transactional
     @Override
     public void guardarPartida(Partida truco) {
+        System.out.println("Guardando partida. PTSJ1: " + truco.getPuntosJ1());
+        System.out.println("Guardando partida. PTSJ2: " + truco.getPuntosJ2());
         sessionFactory.getCurrentSession().save(truco);
     }
 

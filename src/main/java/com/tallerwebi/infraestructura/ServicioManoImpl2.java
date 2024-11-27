@@ -5,9 +5,6 @@ import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -19,8 +16,6 @@ public class ServicioManoImpl2 implements ServicioMano {
     RepositorioRonda2 repositorioRonda;
     RepositorioTruco repositorioTruco;
     RepositorioCarta repositorioCarta;
-    @PersistenceContext
-    EntityManager entityManager;
 
     private Integer puntosEnJuegoEnvido;
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
@@ -67,6 +62,7 @@ public class ServicioManoImpl2 implements ServicioMano {
         m.setCartasJ2(new ArrayList<>());
         m.setCartasTiradasJ1(new ArrayList<>());
         m.setCartasTiradasJ2(new ArrayList<>());
+        m.setGanador(null);
         this.asignarCartasJugadores(j1, j2, m);
         repositorioMano.guardar(m);
         return m;
@@ -91,6 +87,7 @@ public class ServicioManoImpl2 implements ServicioMano {
         nueva.setCartasJ2(new ArrayList<>());
         nueva.setCartasTiradasJ1(new ArrayList<>());
         nueva.setCartasTiradasJ2(new ArrayList<>());
+        nueva.setGanador(null);
 
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
 
@@ -312,27 +309,30 @@ public class ServicioManoImpl2 implements ServicioMano {
         if (truco.getJ1() == null) throw new TrucoException("El jugador 1 es nulo.");
         if (truco.getJ2() == null) throw new TrucoException("El jugador 2 es nulo.");
 
-        Jugador ganador = obtenerGanadorDeRonda(mano, truco.getJ1(), truco.getJ2());
-        if (ganador != null) {
-            if (ganador.getNombre().equals(truco.getJ1().getNombre())) {
+        obtenerGanadorDeRonda(mano, truco.getJ1(), truco.getJ2());
+
+        if (mano.getEstaTerminada()) {
+            if (mano.getPuntosRondaJ1() > mano.getPuntosRondaJ2()) {
                 truco.setPuntosJ1(truco.getPuntosJ1() + 1);
+                mano.setGanador(truco.getJ1());
             } else {
+                mano.setGanador(truco.getJ2());
                 truco.setPuntosJ2(truco.getPuntosJ2() + 1);
             }
         }
 
-        System.out.println(truco);
-        entityManager.merge(mano);
+        this.repositorioMano.merge(mano);
         this.repositorioTruco.guardarPartida(truco);
     }
 
-    private Jugador obtenerGanadorDeRonda(Mano mano, Jugador jugador1, Jugador jugador2) {
+    private void obtenerGanadorDeRonda(Mano mano, Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
         if (mano.getCartasTiradasJ1().size() == mano.getCartasTiradasJ2().size()) {
 
             // Verificar que las listas no estén vacías y que los índices sean válidos
             if (mano.getCartasJ1().isEmpty() || mano.getCartasJ2().isEmpty()) {
                 mano.setEstaTerminada(true);
+                System.out.println("Cambie la mano a terminada porque ya no tienen cartas");
             }
 
             // Conseguimos las últimas tiradas.
@@ -343,14 +343,13 @@ public class ServicioManoImpl2 implements ServicioMano {
             if (cartaJ1.getValor() > cartaJ2.getValor()) {
                 mano.setPuntosRondaJ1(mano.getPuntosRondaJ1() + 1);
                 this.leTocaTirar = jugador1;
-                return jugador1;
             } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
                 mano.setPuntosRondaJ2(mano.getPuntosRondaJ2() + 1);
                 this.leTocaTirar = jugador2;
-                return jugador2;
+            } else {
+                System.out.println("obtenerGanadorDeRonda: NO SUME A NADIE");
             }
         }
-        return null;
     }
 
     private void preguntarEnvido(String accionEncontrada, Jugador ejecutor) {

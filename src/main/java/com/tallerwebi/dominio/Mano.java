@@ -20,6 +20,9 @@ public class Mano {
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
 
+    @ManyToOne
+    private Jugador ganador;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
@@ -59,6 +62,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Jugador getGanador() {
+        return ganador;
+    }
+
+    public void setGanador(Jugador ganador) {
+        this.ganador = ganador;
     }
 
     public Boolean getConfirmacionTerminada() {
@@ -168,7 +179,20 @@ public class Mano {
 
     @Override
     public String toString() {
-        return "Mano2{" + "id=" + id + ", partida=" + partida + ", estaTerminada=" + estaTerminada + ", movimientos=" + movimientos + ", cartasJ1=" + cartasJ1 + ", cartasJ2=" + cartasJ2 + '}';
+        return "Mano{" +
+                "id=" + id +
+                ", partida=" + partida +
+                ", estaTerminada=" + estaTerminada +
+                ", confirmacionTerminada=" + confirmacionTerminada +
+                ", movimientos=" + movimientos +
+                ", puntosRondaJ1=" + puntosRondaJ1 +
+                ", puntosRondaJ2=" + puntosRondaJ2 +
+                ", ganador=" + ganador +
+                ", cartasJ1=" + cartasJ1.size() +
+                ", cartasJ2=" + cartasJ2.size() +
+                ", cartasTiradasJ1=" + cartasTiradasJ1.size() +
+                ", cartasTiradasJ2=" + cartasTiradasJ2.size() +
+                '}';
     }
 }
 

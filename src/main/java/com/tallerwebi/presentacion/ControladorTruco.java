@@ -40,6 +40,8 @@ public class ControladorTruco {
             Mano mano = servicioMano2.obtenerManoPorId(partidaId);
 
             System.out.println("Estado de la ronda: " + (mano.getEstaTerminada() ? "terminada" : "en curso"));
+            System.out.println("TRUCO QUE TENGO");
+            System.out.println(partida);
 
             model.put("seTermino", mano.getEstaTerminada());
 
@@ -142,9 +144,6 @@ public class ControladorTruco {
         ultimaMano.setConfirmacionTerminada(true);
         servicioMano2.guardar(ultimaMano);
         servicioMano2.reset(truco);
-
-        System.out.println("El truco que encontré al cambiar de mano");
-        System.out.println(truco);
 
         // Guardar IDs en la sesión
         session.setAttribute("idPartida", truco.getId());
