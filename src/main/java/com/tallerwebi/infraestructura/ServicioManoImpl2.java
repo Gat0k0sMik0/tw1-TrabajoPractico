@@ -312,17 +312,24 @@ public class ServicioManoImpl2 implements ServicioMano {
         obtenerGanadorDeRonda(mano, truco.getJ1(), truco.getJ2());
 
         if (mano.getEstaTerminada()) {
+            System.out.println("Mano terminada: resultados ->");
+            System.out.println("PuntosRondaJ1: " + mano.getPuntosRondaJ1());
+            System.out.println("PuntosRondaJ2: " + mano.getPuntosRondaJ2());
             if (mano.getPuntosRondaJ1() > mano.getPuntosRondaJ2()) {
                 truco.setPuntosJ1(truco.getPuntosJ1() + 1);
                 mano.setGanador(truco.getJ1());
+                System.out.println("J1 GANASTE AMIGO!");
             } else {
                 mano.setGanador(truco.getJ2());
                 truco.setPuntosJ2(truco.getPuntosJ2() + 1);
+                System.out.println("J2 GANASTE AMIGO!");
             }
         }
 
+        System.out.println(truco);
+
+        this.repositorioTruco.merge(truco);
         this.repositorioMano.merge(mano);
-        this.repositorioTruco.guardarPartida(truco);
     }
 
     private void obtenerGanadorDeRonda(Mano mano, Jugador jugador1, Jugador jugador2) {

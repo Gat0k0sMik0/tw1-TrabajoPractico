@@ -7,6 +7,9 @@ public interface RepositorioTruco {
     void guardarPartida(Partida truco);
 
     @Transactional
+    void merge(Partida truco);
+
+    @Transactional
     Partida buscarPartidaPorId (Long id);
 
     @Transactional
