@@ -7,12 +7,17 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 @Repository
 public class RepositorioTrucoImpl implements RepositorioTruco {
 
     private SessionFactory sessionFactory;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     public RepositorioTrucoImpl(SessionFactory sessionFactory) {
@@ -23,6 +28,12 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Override
     public void guardarPartida(Partida truco) {
         sessionFactory.getCurrentSession().save(truco);
+    }
+
+    @Transactional
+    @Override
+    public void merge(Partida truco) {
+        entityManager.merge(truco);
     }
 
     @Transactional

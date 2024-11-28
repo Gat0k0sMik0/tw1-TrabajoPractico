@@ -22,7 +22,7 @@ public class ServicioRondaTest {
     RepositorioRonda2 repositorioRonda2 = mock(RepositorioRondaImpl.class);
     RepositorioMano repositorioMano = mock(RepositorioManoImpl.class);
 
-    ServicioRonda2 servicioRonda = new ServicioRondaImpl(repositorioRonda2, repositorioMano);
+    ServicioRonda servicioRonda = new ServicioRondaImpl(repositorioRonda2, repositorioMano);
 
     Jugador j1 = new Jugador();
     Jugador j2 = new Jugador();
