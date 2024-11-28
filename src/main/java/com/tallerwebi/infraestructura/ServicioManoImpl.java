@@ -404,6 +404,7 @@ public class ServicioManoImpl implements ServicioMano {
         String accionQueResponde = saberAccion(accion);
         String respuestaDeLaAccion = saberAccion(respuesta);
         Jugador respondeAhora;
+        System.out.println("Ejecuta " + ejecutor.getNombre() + " y dice " + respuesta + " a la accion de " + accionQueResponde + " que preguntó " + receptor.getNombre());
         if (esTruco(accionQueResponde)) {
             respondeAhora = manejarRespuestaTruco(truco, mano, respuestaDeLaAccion, ejecutor, receptor);
         } else if (esEnvido(accionQueResponde)) {
@@ -412,6 +413,7 @@ public class ServicioManoImpl implements ServicioMano {
             throw new TrucoException("Responder: ocurrió un error");
         }
         mano.setRespondeAhora(respondeAhora);
+        this.repositorioTruco.merge(truco);
         this.repositorioMano.merge(mano);
         return respondeAhora;
     }

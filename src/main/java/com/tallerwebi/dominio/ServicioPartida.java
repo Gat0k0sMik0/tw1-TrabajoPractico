@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio;
 
 public interface ServicioPartida {
-    // TODO: despues cambiar
 
     Partida obtenerPartidaPorId(Long id);
 
