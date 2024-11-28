@@ -99,13 +99,10 @@ public class ServicioManoImpl implements ServicioMano {
     public Mano obtenerManoPorId(Long idPartida) {
         Mano m = repositorioMano.obtenerUltimaMano(idPartida);
         if (m == null) return null;
-
         Hibernate.initialize(m.getCartasJ1());
         Hibernate.initialize(m.getCartasJ2());
         Hibernate.initialize(m.getCartasTiradasJ1());
         Hibernate.initialize(m.getCartasTiradasJ2());
-        this.cartasJ1 = m.getCartasJ1();
-        this.cartasJ2 = m.getCartasJ2();
         return m;
     }
 

@@ -58,18 +58,21 @@ public class ControladorTruco {
             model.put("puntosJ1", partida.getPuntosJ1());
             model.put("puntosJ2", partida.getPuntosJ2());
 
-            model.put("mostrarRespuestasEnvidoJ1", false);
-            model.put("mostrarRespuestasEnvidoJ2", false);
-            model.put("mostrarRespuestasTrucoJ1", false);
-            model.put("mostrarRespuestasTrucoJ2", false);
-            model.put("mostrarRespuestasJ1", true);
-            model.put("mostrarRespuestasJ2", true);
+            System.out.println("Responde ahora: " + mano.getRespondeAhora());
+
+            model.put("mostrarRespuestasEnvidoJ1", mano.getRespondeAhora() != null);
+            model.put("mostrarRespuestasEnvidoJ2", mano.getRespondeAhora() != null);
+            model.put("mostrarRespuestasTrucoJ1", mano.getRespondeAhora() != null);
+            model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora() != null);
+            model.put("mostrarRespuestasJ1", mano.getRespondeAhora() == null);
+            model.put("mostrarRespuestasJ2", mano.getRespondeAhora() == null);
 
             model.put("puntosParaGanar", partida.getPuntosParaGanar());
             model.put("mano", mano);
             model.put("ronda", ronda);
             model.put("partida", partida);
             model.put("partidaIniciada", true);
+            model.put("accionAResponder", session.getAttribute("accionAResponder"));
 
             model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
             model.put("leTocaResponder", mano.getRespondeAhora());
@@ -152,19 +155,17 @@ public class ControladorTruco {
 
     @GetMapping(path = "/accion")
     public ModelAndView accion(
-            @RequestParam("mano") String manoId,
-            @RequestParam("ronda") String rondaNro,
             @RequestParam("accion") String accionValue,
             @RequestParam("jugador") String nroJugador,
             HttpSession session
     ) {
-
-        Long idPartida = (Long)session.getAttribute("idPartida");
-        ModelMap model = new ModelMap();
+        Long idPartida = (Long) session.getAttribute("idPartida");
+        session.setAttribute("accionAResponder", accionValue);
 
         // Obtener partida y mano
-        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
-        Mano mano = servicioMano.obtenerManoPorId(Long.getLong(manoId));
+        Mano mano = servicioMano.obtenerManoPorId(idPartida);
+
+        System.out.println(mano);
 
         // Saber quien reponde -> null si se va al mazo
         Jugador respondeAhora = servicioMano.preguntar(mano, accionValue, Integer.parseInt(nroJugador));
@@ -181,18 +182,14 @@ public class ControladorTruco {
     @GetMapping(path = "/respuesta")
     public ModelAndView responder(
             @RequestParam("accion") String accionAlCualResponde,
-            @RequestParam("mano") String idMano,
-            @RequestParam("ronda") String idRonda,
             @RequestParam("respuesta") String nroRespuesta,
             @RequestParam("jugador") String nroJugador,
             HttpSession session
+
     ) {
-        Jugador j1 = (Jugador) session.getAttribute("jugador1");
-        Jugador j2 = (Jugador) session.getAttribute("jugador2");
 
-        Long idPartida = (Long)session.getAttribute("idPartida");
+        Long idPartida = (Long) session.getAttribute("idPartida");
 
-        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano mano = servicioMano.obtenerManoPorId(idPartida);
 
         // Retorna jugador que le toca responder si es que responde algo que no sea quiero/no quiero. Si es así, da null;

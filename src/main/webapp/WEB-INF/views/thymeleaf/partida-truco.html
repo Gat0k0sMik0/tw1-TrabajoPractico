@@ -35,54 +35,38 @@
             <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
-                <div class="d-flex gap-1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 1}">
+                <div class="d-flex gap-1" th:if="${mostrarRespuestasJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=5&jugador=1'}">Envido
+                       th:href="@{/accion(mano=${mano.getId()}, accion=5, jugador=1)}">Envido
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=2&jugador=1'}">Truco
+                       th:href="@{/accion(mano=${mano.getId()}, accion=2, jugador=1)}">Truco
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=8&jugador=1'}">FLOR
+                       th:href="@{/accion(mano=${mano.getId()}, accion=8, jugador=1)}">FLOR
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=9&jugador=1'}">MAZO
+                       th:href="@{/accion(mano=${mano.getId()}, accion=9, jugador=1)}">MAZO
                     </a>
                 </div>
                 <!-- RESPUESTAS TRUCO -->
-                <div id="respuestas1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 1}">
+                <div id="respuestas1" th:if="${mostrarRespuestasEnvidoJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
                     <!-- NUEVA LÓGICA -->
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=1&jugador=1'}">Quiero
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=1, jugador=1, accion=${accionAResponder})}">Quiero
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=0&jugador=1'}">No Quiero
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=0, jugador=1, accion=${accionAResponder})}">No Quiero
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=6&jugador=1'}">Re Truco
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=6, jugador=1, accion=${accionAResponder})}">Re Truco
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=7&jugador=1'}">Vale Cuatro
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=7, jugador=1, accion=${accionAResponder})}">Vale Cuatro
                     </a>
                 </div>
                 <!-- RESPUESTAS ENVIDO -->
-                <div id="respuestas" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 1}">
+                <div id="respuestas" th:if="${mostrarRespuestasTrucoJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
                     <a class="btn btn-primary"
                        th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
@@ -159,26 +143,22 @@
             <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
-                <div class="d-flex gap-1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 2}">
+                <div class="d-flex gap-1" th:if="${mostrarRespuestasJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=5&jugador=2'}">Envido
+                       th:href="@{/accion(mano=${mano.getId()}, accion=5, jugador=2)}">Envido
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=2&jugador=2'}">Truco
+                       th:href="@{/accion(mano=${mano.getId()}, accion=2, jugador=2)}">Truco
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=8&jugador=2'}">FLOR
+                       th:href="@{/accion(mano=${mano.getId()}, accion=8, jugador=2)}">FLOR
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
-                                  + '&accion=9&jugador=2'}">MAZO
+                       th:href="@{/accion(mano=${mano.getId()}, accion=9, jugador=2)}">MAZO
                     </a>
                 </div>
                 <!-- RESPUESTA ENVIDO -->
-                <div th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 2}">
+                <div th:if="${mostrarRespuestasEnvidoJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
                     <a class="btn btn-primary"
                        th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
@@ -205,31 +185,20 @@
                     </a>
                     <!-- FIN NUEVA LÓGICA -->
                 </div>
-                <!-- RESPUESTA TRUCO -->
-                <div id="respuesta1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 2}">
+                <!-- RESPUESTAS TRUCO -->
+                <div id="respuesta1" th:if="${mostrarRespuestasEnvidoJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
+                    <!-- NUEVA LÓGICA -->
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=1&jugador=2'}">Quiero
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=1, jugador=2, accion=${accionAResponder})}">Quiero
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=0&jugador=2'}">No Quiero
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=0, jugador=2, accion=${accionAResponder})}">No Quiero
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=6&jugador=2'}">Re Truco
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=6, jugador=2, accion=${accionAResponder})}">Re Truco
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{'/respuesta?accion=' + accion.getNro()
-                                  + '&mano=' + mano.getId()
-                                  + '&ronda= ' + ronda.getNro()
-                                  + '&respuesta=7&jugador=2'}">Vale Cuatro
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=7, jugador=2, accion=${accionAResponder})}">Vale Cuatro
                     </a>
                 </div>
             </div>
