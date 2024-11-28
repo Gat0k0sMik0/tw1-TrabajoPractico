@@ -19,6 +19,7 @@ public class ServicioManoImpl2 implements ServicioMano {
 
     private Integer puntosEnJuegoEnvido;
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
+    private Integer puntosEnJuegoFlor;
     private Integer puntosEnJuegoMano;
 
     Jugador diceEnvidoJ1;
@@ -26,9 +27,15 @@ public class ServicioManoImpl2 implements ServicioMano {
     Jugador diceRealEnvido;
     Jugador diceFaltaEnvido;
     Jugador leTocaTirar;
+    Jugador diceFlorJ1;
+    Jugador diceFlorJ2;
+    Jugador diceContraflor;
+    Jugador diceContraflorAlResto;
+
 
     private List<Carta> cartasJ1;
     private List<Carta> cartasJ2;
+
 
     @Autowired
     public ServicioManoImpl2(
@@ -48,6 +55,7 @@ public class ServicioManoImpl2 implements ServicioMano {
         this.diceFaltaEnvido = null;
         this.leTocaTirar = null;
         this.puntosEnJuegoEnvido = 0;
+        this.puntosEnJuegoFlor = 0;
         this.indicadorTruco = 0;
         this.puntosEnJuegoMano = 0;
     }
@@ -279,8 +287,12 @@ public class ServicioManoImpl2 implements ServicioMano {
             preguntarEnvido(accionRealizada, ejecutor);
             return receptor;
         } else if (esFlor(accionRealizada)) {
-            // TODO: calcular flor
-            return null;
+            if(tieneFlor(ejecutor, mano) && !tieneFlor(receptor, mano)){
+                this.puntosEnJuegoFlor = 3;
+                return receptor;
+            }
+            preguntarFlor(accionRealizada, ejecutor);
+            return receptor;
         } else if (accionRealizada.equals("MAZO")) {
             List<Ronda> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(mano.getId());
             Integer puntosEnJuego = 1;
@@ -302,6 +314,27 @@ public class ServicioManoImpl2 implements ServicioMano {
 
         // TODO: si la ronda no es la primera, no puede cantar envido
     }
+
+    private boolean tieneFlor(Jugador jugador, Mano mano) {
+        if (jugador.getNumero().equals(1)) {
+            List<Carta> cartas = mano.getCartasJ1();
+            if (cartas.get(0).getPalo().equals(cartas.get(1).getPalo()) &&
+                    cartas.get(1).getPalo().equals(cartas.get(2).getPalo())){
+                return true;
+            }
+        }
+
+        if (jugador.getNumero().equals(2)) {
+            List<Carta> cartas = mano.getCartasJ2();
+            if (cartas.get(0).getPalo().equals(cartas.get(1).getPalo()) &&
+                    cartas.get(1).getPalo().equals(cartas.get(2).getPalo())){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     @Override
     public void determinarGanadorRonda(Partida truco, Mano mano) {
@@ -382,6 +415,28 @@ public class ServicioManoImpl2 implements ServicioMano {
         }
     }
 
+    private void preguntarFlor(String accionRealizada, Jugador ejecutor) {
+        switch (accionRealizada) {
+            case "FLOR":
+                if (ejecutor.getNumero().equals(1)) {
+                    this.diceFlorJ1 = ejecutor;
+                } else {
+                    this.diceFlorJ2 = ejecutor;
+                }
+                puntosEnJuegoFlor += 3;
+                break;
+            case "CONTRAFLOR":
+                diceContraflor = ejecutor;
+                puntosEnJuegoEnvido += 6;
+                break;
+            case "CONTRAFLOR AL RESTO":
+                diceContraflorAlResto = ejecutor;
+                //TODO: Jugador que gana, gana la partida
+                break;
+            default:
+                throw new TrucoException("Preguntar flor: ocurrió un error.");
+        }
+    }
     @Override
     public Jugador responder(Partida truco, String accion, String respuesta, Jugador ejecutor, Jugador receptor) {
         String accionQueResponde = saberAccion(accion);
@@ -391,10 +446,90 @@ public class ServicioManoImpl2 implements ServicioMano {
             respondeAhora = manejarRespuestaTruco(truco, respuestaDeLaAccion, ejecutor, receptor);
         } else if (esEnvido(accionQueResponde)) {
             respondeAhora = manejarRespuestaEnvido(truco, respuestaDeLaAccion, ejecutor, receptor);
-        } else {
+        } else if (esFlor(accionQueResponde)) {
+            respondeAhora = manejarRespuestaFlor(truco, respuestaDeLaAccion, ejecutor, receptor);
+        }else {
             throw new TrucoException("Responder: ocurrió un error");
         }
         return respondeAhora;
+    }
+
+    private Jugador manejarRespuestaFlor(Partida truco, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor) {
+        // Saber quien es el j1 y j2
+        Jugador j1 = ejecutor.getNumero().equals(1) ? ejecutor : receptor;
+        Jugador j2 = receptor.getNumero().equals(2) ? receptor : ejecutor;
+
+        if (respuestaDeLaAccion.equals("CONTRAFLOR") || respuestaDeLaAccion.equals("CONTRAFLOR AL RESTO")) {
+            // RESPUESTAS DIRECTAS
+            if (respuestaDeLaAccion.equals("CONTRAFLOR")) {
+                // CALCULAMOS TANTOS
+                Integer tantosJ1 = this.calcularTantosFlor(j1);
+                Integer tantosJ2 = this.calcularTantosFlor(j2);
+
+                if (this.diceContraflorAlResto != null) {
+                    // falta envido (anula todos los anteriores)
+                    Integer puntosParaGanar = truco.getPuntosParaGanar();
+                    Integer puntosJ1 = truco.getPuntosJ1();
+                    Integer puntosJ2 = truco.getPuntosJ2();
+                    Integer puntosParaElGanador = 0;
+                    if (tantosJ1 > tantosJ2) {
+                        puntosParaElGanador = puntosParaGanar - puntosJ2;
+                        truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
+                    } else if (tantosJ1 < tantosJ2) {
+                        puntosParaElGanador = puntosParaGanar - puntosJ1;
+                        truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
+                    } else {
+                        System.out.println("TJ1: " + tantosJ1);
+                        System.out.println("TJ2: " + tantosJ2);
+                        System.out.println("Entre donde no debía");
+                        // TODO: manejar solucion cuando tienen los mismos tantos
+                    }
+                    return null;
+                } else {
+                    // envidos
+                    if (tantosJ1 > tantosJ2) {
+                        truco.setPuntosJ1(truco.getPuntosJ2() + this.puntosEnJuegoFlor);
+                    } else if (tantosJ1 < tantosJ2) {
+                        truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoFlor);
+                    } else {
+                        // TODO: manejar solucion cuando tienen los mismos tantos
+                    }
+                    return null;
+                }
+            } else {
+                // NO QUIERE
+                return null;
+            }
+        } else if (respuestaDeLaAccion.equals("CONTRAFLOR AL RESTO")) {
+            if (ejecutor.getNumero().equals(j1.getNumero())) {
+                this.diceContraflorAlResto = ejecutor;
+            } else {
+                this.diceContraflorAlResto = receptor;
+            }
+            return receptor;
+        }  else {
+            throw new TrucoException("ManejarEnvido2: ocurrió un error.");
+        }
+    }
+
+    private Integer calcularTantosFlor(Jugador jugador) {
+        List<Carta> cartasJugador = null;
+        if (jugador.getNumero().equals(1)) {
+            cartasJugador = this.cartasJ1;
+        } else {
+            cartasJugador = this.cartasJ2;
+        }
+
+        Integer tantosIniciales = 20;
+        for (Carta carta : cartasJugador) {
+            if (carta.getNumero() >= 10 && carta.getNumero() <= 12) {
+                tantosIniciales += 0;
+            } else {
+                tantosIniciales += carta.getNumero();
+            }
+        }
+
+        return tantosIniciales;
     }
 
     private Jugador manejarRespuestaEnvido(Partida truco, String respuestaDeLaAccion,
@@ -421,7 +556,7 @@ public class ServicioManoImpl2 implements ServicioMano {
                     Integer puntosParaElGanador = 0;
                     if (tantosJ1 > tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ2;
-                        truco.setPuntosJ1(truco.getPuntosJ2() + puntosParaElGanador);
+                        truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
                     } else if (tantosJ1 < tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ1;
                         truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
