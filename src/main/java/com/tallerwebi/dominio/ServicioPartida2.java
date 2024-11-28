@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import javax.transaction.Transactional;
+
 public interface ServicioPartida2 {
     // TODO: despues cambiar
 
@@ -10,6 +12,9 @@ public interface ServicioPartida2 {
     void reset(Jugador j1, Jugador j2);
 
     void guardarJugador(Jugador jugador1);
+
+    @Transactional
+    Jugador verificarGanador(Partida partida);
 
     ;
 }

@@ -66,6 +66,15 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         repositorioTruco.guardarJugador(jugador);
     }
 
-
+    @Override
+    @Transactional
+    public Jugador verificarGanador(Partida partida) {
+        if (partida.getPuntosJ1() >= partida.getPuntosParaGanar()) {
+            return partida.getJ1();
+        } else if (partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
+            return partida.getJ2();
+        }
+        return null;
+    }
 
 }

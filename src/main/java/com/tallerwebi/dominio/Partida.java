@@ -25,6 +25,7 @@ public class Partida {
     private Integer puntosJ2;
     private Integer puntosParaGanar;
 
+
     public Partida() {
 
     }

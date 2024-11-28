@@ -301,6 +301,10 @@
     <p th:if="${jugador2 != null}" th:text="${jugador2}"></p>
     <p th:if="${partida != null}" th:text="${partida}"></p>
 
+    <div th:if="${seTerminoLaPartida}">
+        <h3>¡El ganador es: <span th:text="${ganador}"></span>!</h3>
+    </div>
+
 </main>
 
 <!-- Footer -->

@@ -75,6 +75,13 @@ public class ControladorTruco {
             model.put("partidaIniciada", true);
 
             model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
+
+            // Verificar si hay un ganador
+            Jugador ganador = servicioTruco.verificarGanador(partida);
+            if (ganador != null) {
+                model.put("ganador", ganador.getNombre()); // Agrega al modelo el nombre del ganador
+                model.put("seTerminoLaPartida", true); // Marca que la partida terminó
+            }
         }
 
         return new ModelAndView("partida-truco", model);
@@ -129,7 +136,7 @@ public class ControladorTruco {
 
         // Para saber quien tira la proxima ronda. Si es null, hay parda
         servicioMano2.determinarGanadorRonda(truco, mano);
-
+        
         return new ModelAndView("redirect:/partida-truco");
     }
 
@@ -147,6 +154,7 @@ public class ControladorTruco {
 
         // Guardar IDs en la sesión
         session.setAttribute("idPartida", truco.getId());
+
 
         return new ModelAndView("redirect:/partida-truco");
     }
