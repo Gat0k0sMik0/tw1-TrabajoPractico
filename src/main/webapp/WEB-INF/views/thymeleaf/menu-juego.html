@@ -33,8 +33,30 @@
 <main class="info-container col-12">
     <div class="col-10 mx-auto menuJuegoWrapper">
         <!-- Imagen de portada del juego -->
-        <img th:src="@{/img/fondo-truco.jpg}" alt="Imagen del juego">
-        <a th:href="@{/partida-truco}"> <button> JUGAR</button> </a>
+        <img th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
+        <div class="botones">
+            <a th:href="@{/crearSala}"><button id="boton-crear">CREAR SALA</button></a>
+            <button id="boton-buscar" onclick="mostrarPanelSalas()">VER SALAS DE ESPERA</button>
+        </div>
+
+        <!-- Panel desplegable -->
+        <div id="panel" class="panel oculto">
+            <h3>Salas de Espera</h3>
+            <ul id="lista-salas">
+                <!-- Mostrar mensaje si no hay salas -->
+                <li th:if="${#lists.isEmpty(salasDeEspera)}">No se encontró ninguna sala.</li>
+
+                <!-- Si hay salas, mostrar lista de salas -->
+                <li th:each="sala : ${salasDeEspera}">
+                    <span th:text="${sala.nombreJugador1}">Jugador 1</span>
+                    <span th:text="${sala.nombreJugador2 != null ? sala.nombreJugador2 : 'Esperando jugador 2'}">Jugador 2</span>
+                    <button th:if="${sala.nombreJugador2 == null}" th:onclick="'unirseSala(' + ${sala.id} + ')'">Unirse</button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Mensaje de carga -->
+        <div id="loading" style="display: none;">Cargando salas...</div>
 
         <!-- Estadísticas del juego -->
         <div class="game-stats">
@@ -138,6 +160,12 @@
     </div>
     <hr class="col-10 mx-auto text-white"/>
     <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
+
+    <script>
+        function mostrarPanelSalas() {
+            document.getElementById("panel").classList.toggle("oculto");
+        }
+    </script>
 </footer>
 </body>
 </html>
