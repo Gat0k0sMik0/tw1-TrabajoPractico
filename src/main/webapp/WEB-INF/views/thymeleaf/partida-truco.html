@@ -131,8 +131,8 @@
 
             <form th:action="@{/comenzar-truco}" method="get">
                 <div class="col-4">
-                    <input type="hidden" name="jugador1" th:value="${sala.nombreJugador1 != null ? sala.nombreJugador1 : ''}" />
-                    <input type="hidden" name="jugador2" th:value="${sala.nombreJugador2 != null ? sala.nombreJugador2 : ''}" />
+                    <input type="hidden" name="jugador1" th:value="${sala != null && sala.nombreJugador1 != null ? sala.nombreJugador1 : ''}" />
+                    <input type="hidden" name="jugador2" th:value="${sala != null && sala.nombreJugador2 != null ? sala.nombreJugador2 : ''}" />
                     <button type="submit" style="background-color: #2c3e50; border: none;">
                         <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas" style="background: transparent;">
                     </button>
@@ -151,9 +151,9 @@
             </div>
             <div class="col-4 d-flex flex-column justify-content-center align-items-center">
                 <p th:if="${jugador1 != null}"
-                   th:text="|${jugador1.nombre}: ${puntosJ1 != null ? puntosJ1 : 0}|"></p>
+                   th:text="|${jugador1}: ${puntosJ1 != null ? puntosJ1 : 0}|"></p>
                 <p th:if="${jugador2 != null}"
-                   th:text="|${jugador2.nombre}: ${puntosJ2 != null ? puntosJ2 : 0}|"></p>
+                   th:text="|${jugador2}: ${puntosJ2 != null ? puntosJ2 : 0}|"></p>
                 <p th:if="${turnoJugador != null}" th:text="'Turno de jugador ' + ${turnoJugador}"></p>
                 <a th:if="${seTermino}"
                    class="btn btn-danger"
