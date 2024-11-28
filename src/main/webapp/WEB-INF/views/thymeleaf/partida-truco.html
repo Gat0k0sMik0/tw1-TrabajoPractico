@@ -35,7 +35,7 @@
             <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
-                <div class="d-flex gap-1" th:if="${mostrarRespuestasJ1}">
+                <div class="d-flex gap-1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 1}">
                     <a class="btn btn-primary"
                        th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
                                   + '&accion=5&jugador=1'}">Envido
@@ -54,7 +54,7 @@
                     </a>
                 </div>
                 <!-- RESPUESTAS TRUCO -->
-                <div id="respuestas1" th:if="${mostrarRespuestasTrucoJ1}">
+                <div id="respuestas1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 1}">
                     <!-- NUEVA LÓGICA -->
                     <a class="btn btn-primary"
                        th:href="@{'/respuesta?accion=' + accion.getNro()
@@ -81,10 +81,8 @@
                                   + '&respuesta=7&jugador=1'}">Vale Cuatro
                     </a>
                 </div>
-
                 <!-- RESPUESTAS ENVIDO -->
-                <div id="respuestas" th:if="${mostrarRespuestasEnvidoJ1}">
-                    <!-- RESPUESTA ENVIDO -->
+                <div id="respuestas" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 1}">
                     <a class="btn btn-primary"
                        th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
@@ -109,7 +107,6 @@
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=4&jugador=1'}">Falta Envido
                     </a>
-                    <!-- FIN NUEVA LÓGICA -->
                 </div>
             </div>
             <!-- CARTAS  -->
@@ -162,88 +159,78 @@
             <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
                  th:if="${partidaIniciada}">
                 <!-- NORMALES -->
-                <div class="d-flex gap-1" th:if="${mostrarRespuestasJ2}">
-                    <!-- BOTONERA -->
-                    <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
-                         th:if="${partidaIniciada}">
-                        <!-- NORMALES -->
-                        <div class="d-flex gap-1" th:if="${mostrarRespuestasJ2}">
-                            <a class="btn btn-primary"
-                               th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                <div class="d-flex gap-1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 2}">
+                    <a class="btn btn-primary"
+                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
                                   + '&accion=5&jugador=2'}">Envido
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
                                   + '&accion=2&jugador=2'}">Truco
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
                                   + '&accion=8&jugador=2'}">FLOR
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/accion?mano=' + mano.getId() + '&ronda= ' + ronda.getId()
                                   + '&accion=9&jugador=2'}">MAZO
-                            </a>
-                        </div>
-                        <!-- RESPUESTA ENVIDO -->
-                        <div th:if="${mostrarRespuestasEnvidoJ2}">
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                </div>
+                <!-- RESPUESTA ENVIDO -->
+                <div th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 2}">
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=1&jugador=2'}">Quiero
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=0&jugador=2'}">No Quiero
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=3&jugador=2'}">Real Envido
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=4&jugador=2'}">Falta Envido
-                            </a>
-                            <!-- FIN NUEVA LÓGICA -->
-                        </div>
-
-                        <!-- RESPUESTA TRUCO -->
-                        <div id="respuesta1" th:if="${mostrarRespuestasTrucoJ2}">
-                            <!-- NUEVA LOGICA -->
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <!-- FIN NUEVA LÓGICA -->
+                </div>
+                <!-- RESPUESTA TRUCO -->
+                <div id="respuesta1" th:if="${leTocaResponder != null && leTocaResponder.getNumero() == 2}">
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=1&jugador=2'}">Quiero
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=0&jugador=2'}">No Quiero
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=6&jugador=2'}">Re Truco
-                            </a>
-                            <a class="btn btn-primary"
-                               th:href="@{'/respuesta?accion=' + accion.getNro()
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{'/respuesta?accion=' + accion.getNro()
                                   + '&mano=' + mano.getId()
                                   + '&ronda= ' + ronda.getNro()
                                   + '&respuesta=7&jugador=2'}">Vale Cuatro
-                            </a>
-                            <!-- FIN NUEVA LÓGICA -->
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <!-- CARTAS -->
@@ -266,31 +253,31 @@
         th:text="${terminada ? 'Listo, se terminó' : 'Continuar jugando.'}"></h3>
     <div class="tabla-datos">
         <!-- Verifica si la lista de rondas no es null ni está vacía -->
-<!--        <div th:if="${rondas != null and !rondas.isEmpty()}">-->
-<!--            <table class="table table-striped table-bordered">-->
-<!--                <thead class="thead-dark">-->
-<!--                <tr>-->
-<!--                    <th>NRO RONDA</th>-->
-<!--                    <th>ID JUGADOR</th>-->
-<!--                    <th>VALOR</th>-->
-<!--                    <th>NRO + PALO</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr th:each="ronda : ${rondas}">-->
-<!--                    <td th:text="${ronda.nroRonda}"></td>-->
-<!--                    <td th:text="${ronda.jugador.nombre}"></td>-->
-<!--                    <td th:text="${ronda.valorCarta}"></td>-->
-<!--                    &lt;!&ndash; Concatenación con Thymeleaf usando |...| &ndash;&gt;-->
-<!--                    <td th:text="|${ronda.nroCarta} ${ronda.palo}|"></td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; Mensaje cuando la lista está vacía o es null &ndash;&gt;-->
-<!--        <div th:if="${rondas == null or rondas.isEmpty()}">-->
-<!--            <p>No hay rondas jugadas aún.</p>-->
-<!--        </div>-->
+        <!--        <div th:if="${rondas != null and !rondas.isEmpty()}">-->
+        <!--            <table class="table table-striped table-bordered">-->
+        <!--                <thead class="thead-dark">-->
+        <!--                <tr>-->
+        <!--                    <th>NRO RONDA</th>-->
+        <!--                    <th>ID JUGADOR</th>-->
+        <!--                    <th>VALOR</th>-->
+        <!--                    <th>NRO + PALO</th>-->
+        <!--                </tr>-->
+        <!--                </thead>-->
+        <!--                <tbody>-->
+        <!--                <tr th:each="ronda : ${rondas}">-->
+        <!--                    <td th:text="${ronda.nroRonda}"></td>-->
+        <!--                    <td th:text="${ronda.jugador.nombre}"></td>-->
+        <!--                    <td th:text="${ronda.valorCarta}"></td>-->
+        <!--                    &lt;!&ndash; Concatenación con Thymeleaf usando |...| &ndash;&gt;-->
+        <!--                    <td th:text="|${ronda.nroCarta} ${ronda.palo}|"></td>-->
+        <!--                </tr>-->
+        <!--                </tbody>-->
+        <!--            </table>-->
+        <!--        </div>-->
+        <!--        &lt;!&ndash; Mensaje cuando la lista está vacía o es null &ndash;&gt;-->
+        <!--        <div th:if="${rondas == null or rondas.isEmpty()}">-->
+        <!--            <p>No hay rondas jugadas aún.</p>-->
+        <!--        </div>-->
     </div>
     <!-- Mensaje cuando la lista está vacía o es null -->
     <div th:if="${manos == null or manos.isEmpty()}">

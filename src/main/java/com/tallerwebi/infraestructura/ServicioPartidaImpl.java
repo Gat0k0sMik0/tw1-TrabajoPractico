@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-public class ServicioPartidaImpl implements ServicioPartida2 {
+public class ServicioPartidaImpl implements ServicioPartida {
 
     @Autowired
     RepositorioTruco repositorioTruco;

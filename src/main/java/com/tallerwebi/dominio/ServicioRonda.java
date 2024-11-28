@@ -1,11 +1,8 @@
 package com.tallerwebi.dominio;
 
-import java.util.List;
-
 public interface ServicioRonda {
-    void empezar();
-//    List<Ronda> getRondas();
-    void crearRonda(Jugador jugador, Carta carta);
-
-    String getGanadorDeRondaPorNumero(int i);
+    Ronda empezar(Mano mano);
+    void registrarRonda(Mano mano, Ronda ronda);
+    Ronda obtenerRondaPorId(Long id);
+    void reset();
 }

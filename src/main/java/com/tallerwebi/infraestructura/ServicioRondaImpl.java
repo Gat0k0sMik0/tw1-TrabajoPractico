@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ServicioRondaImpl implements ServicioRonda2 {
+public class ServicioRondaImpl implements ServicioRonda {
 
     private List<Ronda> rondas;
     private Integer contadorNroRonda;

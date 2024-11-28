@@ -249,9 +249,9 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public Jugador saberQuienTiraAhora() {
-        System.out.println("MANO.S-saberQuienTiraAhora: " + this.leTocaTirar);
         return this.leTocaTirar;
     }
+
 
     @Override
     public Integer obtenerPuntosEnJuegoPorTruco() {
@@ -275,17 +275,21 @@ public class ServicioManoImpl implements ServicioMano {
         Jugador receptor = nroJugador.equals(1) ? truco.getJ2() : truco.getJ1();
         System.out.println("Ejecuta: " + ejecutor.getNombre());
         System.out.println("Recibe: " + receptor.getNombre());
-
-
         String accionRealizada = saberAccion(accion);
         if (esTruco(accionRealizada)) {
             preguntarTruco(accionRealizada);
+            mano.setRespondeAhora(receptor);
+            this.repositorioMano.merge(mano);
             return receptor;
         } else if (esEnvido(accionRealizada)) {
             preguntarEnvido(accionRealizada, ejecutor);
+            mano.setRespondeAhora(receptor);
+            this.repositorioMano.merge(mano);
             return receptor;
         } else if (esFlor(accionRealizada)) {
             // TODO: calcular flor
+            mano.setRespondeAhora(null);
+            this.repositorioMano.merge(mano);
             return null;
         } else if (accionRealizada.equals("MAZO")) {
             List<Ronda> rondasMano = this.repositorioRonda.obtenerRondasDeUnaMano(mano.getId());
@@ -301,11 +305,11 @@ public class ServicioManoImpl implements ServicioMano {
             mano.setEstaTerminada(true);
             this.repositorioTruco.merge(truco);
             this.repositorioMano.merge(mano);
+            mano.setRespondeAhora(null);
             return null;
         } else {
             throw new TrucoException("Preguntar: ocurrió un error.");
         }
-
         // TODO: si la ronda no es la primera, no puede cantar envido
     }
 
@@ -410,8 +414,11 @@ public class ServicioManoImpl implements ServicioMano {
         } else {
             throw new TrucoException("Responder: ocurrió un error");
         }
+        mano.setRespondeAhora(respondeAhora);
+        this.repositorioMano.merge(mano);
         return respondeAhora;
     }
+
 
     private Jugador manejarRespuestaEnvido(Partida truco, Mano mano, String respuestaDeLaAccion,
                                            Jugador ejecutor, Jugador receptor) {
