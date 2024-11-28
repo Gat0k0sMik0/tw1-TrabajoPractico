@@ -5,8 +5,8 @@ import com.tallerwebi.dominio.SalaDeEspera;
 import com.tallerwebi.dominio.ServicioSalaDeEspera;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -31,5 +31,10 @@ public class ServicioSalaDeEsperaImpl implements ServicioSalaDeEspera {
     @Override
     public SalaDeEspera obtenerSalaPorId(Long idSala) {
         return repositorioSalaDeEspera.obtenerSalaPorId(idSala);
+    }
+
+    @Override
+    public void actualizarSala(SalaDeEspera sala) {
+        repositorioSalaDeEspera.actualizar(sala);
     }
 }

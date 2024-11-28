@@ -24,9 +24,10 @@
 </header>
 
 <main>
-    <h3 th:text="${jugador2 != null && jugador1 != null
-    ? 'Jugando ' + jugador1.nombre + ' VS ' + jugador2.nombre : 'Un momento. Falta un jugador.'}">
-    </h3>
+    <h3 th:text="${jugador1 != null ? (jugador2 != null ?
+     'Jugando ' + jugador1 + ' VS ' + jugador2 :
+      'Bienvenido ' + jugador1 + '. Esperando al segundo jugador...') :
+       'Esperando información del jugador 1.'}"></h3>
     <div id="mesa" class="gap-2">
 
         <!-- CARTAS JUGADOR 1 (arriba) -->
@@ -127,11 +128,16 @@
 
         <!-- CARTAS TIRADAS -->
         <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
-            <div class="col-4">
-                <a th:href="@{/comenzar-truco}">
-                    <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
-                </a>
-            </div>
+
+            <form th:action="@{/comenzar-truco}" method="get">
+                <div class="col-4">
+                    <input type="hidden" name="jugador1" th:value="${sala.nombreJugador1 != null ? sala.nombreJugador1 : ''}" />
+                    <input type="hidden" name="jugador2" th:value="${sala.nombreJugador2 != null ? sala.nombreJugador2 : ''}" />
+                    <button type="submit" style="background-color: #2c3e50; border: none;">
+                        <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas" style="background: transparent;">
+                    </button>
+                </div>
+            </form>
             <div id="texto-repartir" th:if="${partidaIniciada == false}" class="col-4">
                 <img th:src="@{/img/cartas-truco/repartir-cartas-v2.png}">
             </div>

@@ -40,4 +40,10 @@ public class RepositorioSalaDeEsperaImpl implements RepositorioSalaDeEspera {
         Session session = sessionFactory.getCurrentSession();
         return session.get(SalaDeEspera.class, id);
     }
+
+    @Override
+    @Transactional
+    public void actualizar(SalaDeEspera sala) {
+        sessionFactory.getCurrentSession().update(sala);
+    }
 }

@@ -35,11 +35,16 @@
         <!-- Imagen de portada del juego -->
         <img th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
         <div class="botones">
-            <a th:href="@{/crearSala}"><button id="boton-crear">CREAR SALA</button></a>
+            <form th:action="@{/crearSala}" method="get">
+                <!-- Enviar el nombre del usuario activo como un parámetro oculto -->
+                <input type="hidden" name="usuario1" th:value="${usuarioActivo.nombreUsuario}" />
+                <button type="submit" id="boton-crear">CREAR SALA</button>
+            </form>
             <button id="boton-buscar" onclick="mostrarPanelSalas()">VER SALAS DE ESPERA</button>
         </div>
 
         <!-- Panel desplegable -->
+        <h2 th:if="${error != null}" th:text="${error}" style="color: red;"></h2>
         <div id="panel" class="panel oculto">
             <h3>Salas de Espera</h3>
             <ul id="lista-salas">
@@ -48,9 +53,13 @@
 
                 <!-- Si hay salas, mostrar lista de salas -->
                 <li th:each="sala : ${salasDeEspera}">
-                    <span th:text="${sala.nombreJugador1}">Jugador 1</span>
-                    <span th:text="${sala.nombreJugador2 != null ? sala.nombreJugador2 : 'Esperando jugador 2'}">Jugador 2</span>
-                    <button th:if="${sala.nombreJugador2 == null}" th:onclick="'unirseSala(' + ${sala.id} + ')'">Unirse</button>
+                    <span th:text="'ID de sala: ' + ${sala.id}"></span>
+                    <span th:text="'Jugador 1: ' + ${sala.nombreJugador1}"></span>
+                    <span th:text="${sala.nombreJugador2 != null ? 'Jugador 2: ' + sala.nombreJugador2 : 'Esperando por rival'}"></span>
+                    <form th:action="@{/unirseSala}" method="get">
+                        <input type="hidden" name="idSala" th:value="${sala.id}" />
+                        <button type="submit" th:if="${sala.nombreJugador2 == null}">Unirse</button>
+                    </form>
                 </li>
             </ul>
         </div>

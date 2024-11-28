@@ -144,11 +144,6 @@ public class ControladorLogin {
         }
     }
 
-    @RequestMapping("/verificar")
-    public ModelAndView v() {
-        return new ModelAndView("verificacionCorreo");
-    }
-
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView inicio() {
         return new ModelAndView("redirect:/login");
