@@ -14,6 +14,8 @@ public class SalaDeEspera {
     private Long id;
     private String nombreJugador1;
     private String nombreJugador2;
+    private Long idJugador1;
+    private Long idJugador2;
     private Boolean partidaIniciada;
 
     public void setId(Long id) {
@@ -46,5 +48,21 @@ public class SalaDeEspera {
 
     public void setPartidaIniciada(Boolean partidaIniciada) {
         this.partidaIniciada = partidaIniciada;
+    }
+
+    public Long getIdJugador1() {
+        return idJugador1;
+    }
+
+    public void setIdJugador1(Long idJugador1) {
+        this.idJugador1 = idJugador1;
+    }
+
+    public Long getIdJugador2() {
+        return idJugador2;
+    }
+
+    public void setIdJugador2(Long idJugador2) {
+        this.idJugador2 = idJugador2;
     }
 }

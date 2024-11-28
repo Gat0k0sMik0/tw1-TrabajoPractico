@@ -1,21 +1,20 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioSalaDeEspera;
-import com.tallerwebi.dominio.SalaDeEspera;
-import com.tallerwebi.dominio.ServicioSalaDeEspera;
+import com.tallerwebi.dominio.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 public class ServicioSalaDeEsperaImpl implements ServicioSalaDeEspera {
     private final RepositorioSalaDeEspera repositorioSalaDeEspera;
+    private final RepositorioJugador repositorioJugador;
 
     @Autowired
-    public ServicioSalaDeEsperaImpl(RepositorioSalaDeEspera repositorioSalaDeEspera) {
+    public ServicioSalaDeEsperaImpl(RepositorioSalaDeEspera repositorioSalaDeEspera, RepositorioJugador repositorioJugador) {
         this.repositorioSalaDeEspera = repositorioSalaDeEspera;
+        this.repositorioJugador = repositorioJugador;
     }
 
     @Override
@@ -36,5 +35,10 @@ public class ServicioSalaDeEsperaImpl implements ServicioSalaDeEspera {
     @Override
     public void actualizarSala(SalaDeEspera sala) {
         repositorioSalaDeEspera.actualizar(sala);
+    }
+
+    @Override
+    public Jugador obtenerJugadorPorId(Long id) {
+        return repositorioJugador.buscarPorId(id);
     }
 }

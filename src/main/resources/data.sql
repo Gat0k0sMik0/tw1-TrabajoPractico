@@ -1,14 +1,13 @@
 /* USUARIOS */
-INSERT INTO Usuario(nombreUsuario, email, password, rol, activo)
+INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id)
 VALUES
-('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true),
-('admin', 'test@prueba.com', 'admin', 'ADMIN', true),
-('user1', 'user1@user.com', 'user0000', 'USER', true),
-('user2', 'user2@user.com', 'user0000', 'USER', true),
-('user3', 'user3@user.com', 'user0000', 'USER', true),
-('user4', 'user4@user.com', 'user0000', 'USER', true),
-('user5', 'user5@user.com', 'user0000', 'USER', true);
-
+('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1),
+('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2),
+('user1', 'user1@user.com', 'user0000', 'USER', true, 3),
+('user2', 'user2@user.com', 'user0000', 'USER', true, 4),
+('user3', 'user3@user.com', 'user0000', 'USER', true, 5),
+('user4', 'user4@user.com', 'user0000', 'USER', true, 6),
+('user5', 'user5@user.com', 'user0000', 'USER', true, 7);
 
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)

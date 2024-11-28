@@ -25,8 +25,8 @@
 
 <main>
     <h3 th:text="${jugador1 != null ? (jugador2 != null ?
-     'Jugando ' + jugador1 + ' VS ' + jugador2 :
-      'Bienvenido ' + jugador1 + '. Esperando al segundo jugador...') :
+     'Jugando ' + jugador1.nombre + ' VS ' + jugador2.nombre :
+      'Bienvenido ' + jugador1.nombre + '. Esperando al segundo jugador...') :
        'Esperando información del jugador 1.'}"></h3>
     <div id="mesa" class="gap-2">
 
@@ -151,9 +151,9 @@
             </div>
             <div class="col-4 d-flex flex-column justify-content-center align-items-center">
                 <p th:if="${jugador1 != null}"
-                   th:text="|${jugador1}: ${puntosJ1 != null ? puntosJ1 : 0}|"></p>
+                   th:text="|${jugador1.nombre}: ${puntosJ1 != null ? puntosJ1 : 0}|"></p>
                 <p th:if="${jugador2 != null}"
-                   th:text="|${jugador2}: ${puntosJ2 != null ? puntosJ2 : 0}|"></p>
+                   th:text="|${jugador2.nombre}: ${puntosJ2 != null ? puntosJ2 : 0}|"></p>
                 <p th:if="${turnoJugador != null}" th:text="'Turno de jugador ' + ${turnoJugador}"></p>
                 <a th:if="${seTermino}"
                    class="btn btn-danger"

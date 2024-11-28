@@ -35,11 +35,13 @@
         <!-- Imagen de portada del juego -->
         <img th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
         <div class="botones">
+            <!-- CREAR SALA -->
             <form th:action="@{/crearSala}" method="get">
-                <!-- Enviar el nombre del usuario activo como un parámetro oculto -->
-                <input type="hidden" name="usuario1" th:value="${usuarioActivo.nombreUsuario}" />
+                <!-- Enviar el id del usuario activo como un parámetro oculto -->
+                <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}" />
                 <button type="submit" id="boton-crear">CREAR SALA</button>
             </form>
+            <!-- VER SALAS -->
             <button id="boton-buscar" onclick="mostrarPanelSalas()">VER SALAS DE ESPERA</button>
         </div>
 
@@ -58,6 +60,8 @@
                     <span th:text="${sala.nombreJugador2 != null ? 'Jugador 2: ' + sala.nombreJugador2 : 'Esperando por rival'}"></span>
                     <form th:action="@{/unirseSala}" method="get">
                         <input type="hidden" name="idSala" th:value="${sala.id}" />
+                        <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}"/>
+                        <input type="hidden" name="idHost" th:value="${sala.idJugador1}"/>
                         <button type="submit" th:if="${sala.nombreJugador2 == null}">Unirse</button>
                     </form>
                 </li>

@@ -29,25 +29,6 @@ public class ControladorAmigos {
         this.servicioUsuario = servicioUsuario;
     }
 
-
-    @GetMapping("/home")
-    public String mostrarHome(Model model, HttpServletRequest request) {
-        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
-
-        // Verifica que el usuario esté logueado
-        if (usuarioSesion == null) {
-            return "redirect:/login"; // Redirige al login si no hay sesión activa
-        }
-
-        // Obtén las recomendaciones de amigos
-        List<Usuario> usuariosSugeridos = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
-
-        // Agrega las recomendaciones al modelo
-        model.addAttribute("usuariosSugeridos", usuariosSugeridos);
-
-        return "home";  // Retorna la vista home.html
-    }
-
     @RequestMapping("/amigos")
     public ModelAndView irAChatAmigos(HttpServletRequest request) throws AmistadesException {
         ModelMap model = new ModelMap();

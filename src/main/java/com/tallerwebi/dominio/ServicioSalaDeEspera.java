@@ -8,4 +8,6 @@ public interface ServicioSalaDeEspera {
     void guardarSala(SalaDeEspera salaDeEspera);
     SalaDeEspera obtenerSalaPorId(Long idSala);
     void actualizarSala(SalaDeEspera sala);
+
+    Jugador obtenerJugadorPorId(Long id);
 }
