@@ -23,6 +23,9 @@ public class Mano {
     @ManyToOne
     private Jugador ganador;
 
+    @ManyToOne
+    private Jugador respondeAhora;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
@@ -62,6 +65,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Jugador getRespondeAhora() {
+        return respondeAhora;
+    }
+
+    public void setRespondeAhora(Jugador respondeAhora) {
+        this.respondeAhora = respondeAhora;
     }
 
     public Jugador getGanador() {

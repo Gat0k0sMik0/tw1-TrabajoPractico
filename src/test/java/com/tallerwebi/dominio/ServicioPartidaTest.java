@@ -3,7 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.infraestructura.RepositorioCartaImpl;
 import com.tallerwebi.infraestructura.RepositorioManoImpl;
 import com.tallerwebi.infraestructura.RepositorioTrucoImpl;
-import com.tallerwebi.infraestructura.ServicioPartida2Impl;
+import com.tallerwebi.infraestructura.ServicioPartidaImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class ServicioPartidaTest {
     RepositorioCarta repositorioCarta = mock(RepositorioCartaImpl.class);
     RepositorioMano repositorioMano = mock(RepositorioManoImpl.class);
 
-    ServicioPartida2 servicioTruco = new ServicioPartida2Impl(repositorioTruco, repositorioCarta, repositorioMano);
+    ServicioPartida servicioTruco = new ServicioPartidaImpl(repositorioTruco, repositorioCarta, repositorioMano);
 
     Jugador j1 = new Jugador();
     Jugador j2 = new Jugador();
