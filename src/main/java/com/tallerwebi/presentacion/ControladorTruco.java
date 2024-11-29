@@ -40,14 +40,17 @@ public class ControladorTruco {
 
         if (partidaId != null) {
             Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
+
+            if (partida.getGanador() != null) {
+                model.put("ganador", partida.getGanador());
+                return new ModelAndView("partida-truco", model);
+            }
+
             Mano mano = servicioMano.obtenerManoPorId(partidaId);
 
             model.put("seTermino", mano.getEstaTerminada());
 
             Jugador leTocaTirar = servicioMano.saberQuienTiraAhora();
-
-            Ronda ronda = new Ronda();
-            ronda.setId(0L);
 
             model.put("cartasJugador1", mano.getCartasJ1());
             model.put("cartasJugador2", mano.getCartasJ2());
@@ -72,7 +75,6 @@ public class ControladorTruco {
 
             model.put("puntosParaGanar", partida.getPuntosParaGanar());
             model.put("mano", mano);
-            model.put("ronda", ronda);
             model.put("partida", partida);
             model.put("partidaIniciada", true);
             model.put("accionAResponder", session.getAttribute("accionAResponder"));
@@ -127,9 +129,8 @@ public class ControladorTruco {
         Mano mano = servicioMano.obtenerManoPorId(truco.getId());
         if (mano == null) return new ModelAndView("redirect:/home");
 
-        // Tiramos carta, retorna ronda creada
-        Ronda ronda = servicioMano.tirarCarta(truco, mano, cartaId, nroJugador);
-        if (ronda == null) return new ModelAndView("redirect:/home");
+        // Tiramos carta
+        servicioMano.tirarCarta(truco, mano, cartaId, nroJugador);
 
         // Para saber quien tira la proxima ronda. Si es null, hay parda
         servicioMano.determinarGanadorRonda(truco, mano);
@@ -152,11 +153,6 @@ public class ControladorTruco {
         servicioMano.guardar(ultimaMano);
         Mano mano = servicioMano.reset(partida);
 
-        // Guardar IDs en la sesión
-
-        Ronda ronda = new Ronda();
-        ronda.setId(0L);
-
         model.put("cartasJugador1", mano.getCartasJ1());
         model.put("cartasJugador2", mano.getCartasJ2());
 
@@ -169,37 +165,31 @@ public class ControladorTruco {
         model.put("puntosJ1", partida.getPuntosJ1());
         model.put("puntosJ2", partida.getPuntosJ2());
 
-        System.out.println("Responde ahora: " + mano.getRespondeAhora());
+        model.put("mostrarRespuestasEnvidoJ1", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 1);
+        model.put("mostrarRespuestasEnvidoJ2", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 2);
 
-        model.put("mostrarRespuestasEnvidoJ1", mano.getRespondeAhora() != null);
-        model.put("mostrarRespuestasEnvidoJ2", mano.getRespondeAhora() != null);
-        model.put("mostrarRespuestasTrucoJ1", mano.getRespondeAhora() != null);
-        model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora() != null);
-        model.put("mostrarRespuestasJ1", mano.getRespondeAhora() == null);
-        model.put("mostrarRespuestasJ2", mano.getRespondeAhora() == null);
+        model.put("mostrarRespuestasTrucoJ1", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 1);
+        model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 2);
+
+        model.put("mostrarRespuestasJ1", mano.getRespondeAhora() == null && mano.getRespondeAhora().getNumero() == 1);
+        model.put("mostrarRespuestasJ2", mano.getRespondeAhora() == null && mano.getRespondeAhora().getNumero() == 2);
 
         model.put("puntosParaGanar", partida.getPuntosParaGanar());
         model.put("mano", mano);
-        model.put("ronda", ronda);
         model.put("partida", partida);
         model.put("partidaIniciada", true);
+
         model.put("accionAResponder", null);
-
         model.put("leTocaResponder", mano.getRespondeAhora());
-
-        Jugador leTocaTirar = null;
-        model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
-
-        session.setAttribute("idPartida", partida.getId());
-
-        System.out.println("mano nueva");
-        System.out.println(mano);
-
-        System.out.println("cartas de mano nueva");
-        System.out.println("j1: " + mano.getCartasJ1());
-        System.out.println("j2: " + mano.getCartasJ2());
+        model.put("turnoJugador", null);
 
         return new ModelAndView("partida-truco", model);
+    }
+
+    @RequestMapping("/salir")
+    public ModelAndView cambiarMano() {
+        // TODO agregar logica para sumar puntos o algo al que gano (estadistica)
+        return new ModelAndView("redirect:/home");
     }
 
 
@@ -344,7 +334,6 @@ public class ControladorTruco {
 
         return new ModelAndView("redirect:/partida-truco");
     }
-
 
 
 }

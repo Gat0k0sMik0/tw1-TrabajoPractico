@@ -18,15 +18,24 @@ public class Partida {
     @JoinColumn(name = "j2_id")
     private Jugador j2;
 
-    @OneToMany
-    private List<Mano> manos;
 
     private Integer puntosJ1;
     private Integer puntosJ2;
     private Integer puntosParaGanar;
 
+    @OneToOne
+    private Jugador ganador;
+
     public Partida() {
 
+    }
+
+    public Jugador getGanador() {
+        return ganador;
+    }
+
+    public void setGanador(Jugador ganador) {
+        this.ganador = ganador;
     }
 
     public Integer getPuntosParaGanar() {

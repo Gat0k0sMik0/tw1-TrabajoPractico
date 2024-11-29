@@ -5,7 +5,7 @@ public interface ServicioMano {
 
     void guardar(Mano mano);
 
-    Ronda tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador);
+    void tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador);
 
     Mano reset(Partida truco);
 
@@ -15,7 +15,6 @@ public interface ServicioMano {
 
     Integer obtenerPuntosEnJuegoPorTruco();
 
-    Integer obtenerMovimientosDeLaMano(Mano mano);
 
     Jugador preguntar(Mano mano, String accion, Integer nroJugador);
 

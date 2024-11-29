@@ -55,6 +55,7 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public Mano empezar(Partida t, Jugador j1, Jugador j2) {
+        // Crear mano nueva y setear valores
         Mano m = new Mano();
         m.setEstaTerminada(false);
         m.setConfirmacionTerminada(false);
@@ -64,14 +65,19 @@ public class ServicioManoImpl implements ServicioMano {
         m.setCartasTiradasJ1(new ArrayList<>());
         m.setCartasTiradasJ2(new ArrayList<>());
         m.setGanador(null);
+
+        // Asignacion de cartas a los jugadores
         this.asignarCartasJugadores(j1, j2, m);
+
+        // Guardamos  mano
         repositorioMano.guardar(m);
+
         return m;
     }
 
     @Override
     public Mano reset(Partida truco) {
-        System.out.println("RESETEANDO MANO");
+        // Reset de valores del servicio
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -81,6 +87,7 @@ public class ServicioManoImpl implements ServicioMano {
         this.indicadorTruco = 0;
         this.puntosEnJuegoMano = 0;
 
+        // Creamos nueva mano
         Mano nueva = new Mano();
         nueva.setEstaTerminada(false);
         nueva.setConfirmacionTerminada(false);
@@ -91,13 +98,12 @@ public class ServicioManoImpl implements ServicioMano {
         nueva.setCartasTiradasJ2(new ArrayList<>());
         nueva.setGanador(null);
 
-        System.out.println("reset:");
-        System.out.println(truco);
-        System.out.println(nueva);
-
+        // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
 
+        // Guardamos nueva mano
         this.repositorioMano.guardar(nueva);
+
         return nueva;
     }
 
@@ -132,60 +138,36 @@ public class ServicioManoImpl implements ServicioMano {
     }
 
     @Override
-    public Ronda tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador) {
+    public void tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador) {
+        // Buscar carta en el repositorio
         Carta cartaElegidaParaTirar = this.repositorioCarta.buscarCartaPorId(idCarta);
-        Jugador jugador;
 
-        if (truco.getJ1().getNumero().toString().equals(nroJugador)) {
-            jugador = truco.getJ1();
-            this.leTocaTirar = truco.getJ2();
-        } else {
-            jugador = truco.getJ2();
-            this.leTocaTirar = truco.getJ1();
-        }
+        // Saber jugador que tira
+        Jugador jugador = truco.getJ1().getNumero().toString().equals(nroJugador) ? truco.getJ1() : truco.getJ2();
+
+        // Definir al que le toca ahora (contrario al que tiró)
+        this.leTocaTirar = truco.getJ1().getNumero().toString().equals(nroJugador) ? truco.getJ2() : truco.getJ1();
 
         if (mano == null) throw new TrucoException("La mano es nula.");
         if (jugador == null) throw new TrucoException("El jugador es nulo.");
         if (cartaElegidaParaTirar == null) throw new TrucoException("La carta es nula.");
 
-
-        List<Carta> cartasJugador = jugador.getNumero().equals(1)
-                ? mano.getCartasJ1() : mano.getCartasJ2();
+        // Obtener copias de cartas del que tiró
+        List<Carta> cartasJugador = jugador.getNumero().equals(1) ? mano.getCartasJ1() : mano.getCartasJ2();
 
         if (!mano.getEstaTerminada()) {
             if (cartasJugador.contains(cartaElegidaParaTirar)) {
+                // Sacarle carta que tira y agregarsela a las que tira
                 sacarCartaDeJugador(jugador, cartaElegidaParaTirar, mano);
-                sumarMovimientoMano(mano);
-                Ronda r = new Ronda();
-                r.setNombreJugador(jugador.getNombre());
-                r.setPaloCarta(cartaElegidaParaTirar.getPalo());
-                r.setValorCarta(cartaElegidaParaTirar.getValor());
-                r.setNroCarta(cartaElegidaParaTirar.getNumero());
-                r.setMano(mano);
-                this.repositorioRonda.guardar(r);
-                return r;
+
+                // Sumar movimiento realizado
+                mano.setMovimientos(mano.getMovimientos() + 1);
             } else {
                 throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
             }
         } else {
             throw new TrucoException("Estás tirando estando la mano terminada.");
         }
-    }
-
-    private void sumarMovimientoMano(Mano mano) {
-        if (mano == null) {
-            throw new TrucoException("La mano es nula.");
-        }
-
-        // Verificar que los movimientos no sean nulos
-        if (mano.getMovimientos() == null) {
-            throw new TrucoException("Los movimientos de la mano son nulos.");
-        }
-
-        mano.setMovimientos(mano.getMovimientos() + 1);
-
-        // Log para verificar que la mano se guardó correctamente
-        System.out.println("Movimiento sumado a la mano con ID: " + mano.getId() + ", movimientos: " + mano.getMovimientos());
     }
 
 
@@ -203,7 +185,7 @@ public class ServicioManoImpl implements ServicioMano {
                 Carta carta = iterator.next();
                 m.getCartasJ1().add(carta);
                 iterator.remove();
-                System.out.println("Le asigné a J1: " + carta.getNumero() + carta.getPalo());
+                System.out.println("Asigno a J1: " + carta);
             }
         } else {
             Iterator<Carta> iterator = seisCartasRandom.iterator();
@@ -211,7 +193,7 @@ public class ServicioManoImpl implements ServicioMano {
                 Carta carta = iterator.next();
                 m.getCartasJ2().add(carta);
                 iterator.remove();
-                System.out.println("Le asigné a J2: " + carta.getNumero() + carta.getPalo());
+                System.out.println("Asigno a J2: " + carta);
             }
         }
     }
@@ -264,18 +246,12 @@ public class ServicioManoImpl implements ServicioMano {
         return this.puntosEnJuegoEnvido;
     }
 
-    @Override
-    public Integer obtenerMovimientosDeLaMano(Mano mano) {
-        return mano.getMovimientos();
-    }
 
     @Override
     public Jugador preguntar(Mano mano, String accion, Integer nroJugador) {
         Partida truco = mano.getPartida();
         Jugador ejecutor = nroJugador.equals(1) ? truco.getJ1() : truco.getJ2();
         Jugador receptor = nroJugador.equals(1) ? truco.getJ2() : truco.getJ1();
-        System.out.println("Ejecuta: " + ejecutor.getNombre());
-        System.out.println("Recibe: " + receptor.getNombre());
         String accionRealizada = saberAccion(accion);
         if (esTruco(accionRealizada)) {
             preguntarTruco(accionRealizada);
@@ -304,9 +280,9 @@ public class ServicioManoImpl implements ServicioMano {
                 truco.setPuntosJ1(truco.getPuntosJ1() + puntosEnJuego);
             }
             mano.setEstaTerminada(true);
+            mano.setRespondeAhora(null);
             this.repositorioTruco.merge(truco);
             this.repositorioMano.merge(mano);
-            mano.setRespondeAhora(null);
             return null;
         } else {
             throw new TrucoException("Preguntar: ocurrió un error.");
@@ -325,11 +301,9 @@ public class ServicioManoImpl implements ServicioMano {
         if (mano.getEstaTerminada()) {
             this.puntosEnJuegoMano = this.puntosEnJuegoMano.equals(0) ? 1 : this.puntosEnJuegoMano;
             if (mano.getPuntosRondaJ1() > mano.getPuntosRondaJ2()) {
-                System.out.println("determinarGanadorRonda: J1 ganó más rondas");
                 truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoMano);
                 mano.setGanador(truco.getJ1());
             } else if (mano.getPuntosRondaJ1() < mano.getPuntosRondaJ2()) {
-                System.out.println("determinarGanadorRonda: J2 ganó más rondas");
                 mano.setGanador(truco.getJ2());
                 truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoMano);
             } else {
@@ -337,8 +311,7 @@ public class ServicioManoImpl implements ServicioMano {
             }
         }
 
-        System.out.println("PTS R J1: " + mano.getPuntosRondaJ1() + " | PTS R J2: " + mano.getPuntosRondaJ2());
-
+        // Guardamos resultados en mano y truco
         this.repositorioTruco.merge(truco);
         this.repositorioMano.merge(mano);
     }
@@ -350,7 +323,6 @@ public class ServicioManoImpl implements ServicioMano {
             // Verificar que las listas no estén vacías y que los índices sean válidos
             if (mano.getCartasJ1().isEmpty() || mano.getCartasJ2().isEmpty()) {
                 mano.setEstaTerminada(true);
-                System.out.println("Cambie la mano a terminada porque ya no tienen cartas");
             }
 
             // Conseguimos las últimas tiradas.
@@ -408,7 +380,6 @@ public class ServicioManoImpl implements ServicioMano {
         String accionQueResponde = saberAccion(accion);
         String respuestaDeLaAccion = saberAccion(respuesta);
         Jugador respondeAhora;
-        System.out.println("Ejecuta " + ejecutor.getNombre() + " y dice " + respuesta + " a la accion de " + accionQueResponde + " que preguntó " + receptor.getNombre());
         if (esTruco(accionQueResponde)) {
             respondeAhora = manejarRespuestaTruco(truco, mano, respuestaDeLaAccion, ejecutor, receptor);
         } else if (esEnvido(accionQueResponde)) {
@@ -427,9 +398,6 @@ public class ServicioManoImpl implements ServicioMano {
                                            Jugador ejecutor, Jugador receptor) {
         // Saber quien es el j1 y j2
         Jugador j1 = ejecutor.getNumero().equals(1) ? ejecutor : receptor;
-        Jugador j2 = receptor.getNumero().equals(2) ? receptor : ejecutor;
-        System.out.println("manejarRespuestaEnvido: j1 es " + j1.getNombre());
-        System.out.println("manejarRespuestaEnvido: j2 es " + j2.getNombre());
 
         if (respuestaDeLaAccion.equals("QUIERO") || respuestaDeLaAccion.equals("NO QUIERO")) {
             // RESPUESTAS DIRECTAS
@@ -437,8 +405,6 @@ public class ServicioManoImpl implements ServicioMano {
                 // ACEPTA Y CALCULAMOS TANTOS
                 Integer tantosJ1 = this.calcularTantosDeCartasDeUnJugador(mano.getCartasJ1());
                 Integer tantosJ2 = this.calcularTantosDeCartasDeUnJugador(mano.getCartasJ2());
-                System.out.println("manejarRespuestaEnvido: Envido J1 " + tantosJ1);
-                System.out.println("manejarRespuestaEnvido: Envido J2 " + tantosJ2);
                 if (this.diceFaltaEnvido != null) {
                     // falta envido (anula todos los anteriores)
                     Integer puntosParaGanar = truco.getPuntosParaGanar();
@@ -452,11 +418,16 @@ public class ServicioManoImpl implements ServicioMano {
                         puntosParaElGanador = puntosParaGanar - puntosJ1;
                         truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
                     } else {
-                        System.out.println("TJ1: " + tantosJ1);
-                        System.out.println("TJ2: " + tantosJ2);
-                        System.out.println("Entre donde no debía");
+                        throw new TrucoException("Tienen los mismos tantos");
                         // TODO: manejar solucion cuando tienen los mismos tantos
                     }
+
+                    if (truco.getPuntosJ1().equals(truco.getPuntosParaGanar())) {
+                        truco.setGanador(truco.getJ1());
+                    } else if (truco.getPuntosJ2().equals(truco.getPuntosParaGanar())) {
+                        truco.setGanador(truco.getJ2());
+                    }
+
                     return null;
                 } else {
                     // envidos
@@ -465,6 +436,7 @@ public class ServicioManoImpl implements ServicioMano {
                     } else if (tantosJ1 < tantosJ2) {
                         truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
                     } else {
+                        throw new TrucoException("Tienen los mismos tantos");
                         // TODO: manejar solucion cuando tienen los mismos tantos
                     }
                     return null;
