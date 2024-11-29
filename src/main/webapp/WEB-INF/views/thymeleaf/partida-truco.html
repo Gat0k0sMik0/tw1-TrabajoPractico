@@ -154,16 +154,16 @@
                 <div class="d-flex gap-1"
                      th:if="${mostrarRespuestasJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
                     <a class="btn btn-primary"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=5, jugador=2)}">Envido
+                       th:href="@{/accion(mano=${mano.getId()}, accion=2, jugador=2)}">Envido
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=2, jugador=2)}">Truco
+                       th:href="@{/accion(mano=${mano.getId()}, accion=5, jugador=2)}">Truco
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=8, jugador=2)}">FLOR
+                       th:href="@{/accion(mano=${mano.getId()}, accion=8, jugador=2)}">Flor
                     </a>
                     <a class="btn btn-primary"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=9, jugador=2)}">MAZO
+                       th:href="@{/accion(mano=${mano.getId()}, accion=9, jugador=2)}">Mazo
                     </a>
                 </div>
                 <!-- RESPUESTA ENVIDO -->

@@ -171,17 +171,17 @@ public class ControladorTruco {
         model.put("mostrarRespuestasTrucoJ1", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 1);
         model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 2);
 
-        model.put("mostrarRespuestasJ1", mano.getRespondeAhora() == null && mano.getRespondeAhora().getNumero() == 1);
-        model.put("mostrarRespuestasJ2", mano.getRespondeAhora() == null && mano.getRespondeAhora().getNumero() == 2);
+        model.put("mostrarRespuestasJ1", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 1);
+        model.put("mostrarRespuestasJ2", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 2);
 
         model.put("puntosParaGanar", partida.getPuntosParaGanar());
         model.put("mano", mano);
         model.put("partida", partida);
         model.put("partidaIniciada", true);
-
         model.put("accionAResponder", null);
+
+        model.put("turnoJugador", 1);
         model.put("leTocaResponder", mano.getRespondeAhora());
-        model.put("turnoJugador", null);
 
         return new ModelAndView("partida-truco", model);
     }
@@ -225,7 +225,6 @@ public class ControladorTruco {
             @RequestParam("respuesta") String nroRespuesta,
             @RequestParam("jugador") String nroJugador,
             HttpSession session
-
     ) {
 
         Long idPartida = (Long) session.getAttribute("idPartida");

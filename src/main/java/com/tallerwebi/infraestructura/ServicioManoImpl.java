@@ -380,9 +380,14 @@ public class ServicioManoImpl implements ServicioMano {
         String accionQueResponde = saberAccion(accion);
         String respuestaDeLaAccion = saberAccion(respuesta);
         Jugador respondeAhora;
+
+        System.out.println("Accion planteada: " + accionQueResponde);
+        System.out.println("Respuesta de accion: " + respuestaDeLaAccion);
         if (esTruco(accionQueResponde)) {
+            System.out.println("PASO ALGO CON EL TRUCO");
             respondeAhora = manejarRespuestaTruco(truco, mano, respuestaDeLaAccion, ejecutor, receptor);
         } else if (esEnvido(accionQueResponde)) {
+            System.out.println("PASO ALGO CON EL ENVIDO");
             respondeAhora = manejarRespuestaEnvido(truco, mano, respuestaDeLaAccion, ejecutor, receptor);
         } else {
             throw new TrucoException("Responder: ocurrió un error");
