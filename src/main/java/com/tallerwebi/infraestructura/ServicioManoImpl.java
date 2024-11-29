@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -70,6 +71,7 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public Mano reset(Partida truco) {
+        System.out.println("RESETEANDO MANO");
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -88,6 +90,10 @@ public class ServicioManoImpl implements ServicioMano {
         nueva.setCartasTiradasJ1(new ArrayList<>());
         nueva.setCartasTiradasJ2(new ArrayList<>());
         nueva.setGanador(null);
+
+        System.out.println("reset:");
+        System.out.println(truco);
+        System.out.println(nueva);
 
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
 
@@ -193,22 +199,20 @@ public class ServicioManoImpl implements ServicioMano {
     private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano m) {
         if (j.getNumero().equals(1)) {
             Iterator<Carta> iterator = seisCartasRandom.iterator();
-            while (iterator.hasNext() && this.cartasJ1.size() < 3) {
+            while (iterator.hasNext() && m.getCartasJ1().size() < 3) {
                 Carta carta = iterator.next();
-                this.cartasJ1.add(carta);
+                m.getCartasJ1().add(carta);
                 iterator.remove();
+                System.out.println("Le asigné a J1: " + carta.getNumero() + carta.getPalo());
             }
-            m.setCartasJ1(this.cartasJ1);
-            System.out.println("Le asigné " + m.getCartasJ1().size() + " a J1");
         } else {
             Iterator<Carta> iterator = seisCartasRandom.iterator();
-            while (iterator.hasNext() && this.cartasJ2.size() < 3) {
+            while (iterator.hasNext() && m.getCartasJ2().size() < 3) {
                 Carta carta = iterator.next();
-                this.cartasJ2.add(carta);
+                m.getCartasJ2().add(carta);
                 iterator.remove();
+                System.out.println("Le asigné a J2: " + carta.getNumero() + carta.getPalo());
             }
-            m.setCartasJ2(this.cartasJ2);
-            System.out.println("Le asigné " + m.getCartasJ2().size() + " a J2");
         }
     }
 
@@ -319,21 +323,21 @@ public class ServicioManoImpl implements ServicioMano {
         obtenerGanadorDeRonda(mano, truco.getJ1(), truco.getJ2());
 
         if (mano.getEstaTerminada()) {
-            System.out.println("Mano terminada: resultados ->");
-            System.out.println("PuntosRondaJ1: " + mano.getPuntosRondaJ1());
-            System.out.println("PuntosRondaJ2: " + mano.getPuntosRondaJ2());
+            this.puntosEnJuegoMano = this.puntosEnJuegoMano.equals(0) ? 1 : this.puntosEnJuegoMano;
             if (mano.getPuntosRondaJ1() > mano.getPuntosRondaJ2()) {
-                truco.setPuntosJ1(truco.getPuntosJ1() + 1);
+                System.out.println("determinarGanadorRonda: J1 ganó más rondas");
+                truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoMano);
                 mano.setGanador(truco.getJ1());
-                System.out.println("J1 GANASTE AMIGO!");
-            } else {
+            } else if (mano.getPuntosRondaJ1() < mano.getPuntosRondaJ2()) {
+                System.out.println("determinarGanadorRonda: J2 ganó más rondas");
                 mano.setGanador(truco.getJ2());
-                truco.setPuntosJ2(truco.getPuntosJ2() + 1);
-                System.out.println("J2 GANASTE AMIGO!");
+                truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoMano);
+            } else {
+                throw new TrucoException("Ambos tienen mismos puntos de ronda");
             }
         }
 
-        System.out.println(truco);
+        System.out.println("PTS R J1: " + mano.getPuntosRondaJ1() + " | PTS R J2: " + mano.getPuntosRondaJ2());
 
         this.repositorioTruco.merge(truco);
         this.repositorioMano.merge(mano);

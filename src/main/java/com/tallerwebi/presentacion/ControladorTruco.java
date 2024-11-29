@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,6 +35,8 @@ public class ControladorTruco {
 
         ModelMap model = new ModelMap();
         Long partidaId = (Long) session.getAttribute("idPartida");
+
+        System.out.println("Recibo id de partida: " + partidaId);
 
         if (partidaId != null) {
             Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
@@ -121,7 +124,7 @@ public class ControladorTruco {
         if (truco == null) return new ModelAndView("redirect:/home");
 
         // Buscar id_mano de parametro en BD
-        Mano mano = servicioMano.obtenerManoPorId(Long.parseLong(manoId));
+        Mano mano = servicioMano.obtenerManoPorId(truco.getId());
         if (mano == null) return new ModelAndView("redirect:/home");
 
         // Tiramos carta, retorna ronda creada
@@ -139,17 +142,64 @@ public class ControladorTruco {
             HttpSession session
     ) {
         Long idPartida = (Long) session.getAttribute("idPartida");
+        ModelMap model = new ModelMap();
 
-        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
+        Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
+        ultimaMano.getCartasTiradasJ1().clear();
+        ultimaMano.getCartasTiradasJ2().clear();
         ultimaMano.setConfirmacionTerminada(true);
         servicioMano.guardar(ultimaMano);
-        servicioMano.reset(truco);
+        Mano mano = servicioMano.reset(partida);
 
         // Guardar IDs en la sesión
-        session.setAttribute("idPartida", truco.getId());
 
-        return new ModelAndView("redirect:/partida-truco");
+        Ronda ronda = new Ronda();
+        ronda.setId(0L);
+
+        model.put("cartasJugador1", mano.getCartasJ1());
+        model.put("cartasJugador2", mano.getCartasJ2());
+
+        model.put("jugador1", partida.getJ1());
+        model.put("jugador2", partida.getJ2());
+
+        model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
+        model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
+
+        model.put("puntosJ1", partida.getPuntosJ1());
+        model.put("puntosJ2", partida.getPuntosJ2());
+
+        System.out.println("Responde ahora: " + mano.getRespondeAhora());
+
+        model.put("mostrarRespuestasEnvidoJ1", mano.getRespondeAhora() != null);
+        model.put("mostrarRespuestasEnvidoJ2", mano.getRespondeAhora() != null);
+        model.put("mostrarRespuestasTrucoJ1", mano.getRespondeAhora() != null);
+        model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora() != null);
+        model.put("mostrarRespuestasJ1", mano.getRespondeAhora() == null);
+        model.put("mostrarRespuestasJ2", mano.getRespondeAhora() == null);
+
+        model.put("puntosParaGanar", partida.getPuntosParaGanar());
+        model.put("mano", mano);
+        model.put("ronda", ronda);
+        model.put("partida", partida);
+        model.put("partidaIniciada", true);
+        model.put("accionAResponder", null);
+
+        model.put("leTocaResponder", mano.getRespondeAhora());
+
+        Jugador leTocaTirar = null;
+        model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
+
+        session.setAttribute("idPartida", partida.getId());
+
+        System.out.println("mano nueva");
+        System.out.println(mano);
+
+        System.out.println("cartas de mano nueva");
+        System.out.println("j1: " + mano.getCartasJ1());
+        System.out.println("j2: " + mano.getCartasJ2());
+
+        return new ModelAndView("partida-truco", model);
     }
 
 
@@ -265,41 +315,6 @@ public class ControladorTruco {
 //    }
 
 
-    private String saberAccionEnvido(String respuesta) {
-        String respuestaDada = "";
-        switch (Integer.parseInt(respuesta)) {
-            case 0:
-                respuestaDada = "NO QUIERO";
-                break;
-            case 1:
-                respuestaDada = "QUIERO";
-                break;
-            case 2:
-                respuestaDada = "ENVIDO";
-                break;
-            case 3:
-                respuestaDada = "REAL ENVIDO";
-                break;
-            case 4:
-                respuestaDada = "FALTA ENVIDO";
-                break;
-            default:
-                return "";
-        }
-        return respuestaDada;
-    }
-
-//    private Carta getCartaDeLasCartasDelJugadorPorId(Long idCarta, Jugador jugador) {
-//        for (Carta carta : jugador.getCartas()) {
-//            if (carta.getId().equals(idCarta)) {
-//                return carta;
-//            }
-//        }
-//        return null;
-//    }
-
-    /*LOGICA TRUCO*/
-
     @PostMapping("/responderTruco")
     public ModelAndView responderTruco(
             @RequestParam("respuestaTruco") String respuesta,
@@ -330,63 +345,6 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/partida-truco");
     }
 
-    // Métodos para separar responsabilidades
 
-    private Boolean esEnvido(String accion) {
-        return accion.equalsIgnoreCase("ENVIDO") ||
-                accion.equalsIgnoreCase("REAL ENVIDO") ||
-                accion.equalsIgnoreCase("FALTA ENVIDO");
-    }
-
-    private Boolean esTruco(String accion) {
-        return accion.equalsIgnoreCase("TRUCO") || accion.equalsIgnoreCase("RE TRUCO") || accion.equalsIgnoreCase("VALE CUATRO");
-    }
-
-    private Jugador saberJugadorPorNombre(String nroJugador, Jugador j1, Jugador j2) {
-        if (j1.getNumero().toString().equals(nroJugador)) return j1;
-        if (j2.getNumero().toString().equals(nroJugador)) return j2;
-        return null;
-    }
-
-
-    // Métodos para desarrollo
-    private String saberAccion(String numberValue) {
-        String respuestaDada = "";
-        switch (Integer.parseInt(numberValue)) {
-            case 0:
-                respuestaDada = "NO QUIERO";
-                break;
-            case 1:
-                respuestaDada = "QUIERO";
-                break;
-            case 2:
-                respuestaDada = "ENVIDO";
-                break;
-            case 3:
-                respuestaDada = "REAL ENVIDO";
-                break;
-            case 4:
-                respuestaDada = "FALTA ENVIDO";
-                break;
-            case 5:
-                respuestaDada = "TRUCO";
-                break;
-            case 6:
-                respuestaDada = "RE TRUCO";
-                break;
-            case 7:
-                respuestaDada = "VALE 4";
-                break;
-            case 8:
-                respuestaDada = "FLOR";
-                break;
-            case 9:
-                respuestaDada = "MAZO";
-                break;
-            default:
-                return "";
-        }
-        return respuestaDada;
-    }
 
 }
