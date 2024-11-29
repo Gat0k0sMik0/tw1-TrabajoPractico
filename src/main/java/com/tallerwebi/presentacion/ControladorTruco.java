@@ -241,6 +241,11 @@ public class ControladorTruco {
         return new ModelAndView("redirect:/partida-truco");
     }
 
+    @GetMapping(path = "/crear-partida")
+    public ModelAndView crearPartida() {
+        
+    }
+
 
 //    @RequestMapping(path = "/accion-envido", method = RequestMethod.POST)
 //    public ModelAndView cantarEnvido(

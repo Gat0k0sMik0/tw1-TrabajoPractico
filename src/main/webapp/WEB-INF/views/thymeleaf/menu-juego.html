@@ -34,15 +34,16 @@
     <div class="col-10 mx-auto menuJuegoWrapper">
         <!-- Imagen de portada del juego -->
         <img th:src="@{/img/fondo-truco.jpg}" alt="Imagen del juego">
-        <a th:href="@{/partida-truco}"> <button> JUGAR</button> </a>
-
+        <div class="d-flex gap-2 flex-wrap">
+            <a th:href="@{/partida-truco}" class="btn btn-primary">JUGAR</a>
+            <a th:href="@{/crear-partida}" class="btn btn-success">Crear Partida</a>
+        </div>
         <!-- Estadísticas del juego -->
         <div class="game-stats">
             <div class="opciones">
                 <h2 class="opcion1">Estadísticas</h2>
                 <h2 class="opcion2">Historial</h2>
             </div>
-
             <table>
                 <thead>
                 <tr>
