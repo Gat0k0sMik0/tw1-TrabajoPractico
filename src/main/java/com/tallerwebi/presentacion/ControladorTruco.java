@@ -87,7 +87,9 @@ public class ControladorTruco {
     }
 
     @GetMapping("/comenzar-truco")
-    public ModelAndView comenzarTruco(HttpSession session) {
+    public ModelAndView comenzarTruco(@RequestParam("jugador1") String nombreJugador1,
+                                      @RequestParam("jugador2") String nombreJugador2,
+                                      HttpSession session) {
         System.out.println("Empezado");
         Usuario usuario = (Usuario) session.getAttribute("usuarioActivo");
         if (usuario == null) return new ModelAndView("redirect:/login");
@@ -95,10 +97,8 @@ public class ControladorTruco {
         // Asignamos usuario como jugador
         Jugador jugador1 = new Jugador();
         Jugador jugador2 = new Jugador();
-        jugador1.setNombre(usuario.getNombreUsuario());
-        jugador2.setNombre("Juancito");
-        jugador1.setNumero(1);
-        jugador2.setNumero(2);
+        jugador1.setNombre(nombreJugador1);
+        jugador2.setNombre(nombreJugador2);
 
         // Empezamos la partida
         Partida truco = this.servicioTruco.empezar(jugador1, jugador2);

@@ -32,33 +32,36 @@
    </div>
 </header>
 <main>
-    <div class="amigos">
-        <a th:href="@{/amigos}">
-            <h1>Amigos</h1>
-        </a>
-        <img id="amigo1" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo2" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo3" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo4" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo5" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo6" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo7" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo8" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo9" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo10" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo11" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo12" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo13" th:src="@{/img/usuario.png}" alt="Usuario">
-        <img id="amigo14" th:src="@{/img/usuario.png}" alt="Usuario">
-    </div>
 
+        <div class="amigos">
+            <a th:href="@{/amigos}">
+                <h1>Amigos</h1>
+            </a>
+            <div class="d-flex flex-column align-items-center tablaAmigos" th:if="${amigos == null || amigos.size() == 0}">
+                <p class="text-white fs-5">Te recomendamos estos amigos</p>
+                <div class="sugerencias-container">
+                    <div class="sugerencia-item" th:each="usuario : ${usuariosSugeridos}">
+                        <p class="text-white" th:text="${usuario.nombreUsuario}"></p>
+                        <form th:action="@{/agregar-amigo}" method="post">
+                            <input type="hidden" name="idAmigo" th:value="${usuario.id}">
+                            <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
     <div class="container-juegos">
 
         <div class="truco-container">
-            <a th:href="@{/MenuJuego}">
-                <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
+            <form th:action="@{/menuJuego}" method="get">
+                <!-- Campo oculto para pasar el usuario -->
+                <input type="hidden" name="idUsuario" th:value="${usuario.id}">
+
+                <button type="submit" style="border: none; background: #515151">
+                    <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
+                </button>
                 <div class="texto-truco">TRUCO</div>
-            </a>
+            </form>
         </div>
 
         <div class="uno-container">

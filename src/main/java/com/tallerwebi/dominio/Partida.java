@@ -86,6 +86,14 @@ public class Partida {
         this.id = id;
     }
 
+    public List<Mano> getManos() {
+        return manos;
+    }
+
+    public void setManos(List<Mano> manos) {
+        this.manos = manos;
+    }
+
     @Override
     public String toString() {
         return "Truco2{" +

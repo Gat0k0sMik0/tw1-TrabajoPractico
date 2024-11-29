@@ -35,6 +35,21 @@ public class ControladorAmigos {
         Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
         List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioSesion.getId());
         List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
+        model.put("amigosSugeridos", filtrados);  // Se pasa la lista correctamente al modelo
+        if (amigosDelUsuario.isEmpty()) {
+            model.put("error", "No tienes amigos, ¡empieza a agregar algunos!");
+        } else {
+            model.put("amigos", amigosDelUsuario);
+        }
+        return new ModelAndView("amigos", model);
+    }
+/*
+    @RequestMapping("/amigos")
+    public ModelAndView irAChatAmigos(HttpServletRequest request) throws AmistadesException {
+        ModelMap model = new ModelMap();
+        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
+        List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioSesion.getId());
+        List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
         model.put("amigosSugeridos", filtrados);
         if (amigosDelUsuario.isEmpty()) {
             model.put("error", "No tenes amigos flaco");
@@ -42,7 +57,7 @@ public class ControladorAmigos {
             model.put("amigos", amigosDelUsuario);
         }
         return new ModelAndView("amigos", model);
-    }
+    }*/
 
     @RequestMapping(path = "/agregar-amigo", method = RequestMethod.POST)
     public ModelAndView agregarAmigo(@RequestParam("idAmigo") Long idAmigo, HttpServletRequest request) {
