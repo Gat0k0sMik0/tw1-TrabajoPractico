@@ -53,7 +53,7 @@
                     <div class="modal-body">
                         <form type="submit" th:action="@{/crearSala}" class="d-flex flex-column gap-2" method="post">
                             <!-- Enviar el id del usuario activo como un parámetro oculto -->
-                            <input type="hidden" th:value="${usuarioActivo.getId()}" name="idUsuario">
+                            <input type="hidden" th:value="${ua.getId()}" name="idUsuario">
                             <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
                                 <!-- PUNTOS PARA GANAR -->
                                 <label class="btn btn-primary active">
