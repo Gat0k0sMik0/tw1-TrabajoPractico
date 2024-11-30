@@ -87,4 +87,51 @@ public class ServicioPartidaImpl implements ServicioPartida {
     public List<Partida> getTodasLasPartidas() {
         return this.repositorioTruco.getTodasLasPartidas();
     }
+
+    @Override
+    public void finalizarPartida(Long idPartida) {
+        // Obtener la partida
+        Partida partida = repositorioTruco.buscarPartidaPorId(idPartida);
+
+        // Validar la existencia de la partida
+        if (partida == null) {
+            throw new IllegalArgumentException("La partida no existe.");
+        }
+
+        // Verificar si ya tiene un ganador
+        if (partida.isPartidaFinalizada()) {
+            throw new IllegalStateException("La partida ya ha finalizado.");
+        }
+
+        // Determinar el ganador
+        if (partida.getPuntosJ1() >= partida.getPuntosParaGanar()) {
+            partida.setGanador(partida.getJ1());
+            registrarVictoria(partida.getJ1());
+        } else if (partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
+            partida.setGanador(partida.getJ2());
+            registrarVictoria(partida.getJ2());
+        } else {
+            throw new IllegalStateException("No se puede finalizar la partida, aún no hay un ganador.");
+        }
+
+        // Guardar los cambios
+        repositorioTruco.guardarPartida(partida);
+}
+
+    // Método para registrar la victoria de un jugador
+    private void registrarVictoria(Jugador ganador) {
+        ganador.setVictorias(ganador.getVictorias() + 1); // Incrementa las victorias
+        actualizarNivel(ganador); // Actualiza el nivel según las victorias
+    }
+
+    // Método para actualizar el nivel según las victorias
+    private void actualizarNivel(Jugador jugador) {
+        if (jugador.getVictorias() >= 30) {
+            jugador.setNivel("Oro");
+        } else if (jugador.getVictorias() >= 20) {
+            jugador.setNivel("Plata");
+        } else {
+            jugador.setNivel("Bronce");
+        }
+    }
 }

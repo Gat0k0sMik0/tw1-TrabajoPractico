@@ -98,6 +98,7 @@ public class ControladorTruco {
                 if (partida.getPuedeEmpezar()) {
                     if (partida.getGanador() != null) {
                         model.put("ganador", partida.getGanador());
+                        model.put("partidaFinalizada", true);  // Flag para mostrar mensaje de fin
                         return new ModelAndView("partida-truco", model);
                     }
 

@@ -22,5 +22,7 @@ public interface ServicioPartida {
 
     List<Partida> getTodasLasPartidas();
 
+    void finalizarPartida(Long idPartida);
+
     ;
 }

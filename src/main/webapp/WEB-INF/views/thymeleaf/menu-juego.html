@@ -122,74 +122,19 @@
                 <thead>
                 <tr>
                     <th>Jugador</th>
-                    <th>Partidas</th>
-                    <th>Partidas Ganadas</th>
-                    <th>Partidas Perdidas</th>
+                    <th>Victorias</th>
+                    <th>Nivel</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Sofía Hernández</td>
-                    <td>23</td>
-                    <td>15</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Ana Martínez</td>
-                    <td>22</td>
-                    <td>14</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>María López</td>
-                    <td>20</td>
-                    <td>12</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Javier Morales</td>
-                    <td>21</td>
-                    <td>13</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Laura García</td>
-                    <td>19</td>
-                    <td>13</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Carlos Gómez</td>
-                    <td>18</td>
-                    <td>10</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Luis Fernández</td>
-                    <td>17</td>
-                    <td>11</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Isabel Ruiz</td>
-                    <td>16</td>
-                    <td>10</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Juan Pérez</td>
-                    <td>15</td>
-                    <td>9</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Pablo Torres</td>
-                    <td>14</td>
-                    <td>7</td>
-                    <td>7</td>
+                <tr th:each="jugador : ${jugadores}">
+                    <td th:text="${jugador.nombre}"></td>
+                    <td th:text="${jugador.victorias}"></td>
+                    <td th:text="${jugador.nivel}"></td>
                 </tr>
                 </tbody>
             </table>
+
         </div>
     </div>
 
