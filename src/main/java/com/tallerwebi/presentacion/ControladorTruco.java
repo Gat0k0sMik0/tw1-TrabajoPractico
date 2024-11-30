@@ -150,6 +150,7 @@ public class ControladorTruco {
             @RequestParam("idPartida") String idPartida,
             HttpSession session) {
         System.out.println("/comenzar-truco: inicio");
+
         Partida truco = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
         if (truco == null) return new ModelAndView("redirect:/home");
 

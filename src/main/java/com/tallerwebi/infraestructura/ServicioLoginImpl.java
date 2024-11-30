@@ -26,35 +26,29 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(Usuario usuario) throws MailExistenteException, ContraseniaInvalidaException, UsuarioInvalidoException, UsuarioExistenteException, EmailInvalidoException, ContraseniasDiferentesException {
+    public void registrar(Usuario usuario) throws MailExistenteException, ContraseniaInvalidaException, UsuarioInvalidoException, UsuarioExistenteException, ActualizarUsuarioException, ContraseniasDiferentesException {
         Usuario usuarioEncontradoConMail = repositorioUsuario.buscarPorMail(usuario.getEmail());
         Usuario usuarioEncontradoConNombre = repositorioUsuario.buscarPorNombre(usuario.getNombreUsuario());
 
         // Validacion correo
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (!usuario.getEmail().matches(emailRegex) || !usuario.getEmail().endsWith(".com")) {
-            throw new EmailInvalidoException();
-        }
+        if (!usuario.getEmail().matches(emailRegex) || !usuario.getEmail().endsWith(".com"))
+            throw new ActualizarUsuarioException("El e-mail está mal escrito");
         // Que no exista usuario con mismo correo
-        if(usuarioEncontradoConMail != null){
-            throw new MailExistenteException();
-        }
+        if (usuarioEncontradoConMail != null)
+            throw new ActualizarUsuarioException("No se encontró el usuario para actualizar");
         // Validacion largo de nombre de usuario
-        if (usuario.getNombreUsuario().length() > 16  || usuario.getNombreUsuario().length() < 4) {
-            throw new UsuarioInvalidoException();
-        }
+        if (usuario.getNombreUsuario().length() > 16 || usuario.getNombreUsuario().length() < 4)
+            throw new ActualizarUsuarioException("El largo del nombre de usuario debe ser de entre 5 y 16 caracteres");
         // Que no exista usuario con el mismo nombre
-        if (usuarioEncontradoConNombre != null) {
-            throw new UsuarioExistenteException();
-        }
+        if (usuarioEncontradoConNombre != null)
+            throw new ActualizarUsuarioException("Ya existe un usuario con ese nombre de usuario");
         // Validacion repetir contraseña
-        if (!usuario.getPassword().equals(usuario.getConfirmPassword())) {
-            throw new ContraseniasDiferentesException();
-        }
+        if (!usuario.getPassword().equals(usuario.getConfirmPassword()))
+            throw new ActualizarUsuarioException("Las contraseñas que ingresaste son distintas. Deben ser iguales");
         // Validacion largo de contraseña
-        if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5) {
-            throw new ContraseniaInvalidaException();
-        }
+        if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5)
+            throw new ActualizarUsuarioException("El largo dela contraseña debe ser de entre 5 y 15 caracteres");
     }
 
     @Override

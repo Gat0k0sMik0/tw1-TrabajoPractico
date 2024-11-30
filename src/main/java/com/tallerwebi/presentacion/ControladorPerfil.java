@@ -2,17 +2,14 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.*;
-import com.tallerwebi.infraestructura.ServicioUsuarioImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.tallerwebi.dominio.ServicioUsuario;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 
 @Controller
 public class ControladorPerfil {
@@ -24,59 +21,54 @@ public class ControladorPerfil {
     }
 
     @RequestMapping("/perfil")
-        public ModelAndView perfilUsuario() {
-            ModelMap model = new ModelMap();
-            model.put("fullname", "John Doe");
-            model.put("username", "johndoe123");
-            return new ModelAndView("perfil", model);
-        }
+    public ModelAndView perfilUsuario() {
+        ModelMap model = new ModelMap();
+        model.put("fullname", "John Doe");
+        model.put("username", "johndoe123");
+        return new ModelAndView("perfil", model);
+    }
 
 
     @RequestMapping("/modificar-perfil")
-    public ModelAndView irAModificarPerfil(HttpServletRequest request) {
-        HttpSession sesion = request.getSession();
-        Usuario usuario = (Usuario) sesion.getAttribute("usuarioActivo");
+    public ModelAndView irAModificarPerfil(HttpSession session) {
+        Usuario u = (Usuario) session.getAttribute("usuarioActivo");
+        if (u == null) return new ModelAndView("redirect:/login");
+
+        Usuario usuario = servicioUsuario.buscarPorId(u.getId());
+        if (usuario == null) return new ModelAndView("redirect:/login");
+
         ModelMap model = new ModelMap();
+
         model.put("datosUsuario", new Usuario());
-        if (usuario != null) {
-            model.put("nombreUsuario", usuario.getNombreUsuario());
-        }
+        model.put("usuario", usuario);
+
+        session.setAttribute("usuarioActivo", usuario);
+
         return new ModelAndView("modificar-perfil", model);
     }
 
 
     @PostMapping("/actualizar-perfil")
-    public ModelAndView actualizarPerfil(@ModelAttribute("datosUsuario") Usuario usuarioNuevo,
-                                         HttpServletRequest request) {
+    public ModelAndView actualizarPerfil(
+            @ModelAttribute("datosUsuario") Usuario usuarioNuevo,
+            HttpSession session) {
+
+        Usuario usuarioViejo = (Usuario)session.getAttribute("usuarioActivo");
         ModelMap model = new ModelMap();
+
         try {
-            servicioUsuario.verificarDatos(usuarioNuevo);
-        } catch (EmailInvalidoException e) {
-            model.put("error", "El correo no es válido");
-            return new ModelAndView("modificar-perfil", model);
-        } catch (MailExistenteException e) {
-            model.put("error", "El correo ya existe");
-            return new ModelAndView("modificar-perfil", model);
-        } catch (UsuarioInvalidoException e) {
-            model.put("error", "El usuario debe contener entre 4 y 16 caracteres");
-            return new ModelAndView("modificar-perfil", model);
-        } catch (UsuarioExistenteException e) {
-            model.put("error", "El usuario ya existe");
-            return new ModelAndView("modificar-perfil", model);
-        } catch (ContraseniaInvalidaException e) {
-            model.put("error", "La contraseña debe contener entre 5 y 15 caracteres");
-            return new ModelAndView("modificar-perfil", model);
-        } catch (ContraseniasDiferentesException e) {
-            model.put("error", "Las contraseñas no coinciden");
-            return new ModelAndView("modificar-perfil", model);
+            servicioUsuario.verificarDatos(usuarioViejo, usuarioNuevo);
+        } catch (ActualizarUsuarioException e) {
+            model.put("error", e.getMessage());
         }
 
-        HttpSession sesion = request.getSession();
-        Usuario usuarioLogueado = (Usuario) sesion.getAttribute("usuarioActivo");
-        usuarioLogueado =  servicioUsuario.actualizarPerfil(usuarioLogueado, usuarioNuevo);
-        sesion.setAttribute("usuarioActivo", usuarioLogueado);
+        Usuario usuarioActualizado = servicioUsuario.actualizarPerfil(usuarioNuevo);
+        session.setAttribute("usuarioActivo", usuarioActualizado);
+        model.put("usuario", usuarioActualizado);
+        model.addAttribute("mostrarModal", true);  // Variable para controlar el modal
+        model.addAttribute("mensajeModal", "Usuario actualizado correctamente.");
 
-        return new ModelAndView("perfil", "datosUsuario", usuarioLogueado);
+        return new ModelAndView("modificar-perfil", model);
     }
 
     @GetMapping("/volver-home")

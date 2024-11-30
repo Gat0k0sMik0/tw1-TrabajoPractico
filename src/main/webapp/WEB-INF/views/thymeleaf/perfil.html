@@ -3,20 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-
     <!-- Bootstrap -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
     <!-- Estilos generales -->
     <link rel="stylesheet" th:href="@{/css/general.css}"/>
-
     <!-- Estilo custom -->
     <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
-
-    <title>Taller Web I</title>
-
-
+    <title>Editar perfil</title>
 </head>
 <body>
 <header class="col-12 py-3 d-flex align-items-center">
@@ -27,7 +20,8 @@
         <p class="fs-4 m-0">
             Perfil
         </p>
-        <a th:href="@{/modificar-perfil}" class="text-decoration-none text-white fs-5 settingsImageContainer">
+        <a th:href="@{/modificar-perfil}"
+           class="text-decoration-none text-white fs-5 settingsImageContainer">
             <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
         </a>
     </nav>
@@ -43,7 +37,7 @@
 
             <!-- <p class="fs-3 fw-semibold m-0" th:text="${datosUsuario.getEmail()}"></p> -->
             <!-- <p th:text="${datosUsuario.getEmail()}"></p> -->
-            
+
 
             <p class="fs-3 fw-semibold m-0" th:text="${fullname}"></p>
             <p th:text="${username}"></p>
