@@ -25,10 +25,11 @@ public class ControladorEstadisticas {
 
     @RequestMapping("/estadisticas")
     public ModelAndView obtenerEstadisticas() {
-        ModelMap model = new ModelMap();
-        List<Estadistica> estadisticas = servicioEstadisticas.obtenerTodasLasEstadisticas();
-        model.addAttribute("estadisticas", estadisticas);
-        return new ModelAndView("estadisticas", model);
+//        ModelMap model = new ModelMap();
+//        List<Estadistica> estadisticas = servicioEstadisticas.obtenerTodasLasEstadisticas();
+//        model.addAttribute("estadisticas", estadisticas);
+//        return new ModelAndView("estadisticas", model);
+        return null;
     }
 }
 

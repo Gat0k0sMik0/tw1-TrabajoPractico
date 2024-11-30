@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Jugador;
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +12,11 @@ import java.util.List;
 @Service
 public class ServicioPartidaImpl implements ServicioPartida {
 
-    @Autowired
     RepositorioTruco repositorioTruco;
-    @Autowired
     RepositorioMano repositorioMano;
-    @Autowired
     RepositorioCarta repositorioCarta;
 
-
+    @Autowired
     public ServicioPartidaImpl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
         this.repositorioTruco = repositorioTruco;
         this.repositorioCarta = repositorioCarta;
@@ -67,16 +65,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
         this.repositorioTruco.guardarPartida(truco);
     }
 
-    @Override
-    public void reset(Jugador j1, Jugador j2) {
-        this.vaciarCartasDeJugadores(j1, j2);
-//        this.asignarCartasJugadores(j1, j2);
-    }
-
-    private void vaciarCartasDeJugadores(Jugador j1, Jugador j2) {
-//        j1.getCartas().clear();
-//        j2.getCartas().clear();
-    }
 
     @Override
     public void guardarJugador(Jugador jugador) {
@@ -95,12 +83,12 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         // Validar la existencia de la partida
         if (partida == null) {
-            throw new IllegalArgumentException("La partida no existe.");
+            throw new TrucoException("La partida no existe.");
         }
 
         // Verificar si ya tiene un ganador
         if (partida.isPartidaFinalizada()) {
-            throw new IllegalStateException("La partida ya ha finalizado.");
+            throw new TrucoException("La partida ya ha finalizado.");
         }
 
         // Determinar el ganador
@@ -111,11 +99,11 @@ public class ServicioPartidaImpl implements ServicioPartida {
             partida.setGanador(partida.getJ2());
             registrarVictoria(partida.getJ2());
         } else {
-            throw new IllegalStateException("No se puede finalizar la partida, aún no hay un ganador.");
+            throw new TrucoException("No se puede finalizar la partida, aún no hay un ganador.");
         }
 
         // Guardar los cambios
-        repositorioTruco.guardarPartida(partida);
+        repositorioTruco.merge(partida);
 }
 
     // Método para registrar la victoria de un jugador

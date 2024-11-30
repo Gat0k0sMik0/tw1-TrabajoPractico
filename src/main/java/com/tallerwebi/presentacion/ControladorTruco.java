@@ -21,14 +21,17 @@ public class ControladorTruco {
     private ServicioPartida servicioTruco;
     private ServicioMano servicioMano;
     private ServicioUsuario servicioUsuario;
+    private ServicioEstadisticas servicioEstadistica;
 
     @Autowired
     public ControladorTruco(ServicioPartida servicioTruco,
-                            ServicioMano servicioMano2,
-                            ServicioUsuario servicioUsuario) {
+                            ServicioMano servicioMano,
+                            ServicioUsuario servicioUsuario,
+                            ServicioEstadisticas servicioEstadistica) {
         this.servicioTruco = servicioTruco;
-        this.servicioMano = servicioMano2;
+        this.servicioMano = servicioMano;
         this.servicioUsuario = servicioUsuario;
+        this.servicioEstadistica = servicioEstadistica;
     }
 
     @GetMapping("/espera")
@@ -98,7 +101,8 @@ public class ControladorTruco {
                 if (partida.getPuedeEmpezar()) {
                     if (partida.getGanador() != null) {
                         model.put("ganador", partida.getGanador());
-                        model.put("partidaFinalizada", true);  // Flag para mostrar mensaje de fin
+                        model.put("partidaFinalizada", true);
+                        servicioEstadistica.guardarResultado(partida);
                         return new ModelAndView("partida-truco", model);
                     }
 

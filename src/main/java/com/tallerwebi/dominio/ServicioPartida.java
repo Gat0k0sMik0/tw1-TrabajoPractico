@@ -16,8 +16,6 @@ public interface ServicioPartida {
     List<Partida> getPartidasDisponibles();
 
 
-    void reset(Jugador j1, Jugador j2);
-
     void guardarJugador(Jugador jugador1);
 
     List<Partida> getTodasLasPartidas();

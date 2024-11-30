@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Estadistica {
@@ -11,49 +8,61 @@ public class Estadistica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String jugador;
-    private Integer nivel;
-    private Integer puntaje;
 
-    public Estadistica(String jugador, Integer nivel, Integer puntaje) {
-        this.jugador = jugador;
-        this.nivel = nivel;
-        this.puntaje = puntaje;
-    }
+    private Integer ganadas;
+    private Integer jugadas;
+    private String juego;
+
+    @ManyToOne
+    private Jugador jugador;
 
     public Estadistica() {
-
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Estadistica(Integer ganadas, Integer jugadas, Jugador jugador, String juego) {
+        this.ganadas = ganadas;
+        this.jugadas = jugadas;
+        this.jugador = jugador;
+        this.juego = juego;
+    }
+
+    public String getJuego() {
+        return juego;
+    }
+
+    public void setJuego(String juego) {
+        this.juego = juego;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getJugador() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getGanadas() {
+        return ganadas;
+    }
+
+    public void setGanadas(Integer ganadas) {
+        this.ganadas = ganadas;
+    }
+
+    public Integer getJugadas() {
+        return jugadas;
+    }
+
+    public void setJugadas(Integer jugadas) {
+        this.jugadas = jugadas;
+    }
+
+    public Jugador getJugador() {
         return jugador;
     }
 
-    public void setJugador(String jugador) {
+    public void setJugador(Jugador jugador) {
         this.jugador = jugador;
-    }
-
-    public Integer getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(Integer nivel) {
-        this.nivel = nivel;
-    }
-
-    public Integer getPuntaje() {
-        return puntaje;
-    }
-
-    public void setPuntaje(Integer puntaje) {
-        this.puntaje = puntaje;
     }
 }
