@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
-public class ServicioPartida2Impl implements ServicioPartida2 {
+public class ServicioPartidaImpl implements ServicioPartida {
 
     @Autowired
     RepositorioTruco repositorioTruco;
@@ -18,7 +19,7 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     RepositorioCarta repositorioCarta;
 
 
-    public ServicioPartida2Impl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
+    public ServicioPartidaImpl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
         this.repositorioTruco = repositorioTruco;
         this.repositorioCarta = repositorioCarta;
         this.repositorioMano = repositorioMano;
@@ -32,22 +33,38 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
     }
 
     @Override
-    @Transactional
-    public Partida empezar(Jugador j1, Jugador j2) {
+    public Partida preparar(Jugador j1, Integer puntosMaximos) {
         Partida truco = new Partida();
-
+        truco.setPuedeEmpezar(false);
         truco.setJ1(j1);
-        truco.setJ2(j2);
-        truco.setPuntosParaGanar(30);
+        truco.setPuntosParaGanar(puntosMaximos);
         truco.setPuntosJ1(0);
+        truco.setJ2(null);
         truco.setPuntosJ2(0);
-
-        // Guardar partida en la base de datos
         this.repositorioTruco.guardarJugador(j1);
-        this.repositorioTruco.guardarJugador(j2);
         this.repositorioTruco.guardarPartida(truco);
-
         return truco;
+    }
+
+    @Override
+    public void agregarJugador(Jugador j2, Partida truco) {
+        truco.setJ2(j2);
+        truco.setPuntosJ2(0);
+        this.repositorioTruco.guardarJugador(j2);
+        this.repositorioTruco.merge(truco);
+    }
+
+
+    @Override
+    public List<Partida> getPartidasDisponibles() {
+        return this.repositorioTruco.getPartidasDisponibles();
+    }
+
+
+    @Override
+    public void empezar(Partida truco) {
+        truco.setPuedeEmpezar(true);
+        this.repositorioTruco.guardarPartida(truco);
     }
 
     @Override
@@ -66,6 +83,10 @@ public class ServicioPartida2Impl implements ServicioPartida2 {
         repositorioTruco.guardarJugador(jugador);
     }
 
+    @Override
+    public List<Partida> getTodasLasPartidas() {
+        return this.repositorioTruco.getTodasLasPartidas();
+    }
 
 
 }

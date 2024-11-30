@@ -7,12 +7,18 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public class RepositorioTrucoImpl implements RepositorioTruco {
 
     private SessionFactory sessionFactory;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     public RepositorioTrucoImpl(SessionFactory sessionFactory) {
@@ -22,9 +28,15 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Transactional
     @Override
     public void guardarPartida(Partida truco) {
-        System.out.println("Guardando partida. PTSJ1: " + truco.getPuntosJ1());
-        System.out.println("Guardando partida. PTSJ2: " + truco.getPuntosJ2());
+        System.out.println("Guardo: ");
+        System.out.println(truco);
         sessionFactory.getCurrentSession().save(truco);
+    }
+
+    @Transactional
+    @Override
+    public void merge(Partida truco) {
+        entityManager.merge(truco);
     }
 
     @Transactional
@@ -41,9 +53,7 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Transactional
     @Override
     public void guardarJugador(Jugador jugador) {
-        Session session = sessionFactory.getCurrentSession();
-        session.save(jugador);
-        System.out.println("Jugador guardado en repo con ID: " + jugador.getId());
+        sessionFactory.getCurrentSession().save(jugador);
     }
 
     @Transactional
@@ -56,6 +66,23 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
         return j;
     }
 
+    @Transactional
+    @Override
+    public List<Partida> getPartidasDisponibles() {
+        return (List<Partida>) sessionFactory.getCurrentSession()
+                .createCriteria(Partida.class)
+                .add(Restrictions.isNull("j2"))
+                .add(Restrictions.eq("puedeEmpezar", false))
+                .list();
+    }
+
+    @Transactional
+    @Override
+    public List<Partida> getTodasLasPartidas() {
+        return (List<Partida>) sessionFactory.getCurrentSession()
+                .createCriteria(Partida.class)
+                .list();
+    }
 
 
 }

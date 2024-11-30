@@ -19,6 +19,7 @@
 <form id="formulario" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
     <h1> Iniciar sesión en Aplicación</h1>
 
+    <p th:if="${message != null}" style="color: #71df19" th:text="${message}"></p>
     <p th:if="${error != null}" style="color: red" th:text="'Error, ' + ${error}"></p>
 
     <label for="username">Correo electrónico</label>

@@ -23,6 +23,9 @@ public class Mano {
     @ManyToOne
     private Jugador ganador;
 
+    @ManyToOne
+    private Jugador respondeAhora;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
@@ -62,6 +65,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Jugador getRespondeAhora() {
+        return respondeAhora;
+    }
+
+    public void setRespondeAhora(Jugador respondeAhora) {
+        this.respondeAhora = respondeAhora;
     }
 
     public Jugador getGanador() {
@@ -188,8 +199,8 @@ public class Mano {
                 ", puntosRondaJ1=" + puntosRondaJ1 +
                 ", puntosRondaJ2=" + puntosRondaJ2 +
                 ", ganador=" + ganador +
-                ", cartasJ1=" + cartasJ1.size() +
-                ", cartasJ2=" + cartasJ2.size() +
+                ", cartasJ1=" + cartasJ1 +
+                ", cartasJ2=" + cartasJ2 +
                 ", cartasTiradasJ1=" + cartasTiradasJ1.size() +
                 ", cartasTiradasJ2=" + cartasTiradasJ2.size() +
                 '}';

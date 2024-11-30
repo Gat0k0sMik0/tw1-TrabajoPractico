@@ -41,7 +41,6 @@ public class RepositorioManoImpl implements RepositorioMano {
     @Transactional
     @Override
     public Mano obtenerUltimaMano(Long idPartida) {
-        System.out.println("Buscando mano con partida ID: " + idPartida);
         return (Mano) sessionFactory.getCurrentSession()
                 .createCriteria(Mano.class)
                 .add(Restrictions.eq("confirmacionTerminada", false))

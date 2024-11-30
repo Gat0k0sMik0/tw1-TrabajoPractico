@@ -3,7 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.infraestructura.RepositorioCartaImpl;
 import com.tallerwebi.infraestructura.RepositorioManoImpl;
 import com.tallerwebi.infraestructura.RepositorioTrucoImpl;
-import com.tallerwebi.infraestructura.ServicioPartida2Impl;
+import com.tallerwebi.infraestructura.ServicioPartidaImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ServicioPartidaTest {
@@ -22,7 +22,7 @@ public class ServicioPartidaTest {
     RepositorioCarta repositorioCarta = mock(RepositorioCartaImpl.class);
     RepositorioMano repositorioMano = mock(RepositorioManoImpl.class);
 
-    ServicioPartida2 servicioTruco = new ServicioPartida2Impl(repositorioTruco, repositorioCarta, repositorioMano);
+    ServicioPartida servicioTruco = new ServicioPartidaImpl(repositorioTruco, repositorioCarta, repositorioMano);
 
     Jugador j1 = new Jugador();
     Jugador j2 = new Jugador();
@@ -75,4 +75,23 @@ public class ServicioPartidaTest {
     public void queSeEmpiezeLaPartida() {
 
     }
+
+    @Test
+    @Transactional
+    public void queMeTraigaUnaListaDePartidasCreadas() {
+        Partida partida1 = new Partida();
+        partida1.setId(0L);
+        partida1.setJ1(j1);
+        partida1.setJ2(null);
+        partida1.setPuntosParaGanar(30);
+        Partida partida2 = new Partida();
+        partida2.setId(1L);
+        partida2.setJ1(j2);
+        partida2.setJ2(null);
+        partida2.setPuntosParaGanar(30);
+        when(servicioTruco.getTodasLasPartidas()).thenReturn(List.of(partida1, partida2));
+        List<Partida> partidas = servicioTruco.getTodasLasPartidas();
+        assertFalse(partidas.isEmpty());
+    }
+
 }

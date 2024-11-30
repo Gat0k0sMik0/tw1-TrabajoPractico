@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Carta implements Cloneable {
+public class Carta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,32 +26,10 @@ public class Carta implements Cloneable {
                 "id=" + id +
                 ", valor=" + valor +
                 ", numero=" + numero +
-                ", palo='" + palo + '\'' +
-                ", img='" + img + '\'' +
+                ", palo='" + palo +
                 ", valorEnvido=" + valorEnvido +
                 '}';
     }
-
-//    public Carta(Integer valor, Integer numero, String palo) {
-//        this.valor = valor;
-//        this.numero = numero;
-//        this.palo = palo;
-//        this.valorEnvido = 0;
-//    }
-//
-//    public Carta(Integer valor, Integer numero, String palo, String img) {
-//        this.valor = valor;
-//        this.numero = numero;
-//        this.palo = palo;
-//        this.img = img;
-//        this.valorEnvido = 0;
-//    }
-
-//    private int calcularValorEnvido(int numero) {
-//        // Lógica para calcular el valorEnvido
-//        return (numero >= 10 && numero <= 12) ? 0 : numero; // O cualquier lógica que necesites
-//    }
-
 
 
     public Integer getValorEnvido() {
@@ -113,16 +91,5 @@ public class Carta implements Cloneable {
 
     public void setImg(String img) {
         this.img = img;
-    }
-
-    @Override
-    public Carta clone() {
-        try {
-            Carta clone = (Carta) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }

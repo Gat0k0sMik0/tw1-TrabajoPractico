@@ -31,12 +31,18 @@ body {
 }
 
 .info-container img{
-    width:  80%;
+    width:  100%;
     padding-top: 25px;
-    height: 45rem;
 }
 
-button {
+.botones {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.styledBtn {
     background-color: #05ea0a;
     color: #fff;
     padding: 10px 15px;
@@ -44,16 +50,85 @@ button {
     border: 3px solid transparent;
     font-size: 35px;
     text-space: 8px;
-    width: 90%;
+    width: 280px;
+    height: 120px;
     box-sizing: border-box;
     margin: 10px;
 }
 
-button:hover {
-    background-color: #fff;
+#boton-buscar {
+    background-color: #05ea0a;
+    color: white;
+}
+
+#boton-buscar {
+    background-color: #ea8705;
+    color: white;
+}
+
+#boton-crear:hover {
+    background-color: #ffffff;
     color: #05ea0a;
     border: 3px solid #05ea0a;
     cursor: pointer;
+}
+
+#boton-buscar:hover {
+    background-color: #ffffff;
+    color: #ea8705;
+    border: 3px solid #ea8705;
+    cursor: pointer;
+}
+
+/* Panel de salas */
+.panel {
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.oculto {
+    display: none;
+}
+
+.panel h3 {
+    margin-top: 0;
+}
+
+#lista-salas {
+    list-style-type: none;
+    padding: 0;
+}
+
+#lista-salas li {
+    background-color: #f1f1f1;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#lista-salas li span {
+    font-size: 18px;
+}
+
+#lista-salas li button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#lista-salas li button:hover {
+    background-color: #0056b3;
 }
 
 .game-stats {
