@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Estadistica;
+import com.tallerwebi.dominio.Jugador;
 import com.tallerwebi.dominio.ServicioEstadisticas;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,10 @@ import java.util.List;
 @Transactional
 public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
-
+    private List<Estadistica> estadisticas = new ArrayList<>();
+    private List<Jugador> jugadores = new ArrayList<>();
     @Override
     public List<Estadistica> obtenerTodasLasEstadisticas() {
-            List<Estadistica> estadisticas = new ArrayList<>();
             Estadistica estadistica1 = new Estadistica("Pepe12", 97, 150);
             Estadistica estadistica2 = new Estadistica("Tomas9", 86, 143);
             Estadistica estadistica3 = new Estadistica("Holamundo", 67, 123);
@@ -28,4 +29,5 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
             return estadisticas;
         }
+
 }
