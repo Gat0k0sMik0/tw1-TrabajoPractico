@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface RepositorioEstadistica {
     @Transactional
@@ -8,4 +9,6 @@ public interface RepositorioEstadistica {
 
     @Transactional
     void guardarEstadistica(Estadistica e);
+
+    List<Estadistica> obtenerTodasLasEstadisticasDeUnJugador(Long id);
 }

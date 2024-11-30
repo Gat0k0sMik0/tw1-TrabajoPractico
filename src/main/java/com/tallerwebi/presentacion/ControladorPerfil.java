@@ -1,5 +1,7 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.Estadistica;
+import com.tallerwebi.dominio.ServicioEstadisticas;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.stereotype.Controller;
@@ -10,14 +12,17 @@ import com.tallerwebi.dominio.ServicioUsuario;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ControladorPerfil {
 
     private final ServicioUsuario servicioUsuario;
+    private final ServicioEstadisticas servicioEstadisticas;
 
-    public ControladorPerfil(ServicioUsuario servicioUsuario) {
+    public ControladorPerfil(ServicioUsuario servicioUsuario, ServicioEstadisticas servicioEstadisticas) {
         this.servicioUsuario = servicioUsuario;
+        this.servicioEstadisticas = servicioEstadisticas;
     }
 
     @RequestMapping("/perfil")
@@ -25,7 +30,16 @@ public class ControladorPerfil {
         ModelMap model = new ModelMap();
         Usuario usuario = servicioUsuario.buscarPorId(Long.parseLong(idUsuario));
         if (usuario == null) return new ModelAndView("redirect:/login");
+
+        servicioEstadisticas.agregarEstadisticasFicticias(usuario);
+        List<Estadistica> estadisticas = servicioEstadisticas.obtenerEstadisticasDeUnJugador(usuario.getId());
+
+        System.out.println(estadisticas);
+
+
         model.put("usuario", usuario);
+        model.put("estadisticas", estadisticas);
+
         return new ModelAndView("perfil", model);
     }
 

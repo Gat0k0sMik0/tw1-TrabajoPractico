@@ -14,9 +14,21 @@ public class Jugador {
     private Integer victorias;
     private String nivel;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     public Jugador() {
         this.victorias = 0;
         this.nivel = "Bronce";
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Long getId() {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
@@ -24,8 +25,9 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
     @Override
     public Estadistica obtenerEstadisticaDeJugador(Long idJugador) {
         return (Estadistica) sessionFactory.getCurrentSession()
-                .createCriteria(Carta.class).createAlias("jugador", "j")
-                .add(Restrictions.eq("jugador.id", idJugador))
+                .createCriteria(Estadistica.class)
+                .createAlias("jugador", "j")
+                .add(Restrictions.eq("j.id", idJugador))
                 .add(Restrictions.eq("juego", "Truco"))
                 .uniqueResult();
     }
@@ -33,7 +35,18 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
     @Transactional
     @Override
     public void guardarEstadistica(Estadistica e) {
+        System.out.println("Estadistica guardada: " + e);
         sessionFactory.getCurrentSession().save(e);
+    }
+
+    @Override
+    public List<Estadistica> obtenerTodasLasEstadisticasDeUnJugador(Long idUsuario) {
+        return (List<Estadistica>) sessionFactory.getCurrentSession()
+                .createCriteria(Estadistica.class, "e")
+                .createAlias("e.jugador", "j") // Alias para Jugador
+                .createAlias("j.usuario", "u") // Alias para Usuario
+                .add(Restrictions.eq("u.id", idUsuario))
+                .list();
     }
 
 }
