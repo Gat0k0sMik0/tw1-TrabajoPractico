@@ -2,6 +2,8 @@ package com.tallerwebi.dominio;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 public interface ServicioPartida {
 
     Partida preparar(Jugador j1, Integer puntosMaximos);

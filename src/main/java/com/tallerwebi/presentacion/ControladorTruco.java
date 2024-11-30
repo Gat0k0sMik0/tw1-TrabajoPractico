@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.sound.midi.SysexMessage;
 import java.awt.*;
+import java.util.Random;
 
 
 @Controller
@@ -133,7 +134,7 @@ public class ControladorTruco {
                     model.put("idPartida", partida.getId());
                     model.put("accionAResponder", session.getAttribute("accionAResponder"));
 
-                    model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
+                    model.put("turnoJugador", leTocaTirar.getNumero());
                     model.put("leTocaResponder", mano.getRespondeAhora());
                 }
                 model.put("partidaIniciada", false);

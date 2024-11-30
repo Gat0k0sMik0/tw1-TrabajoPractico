@@ -61,6 +61,7 @@ public class ServicioManoImpl implements ServicioMano {
         m.setCartasTiradasJ1(new ArrayList<>());
         m.setCartasTiradasJ2(new ArrayList<>());
         m.setGanador(null);
+        this.leTocaTirar = getRandom(truco);
 
         // Asignacion de cartas a los jugadores
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
@@ -613,4 +614,13 @@ public class ServicioManoImpl implements ServicioMano {
         return respuestaDada;
     }
 
+    public static Jugador getRandom(Partida truco) {
+        Random random = new Random();
+        int i = random.nextInt(2) + 1;
+        if (i == 1) {
+            return truco.getJ1();
+        } else {
+            return truco.getJ2();
+        }
+    }
 }
