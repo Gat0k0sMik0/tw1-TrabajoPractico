@@ -42,7 +42,7 @@ body {
     justify-content: space-around;
 }
 
-button {
+.styledBtn {
     background-color: #05ea0a;
     color: #fff;
     padding: 10px 15px;

@@ -4,24 +4,28 @@ import com.tallerwebi.dominio.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 public class ControladorMenuJuego {
+
     private final ServicioSalaDeEspera servicioSalaDeEspera;
     private final ServicioUsuario servicioUsuario;
+    private final ServicioPartida servicioTruco;
 
     @Autowired
-    public ControladorMenuJuego(ServicioSalaDeEspera servicioSalaDeEspera, ServicioUsuario servicioUsuario) {
+    public ControladorMenuJuego(
+            ServicioSalaDeEspera servicioSalaDeEspera,
+            ServicioUsuario servicioUsuario,
+            ServicioPartida servicioTruco) {
         this.servicioSalaDeEspera = servicioSalaDeEspera;
         this.servicioUsuario = servicioUsuario;
+        this.servicioTruco = servicioTruco;
     }
 
     // Método para mostrar el menú de juego
@@ -48,37 +52,34 @@ public class ControladorMenuJuego {
     }
 
     // Método para crear una sala
-    @RequestMapping("/crearSala")
-    public ModelAndView crearSala(@ModelAttribute("idUsuario") Long idUsuario,
-                                  HttpSession session) {
-        ModelMap model = new ModelMap();
+    @PostMapping("/crearSala")
+    public ModelAndView crearSala(
+            @RequestParam("idUsuario") Long idUsuario,
+            @RequestParam("puntos") String puntosMaximos
+    ) {
 
         // Obtener el usuario activo
         Usuario usuarioActivo = servicioUsuario.buscarPorId(idUsuario);
-
-        // Crear un jugador con el nombre del usuario activo
-        Jugador jugador1 = new Jugador();
-        jugador1.setNombre(usuarioActivo.getNombreUsuario());
-
-        // Crear la sala con el jugador 1
-        SalaDeEspera salaDeEspera = new SalaDeEspera();
-        salaDeEspera.setNombreJugador1(jugador1.getNombre());
-        salaDeEspera.setIdJugador1(jugador1.getId());
-        salaDeEspera.setPartidaIniciada(false);
-
-        // Guardar la sala
-        servicioSalaDeEspera.guardarSala(salaDeEspera);
-
-        // Almacenar jugador1 en la sesión
-        session.setAttribute("jugador1", jugador1);
-        session.setAttribute("sala", salaDeEspera);
-
-        // Pasar la sala y jugador a la vista
-        model.put("jugador1", jugador1);
-        model.put("sala", salaDeEspera);
+        if (usuarioActivo == null) return new ModelAndView("redirect:/login");
 
         // Redirigir a la vista de la partida
-        return new ModelAndView("partida-truco", model);
+        return new ModelAndView("redirect:/espera?idJugador=" + usuarioActivo.getId() + "&ptsmax=" + puntosMaximos);
+    }
+
+    @GetMapping(path = "/verSalas")
+    public ModelAndView verSalas(
+            HttpSession session
+    ) {
+        Usuario ua = (Usuario) session.getAttribute("usuarioActivo");
+        ua = servicioUsuario.buscarPorId(ua.getId());
+        if (ua == null) return new ModelAndView("redirect:/login");
+
+        ModelMap model = new ModelMap();
+        List<Partida> partidas = servicioTruco.getPartidasDisponibles();
+
+        model.put("partidas", partidas);
+        model.put("ua", ua);
+        return new ModelAndView("salas", model);
     }
 
     @RequestMapping("/unirseSala")
