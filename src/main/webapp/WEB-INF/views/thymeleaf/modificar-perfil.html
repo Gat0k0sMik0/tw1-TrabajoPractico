@@ -15,7 +15,7 @@
     <div class="col-10 mx-auto d-flex align-items-center justify-content-between">
         <h3 th:text="${usuario.getNombreUsuario() + ' estas editando tu perfil'}"></h3>
         <nav class="d-flex flex-wrap gap-5 align-items-center fs-5">
-            <a class="text-decoration-none text-white" th:href="@{/perfil}">
+            <a class="text-decoration-none text-white" th:href="@{/perfil(id=${usuario.getId()})}">
                 <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
             </a>
             <a href="" class="text-decoration-none text-white fs-5">

@@ -15,40 +15,40 @@
 </head>
 <body>
 <header class="col-12 d-flex align-items-center">
-   <div class="col-10 mx-auto d-flex align-items-center justify-content-between">
-       <h1 th:text="'Bienvenido ' + ${nombreUsuario}"></h1>
-       <nav class="d-flex flex-wrap gap-5 align-items-center fs-5">
-           <!-- th:href="@{/perfilUsuario}" -->
-           <a class="text-decoration-none text-white" th:href="@{/perfil}">
-               <!-- th:src="@{/img/usuario.png}" -->
-               <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
-           </a>
-           <a href="" class="text-decoration-none text-white fs-5">
-               <!-- th:src="@{/img/configuracion.png}" -->
-               <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
-           </a>
-           <button class="closeSessionBtn">Cerrar sesión</button>
-       </nav>
-   </div>
+    <div class="col-10 mx-auto d-flex align-items-center justify-content-between">
+        <h1 th:text="'Bienvenido ' + ${usuario.getNombreUsuario()}"></h1>
+        <nav class="d-flex flex-wrap gap-5 align-items-center fs-5">
+            <!-- th:href="@{/perfilUsuario}" -->
+            <a class="text-decoration-none text-white" th:href="@{/perfil(id=${usuario.getId()})}">
+                <!-- th:src="@{/img/usuario.png}" -->
+                <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+            </a>
+            <a href="" class="text-decoration-none text-white fs-5">
+                <!-- th:src="@{/img/configuracion.png}" -->
+                <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+            </a>
+            <button class="closeSessionBtn">Cerrar sesión</button>
+        </nav>
+    </div>
 </header>
 <main>
 
-        <div class="amigos">
-            <a th:href="@{/amigos}">
-                <h1>Amigos</h1>
-            </a>
-            <div class="d-flex flex-column align-items-center tablaAmigos" th:if="${amigos == null || amigos.size() == 0}">
-                <p class="text-white fs-5">Te recomendamos estos amigos</p>
-                <div class="sugerencias-container">
-                    <div class="sugerencia-item" th:each="usuario : ${usuariosSugeridos}">
-                        <p class="text-white" th:text="${usuario.nombreUsuario}"></p>
-                        <form th:action="@{/agregar-amigo}" method="post">
-                            <input type="hidden" name="idAmigo" th:value="${usuario.id}">
-                            <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
-                        </form>
-                    </div>
+    <div class="amigos">
+        <a th:href="@{/amigos}">
+            <h1>Amigos</h1>
+        </a>
+        <div class="d-flex flex-column align-items-center tablaAmigos" th:if="${amigos == null || amigos.size() == 0}">
+            <p class="text-white fs-5">Te recomendamos estos amigos</p>
+            <div class="sugerencias-container">
+                <div class="sugerencia-item" th:each="usuario : ${usuariosSugeridos}">
+                    <p class="text-white" th:text="${usuario.nombreUsuario}"></p>
+                    <form th:action="@{/agregar-amigo}" method="post">
+                        <input type="hidden" name="idAmigo" th:value="${usuario.id}">
+                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+                    </form>
                 </div>
             </div>
+        </div>
     </div>
     <div class="container-juegos">
 

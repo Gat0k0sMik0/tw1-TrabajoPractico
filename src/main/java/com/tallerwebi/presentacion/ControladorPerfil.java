@@ -21,10 +21,11 @@ public class ControladorPerfil {
     }
 
     @RequestMapping("/perfil")
-    public ModelAndView perfilUsuario() {
+    public ModelAndView perfilUsuario(@RequestParam("id") String idUsuario) {
         ModelMap model = new ModelMap();
-        model.put("fullname", "John Doe");
-        model.put("username", "johndoe123");
+        Usuario usuario = servicioUsuario.buscarPorId(Long.parseLong(idUsuario));
+        if (usuario == null) return new ModelAndView("redirect:/login");
+        model.put("usuario", usuario);
         return new ModelAndView("perfil", model);
     }
 
@@ -53,7 +54,7 @@ public class ControladorPerfil {
             @ModelAttribute("datosUsuario") Usuario usuarioNuevo,
             HttpSession session) {
 
-        Usuario usuarioViejo = (Usuario)session.getAttribute("usuarioActivo");
+        Usuario usuarioViejo = (Usuario) session.getAttribute("usuarioActivo");
         ModelMap model = new ModelMap();
 
         try {

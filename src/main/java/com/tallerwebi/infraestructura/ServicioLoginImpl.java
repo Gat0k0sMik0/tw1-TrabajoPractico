@@ -26,7 +26,7 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(Usuario usuario) throws MailExistenteException, ContraseniaInvalidaException, UsuarioInvalidoException, UsuarioExistenteException, ActualizarUsuarioException, ContraseniasDiferentesException {
+    public void registrar(Usuario usuario) throws ActualizarUsuarioException {
         Usuario usuarioEncontradoConMail = repositorioUsuario.buscarPorMail(usuario.getEmail());
         Usuario usuarioEncontradoConNombre = repositorioUsuario.buscarPorNombre(usuario.getNombreUsuario());
 

@@ -96,12 +96,4 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
     }
 
-    @Override
-    public List<Usuario> getUsuariosRandom(Integer cantidad, Long idUsuario) {
-        return repositorioUsuario.getUsuariosRandom(cantidad, idUsuario);
-    }
-
-    private Boolean saberSiExisteUnUsuarioEnLaLista(Usuario usuario, List<Usuario> lista) {
-        return lista.contains(usuario);
-    }
 }
