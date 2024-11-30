@@ -26,6 +26,7 @@ public class Partida {
     @OneToOne
     private Jugador ganador;
 
+
     public Partida() {
 
     }
