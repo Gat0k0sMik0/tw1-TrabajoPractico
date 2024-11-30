@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class ServicioPartidaImpl implements ServicioPartida {
@@ -88,5 +87,4 @@ public class ServicioPartidaImpl implements ServicioPartida {
     public List<Partida> getTodasLasPartidas() {
         return this.repositorioTruco.getTodasLasPartidas();
     }
-
 }
