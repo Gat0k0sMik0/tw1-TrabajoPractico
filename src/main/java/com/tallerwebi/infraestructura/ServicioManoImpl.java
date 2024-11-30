@@ -22,14 +22,11 @@ public class ServicioManoImpl implements ServicioMano {
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
     private Integer puntosEnJuegoMano;
 
-    Jugador diceEnvidoJ1;
-    Jugador diceEnvidoJ2;
-    Jugador diceRealEnvido;
-    Jugador diceFaltaEnvido;
-    Jugador leTocaTirar;
-
-    private List<Carta> cartasJ1;
-    private List<Carta> cartasJ2;
+    private Jugador diceEnvidoJ1;
+    private Jugador diceEnvidoJ2;
+    private Jugador diceRealEnvido;
+    private Jugador diceFaltaEnvido;
+    private Jugador leTocaTirar;
 
     @Autowired
     public ServicioManoImpl(
@@ -41,8 +38,6 @@ public class ServicioManoImpl implements ServicioMano {
         this.repositorioRonda = repositorioRonda;
         this.repositorioTruco = repositorioTruco;
         this.repositorioCarta = repositorioCarta;
-        this.cartasJ1 = new ArrayList<>();
-        this.cartasJ2 = new ArrayList<>();
         this.diceEnvidoJ1 = null;
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
@@ -53,13 +48,14 @@ public class ServicioManoImpl implements ServicioMano {
         this.puntosEnJuegoMano = 0;
     }
 
+
     @Override
-    public Mano empezar(Partida t, Jugador j1, Jugador j2) {
+    public void empezar(Partida truco) {
         // Crear mano nueva y setear valores
         Mano m = new Mano();
         m.setEstaTerminada(false);
         m.setConfirmacionTerminada(false);
-        m.setPartida(t);
+        m.setPartida(truco);
         m.setCartasJ1(new ArrayList<>());
         m.setCartasJ2(new ArrayList<>());
         m.setCartasTiradasJ1(new ArrayList<>());
@@ -67,12 +63,12 @@ public class ServicioManoImpl implements ServicioMano {
         m.setGanador(null);
 
         // Asignacion de cartas a los jugadores
-        this.asignarCartasJugadores(j1, j2, m);
+        this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
+
+        System.out.println(m);
 
         // Guardamos  mano
         repositorioMano.guardar(m);
-
-        return m;
     }
 
     @Override

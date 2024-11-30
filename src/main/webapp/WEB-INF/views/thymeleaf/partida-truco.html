@@ -100,36 +100,26 @@
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                     </a>
                 </th:block>
-
+                <th:block th:each="carta : ${cartasJugador1}" th:if="${turnoJugador == 2}">
+                    <a class="cartaTirarBtn">
+                        <img th:src="@{/img/cartaAlReves.png}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
+                    </a>
+                </th:block>
             </div>
         </div>
 
         <!-- CARTAS TIRADAS -->
-        <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
-
-            <form th:action="@{/comenzar-truco}" method="get">
-                <div class="col-4">
-                    <input type="hidden" name="jugador1" th:value="${sala != null && sala.nombreJugador1 != null ? sala.nombreJugador1 : ''}" />
-                    <input type="hidden" name="jugador2" th:value="${sala != null && sala.nombreJugador2 != null ? sala.nombreJugador2 : ''}" />
-                    <button type="submit" style="background-color: #2c3e50; border: none;">
-                        <img id="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas" style="background: transparent;">
-                    </button>
-                </div>
-            </form>
-<!--            <div id="texto-repartir" th:if="${partidaIniciada == false}" class="col-4">-->
-<!--                <img th:src="@{/img/cartas-truco/repartir-cartas-v2.png}">-->
-<!--                <div class="col-4 bor3">-->
-<!--                <a th:href="@{/comenzar-truco}" th:if="${ganador == null}" class="w-100">-->
-<!--                    <img class="mazo bor2" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">-->
-<!--                </a>-->
-<!--                <a th:if="${ganador != null}" class="w-100">-->
-<!--                    <img class="mazo bor1" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">-->
-<!--                </a>-->
-<!--            </div>-->
-            <div id="texto-repartir" th:if="${partidaIniciada == false}" class="col-8">
-                <img th:src="@{/img/cartas-truco/repartir-cartas-v2.png}" alt="Texto repartir">
+        <div id="cartas-en-juego" class="d-flex flex-wrap order-1 bor2">
+            <div th:if="${partidaIniciada != null && !partidaIniciada}" class="col-4 bor1">
+                <a th:href="@{/comenzar-truco(idPartida= ${idPartida})}" th:if="${ganador == null}" class="w-100">
+                    <img class="mazo bor2" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                </a>
+                <a th:if="${ganador != null}" class="w-100">
+                    <img class="mazo bor1" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                </a>
             </div>
-            <div class="col-4 d-flex flex-column flex-wrap gap-1" th:if="${partidaIniciada == true}">
+
+            <div class="col-4 d-flex flex-column flex-wrap gap-1" th:if="${partidaIniciada != null && partidaIniciada}">
                 <div class="d-flex justify-content-center gap-2" th:if="${cartasTiradasJ1 != null}">
                     <img th:each="carta : ${cartasTiradasJ1}" th:src="@{${carta.img}}" alt="Carta" class="cartaTirada"/>
                 </div>
@@ -137,6 +127,7 @@
                     <img th:each="carta : ${cartasTiradasJ2}" th:src="@{${carta.img}}" alt="Carta" class="cartaTirada"/>
                 </div>
             </div>
+
             <div class="col-4 d-flex flex-column justify-content-center align-items-center">
                 <div th:if="${ganador != null}">
                     <p>Ganó <strong th:text="${ganador.getNombre()}"></strong>!</p>
@@ -228,6 +219,11 @@
                     <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=2)}"
                        class="cartaTirarBtn">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
+                    </a>
+                </th:block>
+                <th:block th:each="carta : ${cartasJugador2}" th:if="${turnoJugador == 1}">
+                    <a class="cartaTirarBtn">
+                        <img th:src="@{/img/cartaAlReves.png}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                     </a>
                 </th:block>
 

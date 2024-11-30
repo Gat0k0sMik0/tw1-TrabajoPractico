@@ -77,8 +77,10 @@ public class ServicioManoTest {
     @Test
     void queSeGuardeLaMano() {
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
-        Partida t = new Partida();
-        Mano mano = servicioMano.empezar(t, j1, j2);
+        Mano p = new Mano();
+        p.setId(0L);
+        when(repositorioMano.obtenerManoPorId(p.getId())).thenReturn(p);
+        Mano mano = servicioMano.obtenerManoPorId(0L);
         assertThat(mano, notNullValue());
     }
 
@@ -209,7 +211,7 @@ public class ServicioManoTest {
         t.setJ2(j2);
         m.setCartasJ1(new ArrayList<>());
         m.setCartasJ2(new ArrayList<>());
-        servicioMano.empezar(t, j1, j2);
+        servicioMano.empezar(t);
         whenAsignoTresCartasAlJugador(j1, esperadas, m);
         whenAsignoTresCartasAlJugador(j2, esperadas, m);
     }
@@ -436,9 +438,24 @@ public class ServicioManoTest {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         Partida t = new Partida();
-        Mano m = servicioMano.empezar(t, j1, j2);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        Mano ayuda = new Mano();
+        ayuda.setId(0L);
+        ayuda.setCartasJ1(new ArrayList<>());
+        ayuda.setCartasJ2(new ArrayList<>());
+        ayuda.setCartasTiradasJ1(new ArrayList<>());
+        ayuda.setCartasTiradasJ2(new ArrayList<>());
+        servicioMano.empezar(t);
+        whenAsignoTresCartasAlJugador(t.getJ1(), esperadas, ayuda);
+        whenAsignoTresCartasAlJugador(t.getJ2(), esperadas, ayuda);
+        when(repositorioMano.obtenerManoPorId(0L)).thenReturn(ayuda);
+        when(repositorioMano.obtenerUltimaMano(0L)).thenReturn(ayuda);
+        Mano m = servicioMano.obtenerManoPorId(0L);
+        System.out.println(m);
         // then
         assertThat(m.getCartasJ1().size(), equalTo(3));
+        assertThat(m.getCartasJ2().size(), equalTo(3));
     }
 
     @Test

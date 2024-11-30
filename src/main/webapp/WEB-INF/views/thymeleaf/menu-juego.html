@@ -34,15 +34,55 @@
     <div class="col-10 mx-auto menuJuegoWrapper">
         <!-- Imagen de portada del juego -->
         <img th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
+
+        <div class="d-flex gap-2 flex-wrap">
+            <button type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal">
+                Abrir Modal
+            </button>
+            <a class="btn btn-secondary" th:href="@{/verSalas}">
+                Ver salas
+            </a>
+        </div>
+
+        <!--   CONTINUACIÓN    -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Crear sala</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form type="submit" th:action="@{/crearSala}" class="d-flex flex-column gap-2" method="post">
+                            <input type="hidden" th:value="${usuarioActivo.getId()}" name="idUsuario">
+                            <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="puntos" id="option15" value="15" autocomplete="off" checked> 15 puntos
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="puntos" id="option30" value="30" autocomplete="off"> 30 puntos
+                                </label>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Crear sala</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="botones">
             <!-- CREAR SALA -->
-            <form th:action="@{/crearSala}" method="get">
+            <form th:action="@{/crearSala}" method="post">
                 <!-- Enviar el id del usuario activo como un parámetro oculto -->
-                <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}" />
-                <button type="submit" id="boton-crear">CREAR SALA</button>
+                <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}"/>
+                <button type="submit" id="boton-crear" class="styledBtn">CREAR SALA</button>
             </form>
             <!-- VER SALAS -->
-            <button id="boton-buscar" onclick="mostrarPanelSalas()">VER SALAS DE ESPERA</button>
+            <button id="boton-buscar" onclick="mostrarPanelSalas()" class="styledBtn">VER SALAS DE ESPERA</button>
         </div>
 
         <!-- Panel desplegable -->
@@ -59,7 +99,7 @@
                     <span th:text="'Jugador 1: ' + ${sala.nombreJugador1}"></span>
                     <span th:text="${sala.nombreJugador2 != null ? 'Jugador 2: ' + sala.nombreJugador2 : 'Esperando por rival'}"></span>
                     <form th:action="@{/unirseSala}" method="get">
-                        <input type="hidden" name="idSala" th:value="${sala.id}" />
+                        <input type="hidden" name="idSala" th:value="${sala.id}"/>
                         <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}"/>
                         <input type="hidden" name="idHost" th:value="${sala.idJugador1}"/>
                         <button type="submit" th:if="${sala.nombreJugador2 == null}">Unirse</button>
@@ -173,12 +213,12 @@
     </div>
     <hr class="col-10 mx-auto text-white"/>
     <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
-
-    <script>
-        function mostrarPanelSalas() {
-            document.getElementById("panel").classList.toggle("oculto");
-        }
-    </script>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script>
+    function mostrarPanelSalas() {
+        document.getElementById("panel").classList.toggle("oculto");
+    }
+</script>
 </body>
 </html>
