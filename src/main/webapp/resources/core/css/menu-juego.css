@@ -87,6 +87,11 @@ body {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 90%; /* Ajusta el ancho del panel */
+    max-width: 800px; /* Máximo ancho del panel */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .oculto {
@@ -95,40 +100,50 @@ body {
 
 .panel h3 {
     margin-top: 0;
+    text-align: center;
 }
 
-#lista-salas {
-    list-style-type: none;
-    padding: 0;
-}
-
-#lista-salas li {
-    background-color: #f1f1f1;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
+/* Contenedor de las salas */
+.contenedorSalas {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 20px; /* Espaciado entre las filas */
+    width: 100%; /* El contenedor ocupa el ancho completo */
 }
 
-#lista-salas li span {
-    font-size: 18px;
-}
-
-#lista-salas li button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
+/* Fila de información de cada sala */
+.div {
+    display: flex;
+    justify-content: space-between; /* Espacio equitativo entre las columnas */
+    align-items: center; /* Centra verticalmente los elementos */
+    padding: 10px;
+    border: 1px solid #ddd; /* Líneas entre las filas */
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    background-color: #f9f9f9;
+    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
 }
 
-#lista-salas li button:hover {
-    background-color: #0056b3;
+/* Columnas */
+.columna {
+    flex: 1; /* Cada columna ocupa la misma proporción de espacio */
+    text-align: center; /* Centra el contenido */
+    padding: 0 10px; /* Espaciado interno */
+}
+
+/* Botón "Unirse" */
+.btn-success {
+    padding: 8px 15px;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-success:hover {
+    background-color: #218838;
 }
 
 .game-stats {

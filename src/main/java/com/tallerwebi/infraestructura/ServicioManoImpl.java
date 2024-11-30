@@ -27,6 +27,7 @@ public class ServicioManoImpl implements ServicioMano {
     private Jugador diceRealEnvido;
     private Jugador diceFaltaEnvido;
     private Jugador leTocaTirar;
+    private Jugador ultimoGanadorMano;
 
     @Autowired
     public ServicioManoImpl(
@@ -79,7 +80,7 @@ public class ServicioManoImpl implements ServicioMano {
         this.diceEnvidoJ2 = null;
         this.diceRealEnvido = null;
         this.diceFaltaEnvido = null;
-        this.leTocaTirar = null;
+        this.leTocaTirar = this.ultimoGanadorMano;
         this.puntosEnJuegoEnvido = 0;
         this.indicadorTruco = 0;
         this.puntosEnJuegoMano = 0;
@@ -152,6 +153,7 @@ public class ServicioManoImpl implements ServicioMano {
         // Obtener copias de cartas del que tiró
         List<Carta> cartasJugador = jugador.getNumero().equals(1) ? mano.getCartasJ1() : mano.getCartasJ2();
 
+
         if (!mano.getEstaTerminada()) {
             if (cartasJugador.contains(cartaElegidaParaTirar)) {
                 // Sacarle carta que tira y agregarsela a las que tira
@@ -164,6 +166,11 @@ public class ServicioManoImpl implements ServicioMano {
             }
         } else {
             throw new TrucoException("Estás tirando estando la mano terminada.");
+        }
+
+        // Si el jugador tiró y ambos se quedaron sin cartas, terminó la mano
+        if (mano.getCartasJ1().isEmpty() && mano.getCartasJ2().isEmpty()) {
+            mano.setEstaTerminada(true);
         }
     }
 
@@ -232,7 +239,6 @@ public class ServicioManoImpl implements ServicioMano {
         return this.leTocaTirar;
     }
 
-
     @Override
     public Integer obtenerPuntosEnJuegoPorTruco() {
         return this.puntosEnJuegoMano;
@@ -295,14 +301,20 @@ public class ServicioManoImpl implements ServicioMano {
 
         obtenerGanadorDeRonda(mano, truco.getJ1(), truco.getJ2());
 
+        if (mano.getCartasJ1().toArray().length == 0 && mano.getCartasJ2().toArray().length == 0) {
+            mano.setEstaTerminada(true);
+        }
+
         if (mano.getEstaTerminada()) {
             this.puntosEnJuegoMano = this.puntosEnJuegoMano.equals(0) ? 1 : this.puntosEnJuegoMano;
             if (mano.getPuntosRondaJ1() > mano.getPuntosRondaJ2()) {
                 truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoMano);
                 mano.setGanador(truco.getJ1());
+                setUltimoGanadorMano(truco.getJ1());
             } else if (mano.getPuntosRondaJ1() < mano.getPuntosRondaJ2()) {
                 mano.setGanador(truco.getJ2());
                 truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoMano);
+                setUltimoGanadorMano(truco.getJ2());
             } else {
                 throw new TrucoException("Ambos tienen mismos puntos de ronda");
             }
@@ -622,5 +634,13 @@ public class ServicioManoImpl implements ServicioMano {
         } else {
             return truco.getJ2();
         }
+    }
+
+    public Jugador getUltimoGanadorMano() {
+        return ultimoGanadorMano;
+    }
+
+    public void setUltimoGanadorMano(Jugador ultimoGanadorMano) {
+        this.ultimoGanadorMano = ultimoGanadorMano;
     }
 }
