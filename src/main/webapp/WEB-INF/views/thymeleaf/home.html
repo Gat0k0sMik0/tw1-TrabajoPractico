@@ -53,10 +53,15 @@
     <div class="container-juegos">
 
         <div class="truco-container">
-            <a th:href="@{/MenuJuego}">
-                <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
+            <form th:action="@{/menuJuego}" method="get">
+                <!-- Campo oculto para pasar el usuario -->
+                <input type="hidden" name="idUsuario" th:value="${usuario.id}">
+
+                <button type="submit" style="border: none; background: #515151">
+                    <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
+                </button>
                 <div class="texto-truco">TRUCO</div>
-            </a>
+            </form>
         </div>
 
         <div class="uno-container">

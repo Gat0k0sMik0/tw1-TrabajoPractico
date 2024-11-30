@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Código</title>
+    <link rel="stylesheet" th:href="@{/css/verificacionCorreo.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Ingrese su código de 6 dígitos</h2>
+    <form th:action="@{/verificar-correo}" method="POST" class="code-form">
+        <div class="input-group">
+            <input type="text" maxlength="1" class="digit" name="codigo1" required>
+            <input type="text" maxlength="1" class="digit" name="codigo2" required>
+            <input type="text" maxlength="1" class="digit" name="codigo3" required>
+            <input type="text" maxlength="1" class="digit" name="codigo4" required>
+            <input type="text" maxlength="1" class="digit" name="codigo5" required>
+            <input type="text" maxlength="1" class="digit" name="codigo6" required>
+        </div>
+        <input type="hidden" name="email" value="${sessionScope.email}">
+        <button type="submit" class="submit-btn">Validar</button>
+    </form>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('.digit');
+
+        inputs.forEach((input, index) => {
+            // Moverse al siguiente input cuando se ingresa un dígito
+            input.addEventListener('input', function() {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            // Moverse al anterior input cuando se borra un dígito
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

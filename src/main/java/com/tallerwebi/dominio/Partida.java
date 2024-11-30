@@ -18,16 +18,33 @@ public class Partida {
     @JoinColumn(name = "j2_id")
     private Jugador j2;
 
-    @OneToMany
-    private List<Mano> manos;
-
     private Integer puntosJ1;
     private Integer puntosJ2;
     private Integer puntosParaGanar;
+    private Boolean puedeEmpezar;
+
+    @OneToOne
+    private Jugador ganador;
 
 
     public Partida() {
 
+    }
+
+    public Boolean getPuedeEmpezar() {
+        return puedeEmpezar;
+    }
+
+    public void setPuedeEmpezar(Boolean puedeEmpezar) {
+        this.puedeEmpezar = puedeEmpezar;
+    }
+
+    public Jugador getGanador() {
+        return ganador;
+    }
+
+    public void setGanador(Jugador ganador) {
+        this.ganador = ganador;
     }
 
     public Integer getPuntosParaGanar() {
@@ -80,13 +97,15 @@ public class Partida {
 
     @Override
     public String toString() {
-        return "Truco2{" +
+        return "Partida{" +
                 "id=" + id +
                 ", j1=" + j1 +
                 ", j2=" + j2 +
                 ", puntosJ1=" + puntosJ1 +
                 ", puntosJ2=" + puntosJ2 +
                 ", puntosParaGanar=" + puntosParaGanar +
+                ", puedeEmpezar=" + puedeEmpezar +
+                ", ganador=" + ganador +
                 '}';
     }
 }

@@ -6,7 +6,12 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>spring web mvc</name>
-
+    <repositories>
+        <repository>
+            <id>glassfish</id>
+            <url>https://repo.eclipse.org/content/groups/releases/</url>
+        </repository>
+    </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>11</jdk.version>
@@ -128,6 +133,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.0</version>
+        </dependency>
+
+        <!-- MAILER -->
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
+            <version>2.0.2</version>
         </dependency>
     </dependencies>
 

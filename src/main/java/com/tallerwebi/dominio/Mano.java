@@ -199,8 +199,8 @@ public class Mano {
                 ", puntosRondaJ1=" + puntosRondaJ1 +
                 ", puntosRondaJ2=" + puntosRondaJ2 +
                 ", ganador=" + ganador +
-                ", cartasJ1=" + cartasJ1.size() +
-                ", cartasJ2=" + cartasJ2.size() +
+                ", cartasJ1=" + cartasJ1 +
+                ", cartasJ2=" + cartasJ2 +
                 ", cartasTiradasJ1=" + cartasTiradasJ1.size() +
                 ", cartasTiradasJ2=" + cartasTiradasJ2.size() +
                 '}';
