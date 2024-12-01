@@ -50,6 +50,7 @@ public class ControladorTruco {
         Jugador jugador1 = new Jugador();
         jugador1.setNombre(usuarioActivo.getNombreUsuario());
         jugador1.setNumero(1);
+        jugador1.setUsuario(usuarioActivo);
 
         Partida truco = servicioTruco.preparar(jugador1, Integer.parseInt(puntosMaximos));
 
@@ -77,6 +78,7 @@ public class ControladorTruco {
         Jugador jugador2 = new Jugador();
         jugador2.setNombre(usuarioActivo.getNombreUsuario());
         jugador2.setNumero(2);
+        jugador2.setUsuario(usuarioActivo);
         servicioTruco.agregarJugador(jugador2, truco);
 
         session.setAttribute("idPartida", truco.getId());
