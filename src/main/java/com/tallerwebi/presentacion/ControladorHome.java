@@ -28,9 +28,15 @@ public class ControladorHome {
 
     @RequestMapping("/home")
     public ModelAndView irAlHome(
-            @ModelAttribute("email") String email) {
+            HttpSession session) {
         ModelMap model = new ModelMap();
 
+        // Recuperar el email desde la sesión
+        String email = (String) session.getAttribute("email");
+        if (email == null) return new ModelAndView("redirect:/login");
+
+
+        // Buscar el usuario en base al email
         Usuario usuario = servicioUsuario.buscar(email);
         if (usuario == null) return new ModelAndView("redirect:/login");
 
