@@ -21,14 +21,17 @@ public class ControladorTruco {
     private ServicioPartida servicioTruco;
     private ServicioMano servicioMano;
     private ServicioUsuario servicioUsuario;
+    private ServicioEstadisticas servicioEstadistica;
 
     @Autowired
     public ControladorTruco(ServicioPartida servicioTruco,
-                            ServicioMano servicioMano2,
-                            ServicioUsuario servicioUsuario) {
+                            ServicioMano servicioMano,
+                            ServicioUsuario servicioUsuario,
+                            ServicioEstadisticas servicioEstadistica) {
         this.servicioTruco = servicioTruco;
-        this.servicioMano = servicioMano2;
+        this.servicioMano = servicioMano;
         this.servicioUsuario = servicioUsuario;
+        this.servicioEstadistica = servicioEstadistica;
     }
 
     @GetMapping("/espera")
@@ -47,6 +50,7 @@ public class ControladorTruco {
         Jugador jugador1 = new Jugador();
         jugador1.setNombre(usuarioActivo.getNombreUsuario());
         jugador1.setNumero(1);
+        jugador1.setUsuario(usuarioActivo);
 
         Partida truco = servicioTruco.preparar(jugador1, Integer.parseInt(puntosMaximos));
 
@@ -74,6 +78,7 @@ public class ControladorTruco {
         Jugador jugador2 = new Jugador();
         jugador2.setNombre(usuarioActivo.getNombreUsuario());
         jugador2.setNumero(2);
+        jugador2.setUsuario(usuarioActivo);
         servicioTruco.agregarJugador(jugador2, truco);
 
         session.setAttribute("idPartida", truco.getId());
@@ -98,6 +103,8 @@ public class ControladorTruco {
                 if (partida.getPuedeEmpezar()) {
                     if (partida.getGanador() != null) {
                         model.put("ganador", partida.getGanador());
+                        model.put("partidaFinalizada", true);
+                        servicioEstadistica.guardarResultado(partida);
                         return new ModelAndView("partida-truco", model);
                     }
 
@@ -151,6 +158,7 @@ public class ControladorTruco {
             @RequestParam("idPartida") String idPartida,
             HttpSession session) {
         System.out.println("/comenzar-truco: inicio");
+
         Partida truco = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
         if (truco == null) return new ModelAndView("redirect:/home");
 

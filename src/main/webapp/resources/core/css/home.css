@@ -115,7 +115,6 @@ a {
 .closeSessionBtn {
 	padding: 0.8rem 1.6rem;
 	background: #1D8FF2;
-	border: none;
 	border-radius: 1rem;
 	color: #fff;
 	font-weight: 600;
@@ -129,19 +128,116 @@ a {
 	border: 1px solid #fff;
 }
 
+/* Estilos generales para la sección de amigos */
+.amigos {
+	background-color: #343a40; /* Fondo oscuro */
+	padding: 20px;
+	border-radius: 10px;
+	margin: 20px 0;
+}
+
+.amigos a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.amigos h1 {
+	color: #ffffff;
+	font-size: 2rem;
+	margin-bottom: 20px;
+}
+
+/* Estilos cuando no hay amigos */
+.tablaAmigos {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	color: #ffffff;
+}
+
+.tablaAmigos p {
+	font-size: 1.2rem;
+}
+
 .sugerencias-container {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1rem;
+	gap: 10px;
 	justify-content: center;
 }
 
 .sugerencia-item {
+	background-color: #495057;
+	padding: 15px;
+	border-radius: 8px;
+	width: 120px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	padding: 10px;
-	color: white;
+	justify-content: space-between;
 	text-align: center;
+}
+
+.sugerencia-item p {
+	margin-bottom: 10px;
+	font-size: 1.1rem;
+	color: #ffffff;
+}
+
+.sugerencia-item form {
+	margin: 0;
+}
+
+.sugerencia-item button {
+	background-color: #007bff;
+	color: #ffffff;
+	border: none;
+	border-radius: 5px;
+	padding: 5px 10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-top: 5px;
+}
+
+.sugerencia-item button:hover {
+	background-color: #0056b3;
+}
+
+/* Añadir espaciado entre las sugerencias */
+.sugerencias-container {
+	gap: 15px;
+}
+
+/* Títulos e información adicional */
+.amigos h1 {
+	font-size: 2rem;
+	margin-bottom: 10px;
+}
+
+.text-white {
+	color: white;
+}
+#estadisticas {
+	text-decoration: none;
+	display: inline-block;
+	background-color: #28a745;
+	color: #ffffff;
+	padding: 15px 30px;
+	border-radius: 8px;
+	font-size: 1.5rem;
+	font-weight: bold;
+	text-align: center;
+	transition: background-color 0.3s ease, transform 0.3s ease;
+	margin-left:500px;
+	margin-bottom: 30px;
+}
+
+#estadisticas:hover {
+	background-color: #218838;
+	transform: scale(1.05);
+}
+
+#estadisticas div {
+	margin: 0;
 }

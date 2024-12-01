@@ -14,7 +14,7 @@ import java.util.*;
 public class ServicioManoImpl implements ServicioMano {
 
     RepositorioMano repositorioMano;
-    RepositorioRonda2 repositorioRonda;
+    RepositorioRonda repositorioRonda;
     RepositorioTruco repositorioTruco;
     RepositorioCarta repositorioCarta;
 
@@ -32,7 +32,7 @@ public class ServicioManoImpl implements ServicioMano {
     @Autowired
     public ServicioManoImpl(
             RepositorioMano repositorioMano,
-            RepositorioRonda2 repositorioRonda,
+            RepositorioRonda repositorioRonda,
             RepositorioTruco repositorioTruco,
             RepositorioCarta repositorioCarta) {
         this.repositorioMano = repositorioMano;

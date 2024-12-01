@@ -5,7 +5,6 @@ import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +67,7 @@ public class ControladorLogin {
         // Manejo de excepciones
         try {
             servicioLogin.registrar(usuario);
-        } catch (EmailInvalidoException e) {
+        } catch (ActualizarUsuarioException e) {
             model.put("error", "El correo no es válido");
             return new ModelAndView("nuevo-usuario", model);
         } catch (MailExistenteException e) {

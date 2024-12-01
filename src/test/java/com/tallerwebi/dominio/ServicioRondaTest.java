@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class ServicioRondaTest {
 
 
-    RepositorioRonda2 repositorioRonda2 = mock(RepositorioRondaImpl.class);
+    RepositorioRonda repositorioRonda2 = mock(RepositorioRondaImpl.class);
     RepositorioMano repositorioMano = mock(RepositorioManoImpl.class);
 
     ServicioRonda servicioRonda = new ServicioRondaImpl(repositorioRonda2, repositorioMano);

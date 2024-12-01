@@ -16,11 +16,11 @@ public class ServicioRondaImpl implements ServicioRonda {
     private Integer contadorMovimientos;
 
     @Autowired
-    private RepositorioRonda2 repositorioRonda;
+    private RepositorioRonda repositorioRonda;
     @Autowired
     private RepositorioMano repositorioMano;
 
-    public ServicioRondaImpl(RepositorioRonda2 repositorioRonda, RepositorioMano repositorioMano) {
+    public ServicioRondaImpl(RepositorioRonda repositorioRonda, RepositorioMano repositorioMano) {
         this.repositorioRonda = repositorioRonda;
         this.repositorioMano = repositorioMano;
         this.rondas = new ArrayList<>();

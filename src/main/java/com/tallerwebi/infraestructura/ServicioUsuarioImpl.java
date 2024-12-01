@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @Transactional
@@ -47,13 +45,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     }
 
     @Override
-    public Usuario actualizarPerfil(Usuario usuarioLogueado, Usuario usuarioNuevo) {
-        usuarioLogueado.setNombreUsuario(usuarioNuevo.getNombreUsuario());
-        usuarioLogueado.setEmail(usuarioNuevo.getEmail());
-        usuarioLogueado.setPassword(usuarioNuevo.getPassword());
-        usuarioLogueado.setConfirmPassword(usuarioNuevo.getConfirmPassword());
-        repositorioUsuario.modificar(usuarioLogueado);
-        return usuarioLogueado;
+    public Usuario actualizarPerfil(Usuario usuarioNuevo) {
+        repositorioUsuario.modificar(usuarioNuevo);
+        return usuarioNuevo;
     }
 
     @Override
@@ -62,43 +56,44 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     }
 
     @Override
-    public void verificarDatos(Usuario usuario) throws EmailInvalidoException, MailExistenteException, UsuarioInvalidoException, UsuarioExistenteException, ContraseniasDiferentesException, ContraseniaInvalidaException {
-        Usuario usuarioEncontradoConMail = repositorioUsuario.buscarPorMail(usuario.getEmail());
+    public void verificarDatos(Usuario usuarioViejo, Usuario usuario) throws ActualizarUsuarioException {
+        Usuario usuarioEncontradoConMail;
         Usuario usuarioEncontradoConNombre = repositorioUsuario.buscarPorNombre(usuario.getNombreUsuario());
+
+        // Si cambio el email, fijarse que no existe otro con ese mail
+        if (!usuarioViejo.getEmail().equals(usuario.getEmail())) {
+            usuarioEncontradoConMail = repositorioUsuario.buscarPorMail(usuario.getEmail());
+            if (usuarioEncontradoConMail != null) {
+                throw new ActualizarUsuarioException("Ya existe un usuario con ese correo. Intenta otro.");
+            }
+        }
+
+        if (usuario.getPassword().isEmpty() && usuario.getConfirmPassword().isEmpty()) {
+            usuario.setPassword(usuarioViejo.getPassword());
+            usuario.setConfirmPassword(usuarioViejo.getPassword());
+        } else {
+            // Si cambio la contraseña
+            if (!usuario.getPassword().equals(usuarioViejo.getPassword())) {
+                // Validacion repetir contraseña
+                if (!usuario.getPassword().equals(usuario.getConfirmPassword()))
+                    throw new ActualizarUsuarioException("Las contraseñas que ingresaste son distintas. Deben ser iguales");
+                // Validacion largo de contraseña
+                if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5)
+                    throw new ActualizarUsuarioException("El largo de la contraseña debe ser de entre 5 y 15 caracteres");
+            }
+        }
 
         // Validacion correo
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (!usuario.getEmail().matches(emailRegex) || !usuario.getEmail().endsWith(".com")) {
-            throw new EmailInvalidoException();
-        }
-        // Que no exista usuario con mismo correo
-        if (usuarioEncontradoConMail != null) {
-            throw new MailExistenteException();
-        }
+        if (!usuario.getEmail().matches(emailRegex) || !usuario.getEmail().endsWith(".com"))
+            throw new ActualizarUsuarioException("El e-mail está mal escrito");
         // Validacion largo de nombre de usuario
-        if (usuario.getNombreUsuario().length() > 16 || usuario.getNombreUsuario().length() < 4) {
-            throw new UsuarioInvalidoException();
-        }
+        if (usuario.getNombreUsuario().length() > 16 || usuario.getNombreUsuario().length() < 4)
+            throw new ActualizarUsuarioException("El largo del nombre de usuario debe ser de entre 5 y 16 caracteres");
         // Que no exista usuario con el mismo nombre
-        if (usuarioEncontradoConNombre != null) {
-            throw new UsuarioExistenteException();
-        }
-        // Validacion repetir contraseña
-        if (!usuario.getPassword().equals(usuario.getConfirmPassword())) {
-            throw new ContraseniasDiferentesException();
-        }
-        // Validacion largo de contraseña
-        if (usuario.getPassword().length() > 15 || usuario.getPassword().length() < 5) {
-            throw new ContraseniaInvalidaException();
-        }
+        if (usuarioEncontradoConNombre != null)
+            throw new ActualizarUsuarioException("Ya existe un usuario con ese nombre de usuario");
+
     }
 
-    @Override
-    public List<Usuario> getUsuariosRandom(Integer cantidad, Long idUsuario) {
-        return repositorioUsuario.getUsuariosRandom(cantidad, idUsuario);
-    }
-
-    private Boolean saberSiExisteUnUsuarioEnLaLista(Usuario usuario, List<Usuario> lista){
-        return lista.contains(usuario);
-    }
 }

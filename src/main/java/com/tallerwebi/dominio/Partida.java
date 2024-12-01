@@ -95,6 +95,10 @@ public class Partida {
         this.id = id;
     }
 
+    public boolean isPartidaFinalizada() {
+        return this.ganador != null;
+    }
+
     @Override
     public String toString() {
         return "Partida{" +

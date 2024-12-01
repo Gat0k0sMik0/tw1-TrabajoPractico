@@ -10,14 +10,13 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ServicioManoTest {
 
     RepositorioMano repositorioMano = mock(RepositorioManoImpl.class);
     RepositorioTruco repositorioTruco = mock(RepositorioTrucoImpl.class);
-    RepositorioRonda2 repositorioRonda = mock(RepositorioRondaImpl.class);
+    RepositorioRonda repositorioRonda = mock(RepositorioRondaImpl.class);
     RepositorioCarta repositorioCarta = mock(RepositorioCartaImpl.class);
 
     ServicioMano servicioMano = new ServicioManoImpl(
