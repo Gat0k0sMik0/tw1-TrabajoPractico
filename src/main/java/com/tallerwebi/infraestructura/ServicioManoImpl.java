@@ -154,7 +154,8 @@ public class ServicioManoImpl implements ServicioMano {
         List<Carta> cartasJugador = jugador.getNumero().equals(1) ? mano.getCartasJ1() : mano.getCartasJ2();
 
 
-        if (!mano.getEstaTerminada()) {
+
+
             if (cartasJugador.contains(cartaElegidaParaTirar)) {
                 // Sacarle carta que tira y agregarsela a las que tira
                 sacarCartaDeJugador(jugador, cartaElegidaParaTirar, mano);
@@ -164,9 +165,7 @@ public class ServicioManoImpl implements ServicioMano {
             } else {
                 throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
             }
-        } else {
-            throw new TrucoException("Estás tirando estando la mano terminada.");
-        }
+
 
         // Si el jugador tiró y ambos se quedaron sin cartas, terminó la mano
         if (mano.getCartasJ1().isEmpty() && mano.getCartasJ2().isEmpty()) {

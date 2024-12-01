@@ -52,6 +52,7 @@ public class ControladorTruco {
         jugador1.setNumero(1);
         jugador1.setUsuario(usuarioActivo);
 
+        // SE INSTANCIA LA PARTIDA CON LOS PUNTOS PARA GANAR
         Partida truco = servicioTruco.preparar(jugador1, Integer.parseInt(puntosMaximos));
 
         System.out.println(truco);
@@ -144,8 +145,8 @@ public class ControladorTruco {
                     model.put("turnoJugador", leTocaTirar.getNumero());
                     model.put("leTocaResponder", mano.getRespondeAhora());
                 }
-                model.put("partidaIniciada", false);
-                model.put("ganador", null);
+                model.put("partidaIniciada", partida.getPuedeEmpezar());
+                model.put("ganador", partida.getGanador());
                 model.put("idPartida", partida.getId());
             }
         }
@@ -159,21 +160,25 @@ public class ControladorTruco {
             HttpSession session) {
         System.out.println("/comenzar-truco: inicio");
 
-        Partida truco = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
-        if (truco == null) return new ModelAndView("redirect:/home");
+        // Obtén la partida por su ID
+        Partida partida = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
 
-        System.out.println(truco);
+        // Si no existe la partida, redirige a /home
+        if (partida == null) {
+            System.out.println("Partida no encontrada");
+            return new ModelAndView("redirect:/home");
+        }
 
-        // Empezamos la partida
-        this.servicioTruco.empezar(truco);
+        // Empezamos la partida y la mano
+        servicioTruco.empezar(partida);
+        servicioMano.empezar(partida);
 
-        // Empezamos mano
-        this.servicioMano.empezar(truco);
+        // Guarda el ID de la partida en la sesión
+        session.setAttribute("idPartida", partida.getId());
 
-        // Guardar IDs en la sesión
-        session.setAttribute("idPartida", truco.getId());
-
+        System.out.println("Partida iniciada: " + partida);
         System.out.println("/comenzar-truco: fin");
+
         return new ModelAndView("redirect:/partida-truco");
     }
 
