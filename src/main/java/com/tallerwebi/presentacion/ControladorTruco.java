@@ -109,6 +109,14 @@ public class ControladorTruco {
                         return new ModelAndView("partida-truco", model);
                     }
 
+                    // Verificar si debe finalizarse
+                    if (partida.getPuntosJ1() >= partida.getPuntosParaGanar() || partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
+                        servicioTruco.finalizarPartida(partidaId);
+                        model.put("ganador", partida.getGanador());
+                        model.put("partidaFinalizada", true);
+                        return new ModelAndView("partida-truco", model);
+                    }
+
                     Mano mano = servicioMano.obtenerManoPorId(partidaId);
 
                     model.put("seTermino", mano.getEstaTerminada());

@@ -236,6 +236,15 @@
     <p th:if="${jugador2 != null}" th:text="${jugador2}"></p>
     <p th:if="${partida != null}" th:text="${partida}"></p>
 </main>
+<script>
+    function mostrarPopupGanador(mensaje) {
+        alert(mensaje); // Popup simple
+    }
+</script>
+<script th:if="${ganador != null}">
+    let mensaje = '¡Felicidades, ' + [[${ganador}]] + '! Has ganado la partida.';
+    mostrarPopupGanador(mensaje);
+</script>
 
 <!-- Footer -->
 <footer>
@@ -269,6 +278,7 @@
             })
         })
     })
+
 </script>
 </body>
 </html>
