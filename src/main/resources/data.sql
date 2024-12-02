@@ -1,13 +1,18 @@
 /* USUARIOS */
-INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id)
+INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id, urlFotoPerfil)
 VALUES
-('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1),
-('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2),
-('user1', 'user1@user.com', 'user0000', 'USER', true, 3),
-('user2', 'user2@user.com', 'user0000', 'USER', true, 4),
-('user3', 'user3@user.com', 'user0000', 'USER', true, 5),
-('user4', 'user4@user.com', 'user0000', 'USER', true, 6),
-('user5', 'user5@user.com', 'user0000', 'USER', true, 7);
+('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, 'default.png'),
+('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, 'default.png'),
+('user1', 'user1@user.com', 'user0000', 'USER', true, 3, 'default.png'),
+('user2', 'user2@user.com', 'user0000', 'USER', true, 4, 'default.png'),
+('user3', 'user3@user.com', 'user0000', 'USER', true, 5, 'default.png'),
+('user4', 'user4@user.com', 'user0000', 'USER', true, 6, 'default.png'),
+('user5', 'user5@user.com', 'user0000', 'USER', true, 7, 'default.png');
+
+/* FOTO DE PERFIL DEFAULT */
+INSERT INTO FotoPerfil(id, imagen)
+VALUES
+(1, 'default.png');
 
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)
