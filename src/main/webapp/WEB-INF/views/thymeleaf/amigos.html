@@ -44,7 +44,10 @@
                 <td th:text="${amigo.id} + ' - ' + ${amigo.nombreUsuario}"></td>
                 <td class="text-center">
                     <div class="d-flex gap-1">
-                        <button class="btn btn-success btn-sm">Mensaje</button>
+                        <a th:href="@{/chat(idUser1=${usuarioActual.id}, idUser2=${amigo.id})}"
+                           class="btn btn-success btn-sm">
+                            Mensaje
+                        </a>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
                     </div>
                     <!--                    <form th:action="@{/agregar-amigo}" method="post">-->

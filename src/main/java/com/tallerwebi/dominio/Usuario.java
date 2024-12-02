@@ -114,4 +114,11 @@ public class Usuario {
     public int hashCode() {
         return Objects.hashCode(email);
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "nombreUsuario='" + nombreUsuario + '\'' +
+                '}';
+    }
 }

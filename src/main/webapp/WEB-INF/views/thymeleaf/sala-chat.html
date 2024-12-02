@@ -1,24 +1,77 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sala de chat</title>
+    <style>
+        /* Estilos para los contenedores de mensajes */
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .sent {
+            background-color: #cce5ff; /* Color para los mensajes enviados */
+            align-self: flex-end;
+        }
+
+        .received {
+            background-color: #d4edda; /* Color para los mensajes recibidos */
+            align-self: flex-start;
+        }
+
+        /* Estilos para el encabezado del mensaje (nombre y hora) */
+        .message-header {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .timestamp {
+            font-size: 0.8em;
+            color: gray;
+        }
+
+        /* Estilos para el contenido del mensaje */
+        .message-content {
+            font-size: 1.1em;
+        }
+    </style>
 </head>
 
 <body>
 <header><h1>Sala de chat </h1></header>
 <main class="chat-container">
+    <h3 th:text="${'Chat entre ' + u1.nombreUsuario + ' y ' + u2.nombreUsuario}"></h3>
+    <h3 class="text-danger" th:text="${'id1: ' + idUsuario1 + ' | id2: ' + idUsuario2}"></h3>
+    <div th:each="mensaje : ${historial}" class="chat-message-container">
+        <div th:if="${!historial.isEmpty()}" class="message-right">
+            <!-- Mensaje del usuario actual (a la derecha) -->
+            <div class="alert alert-info text-right">
+                <strong th:text="${mensaje.fromUser.nombreUsuario + ': '}"></strong>
+                <strong th:text="${mensaje.content}"></strong>
+                <br/>
+                <small th:text="${mensaje.timestamp}"></small>
+            </div>
+        </div>
+    </div>
     <div class="chat-messages" id="chat-messages">
 
         <!-- Aquí se mostrarán los mensajes -->
 
     </div>
-    <input type="text" class="chat-input" id="message" placeholder="Escribe tu mensajeRecibido" />
+    <input type="text" class="chat-input" id="message" placeholder="Escribe tu mensajeRecibido"/>
     <button onclick="sendMessage()">send</button>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    window.idUsuario1 = /*[[${idUsuario1}]]*/ 0;  // Pasar idUsuario1 al JavaScript global
+    window.idUsuario2 = /*[[${idUsuario2}]]*/ 0;  // Pasar idUsuario2 al JavaScript global
+    /* ]]> */
+</script>
 <script th:src="@{/js/script.js}"></script>
 </body>
 </html>
