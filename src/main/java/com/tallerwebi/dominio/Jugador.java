@@ -11,9 +11,24 @@ public class Jugador {
 
     private String nombre;
     private Integer numero;
+    private Integer victorias;
+    private String nivel;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     public Jugador() {
+        this.victorias = 0;
+        this.nivel = "Bronce";
+    }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -40,14 +55,32 @@ public class Jugador {
         this.numero = numero;
     }
 
+    public Integer getVictorias() {
+        return victorias;
+    }
+
+    public void setVictorias(Integer victorias) {
+        this.victorias = victorias;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
     @Override
     public String toString() {
         return "Jugador{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
+                ", victorias=" + victorias +
+                ", nivel='" + nivel + '\'' +
                 '}';
     }
-
+}
     //
 //    public List<Carta> getCartasTiradas() {
 //        return cartasTiradas;
@@ -55,4 +88,3 @@ public class Jugador {
 //
 //    public void setCartasTiradas(List<Carta> cartasTiradas) {
 //        this.cartasTiradas = cartasTiradas;
-}

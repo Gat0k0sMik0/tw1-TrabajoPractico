@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Foto de Perfil</title>
+    <link rel="stylesheet" th:href="@{/css/subir-foto.css}" />
+</head>
+<body>
+<div class="container">
+    <div class="happy-face">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#ffd700" />
+            <circle cx="8" cy="10" r="1.5" fill="#000" />
+            <circle cx="16" cy="10" r="1.5" fill="#000" />
+            <path d="M8 16c1.33 1 2.67 1 4 0" stroke="#000" stroke-width="1.5" stroke-linecap="round" fill="none" />
+        </svg>
+    </div>
+    <h1>Agrega tu Foto de Perfil</h1>
+    <p>Sube una imagen para personalizar tu perfil, o puedes hacerlo más tarde.</p>
+    <form th:action="@{/subir-foto}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:value="${usuario.id}" name="idUsuario">
+        <input type="file" name="fotoPerfil" id="fotoPerfil">
+        <br>
+        <button type="submit">Subir Foto</button>
+        <button type="submit" class="secondary-btn">Subir más tarde</button>
+    </form>
+</div>
+</body>
+</html>

@@ -35,19 +35,14 @@
         <!-- Imagen de portada del juego -->
         <img th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
 
-        <div class="d-flex gap-2 flex-wrap">
-            <button type="button"
-                    class="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#myModal">
-                Abrir Modal
-            </button>
-            <a class="btn btn-secondary" th:href="@{/verSalas}">
-                Ver salas
-            </a>
+        <div class="botones">
+            <!-- CREAR SALA -->
+            <button type="button" id="boton-crear" class="styledBtn" data-bs-toggle="modal" data-bs-target="#myModal">CREAR SALA</button>
+            <!-- VER SALAS -->
+            <button id="boton-buscar" onclick="mostrarPanelSalas()" class="styledBtn">VER SALAS DE ESPERA</button>
         </div>
 
-        <!--   CONTINUACIÓN    -->
+        <!--   POPUP OPCIONES DE PARTIDA   -->
         <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -57,8 +52,10 @@
                     </div>
                     <div class="modal-body">
                         <form type="submit" th:action="@{/crearSala}" class="d-flex flex-column gap-2" method="post">
-                            <input type="hidden" th:value="${usuarioActivo.getId()}" name="idUsuario">
+                            <!-- Enviar el id del usuario activo como un parámetro oculto -->
+                            <input type="hidden" th:value="${ua.getId()}" name="idUsuario">
                             <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+                                <!-- PUNTOS PARA GANAR -->
                                 <label class="btn btn-primary active">
                                     <input type="radio" name="puntos" id="option15" value="15" autocomplete="off" checked> 15 puntos
                                 </label>
@@ -73,39 +70,46 @@
             </div>
         </div>
 
-
-        <div class="botones">
-            <!-- CREAR SALA -->
-            <form th:action="@{/crearSala}" method="post">
-                <!-- Enviar el id del usuario activo como un parámetro oculto -->
-                <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}"/>
-                <button type="submit" id="boton-crear" class="styledBtn">CREAR SALA</button>
-            </form>
-            <!-- VER SALAS -->
-            <button id="boton-buscar" onclick="mostrarPanelSalas()" class="styledBtn">VER SALAS DE ESPERA</button>
-        </div>
-
         <!-- Panel desplegable -->
         <h2 th:if="${error != null}" th:text="${error}" style="color: red;"></h2>
         <div id="panel" class="panel oculto">
-            <h3>Salas de Espera</h3>
-            <ul id="lista-salas">
-                <!-- Mostrar mensaje si no hay salas -->
-                <li th:if="${#lists.isEmpty(salasDeEspera)}">No se encontró ninguna sala.</li>
-
-                <!-- Si hay salas, mostrar lista de salas -->
-                <li th:each="sala : ${salasDeEspera}">
-                    <span th:text="'ID de sala: ' + ${sala.id}"></span>
-                    <span th:text="'Jugador 1: ' + ${sala.nombreJugador1}"></span>
-                    <span th:text="${sala.nombreJugador2 != null ? 'Jugador 2: ' + sala.nombreJugador2 : 'Esperando por rival'}"></span>
-                    <form th:action="@{/unirseSala}" method="get">
-                        <input type="hidden" name="idSala" th:value="${sala.id}"/>
-                        <input type="hidden" name="idUsuario" th:value="${usuarioActivo.id}"/>
-                        <input type="hidden" name="idHost" th:value="${sala.idJugador1}"/>
-                        <button type="submit" th:if="${sala.nombreJugador2 == null}">Unirse</button>
-                    </form>
-                </li>
-            </ul>
+            <h3>Salas disponibles</h3>
+            <!-- Contenedor -->
+            <div class="contenedorSalas">
+                <div class="div">
+                    <div class="columna">
+                        <p>Partida: 15</p>
+                    </div>
+                    <div class="columna">
+                        <p>30 puntos</p>
+                    </div>
+                    <div class="columna">
+                        <a class="btn btn-success" href="#">Unirse</a>
+                    </div>
+                </div>
+                <div class="div">
+                    <div class="columna">
+                        <p>Partida: 15</p>
+                    </div>
+                    <div class="columna">
+                        <p>30 puntos</p>
+                    </div>
+                    <div class="columna">
+                        <a class="btn btn-success" href="#">Unirse</a>
+                    </div>
+                </div>
+                <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="div">
+                    <div class="columna">
+                        <p th:text="${'Partida: ' + partida.getId()}"></p>
+                    </div>
+                    <div class="columna">
+                        <p th:text="${'Puntos ' + partida.getPuntosParaGanar()}"></p>
+                    </div>
+                    <div class="columna">
+                        <a class="btn btn-success" th:href="@{/unirse(idJugador=${ua.getId()}, idPartida=${partida.getId()})}">Unirse</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Mensaje de carga -->
@@ -122,74 +126,19 @@
                 <thead>
                 <tr>
                     <th>Jugador</th>
-                    <th>Partidas</th>
-                    <th>Partidas Ganadas</th>
-                    <th>Partidas Perdidas</th>
+                    <th>Victorias</th>
+                    <th>Nivel</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Sofía Hernández</td>
-                    <td>23</td>
-                    <td>15</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Ana Martínez</td>
-                    <td>22</td>
-                    <td>14</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>María López</td>
-                    <td>20</td>
-                    <td>12</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Javier Morales</td>
-                    <td>21</td>
-                    <td>13</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Laura García</td>
-                    <td>19</td>
-                    <td>13</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Carlos Gómez</td>
-                    <td>18</td>
-                    <td>10</td>
-                    <td>8</td>
-                </tr>
-                <tr>
-                    <td>Luis Fernández</td>
-                    <td>17</td>
-                    <td>11</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Isabel Ruiz</td>
-                    <td>16</td>
-                    <td>10</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Juan Pérez</td>
-                    <td>15</td>
-                    <td>9</td>
-                    <td>6</td>
-                </tr>
-                <tr>
-                    <td>Pablo Torres</td>
-                    <td>14</td>
-                    <td>7</td>
-                    <td>7</td>
+                <tr th:each="jugador : ${jugadores}">
+                    <td th:text="${jugador.nombre}"></td>
+                    <td th:text="${jugador.victorias}"></td>
+                    <td th:text="${jugador.nivel}"></td>
                 </tr>
                 </tbody>
             </table>
+
         </div>
     </div>
 
@@ -217,7 +166,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 <script>
     function mostrarPanelSalas() {
-        document.getElementById("panel").classList.toggle("oculto");
+        var panel = document.getElementById("panel");
+        panel.classList.toggle("oculto");
+        const offset = 250; // Ajuste en píxeles
+        const panelPosition = panel.getBoundingClientRect().top + window.scrollY - offset;
+
+        window.scrollTo({ top: panelPosition, behavior: "smooth" });
     }
 </script>
 </body>

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.sound.midi.SysexMessage;
 import java.awt.*;
+import java.util.Random;
 
 
 @Controller
@@ -20,14 +21,17 @@ public class ControladorTruco {
     private ServicioPartida servicioTruco;
     private ServicioMano servicioMano;
     private ServicioUsuario servicioUsuario;
+    private ServicioEstadisticas servicioEstadistica;
 
     @Autowired
     public ControladorTruco(ServicioPartida servicioTruco,
                             ServicioMano servicioMano,
-                            ServicioUsuario servicioUsuario) {
+                            ServicioUsuario servicioUsuario,
+                            ServicioEstadisticas servicioEstadistica) {
         this.servicioTruco = servicioTruco;
         this.servicioMano = servicioMano;
         this.servicioUsuario = servicioUsuario;
+        this.servicioEstadistica = servicioEstadistica;
     }
 
     @GetMapping("/espera")
@@ -46,7 +50,9 @@ public class ControladorTruco {
         Jugador jugador1 = new Jugador();
         jugador1.setNombre(usuarioActivo.getNombreUsuario());
         jugador1.setNumero(1);
+        jugador1.setUsuario(usuarioActivo);
 
+        // SE INSTANCIA LA PARTIDA CON LOS PUNTOS PARA GANAR
         Partida truco = servicioTruco.preparar(jugador1, Integer.parseInt(puntosMaximos));
 
         System.out.println(truco);
@@ -73,6 +79,7 @@ public class ControladorTruco {
         Jugador jugador2 = new Jugador();
         jugador2.setNombre(usuarioActivo.getNombreUsuario());
         jugador2.setNumero(2);
+        jugador2.setUsuario(usuarioActivo);
         servicioTruco.agregarJugador(jugador2, truco);
 
         session.setAttribute("idPartida", truco.getId());
@@ -97,6 +104,8 @@ public class ControladorTruco {
                 if (partida.getPuedeEmpezar()) {
                     if (partida.getGanador() != null) {
                         model.put("ganador", partida.getGanador());
+                        model.put("partidaFinalizada", true);
+                        servicioEstadistica.guardarResultado(partida);
                         return new ModelAndView("partida-truco", model);
                     }
 
@@ -126,9 +135,6 @@ public class ControladorTruco {
                     model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora() != null);
                     model.put("mostrarRespuestasJ1", mano.getRespondeAhora() == null);
                     model.put("mostrarRespuestasJ2", mano.getRespondeAhora() == null);
-                    model.put("mostrarRespuestasFlorJ2", servicioMano.tieneFlor(partida.getJ1(), mano));
-                    model.put("mostrarRespuestasFlorJ2", servicioMano.tieneFlor(partida.getJ2(), mano));
-
 
                     model.put("puntosParaGanar", partida.getPuntosParaGanar());
                     model.put("mano", mano);
@@ -136,11 +142,11 @@ public class ControladorTruco {
                     model.put("idPartida", partida.getId());
                     model.put("accionAResponder", session.getAttribute("accionAResponder"));
 
-                    model.put("turnoJugador", leTocaTirar != null ? leTocaTirar.getNumero() : 1);
+                    model.put("turnoJugador", leTocaTirar.getNumero());
                     model.put("leTocaResponder", mano.getRespondeAhora());
                 }
-                model.put("partidaIniciada", false);
-                model.put("ganador", null);
+                model.put("partidaIniciada", partida.getPuedeEmpezar());
+                model.put("ganador", partida.getGanador());
                 model.put("idPartida", partida.getId());
             }
         }
@@ -153,21 +159,26 @@ public class ControladorTruco {
             @RequestParam("idPartida") String idPartida,
             HttpSession session) {
         System.out.println("/comenzar-truco: inicio");
-        Partida truco = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
-        if (truco == null) return new ModelAndView("redirect:/home");
 
-        System.out.println(truco);
+        // Obtén la partida por su ID
+        Partida partida = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
 
-        // Empezamos la partida
-        this.servicioTruco.empezar(truco);
+        // Si no existe la partida, redirige a /home
+        if (partida == null) {
+            System.out.println("Partida no encontrada");
+            return new ModelAndView("redirect:/home");
+        }
 
-        // Empezamos mano
-        this.servicioMano.empezar(truco);
+        // Empezamos la partida y la mano
+        servicioTruco.empezar(partida);
+        servicioMano.empezar(partida);
 
-        // Guardar IDs en la sesión
-        session.setAttribute("idPartida", truco.getId());
+        // Guarda el ID de la partida en la sesión
+        session.setAttribute("idPartida", partida.getId());
 
+        System.out.println("Partida iniciada: " + partida);
         System.out.println("/comenzar-truco: fin");
+
         return new ModelAndView("redirect:/partida-truco");
     }
 

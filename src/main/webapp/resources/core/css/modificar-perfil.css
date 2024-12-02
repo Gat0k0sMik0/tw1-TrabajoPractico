@@ -27,6 +27,10 @@
     background-color: #95BF39;
 }
 
+.styledMain {
+    min-height: calc(100% - 90px);
+}
+
 #usuario{
     width: 60px;
 }
@@ -36,22 +40,6 @@
 }
 .main-header img {
     margin: 18px;
-}
-
-#formulario {
-    margin: 50px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    max-width: 400px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 140px;
 }
 
 h2 {
@@ -76,23 +64,6 @@ input[type="file"] {
     border-radius: 4px;
     box-sizing: border-box;
     background: lightgrey;
-}
-
-button[type="submit"] {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 10px;
-}
-
-button[type="submit"]:hover {
-    background-color: #0000FF;
 }
 
 

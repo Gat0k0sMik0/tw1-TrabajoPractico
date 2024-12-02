@@ -26,6 +26,7 @@ public class Partida {
     @OneToOne
     private Jugador ganador;
 
+
     public Partida() {
 
     }
@@ -92,6 +93,10 @@ public class Partida {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isPartidaFinalizada() {
+        return this.ganador != null;
     }
 
     @Override

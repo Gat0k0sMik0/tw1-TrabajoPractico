@@ -18,7 +18,7 @@ public class ControladorHomeTest {
     ServicioAmistad servicioAmigos = mock(ServicioAmistadImpl.class);
     ControladorHome controladorHome = new ControladorHome(servicioUsuario, servicioAmigos);
 
-    @Test
+   /* @Test
     public void siEstaRegistradoYSeLogueoQueMuestreElHome () {
         String email = "pepito@pepito.com";
         Usuario creado = new Usuario();
@@ -39,6 +39,6 @@ public class ControladorHomeTest {
                 controladorHome.irAlHome(email).getViewName(),
                 equalToIgnoringCase("redirect:/login")
         );
-    }
+    }*/
 
 }

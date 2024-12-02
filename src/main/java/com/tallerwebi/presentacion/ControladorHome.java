@@ -21,20 +21,23 @@ public class ControladorHome {
     private ServicioUsuario servicioUsuario;
     private ServicioAmistad servicioAmistad;
 
-    public ControladorHome (ServicioUsuario servicioUsuario, ServicioAmistad servicioAmistad) {
+    public ControladorHome(ServicioUsuario servicioUsuario, ServicioAmistad servicioAmistad) {
         this.servicioUsuario = servicioUsuario;
         this.servicioAmistad = servicioAmistad;
     }
 
     @RequestMapping("/home")
-    public ModelAndView irAlHome(@ModelAttribute("email") String email) {
+    public ModelAndView irAlHome(
+            HttpSession session) {
         ModelMap model = new ModelMap();
 
+        // Recuperar el email desde la sesión
+        String email = (String) session.getAttribute("email");
+        if (email == null) return new ModelAndView("redirect:/login");
+
+        // Buscar el usuario en base al email
         Usuario usuario = servicioUsuario.buscar(email);
-        // Verifica que el usuario esté logueado
-        if (usuario == null) {
-            return new ModelAndView("redirect:/login"); // Redirige al login si no hay sesión activa
-        }
+        if (usuario == null) return new ModelAndView("redirect:/login");
 
         // Obtén las recomendaciones de amigos
         List<Usuario> usuariosSugeridos = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuario.getId());
@@ -58,8 +61,6 @@ public class ControladorHome {
         // Redireccionar a la ruta /home
         return new ModelAndView("redirect:/home");
     }
-
-
 
 
 }

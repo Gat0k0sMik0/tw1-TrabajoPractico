@@ -41,10 +41,9 @@ public class RepositorioCartaImpl implements RepositorioCarta {
     @Override
     public List<Carta> obtenerCartasDeJugadorPorId(Long idJugador) {
         Session session = sessionFactory.getCurrentSession();
-        List<Carta> c = session.createCriteria(Carta.class)
+        return (List<Carta>) session.createCriteria(Carta.class)
                 .add(Restrictions.eq("jugador.id", idJugador))
                 .list();
-        return c;
     }
 
     @Transactional

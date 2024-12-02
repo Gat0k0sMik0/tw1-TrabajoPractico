@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Jugador;
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.excepcion.TrucoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +12,11 @@ import java.util.List;
 @Service
 public class ServicioPartidaImpl implements ServicioPartida {
 
-    @Autowired
     RepositorioTruco repositorioTruco;
-    @Autowired
     RepositorioMano repositorioMano;
-    @Autowired
     RepositorioCarta repositorioCarta;
 
-
+    @Autowired
     public ServicioPartidaImpl(RepositorioTruco repositorioTruco, RepositorioCarta repositorioCarta, RepositorioMano repositorioMano) {
         this.repositorioTruco = repositorioTruco;
         this.repositorioCarta = repositorioCarta;
@@ -67,16 +65,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
         this.repositorioTruco.guardarPartida(truco);
     }
 
-    @Override
-    public void reset(Jugador j1, Jugador j2) {
-        this.vaciarCartasDeJugadores(j1, j2);
-//        this.asignarCartasJugadores(j1, j2);
-    }
-
-    private void vaciarCartasDeJugadores(Jugador j1, Jugador j2) {
-//        j1.getCartas().clear();
-//        j2.getCartas().clear();
-    }
 
     @Override
     public void guardarJugador(Jugador jugador) {
@@ -88,5 +76,50 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return this.repositorioTruco.getTodasLasPartidas();
     }
 
+    @Override
+    public void finalizarPartida(Long idPartida) {
+        // Obtener la partida
+        Partida partida = repositorioTruco.buscarPartidaPorId(idPartida);
 
+        // Validar la existencia de la partida
+        if (partida == null) {
+            throw new TrucoException("La partida no existe.");
+        }
+
+        // Verificar si ya tiene un ganador
+        if (partida.isPartidaFinalizada()) {
+            throw new TrucoException("La partida ya ha finalizado.");
+        }
+
+        // Determinar el ganador
+        if (partida.getPuntosJ1() >= partida.getPuntosParaGanar()) {
+            partida.setGanador(partida.getJ1());
+            registrarVictoria(partida.getJ1());
+        } else if (partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
+            partida.setGanador(partida.getJ2());
+            registrarVictoria(partida.getJ2());
+        } else {
+            throw new TrucoException("No se puede finalizar la partida, aún no hay un ganador.");
+        }
+
+        // Guardar los cambios
+        repositorioTruco.merge(partida);
+}
+
+    // Método para registrar la victoria de un jugador
+    private void registrarVictoria(Jugador ganador) {
+        ganador.setVictorias(ganador.getVictorias() + 1); // Incrementa las victorias
+        actualizarNivel(ganador); // Actualiza el nivel según las victorias
+    }
+
+    // Método para actualizar el nivel según las victorias
+    private void actualizarNivel(Jugador jugador) {
+        if (jugador.getVictorias() >= 30) {
+            jugador.setNivel("Oro");
+        } else if (jugador.getVictorias() >= 20) {
+            jugador.setNivel("Plata");
+        } else {
+            jugador.setNivel("Bronce");
+        }
+    }
 }

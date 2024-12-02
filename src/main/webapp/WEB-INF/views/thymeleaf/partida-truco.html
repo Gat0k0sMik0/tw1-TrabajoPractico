@@ -19,7 +19,7 @@
         <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="headerImage"/></div>
     </div>
     <div>
-        <a th:href="@{/volver-home}">Volver al menu</a>
+        <a th:href="@{/home}">Volver al menu</a>
     </div>
 </header>
 
@@ -90,19 +90,7 @@
                     </a>
                     <!-- FIN NUEVA LÓGICA -->
                 </div>
-                <!-- RESPUESTAS FLOR -->
-                <div id="respuestasFlor"
-                     th:if="${mostrarRespuestasFlorJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
-                    <a class="btn btn-primary"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=3, jugador=1, accion=${accionAResponder})}">Real
-                        Contraflor
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=4, jugador=1, accion=${accionAResponder})}">Falta
-                        Contraflor al resto
-                    </a>
-                    <!-- FIN NUEVA LÓGICA -->
-                </div>
+
             </div>
             <!-- CARTAS  -->
             <div class="gap-2 cartasJugadorContainer col-4">
@@ -225,19 +213,7 @@
                         Cuatro
                     </a>
                 </div>
-                <!-- RESPUESTAS FLOR -->
-                <div id="respuestasFlor2"
-                     th:if="${mostrarRespuestasFlorJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
-                    <a class="btn btn-primary"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=3, jugador=1, accion=${accionAResponder})}">Real
-                        Contraflor
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=4, jugador=1, accion=${accionAResponder})}">Falta
-                        Contraflor al resto
-                    </a>
-                    <!-- FIN NUEVA LÓGICA -->
-                </div>
+
             </div>
             <!-- CARTAS -->
             <div class="gap-2 cartasJugadorContainer col-4">
