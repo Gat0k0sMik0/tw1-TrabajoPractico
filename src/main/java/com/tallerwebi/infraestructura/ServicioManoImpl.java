@@ -73,6 +73,7 @@ public class ServicioManoImpl implements ServicioMano {
         m.setCartasTiradasJ1(new ArrayList<>());
         m.setCartasTiradasJ2(new ArrayList<>());
         m.setGanador(null);
+        m.setRespondeAhora(truco.getJ1());
         this.leTocaTirar = getRandom(truco);
         this.empezoLaMano = this.leTocaTirar;
 
@@ -82,7 +83,7 @@ public class ServicioManoImpl implements ServicioMano {
         System.out.println(m);
 
         // Guardamos  mano
-        repositorioMano.guardar(m);
+        repositorioMano.merge(m);
     }
 
     @Override
@@ -107,6 +108,7 @@ public class ServicioManoImpl implements ServicioMano {
         nueva.setCartasTiradasJ1(new ArrayList<>());
         nueva.setCartasTiradasJ2(new ArrayList<>());
         nueva.setGanador(null);
+        nueva.setRespondeAhora(truco.getJ1());
 
         // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);

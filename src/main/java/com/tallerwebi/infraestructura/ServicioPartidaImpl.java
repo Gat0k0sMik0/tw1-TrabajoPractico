@@ -48,6 +48,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     public void agregarJugador(Jugador j2, Partida truco) {
         truco.setJ2(j2);
         truco.setPuntosJ2(0);
+        truco.setPuedeEmpezar(true);
         this.repositorioTruco.guardarJugador(j2);
         this.repositorioTruco.merge(truco);
     }
@@ -62,7 +63,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public void empezar(Partida truco) {
         truco.setPuedeEmpezar(true);
-        this.repositorioTruco.guardarPartida(truco);
+        this.repositorioTruco.merge(truco);
     }
 
 
