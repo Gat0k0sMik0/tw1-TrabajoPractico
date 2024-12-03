@@ -2,18 +2,25 @@ const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/spring/wschat'
 });
 
-stompClient.debug = function(str) {
+// Accede a las variables globales definidas en el HTML
+const idUsuario1 = window.idUsuario1;
+const idUsuario2 = window.idUsuario2;
+
+console.log("USUARIO 1: " + idUsuario1);
+console.log("USUARIO 2: " + idUsuario2);
+
+stompClient.debug = function (str) {
     console.log(str)
 };
 
 stompClient.onConnect = (frame) => {
-    console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/messages', (m) => {
-        console.log(JSON.parse(m.body).content);
-        const messagesContainer = document.getElementById("chat-messages");
-        const newMessage = document.createElement("p")
-        newMessage.textContent = JSON.parse(m.body).content;
-        messagesContainer.appendChild(newMessage);
+    console.log('Conectado: ' + frame);
+    const chatChannel = `/queue/chat/${Math.min(idUsuario1, idUsuario2)}-${Math.max(idUsuario1, idUsuario2)}`;
+
+    stompClient.subscribe(chatChannel, (m) => {
+        console.log('Mensaje recibido del servidor:', m.body);
+        const messageData = JSON.parse(m.body)// Aquí ves lo que el servidor envió de vuelta
+        mostrarMensaje(messageData); // Parsear el mensaje
     });
 };
 
@@ -28,15 +35,50 @@ stompClient.onStompError = (frame) => {
 
 stompClient.activate();
 
-// Take the value in the ‘message-input’ text field and send it to the server with empty headers.
-function sendMessage(){
+function mostrarMensaje(messageData) {
+    const chatMessagesDiv = document.getElementById('chat-messages');
 
-    let input = document.getElementById("message");
-    let message = input.value;
+    // Crear un elemento para mostrar el mensaje
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message'); // Puedes usar esto para aplicar estilos
 
-    stompClient.publish({
-        destination: "/app/chat",
-        body: JSON.stringify({message: message})
-    });
+    // Mostrar quién envió el mensaje y el contenido
+    messageElement.innerHTML = `
+        <strong>${messageData.idUsuario1 === idUsuario1 ? 'Tú' : 'Usuario ' + messageData.idUsuario2}:</strong>
+        <span>${messageData.content}</span>
+    `;
+
+    // Agregar el mensaje al div de mensajes
+    chatMessagesDiv.appendChild(messageElement);
+
+    // Hacer scroll automático hacia el último mensaje
+    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
 }
 
+
+// Función para enviar mensajes
+function sendMessage() {
+    const input = document.getElementById("message");
+    const content = input.value.trim();
+
+    if (content === "") {
+        alert("No puedes enviar un mensaje vacío.");
+        return;
+    }
+
+    if (stompClient.connected) {
+        stompClient.publish({
+            destination: `/app/chat`,
+            body: JSON.stringify({
+                idUsuario1: idUsuario1,
+                idUsuario2: idUsuario2,
+                content: content
+            }),
+        });
+
+        input.value = ""; // Limpiar el campo de entrada después de enviar
+    } else {
+        console.error("No se pudo enviar el mensaje. Cliente no conectado.");
+        alert("Error al enviar el mensaje. Intenta nuevamente.");
+    }
+}
