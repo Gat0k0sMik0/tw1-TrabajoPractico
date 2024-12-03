@@ -603,13 +603,19 @@ public class ServicioManoImpl implements ServicioMano {
                     Integer puntosParaElGanador;
                     if (tantosJ1 > tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ2;
-                        truco.setPuntosJ1(truco.getPuntosJ2() + puntosParaElGanador);
+                        truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
                     } else if (tantosJ1 < tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ1;
                         truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
                     } else {
-                        throw new TrucoException("Tienen los mismos tantos");
-                        // TODO: manejar solucion cuando tienen los mismos tantos
+                        if(this.empezoLaMano.equals(truco.getJ1())){
+                            puntosParaElGanador = puntosParaGanar - puntosJ2;
+                            truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
+                        }
+                        if(this.empezoLaMano.equals(truco.getJ2())){
+                            puntosParaElGanador = puntosParaGanar - puntosJ1;
+                            truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
+                        }
                     }
 
                     if (truco.getPuntosJ1().equals(truco.getPuntosParaGanar())) {
@@ -622,12 +628,16 @@ public class ServicioManoImpl implements ServicioMano {
                 } else {
                     // envidos
                     if (tantosJ1 > tantosJ2) {
-                        truco.setPuntosJ1(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
+                        truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoEnvido);
                     } else if (tantosJ1 < tantosJ2) {
                         truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
                     } else {
-                        throw new TrucoException("Tienen los mismos tantos");
-                        // TODO: manejar solucion cuando tienen los mismos tantos
+                        if(this.empezoLaMano.equals(truco.getJ1())){
+                            truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoEnvido);
+                        }
+                        if(this.empezoLaMano.equals(truco.getJ2())){
+                            truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
+                        }
                     }
                     return null;
                 }

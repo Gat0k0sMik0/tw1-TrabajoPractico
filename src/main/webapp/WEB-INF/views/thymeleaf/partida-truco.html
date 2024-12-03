@@ -53,7 +53,7 @@
                 </div>
                 <!-- RESPUESTAS TRUCO -->
                 <div id="respuestas1"
-                     th:if="${mostrarRespuestasEnvidoJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
+                     th:if="${mostrarRespuestasTrucoJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
                     <a class="btn btn-primary"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=1, jugador=1, accion=${accionAResponder})}">Quiero
                     </a>
@@ -72,7 +72,7 @@
                 </div>
                 <!-- RESPUESTAS ENVIDO -->
                 <div id="respuestas"
-                     th:if="${mostrarRespuestasTrucoJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
+                     th:if="${mostrarRespuestasEnvidoJ1 || (leTocaResponder != null && leTocaResponder.getNumero() == 1)}">
                     <a class="btn btn-primary"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=1, jugador=1, accion=${accionAResponder})}">Quiero
                     </a>
@@ -195,7 +195,7 @@
                 </div>
                 <!-- RESPUESTAS TRUCO -->
                 <div id="respuesta1"
-                     th:if="${mostrarRespuestasEnvidoJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
+                     th:if="${mostrarRespuestasTrucoJ2 || (leTocaResponder != null && leTocaResponder.getNumero() == 2)}">
                     <!-- NUEVA LÓGICA -->
                     <a class="btn btn-primary"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=1, jugador=2, accion=${accionAResponder})}">Quiero
