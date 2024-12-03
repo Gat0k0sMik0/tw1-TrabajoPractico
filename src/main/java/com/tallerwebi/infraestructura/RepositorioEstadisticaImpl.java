@@ -23,12 +23,12 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
 
     @Transactional
     @Override
-    public Estadistica obtenerEstadisticaDeJugador(Long idJugador) {
+    public Estadistica obtenerEstadisticaDeJugador(Long idUsuario) {
         return (Estadistica) sessionFactory.getCurrentSession()
-                .createCriteria(Estadistica.class)
-                .createAlias("jugador", "j")
-                .add(Restrictions.eq("j.id", idJugador))
-                .add(Restrictions.eq("juego", "Truco"))
+                .createCriteria(Estadistica.class, "e")
+                .createAlias("e.usuario", "u") // Alias correcto para la relación
+                .add(Restrictions.eq("u.id", idUsuario)) // Filtrar por ID del usuario
+                .add(Restrictions.eq("e.juego", "Truco")) // Filtrar por el juego "Truco"
                 .uniqueResult();
     }
 
@@ -43,10 +43,8 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
     public List<Estadistica> obtenerTodasLasEstadisticasDeUnJugador(Long idUsuario) {
         return (List<Estadistica>) sessionFactory.getCurrentSession()
                 .createCriteria(Estadistica.class, "e")
-                .createAlias("e.jugador", "j") // Alias para Jugador
-                .createAlias("j.usuario", "u") // Alias para Usuario
-                .add(Restrictions.eq("u.id", idUsuario))
+                .createAlias("e.usuario", "u") // Alias para Usuario
+                .add(Restrictions.eq("u.id", idUsuario)) // Filtrar por ID del usuario
                 .list();
     }
-
 }
