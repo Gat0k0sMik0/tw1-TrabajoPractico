@@ -76,6 +76,9 @@ public class ServicioManoImpl implements ServicioMano {
         this.leTocaTirar = getRandom(truco);
         this.empezoLaMano = this.leTocaTirar;
 
+        System.out.println("Le toca tirar " + this.leTocaTirar);
+        System.out.println("Empezo la mano " + this.empezoLaMano);
+
         // Asignacion de cartas a los jugadores
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
 
@@ -335,6 +338,9 @@ public class ServicioManoImpl implements ServicioMano {
         if (truco == null) throw new TrucoException("La partida es nula.");
         if (truco.getJ1() == null) throw new TrucoException("El jugador 1 es nulo.");
         if (truco.getJ2() == null) throw new TrucoException("El jugador 2 es nulo.");
+
+        System.out.println("Le toca tirar " + this.leTocaTirar);
+        System.out.println("Empezo la mano " + this.empezoLaMano);
 
         if(mano.getPuntosRondaJ1() != 2 || mano.getPuntosRondaJ2() != 2){
             obtenerGanadorDeRonda(truco, mano, truco.getJ1(), truco.getJ2());
@@ -603,13 +609,20 @@ public class ServicioManoImpl implements ServicioMano {
                     Integer puntosParaElGanador;
                     if (tantosJ1 > tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ2;
-                        truco.setPuntosJ1(truco.getPuntosJ2() + puntosParaElGanador);
+                        truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
                     } else if (tantosJ1 < tantosJ2) {
                         puntosParaElGanador = puntosParaGanar - puntosJ1;
                         truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
                     } else {
-                        throw new TrucoException("Tienen los mismos tantos");
-                        // TODO: manejar solucion cuando tienen los mismos tantos
+                        if(this.empezoLaMano.equals(truco.getJ1())){
+                            puntosParaElGanador = puntosParaGanar - puntosJ2;
+                            truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
+                        }
+
+                        if(this.empezoLaMano.equals(truco.getJ2())){
+                            puntosParaElGanador = puntosParaGanar - puntosJ1;
+                            truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
+                        }
                     }
 
                     if (truco.getPuntosJ1().equals(truco.getPuntosParaGanar())) {
@@ -622,12 +635,17 @@ public class ServicioManoImpl implements ServicioMano {
                 } else {
                     // envidos
                     if (tantosJ1 > tantosJ2) {
-                        truco.setPuntosJ1(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
+                        truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoEnvido);
                     } else if (tantosJ1 < tantosJ2) {
                         truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
                     } else {
-                        throw new TrucoException("Tienen los mismos tantos");
-                        // TODO: manejar solucion cuando tienen los mismos tantos
+                        if(this.empezoLaMano.equals(truco.getJ1())){
+                            truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoEnvido);
+                        }
+
+                        if(this.empezoLaMano.equals(truco.getJ2())){
+                            truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
+                        }
                     }
                     return null;
                 }
