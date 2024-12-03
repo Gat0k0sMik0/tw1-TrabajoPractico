@@ -3,69 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Estilos generales -->
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!-- Estilos custom -->
+    <link rel="stylesheet" th:href="@{/css/sala-chat.css}"/>
     <title>Sala de chat</title>
-    <style>
-        /* Estilos para los contenedores de mensajes */
-        .message {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            max-width: 80%;
-        }
-
-        .sent {
-            background-color: #cce5ff; /* Color para los mensajes enviados */
-            align-self: flex-end;
-        }
-
-        .received {
-            background-color: #d4edda; /* Color para los mensajes recibidos */
-            align-self: flex-start;
-        }
-
-        /* Estilos para el encabezado del mensaje (nombre y hora) */
-        .message-header {
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .timestamp {
-            font-size: 0.8em;
-            color: gray;
-        }
-
-        /* Estilos para el contenido del mensaje */
-        .message-content {
-            font-size: 1.1em;
-        }
-    </style>
 
 </head>
 
 <body>
-<header><h1>Sala de chat </h1></header>
-<main class="chat-container">
-    <h3 th:text="${'Chat entre ' + u1.nombreUsuario + ' y ' + u2.nombreUsuario}"></h3>
-    <h3 class="text-danger" th:text="${'id1: ' + idUsuario1 + ' | id2: ' + idUsuario2}"></h3>
-    <div th:each="mensaje : ${historial}" class="chat-message-container">
-        <div th:if="${!historial.isEmpty()}" class="message-right">
-            <!-- Mensaje del usuario actual (a la derecha) -->
-            <div class="alert alert-info text-right">
-                <strong th:text="${mensaje.fromUser.nombreUsuario + ': '}"></strong>
-                <strong th:text="${mensaje.content}"></strong>
-                <br/>
-                <small th:text="${mensaje.timestamp}"></small>
+<header class="styledHeader"><h3 class="m-0" id="chattingWith"></h3></header>
+<main class="chat-container col-12">
+    <div class="col-8 col-lg-6 mx-auto chatContainer bg-secondary">
+        <div class="col-12 chat-messages d-flex flex-column gap-2 bor2" id="chat-messages">
+            <!-- Aquí se mostrarán los mensajes -->
+            <th:block>
+                <div
+                        th:class="${'d-flex styledContenedorMensaje' + idUsuario1.equals(usuarioActual.id) ? 'align-self-end' : 'align-self-start'}"
+                        th:each="mensaje : ${historial}">
+                    <div th:class="${'message' + idUsuario1.equals(usuarioActual.id)
+                    ? 'bg-success-subtle rightMessage pe-4 ps-3'
+                    : 'bg-primary-subtle leftMessage ps-4 pe-3'}">
+                        <strong th:text="${idUsuario1.equals(usuarioActual.id) ? 'Tú' : 'Usuario ' + idUsuario2 + ': '}"></strong>
+                        <span th:text="${mensaje.content}"></span>
+                    </div>
+                </div>
+
+            </th:block>
+        </div>
+        <div class="col-8 col-lg-6 chat-input d-flex flex-wrap justify-content-between p-2 bg-warning">
+            <div class="col-10">
+                <input type="text"
+                       id="message"
+                       class="styledInput"
+                       placeholder="Escribe tu mensaje"
+                       onkeydown="handleEnter(event)"
+                />
             </div>
+            <button onclick="sendMessage()" class="col-2 bg-success styledButton">Enviar</button>
         </div>
     </div>
-    <div class="chat-messages" id="chat-messages">
-
-        <!-- Aquí se mostrarán los mensajes -->
-
-    </div>
-    <input type="text" class="chat-input" id="message" placeholder="Escribe tu mensajeRecibido"/>
-    <button onclick="sendMessage()">send</button>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script th:inline="javascript">
     /* <![CDATA[ */
