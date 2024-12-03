@@ -20,7 +20,7 @@ public interface ServicioPartida {
 
     List<Partida> getTodasLasPartidas();
 
-    void finalizarPartida(Long idPartida);
+    void finalizarPartida(Long idPartida, Jugador ganador);
 
     ;
 }

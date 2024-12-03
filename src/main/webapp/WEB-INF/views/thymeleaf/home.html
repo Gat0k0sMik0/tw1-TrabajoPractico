@@ -3,106 +3,197 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
     <!-- Bootstrap -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!-- Estilos generales -->
-    <link rel="stylesheet" th:href="@{/css/general.css}"/>
     <!--  Estilo Custom -->
     <link rel="stylesheet" th:href="@{/css/home.css}">
-
-    <title>Game Home</title>
+    <!-- FOOTER -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- FONT FAMILIES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
+    <title>Trucoteca</title>
 </head>
 <body>
-<header class="col-12 d-flex align-items-center">
-    <div class="col-10 mx-auto d-flex align-items-center justify-content-between">
-        <h1 th:text="'Bienvenido ' + ${usuario.getNombreUsuario()}"></h1>
-        <nav class="d-flex flex-wrap gap-5 align-items-center fs-5">
-            <!-- th:href="@{/perfilUsuario}" -->
-            <a class="text-decoration-none text-white" th:href="@{/perfil(id=${usuario.getId()})}">
-                <!-- th:src="@{/img/usuario.png}" -->
-                <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+<div id="blurry-filter"></div>
+<header>
+    <div>
+        <article id="title">
+            <span class="parent cursive">Bienvenido</span>
+            <br>
+            <h1 th:text="${usuario != null} ? ${usuario.getNombreUsuario()} : 'Invitado'" class="name"></h1>
+        </article>
+
+        <article id="center">
+            <h1 id="titulo-principal">Trucoteca</h1>
+        </article>
+
+        <article id="reference">
+            <a class="text-decoration-none text-white" target="_blank" rel="noopener" th:href="@{/perfil(id=${usuario.id})}">
+                <div th:if="${usuario.fotoPerfil == null || usuario.fotoPerfil.id == 1}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#333">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"></path>
+                    </svg>
+                </div>
+
+                <div th:if="${usuario.fotoPerfil != null && usuario.fotoPerfil.id != 1}">
+                    <img th:src="@{'/img/fotos-perfil/' + ${usuario.fotoPerfil.imagen}}" width="24" height="24" alt="Foto de perfil">
+                </div>
             </a>
-            <a href="" class="text-decoration-none text-white fs-5">
-                <!-- th:src="@{/img/configuracion.png}" -->
-                <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+            <a href="" class="text-decoration-none text-white fs-5" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#333">
+                    <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1a8.12 8.12 0 0 0-1.69-.98l-.38-2.65A.485.485 0 0 0 14 2h-4c-.25 0-.45.18-.49.42l-.38 2.65c-.62.23-1.2.54-1.69.98l-2.49-1a.494.494 0 0 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98L2.62 14.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.49.44 1.07.75 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.62-.23 1.2-.54 1.69-.98l2.49 1c.23.09.5 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+                </svg>
             </a>
-            <button class="closeSessionBtn">Cerrar sesión</button>
-        </nav>
+
+        </article>
     </div>
 </header>
-<main>
 
-    <div class="amigos">
-        <a th:href="@{/amigos}">
-            <h1>Amigos</h1>
-        </a>
-        <div class="d-flex flex-column align-items-center tablaAmigos" th:if="${amigos == null || amigos.size() == 0}">
-            <p class="text-white fs-5">Te recomendamos estos amigos</p>
-            <div class="sugerencias-container">
-                <div class="sugerencia-item" th:each="usuario : ${usuariosSugeridos}">
-                    <p class="text-white" th:text="${usuario.nombreUsuario}"></p>
-                    <form th:action="@{/agregar-amigo}" method="post">
-                        <input type="hidden" name="idAmigo" th:value="${usuario.id}">
-                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
-                    </form>
+<div class="tableta">
+    <span class="cursive">Usuarios sugeridos</span>
+    <a th:href="@{/amigos}">
+        <div class="marquee">
+            <ul class="marquee-content" >
+                <li th:each="usuario : ${usuariosSugeridos}">
+                    <p style="color: black;" th:text="${usuario.nombreUsuario}"></p>
+                    <i class="fab fa-github">
+                        <img th:src="@{/img/fotos-perfil/{fotoPerfil}(fotoPerfil=${usuario.urlFotoPerfil})}" alt="Foto de perfil" class="foto-perfil" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                    </i>
+                </li>
+            </ul>
+        </div>
+    </a>
+
+    <main>
+        <figure style="width: 100%; height: 219px; background-size: cover; background-position: center;">
+            <figcaption>Truco</figcaption>
+            <form th:action="@{/menuJuego}" method="get" >
+                <!-- Campo oculto para pasar el usuario -->
+                <input type="hidden" name="idUsuario" th:value="${usuario.id}">
+
+                <button type="submit" style="border: none; background: none; padding: 0; cursor: pointer;">
+                    <img th:src="@{/img/logos-juegos/truco.png}" alt="Ir al juego de truco" style="width: 100%; height: 220px; background-size: cover; background-position: center;">
+                </button>
+            </form>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/uno.png} + ')'">
+            <figcaption>UNO</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/la-oca.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>La Oca</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/monopoly.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Monopoly</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/batalla-naval.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Batalla Naval</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/poker.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Poker</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/ajedrez.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Ajedrez</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/tenis-de-mesa.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Tenis De Mesa</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/pool.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Pool</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/bowling.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Bowling</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/bingo.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>Bingo</figcaption>
+        </figure>
+        <figure th:style="'width: 100%; height: 219px; background-size: cover; background-position: center; background-image: url(' + @{/img/logos-juegos/juego-secreto.png} + ')'"> <!-- MARCA ERROR PERO FUNCIONA BIEN -->
+            <figcaption>...</figcaption>
+        </figure>
+        <!-- Repite las demás figuras aquí -->
+    </main>
+</div>
+
+
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+<footer class="relative bg-blueGray-200 pt-8 pb-6">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap text-left lg:text-left">
+            <div class="w-full lg:w-6/12 px-4">
+                <h4 class="text-3xl font-semibold text-blueGray-700">¡Sigamos en contacto!</h4>
+                <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
+                    las mejores partidas comienzan con una buena estrategia y terminan con grandes recuerdos.
+                </h5>
+                <div class="mt-6 lg:mb-0 mb-6 social-buttons">
+                    <button class="social-button twitter" type="button">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="social-button facebook" type="button">
+                        <i class="fab fa-facebook-square"></i>
+                    </button>
+                    <button class="social-button dribbble" type="button">
+                        <i class="fab fa-dribbble"></i>
+                    </button>
+                    <button class="social-button github" type="button">
+                        <i class="fab fa-github"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+                <div class="flex flex-wrap items-top mb-6">
+                    <div class="w-full lg:w-4/12 px-4 ml-auto">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Miembros</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Ramos Gonzalo</a></li>
+                            <li><a class="link" href="">Croce Victoria</a></li>
+                            <li><a class="link" href="">Zaccardo Martín</a></li>
+                            <li><a class="link" href="">Gavagnin Lucas</a></li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-4/12 px-4">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Enlaces</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Preguntas Frecuentes</a></li>
+                            <li><a class="link" href="">Terminos & Condiciones</a></li>
+                            <li><a class="link" href="">Política de Privacidad</a></li>
+                            <li><a class="link" href="">Contactanos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-blueGray-300">
+        <div class="flex flex-wrap items-center md:justify-between justify-center">
+            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-blueGray-500 font-semibold py-1">
+                    Copyright © <span id="get-current-year">2024</span>
+                    <a href="" class="text-blueGray-500 hover:text-gray-800" target="_blank">
+                        Trucoteca.
+                    </a>
+                    <a href="" class="text-blueGray-500 hover:text-blueGray-800">Los Maestros Del Mazo</a>.
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-juegos">
-
-        <div class="truco-container">
-            <form th:action="@{/menuJuego}" method="get">
-                <!-- Campo oculto para pasar el usuario -->
-                <input type="hidden" name="idUsuario" th:value="${usuario.id}">
-
-                <button type="submit" style="border: none; background: #515151">
-                    <img th:src="@{/img/truco-home.png}" alt="Imagen del juego truco">
-                </button>
-                <div class="texto-truco">TRUCO</div>
-            </form>
-        </div>
-
-        <div class="uno-container">
-            <a href="#">
-                <img th:src="@{/img/uno-home.jpg}" alt="Imagen del juego uno">
-                <div class="texto-uno">UNO</div>
-            </a>
-        </div>
-
-        <div class="chinchon-container">
-            <a href="#">
-                <img th:src="@{/img/chinchon.jpg}" alt="Imagen del juego chinchon">
-                <div class="texto-chinchon">CHINCHON</div>
-            </a>
-        </div>
-
-    </div>
-
-    <a th:href="@{/estadisticas}" id="estadisticas">
-        <div>Ver estadisticas</div>
-    </a>
-</main>
-<footer class="col-12 py-4 d-flex flex-column gap-2">
-    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
-        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
-            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
-            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
-        </div>
-        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
-            <p>Victoria Croce</p>
-            <p>Lucas Gavagnin</p>
-            <p>Gonzalo Ramos</p>
-            <p>Franco Vargas</p>
-            <p>Martin Zaccardo</p>
-        </div>
-        <div class="col-4 d-flex flex-wrap justify-content-center">
-            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
-        </div>
-    </div>
-    <hr class="col-10 mx-auto text-white"/>
-    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
 </footer>
+
+
+<!-- SCRIPT PARA CARROUSEL -->
+<script>
+    const root = document.documentElement;
+    const marqueeElementsDisplayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
+    const marqueeContent = document.querySelector("ul.marquee-content");
+
+    root.style.setProperty("--marquee-elements", marqueeContent.children.length);
+
+    for(let i=0; i<marqueeElementsDisplayed; i++) {
+        marqueeContent.appendChild(marqueeContent.children[i].cloneNode(true));
+    }
+</script>
 </body>
 </html>

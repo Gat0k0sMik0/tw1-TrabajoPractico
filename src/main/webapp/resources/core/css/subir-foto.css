@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5dc; /* Beige claro */
+    color: #333; /* Gris oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    background: #fff; /* Blanco */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #8b5e3c; /* Marrón suave */
+}
+p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #666;
+}
+input[type="file"] {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background: #f5f5dc;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button {
+    background-color: #8b5e3c; /* Marrón */
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #a6784c; /* Marrón más claro */
+}
+.secondary-btn {
+    background-color: #ccc; /* Gris claro */
+    color: #333;
+    margin-top: 1rem;
+}
+.secondary-btn:hover {
+    background-color: #ddd;
+}
+.happy-face {
+    margin: 1rem 0;
+}
+.happy-face svg {
+    width: 80px;
+    height: 80px;
+}

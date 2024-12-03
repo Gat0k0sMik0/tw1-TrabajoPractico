@@ -17,10 +17,13 @@ public class Usuario {
     private String confirmPassword;
     private String rol;
     private Boolean activo = false;
-    private String avatar;
+    private String UrlFotoPerfil;
 
     @OneToMany(mappedBy = "usuario")
     private Set<Amistad> amistades = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private FotoPerfil fotoPerfil;
 
     public Long getId() {
         return id;
@@ -86,20 +89,28 @@ public class Usuario {
         this.confirmPassword = confirmPassword;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
     public Set<Amistad> getAmistades() {
         return amistades;
     }
 
     public void setAmistades(Set<Amistad> amistades) {
         this.amistades = amistades;
+    }
+
+    public FotoPerfil getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(FotoPerfil fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
+
+    public String getUrlFotoPerfil() {
+        return UrlFotoPerfil;
+    }
+
+    public void setUrlFotoPerfil(String UrlFotoPerfil) {
+        this.UrlFotoPerfil = UrlFotoPerfil;
     }
 
     @Override

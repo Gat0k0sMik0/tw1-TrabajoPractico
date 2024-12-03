@@ -11,4 +11,6 @@ public interface ServicioUsuario {
     Usuario actualizarPerfil(Usuario usuarioNuevo);
     Usuario buscarPorId(Long id);
     void verificarDatos(Usuario viejo, Usuario usuarioNuevo) throws ActualizarUsuarioException;;
+
+    void agregarFotoPerfil(Usuario usuario, FotoPerfil foto);
 }

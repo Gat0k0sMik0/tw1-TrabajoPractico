@@ -1,5 +1,6 @@
 package com.tallerwebi.infraestructura;
 
+import com.tallerwebi.dominio.FotoPerfil;
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioUsuario;
 import com.tallerwebi.dominio.Usuario;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @Transactional
@@ -96,4 +96,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
     }
 
+    @Override
+    public void agregarFotoPerfil(Usuario usuario, FotoPerfil foto) {
+        usuario.setFotoPerfil(foto);
+        usuario.setUrlFotoPerfil(foto.getImagen());
+    }
 }
