@@ -77,10 +77,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
 
-
-
-
-
     @Override
     public void finalizarPartida(Long idPartida, Jugador ganador) {
         // Obtener la partida

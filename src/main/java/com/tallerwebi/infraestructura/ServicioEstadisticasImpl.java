@@ -2,8 +2,6 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.TrucoException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +55,13 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
     }
 
     @Override
+    public Estadistica obtenerUnaEstadisticaDeUnJugador(Long id) {
+        System.out.println("Buscando estadisticas de jugador ID: " + id);
+        return this.repositorioEstadistica.obtenerEstadisticaDeJugador(id);
+    }
+
+
+    @Override
     public void agregarEstadisticasFicticias(Usuario usuario) {
         Jugador j = new Jugador();
         j.setNombre(usuario.getNombreUsuario());
@@ -96,5 +101,11 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         e.setJuego("Truco");
         return e;
     }
+
+    @Override
+    public List<Estadistica> obtenerTopJugadores() {
+       return this.repositorioEstadistica.obtenerTopJugadoresPorVictorias(5);
+    }
+
 
 }

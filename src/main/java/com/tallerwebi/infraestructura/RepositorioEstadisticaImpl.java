@@ -1,9 +1,9 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.Carta;
 import com.tallerwebi.dominio.Estadistica;
 import com.tallerwebi.dominio.RepositorioEstadistica;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -45,6 +45,17 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
                 .createCriteria(Estadistica.class, "e")
                 .createAlias("e.usuario", "u") // Alias para Usuario
                 .add(Restrictions.eq("u.id", idUsuario)) // Filtrar por ID del usuario
+                .list();
+    }
+
+    @Transactional
+    @Override
+    public List<Estadistica> obtenerTopJugadoresPorVictorias(int limite) {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(Estadistica.class, "e")
+                .createAlias("e.usuario", "u")
+                .addOrder(Order.desc("e.ganadas")) // Ordenar por victorias (ganadas) en orden descendente
+                .setMaxResults(limite) // Limitar el número de resultados
                 .list();
     }
 }

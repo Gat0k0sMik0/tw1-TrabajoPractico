@@ -122,26 +122,57 @@
                 <h2 class="opcion2">Historial</h2>
             </div>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Juego</th>
-                    <th>Victorias</th>
-                    <th>Partidas Jugadas</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="estadistica : ${estadisticasGanador}">
-                    <td th:text="${estadistica.juego}"></td>
-                    <td th:text="${estadistica.ganadas}"></td>
-                    <td th:text="${estadistica.jugadas}"></td>
-                </tr>
-                </tbody>
-            </table>
+            <div>
+                <h2>Mis Estadísticas</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Juego</th>
+                        <th>Victorias</th>
+                        <th>Partidas Jugadas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Verificamos si 'misEstadisticas' no es null antes de iterar -->
+                    <tr th:if="${misEstadisticas == null}">
+                        <td colspan="3">No tienes estadísticas registradas.</td>
+                    </tr>
+                    <tr th:each="estadistica : ${misEstadisticas}">
+                        <td th:text="${estadistica.juego != null ? estadistica.juego : 'Sin datos'}"></td>
+                        <td th:text="${estadistica.ganadas != null ? estadistica.ganadas : 0}"></td>
+                        <td th:text="${estadistica.jugadas != null ? estadistica.jugadas : 0}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
+            <div>
+                <h2>Top Jugadores</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Juego</th>
+                        <th>Victorias</th>
+                        <th>Partidas Jugadas</th>
+                        <th>Jugador</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Verificamos si 'top' no es null antes de iterar -->
+                    <tr th:if="${top == null}">
+                        <td colspan="4">No hay datos para el Top de Jugadores.</td>
+                    </tr>
+                    <tr th:each="estadistica : ${top}">
+                        <td th:text="${estadistica.juego != null ? estadistica.juego : 'Sin datos'}"></td>
+                        <td th:text="${estadistica.ganadas != null ? estadistica.ganadas : 0}"></td>
+                        <td th:text="${estadistica.jugadas != null ? estadistica.jugadas : 0}"></td>
+                        <td th:text="${estadistica.usuario != null && estadistica.usuario.nombreUsuario != null ? estadistica.usuario.nombreUsuario : 'Desconocido'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
 </main>
 <footer class="col-12 py-4 d-flex flex-column gap-2">
     <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
