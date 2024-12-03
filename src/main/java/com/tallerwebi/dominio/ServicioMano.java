@@ -22,6 +22,8 @@ public interface ServicioMano {
 
     Integer obtenerPuntosEnJuegoDelEnvido();
 
+    boolean tieneFlor(Jugador jugador, Mano mano);
+
     void determinarGanadorRonda(Partida truco, Mano mano);
 
     Jugador responder(Mano mano, String accion, String respuesta, Integer nroJugador);

@@ -76,8 +76,13 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return this.repositorioTruco.getTodasLasPartidas();
     }
 
+
+
+
+
+
     @Override
-    public void finalizarPartida(Long idPartida) {
+    public void finalizarPartida(Long idPartida, Jugador ganador) {
         // Obtener la partida
         Partida partida = repositorioTruco.buscarPartidaPorId(idPartida);
 
@@ -92,15 +97,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
         }
 
         // Determinar el ganador
-        if (partida.getPuntosJ1() >= partida.getPuntosParaGanar()) {
-            partida.setGanador(partida.getJ1());
-            registrarVictoria(partida.getJ1());
-        } else if (partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
-            partida.setGanador(partida.getJ2());
-            registrarVictoria(partida.getJ2());
-        } else {
-            throw new TrucoException("No se puede finalizar la partida, aún no hay un ganador.");
-        }
+        partida.setGanador(ganador);
+        registrarVictoria(ganador);
 
         // Guardar los cambios
         repositorioTruco.merge(partida);

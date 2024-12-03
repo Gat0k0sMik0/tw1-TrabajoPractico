@@ -90,6 +90,7 @@
                     </a>
                     <!-- FIN NUEVA LÓGICA -->
                 </div>
+
             </div>
             <!-- CARTAS  -->
             <div class="gap-2 cartasJugadorContainer col-4">
@@ -212,6 +213,7 @@
                         Cuatro
                     </a>
                 </div>
+
             </div>
             <!-- CARTAS -->
             <div class="gap-2 cartasJugadorContainer col-4">
@@ -234,6 +236,7 @@
     <p th:if="${jugador2 != null}" th:text="${jugador2}"></p>
     <p th:if="${partida != null}" th:text="${partida}"></p>
 </main>
+
 
 <!-- Footer -->
 <footer>
@@ -267,6 +270,36 @@
             })
         })
     })
+
+</script>
+<script>
+    function mostrarPopUp(mensaje) {
+        // Crear un contenedor para el pop-up
+        let popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '50%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        popup.style.backgroundColor = 'white';
+        popup.style.border = '2px solid black';
+        popup.style.padding = '20px';
+        popup.style.zIndex = '1000';
+        popup.style.boxShadow = '0px 4px 6px rgba(0,0,0,0.1)';
+
+        // Crear el mensaje
+        let mensajeElement = document.createElement('p');
+        mensajeElement.textContent = mensaje;
+        popup.appendChild(mensajeElement);
+
+        // Botón para cerrar el pop-up
+        let botonCerrar = document.createElement('button');
+        botonCerrar.textContent = 'Cerrar';
+        botonCerrar.onclick = () => popup.remove();
+        popup.appendChild(botonCerrar);
+
+        // Agregar el pop-up al cuerpo del documento
+        document.body.appendChild(popup);
+    }
 </script>
 </body>
 </html>

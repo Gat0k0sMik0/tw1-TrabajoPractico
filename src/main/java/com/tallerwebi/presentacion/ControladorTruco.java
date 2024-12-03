@@ -109,6 +109,8 @@ public class ControladorTruco {
                         return new ModelAndView("partida-truco", model);
                     }
 
+
+
                     Mano mano = servicioMano.obtenerManoPorId(partidaId);
 
                     model.put("seTermino", mano.getEstaTerminada());
@@ -192,18 +194,25 @@ public class ControladorTruco {
         Long idPartida = (Long) session.getAttribute("idPartida");
 
         // Obtener partida
-        Partida truco = servicioTruco.obtenerPartidaPorId(idPartida);
-        if (truco == null) return new ModelAndView("redirect:/home");
+        Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
+        if (partida == null) return new ModelAndView("redirect:/home");
 
         // Buscar id_mano de parametro en BD
-        Mano mano = servicioMano.obtenerManoPorId(truco.getId());
+        Mano mano = servicioMano.obtenerManoPorId(partida.getId());
         if (mano == null) return new ModelAndView("redirect:/home");
 
         // Tiramos carta
-        servicioMano.tirarCarta(truco, mano, cartaId, nroJugador);
+        servicioMano.tirarCarta(partida, mano, cartaId, nroJugador);
 
         // Para saber quien tira la proxima ronda. Si es null, hay parda
-        servicioMano.determinarGanadorRonda(truco, mano);
+        servicioMano.determinarGanadorRonda(partida, mano);
+
+        // Verificar si debe finalizarse
+        if (partida.getPuntosJ1() >= partida.getPuntosParaGanar()) {
+            servicioTruco.finalizarPartida(idPartida, partida.getJ1());
+        } else if (partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
+            servicioTruco.finalizarPartida(idPartida, partida.getJ2());
+        }
 
         return new ModelAndView("redirect:/partida-truco");
     }
