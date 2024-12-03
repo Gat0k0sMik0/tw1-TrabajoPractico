@@ -125,16 +125,16 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Jugador</th>
+                    <th>Juego</th>
                     <th>Victorias</th>
-                    <th>Nivel</th>
+                    <th>Partidas Jugadas</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="jugador : ${jugadores}">
-                    <td th:text="${jugador.nombre}"></td>
-                    <td th:text="${jugador.victorias}"></td>
-                    <td th:text="${jugador.nivel}"></td>
+                <tr th:each="estadistica : ${estadisticasGanador}">
+                    <td th:text="${estadistica.juego}"></td>
+                    <td th:text="${estadistica.ganadas}"></td>
+                    <td th:text="${estadistica.jugadas}"></td>
                 </tr>
                 </tbody>
             </table>

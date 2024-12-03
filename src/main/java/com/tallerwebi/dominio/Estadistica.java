@@ -14,16 +14,16 @@ public class Estadistica {
     private String juego;
 
     @ManyToOne
-    @JoinColumn(name = "jugador_id", nullable = false) // Clave foránea
-    private Jugador jugador;
+    @JoinColumn(name = "usuario_id", nullable = false) // Clave foránea
+    private Usuario usuario;
 
     public Estadistica() {
     }
 
-    public Estadistica(Integer ganadas, Integer jugadas, Jugador jugador, String juego) {
+    public Estadistica(Integer ganadas, Integer jugadas, Usuario usuario, String juego) {
         this.ganadas = ganadas;
         this.jugadas = jugadas;
-        this.jugador = jugador;
+        this.usuario = usuario;
         this.juego = juego;
     }
 
@@ -85,12 +85,12 @@ public class Estadistica {
         this.jugadas = jugadas;
     }
 
-    public Jugador getJugador() {
-        return jugador;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Estadistica {
                 ", ganadas=" + ganadas +
                 ", jugadas=" + jugadas +
                 ", juego='" + juego + '\'' +
-                ", jugador=" + jugador +
+                ", usuario=" + usuario +
                 '}';
     }
 }
