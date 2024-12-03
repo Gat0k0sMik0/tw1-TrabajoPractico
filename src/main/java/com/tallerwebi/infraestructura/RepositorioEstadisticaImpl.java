@@ -24,12 +24,19 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
     @Transactional
     @Override
     public Estadistica obtenerEstadisticaDeJugador(Long idUsuario) {
-        return (Estadistica) sessionFactory.getCurrentSession()
+        List<Estadistica> estadisticas = sessionFactory.getCurrentSession()
                 .createCriteria(Estadistica.class, "e")
-                .createAlias("e.usuario", "u") // Alias correcto para la relación
-                .add(Restrictions.eq("u.id", idUsuario)) // Filtrar por ID del usuario
-                .add(Restrictions.eq("e.juego", "Truco")) // Filtrar por el juego "Truco"
-                .uniqueResult();
+                .createAlias("e.usuario", "u")
+                .add(Restrictions.eq("u.id", idUsuario))
+                .add(Restrictions.eq("e.juego", "Truco"))
+                .list();
+
+        if (estadisticas.isEmpty()) {
+            return null; // No se encontró ninguna estadística
+        }
+
+        // Devuelve la primera estadística encontrada o maneja el caso si hay más de una
+        return estadisticas.get(0);
     }
 
     @Transactional

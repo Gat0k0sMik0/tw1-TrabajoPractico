@@ -18,7 +18,7 @@ public class Usuario {
     private String rol;
     private Boolean activo = false;
     private String UrlFotoPerfil;
-    private Integer victorias;
+    private Integer victorias = 0;
     private String nivel;
 
     @OneToMany(mappedBy = "usuario")

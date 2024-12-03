@@ -108,12 +108,14 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     // Método para actualizar el nivel según las victorias
     private void actualizarNivel(Usuario jugador) {
-        if (jugador.getVictorias() >= 30) {
+        if (jugador.getVictorias() >= 50) {
             jugador.setNivel("Oro");
-        } else if (jugador.getVictorias() >= 20) {
+        } else if (jugador.getVictorias() >= 30) {
             jugador.setNivel("Plata");
-        } else {
+        } else if (jugador.getVictorias() >= 10) {
             jugador.setNivel("Bronce");
+        } else {
+            jugador.setNivel("Sin Categoría");
         }
     }
 }
