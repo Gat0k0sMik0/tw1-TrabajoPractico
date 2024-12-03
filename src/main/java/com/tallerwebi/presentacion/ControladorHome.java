@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.ServicioAmistad;
 import com.tallerwebi.dominio.ServicioUsuario;
 import com.tallerwebi.dominio.Usuario;
 import org.hibernate.Session;
@@ -12,28 +13,42 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ControladorHome {
 
     private ServicioUsuario servicioUsuario;
+    private ServicioAmistad servicioAmistad;
 
-    public ControladorHome (ServicioUsuario servicioUsuario) {
+    public ControladorHome(ServicioUsuario servicioUsuario, ServicioAmistad servicioAmistad) {
         this.servicioUsuario = servicioUsuario;
+        this.servicioAmistad = servicioAmistad;
     }
 
     @RequestMapping("/home")
-    public ModelAndView irAlHome(@ModelAttribute("email") String email) {
-        if (email.isEmpty()) {
-            return new ModelAndView("redirect:/login");
-        }
-        Usuario usuario = servicioUsuario.buscar(email);
-        if (usuario == null) {
-            return new ModelAndView("redirect:/login");
-        }
+    public ModelAndView irAlHome(
+            HttpSession session) {
         ModelMap model = new ModelMap();
+
+        // Recuperar el email desde la sesión
+        String email = (String) session.getAttribute("email");
+        if (email == null) return new ModelAndView("redirect:/login");
+
+        // Buscar el usuario en base al email
+        Usuario usuario = servicioUsuario.buscar(email);
+        if (usuario == null) return new ModelAndView("redirect:/login");
+
+        // Obtén las recomendaciones de amigos
+        List<Usuario> usuariosSugeridos = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuario.getId());
+
+        // Agrega las recomendaciones al modelo
+        model.put("usuariosSugeridos", usuariosSugeridos);
         model.put("email", usuario.getEmail());
-        return new ModelAndView("home", model);
+        model.put("usuario", usuario);
+        model.put("IdUsuario", usuario.getId());
+
+        return new ModelAndView("home", model);  // Retorna la vista home.html
     }
 
     @RequestMapping("/volver-home")
@@ -46,8 +61,6 @@ public class ControladorHome {
         // Redireccionar a la ruta /home
         return new ModelAndView("redirect:/home");
     }
-
-
 
 
 }

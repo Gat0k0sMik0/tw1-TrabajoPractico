@@ -1,14 +1,74 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ControladorMenuJuego {
-    @RequestMapping("/MenuJuego")
-    public ModelAndView MenuJuego() {
-        return new ModelAndView("menu-juego");
+    private final ServicioUsuario servicioUsuario;
+    private final ServicioPartida servicioTruco;
+
+    @Autowired
+    public ControladorMenuJuego(
+            ServicioUsuario servicioUsuario,
+            ServicioPartida servicioTruco) {
+        this.servicioUsuario = servicioUsuario;
+        this.servicioTruco = servicioTruco;
     }
 
+    // Método para mostrar el menú de juego
+    @RequestMapping("/menuJuego")
+    public ModelAndView mostrarMenuJuego(HttpSession session,
+                                         @RequestParam("idUsuario") Long idUsuario) {
+        Usuario ua = (Usuario) session.getAttribute("usuarioActivo");
+        ua = servicioUsuario.buscarPorId(ua.getId());
+        if (ua == null) return new ModelAndView("redirect:/login");
+
+        ModelMap model = new ModelMap();
+        List<Partida> partidas = servicioTruco.getPartidasDisponibles();
+
+        model.put("partidas", partidas);
+        model.put("ua", ua);
+
+        return new ModelAndView("menu-juego", model);
+    }
+
+    // Método para crear una sala
+    @PostMapping("/crearSala")
+    public ModelAndView crearSala(
+            @RequestParam("idUsuario") Long idUsuario,
+            @RequestParam("puntos") String puntosMaximos
+    ) {
+
+        // Obtener el usuario activo
+        Usuario usuarioActivo = servicioUsuario.buscarPorId(idUsuario);
+        if (usuarioActivo == null) return new ModelAndView("redirect:/login");
+
+        // Redirigir a la vista de la partida
+        return new ModelAndView("redirect:/espera?idJugador=" + usuarioActivo.getId() + "&ptsmax=" + puntosMaximos);
+    }
+
+    /*@GetMapping(path = "/verSalas")
+    public ModelAndView verSalas(
+            HttpSession session
+    ) {
+        Usuario ua = (Usuario) session.getAttribute("usuarioActivo");
+        ua = servicioUsuario.buscarPorId(ua.getId());
+        if (ua == null) return new ModelAndView("redirect:/login");
+
+        ModelMap model = new ModelMap();
+        List<Partida> partidas = servicioTruco.getPartidasDisponibles();
+
+        model.put("partidas", partidas);
+        model.put("ua", ua);
+        return new ModelAndView("salas", model);
+    }*/
 }

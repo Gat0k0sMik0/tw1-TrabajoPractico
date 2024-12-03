@@ -1,8 +1,6 @@
 package com.tallerwebi.dominio;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Jugador {
@@ -11,33 +9,26 @@ public class Jugador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Truco2 truco;
-
     private String nombre;
-    private Integer puntosRonda = 0;
-    private Integer puntosPartida = 0;
     private Integer numero;
+    private Integer victorias;
+    private String nivel;
 
-    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-    private List<Carta> cartas;  // Relación uno a muchos con Carta
-
-    @OneToOne
-    private Truco2 partida;
-
-//    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-//    private List<Carta> cartasTiradas = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     public Jugador() {
-
+        this.victorias = 0;
+        this.nivel = "Bronce";
     }
 
-    public Truco2 getPartida() {
-        return partida;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setPartida(Truco2 partida) {
-        this.partida = partida;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -48,36 +39,12 @@ public class Jugador {
         this.id = id;
     }
 
-    public Truco2 getTruco() {
-        return truco;
-    }
-
-    public void setTruco(Truco2 truco) {
-        this.truco = truco;
-    }
-
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Integer getPuntosRonda() {
-        return puntosRonda;
-    }
-
-    public void setPuntosRonda(Integer puntosRonda) {
-        this.puntosRonda = puntosRonda;
-    }
-
-    public Integer getPuntosPartida() {
-        return puntosPartida;
-    }
-
-    public void setPuntosPartida(Integer puntosPartida) {
-        this.puntosPartida = puntosPartida;
     }
 
     public Integer getNumero() {
@@ -88,12 +55,20 @@ public class Jugador {
         this.numero = numero;
     }
 
-    public List<Carta> getCartas() {
-        return cartas;
+    public Integer getVictorias() {
+        return victorias;
     }
 
-    public void setCartas(List<Carta> cartas) {
-        this.cartas = cartas;
+    public void setVictorias(Integer victorias) {
+        this.victorias = victorias;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
     }
 
     @Override
@@ -101,9 +76,11 @@ public class Jugador {
         return "Jugador{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
+                ", victorias=" + victorias +
+                ", nivel='" + nivel + '\'' +
                 '}';
     }
-
+}
     //
 //    public List<Carta> getCartasTiradas() {
 //        return cartasTiradas;
@@ -111,4 +88,3 @@ public class Jugador {
 //
 //    public void setCartasTiradas(List<Carta> cartasTiradas) {
 //        this.cartasTiradas = cartasTiradas;
-}

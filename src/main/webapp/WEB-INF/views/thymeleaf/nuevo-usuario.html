@@ -17,7 +17,7 @@
         </div>
     </header>
 
-    <form id="formulario" th:action="@{/registrarme}" method="post" th:object="${nuevoUsuario}">
+    <form id="formulario" th:action="@{/registrarme}" method="post" enctype="multipart/form-data" th:object="${nuevoUsuario}">
         <h1>Registrarse en la aplicación</h1>
 
         <p th:if="${error}" th:text="${error}" style="color: red;"></p>
@@ -34,6 +34,8 @@
 
             <label for="password2">Repetir Contraseña</label>
             <input th:field="*{confirmPassword}" type="password" id="password2" name="password2" placeholder="Entre 5 y 15 caracteres" required>
+
+
 
             <button type="submit">Registrarse</button>
     </form>

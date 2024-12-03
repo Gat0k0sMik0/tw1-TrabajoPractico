@@ -1,30 +1,40 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.ServicioEmail;
-import com.tallerwebi.dominio.ServicioLogin;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.*;
+import com.tallerwebi.infraestructura.ServicioUsuarioImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Controller
 public class ControladorLogin {
 
+    private ServicioUsuario servicioUsuario;
     private ServicioLogin servicioLogin;
     private ServicioEmail servicioEmail;
+    private ServicioFotoDePerfil servicioFotoDePerfil;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, ServicioEmail servicioEmail) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioEmail servicioEmail, ServicioFotoDePerfil servicioFotoDePerfil, ServicioUsuario servicioUsuario) {
         this.servicioLogin = servicioLogin;
         this.servicioEmail = servicioEmail;
+        this.servicioFotoDePerfil = servicioFotoDePerfil;
+        this.servicioUsuario = servicioUsuario;
     }
 
     // MÉTODOS PARA EL LOGIN
@@ -68,7 +78,7 @@ public class ControladorLogin {
         // Manejo de excepciones
         try {
             servicioLogin.registrar(usuario);
-        } catch (EmailInvalidoException e) {
+        } catch (ActualizarUsuarioException e) {
             model.put("error", "El correo no es válido");
             return new ModelAndView("nuevo-usuario", model);
         } catch (MailExistenteException e) {
@@ -133,8 +143,9 @@ public class ControladorLogin {
         if (codigo.trim().equals(validationCode.trim())) {
             // Si el código es correcto, guardar al usuario
             servicioLogin.guardarUsuario(usuario); // Lógica para guardar al usuario
-            redirectAttrs.addFlashAttribute("message", "!Cuenta creada exitosamente!");
-            return new ModelAndView("redirect:/login");
+            ModelMap model = new ModelMap();
+            model.addAttribute(usuario);
+            return new ModelAndView("subir-foto", model);
         } else {
             // Si el código es incorrecto, redirigir con mensaje de error
             redirectAttrs.addFlashAttribute("error", "Código de validación incorrecto.");
@@ -144,9 +155,20 @@ public class ControladorLogin {
         }
     }
 
-    @RequestMapping("/verificar")
-    public ModelAndView v() {
-        return new ModelAndView("verificacionCorreo");
+    @RequestMapping("/subir-foto")
+    public ModelAndView verificarFoto(@ModelAttribute("idUsuario") Long idUsuario,
+                                      @RequestParam("fotoPerfil") MultipartFile fotoPerfil,
+                                      RedirectAttributes redirectAttrs) throws IOException {
+        if (!fotoPerfil.isEmpty()) {
+            // Guardar el usuario y la foto en la base de datos
+            servicioLogin.agregarFotoPerfil(servicioUsuario.buscarPorId(idUsuario), fotoPerfil);
+        } else {
+            // Si no sube nada, le asignamos foto por default
+            servicioLogin.asignarFotoDefault(servicioUsuario.buscarPorId(idUsuario));
+        }
+
+        redirectAttrs.addFlashAttribute("message", "!Cuenta creada exitosamente!");
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)

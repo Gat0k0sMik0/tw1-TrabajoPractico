@@ -1,30 +1,30 @@
-//package com.tallerwebi.dominio;
-//
-//import java.util.List;
-//
-//public interface ServicioMano {
-//    void empezar();
-//    List<Mano> getManos();
-//
-//    Boolean estaLaManoTerminada();
-//
-//    void guardarRonda(Jugador jugador, Carta cartaSeleccionada);
-//
-//    List<Ronda> getRondas();
-//
-//    void sumarPuntoDeRonda(Jugador jugador1);
-//
-//    Integer guardarAccion(Jugador cantador, String accion, boolean b, Integer puntosEnJuego);
-//
-//    List<Accion> getAcciones();
-//
-//    void agregarPuntosEnJuegoManoActual(Integer puntosViejos);
-//
-//    Jugador getGanadorDeManoActual();
-//
-//    void setGanadorDeMano(Jugador jugador1);
-//
-//    String getGanadorDeRondaPorNumero(int i);
-//
-//    void jugarCarta(Long idMano, Long idCartaJugada, Integer idJugador);
-//}
+package com.tallerwebi.dominio;
+
+public interface ServicioMano {
+    void empezar(Partida truco);
+    void tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador);
+
+
+    void guardar(Mano mano);
+
+
+
+    Mano reset(Partida truco);
+
+    Mano obtenerManoPorId(Long id);
+
+    Jugador saberQuienTiraAhora();
+
+    Integer obtenerPuntosEnJuegoPorTruco();
+
+
+    Jugador preguntar(Mano mano, String accion, Integer nroJugador);
+
+    Integer obtenerPuntosEnJuegoDelEnvido();
+
+    boolean tieneFlor(Jugador jugador, Mano mano);
+
+    void determinarGanadorRonda(Partida truco, Mano mano);
+
+    Jugador responder(Mano mano, String accion, String respuesta, Integer nroJugador);
+}

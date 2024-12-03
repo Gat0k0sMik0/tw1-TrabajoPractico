@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class RepositorioRondaImpl implements RepositorioRonda2 {
+public class RepositorioRondaImpl implements RepositorioRonda {
     private SessionFactory sessionFactory;
 
     @Autowired

@@ -1,147 +1,377 @@
-#usuario{
-	width: 60px;
-}
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
 
-#configuracion{
-	width: 40px;
-}
-.main-header img {
-	margin: 18px;
-}
 
-.amigos{
-	margin: 15px;
-	display: flex;
-	flex-direction: row;
-	font-family: 'Press Start 2P', cursive;
-	color: white;
-	padding: 10px;
-	background-color: rgba(0, 0, 0, 0.5);
-	border-radius: 20px;
-}
-
-.amigos img{
-	width: 60px;
-}
-
-.container-juegos{
-	display: flex;
-	flex-direction: row;
-	gap: 10px;
-	margin: 10px;
-}
-
-.truco-container{
-	position: relative;
-	width: 33%;
-}
-
-.truco-container img{
-	width: 100%;
-}
-
-.truco-container .texto-truco {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	color: white;
-	font-size: 45px;
-	padding: 10px;
-	background-color: rgba(0, 0, 0, 0.5);
-	font-family: 'Press Start 2P', cursive;
-	border-radius: 10px;
-	cursor: pointer;
-}
-
-.uno-container{
-	position: relative;
-	width: 33%;
-}
-
-.uno-container img{
-	width: 100%;
-
-}
-
-.uno-container .texto-uno {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	color: white;
-	font-size: 45px;
-	padding: 10px;
-	background-color: rgba(0, 0, 0, 0.5);
-	font-family: 'Press Start 2P', cursive;
-	border-radius: 10px;
-	cursor: pointer;
-}
-
-.chinchon-container{
-	position: relative;
-	width: 33%;
-}
-
-.chinchon-container img{
-	width: 100%;
-	border-radius: 60px;
-}
-
-.chinchon-container .texto-chinchon {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	color: white;
-	font-size: 45px;
-	padding: 10px;
-	background-color: rgba(0, 0, 0, 0.5);
-	font-family: 'Press Start 2P', cursive;
-	border-radius: 10px;
-	cursor: pointer;
-}
-
-a {
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#estadisticas{
-	justify-content: center;
-	align-items: center;
-}
-
-.closeSessionBtn {
-	padding: 0.8rem 1.6rem;
-	background: #1D8FF2;
-	border: none;
-	border-radius: 1rem;
-	color: #fff;
+/* Estilo para el título */
+h1, h2, h3 {
+	font-family: 'Poppins', sans-serif;
 	font-weight: 600;
-	font-size: 1.2rem;
-	transition: all .3s;
-	border: 1px solid #1D8FF2;
 }
 
-.closeSessionBtn:hover {
-	background: #1568b1;
-	border: 1px solid #fff;
+p, span {
+	font-family: "Parkinsans", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: bold;
+	font-style: normal;
 }
 
-.sugerencias-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
-	justify-content: center;
+/* HEADER BORROSO */
+#blurry-filter {
+	width: 100%;
+	height: 9rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='1'/%3E%3C/filter%3E%3Crect width='100' height='100' style='filter:url(%23f)' opacity='.2'/%3E%3C/svg%3E");
+	mask: linear-gradient(black 7rem, transparent);
+	-webkit-mask: linear-gradient(black 7rem, transparent);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	pointer-events: none;
+	touch-action: none;
 }
 
-.sugerencia-item {
+/* ESTILOS GENERALES */
+body {
+	margin: 0;
+	padding: 0;
+	background: #EEE;
+	/*background-image: url('https://png.pngtree.com/background/20230610/original/pngtree-city-illustration-background-vector-picture-image_3046717.jpg');
+	background-size: cover;*/
+	font-family: "Open Sans", sans-serif;
+	box-sizing: border-box;
+	cursor: default;
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 10px;
-	color: white;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+/* HEADER */
+header {
+	width: 100%;
+	height: 8rem;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	display: flex;
+	justify-content: center; /* Centra el contenido horizontalmente */
+	align-items: center; /* Centra el contenido verticalmente */
+
+}
+
+header > div {
+	width: calc(100% - 3rem);
+	max-width: 800px;
+	height: 100%;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between; /* Mantiene el espacio entre los elementos */
+	position: relative;
+}
+
+#titulo-principal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-family: "Kumar One Outline", system-ui;
+	font-size: 60px;
+	text-align: center; /* Asegura que el texto esté centrado dentro de su contenedor */
+	flex-grow: 1; /* Hace que el título ocupe el espacio disponible */
+}
+
+#title {
+	width: 100%;
+}
+
+#title .parent {
+	line-height: 1em;
+	color: #666;
+}
+
+#title .name {
+	font-size: 2em;
+	font-weight: bold;
+	color: #333;
+	mix-blend-mode: difference;
+}
+
+#reference {
+	display: flex;
+}
+
+#reference > a {
+	color: #444;
+}
+
+#reference > a + a {
+	margin-left: 1rem;
+}
+.tableta {
+	width: 75%;
+	background: #EEE;
+	align-self: center;
 	text-align: center;
+	margin-top: 20px;
+}
+
+/* CARROUSEL */
+:root {
+	--marquee-width: 55%;
+	--marquee-height: 20vh;
+	--marquee-elements-displayed: 5;
+	--marquee-element-width: calc(var(--marquee-width) / var(--marquee-elements-displayed));
+	--marquee-animation-duration: calc(var(--marquee-elements) * 7s);
+}
+
+.marquee {
+	width: var(--marquee-width);
+	height: var(--marquee-height);
+	background-color: transparent;
+	color: #eee;
+	overflow: hidden;
+	position: relative;
+	margin-bottom: 10px;
+	margin-left: 22.5%;
+	/* Ajuste del difuminado */
+	mask-image: linear-gradient(to left, black 50%, transparent 10%);  /* Gradiente de derecha a izquierda */
+	-webkit-mask-image: linear-gradient(to left, black 100%, transparent 100%);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.marquee:before, .marquee:after {
+	position: absolute;
+	top: 0;
+	width: 10rem;
+	height: 100%;
+	content: "";
+	z-index: 1;
+}
+
+.marquee:before {
+	right: 0;
+	background: linear-gradient(to left, #EEE 40%, transparent 100%);
+}
+
+.marquee:after {
+	left: 0;
+	background: linear-gradient(to right, #EEE 40%, transparent 100%);
+}
+
+.marquee-content {
+	list-style: none;
+	height: 100%;
+	display: flex;
+	animation: scrolling var(--marquee-animation-duration) linear infinite;
+	padding: 0;
+	margin: 0;
+}
+
+@keyframes scrolling {
+	0% { transform: translateX(calc(100%)); } /* Inicia desde la derecha */
+	100% { transform: translateX(calc(-1 * var(--marquee-element-width) * var(--marquee-elements-displayed))); } /* Desplazamiento hacia la izquierda */
+}
+
+.marquee-content li {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+	max-height: 100%;
+	margin: 0; /* Eliminar cualquier margen entre los elementos */
+}
+
+.marquee-content p {
+	font-size: large;
+	text-decoration: none;
+}
+
+.marquee-content li p {
+	margin: 0; /* Eliminar márgenes para evitar espacios entre los elementos */
+	padding: 0;
+	font-size: 1rem; /* Ajusta el tamaño de texto según lo necesites */
+	color: black;
+}
+
+@media (max-width: 600px) {
+	html { font-size: 12px; }
+	:root {
+		--marquee-width: 100vw;
+		--marquee-height: 16vh;
+		--marquee-elements-displayed: 3;
+	}
+	.marquee:before, .marquee:after { width: 5rem; }
+}
+
+/* MAIN */
+main {
+	width: calc(100% - 3rem);
+	max-width: 800px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 1.5rem;
+	padding-bottom: 30px;
+}
+
+main > article {
+	width: 100%;
+	height: 32px;
+	background-color: #FFF;
+}
+main > figure {
+	width: 100%;
+	margin: 0;
+	background-color: #FFF;
+	background-size: cover;
+	border-radius: 1rem;
+	transition: all 100ms ease-out;
+	position: relative;
+}
+main > figure:hover {
+	box-shadow: 0 16px 16px -4px rgba(0, 0, 0, 0.3);
+	transform: scale(1.02);
+	cursor: pointer;
+}
+main > figure:after {
+	content: "";
+	padding-bottom: 100%;
+	display: block;
+}
+
+main > figure > form {
+	border: none;
+	background: none;
+	padding: 0;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+main > figure > form > button {
+	border: none;
+	background: none;
+	padding: 0;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+}
+
+main > figure > form > button > img {
+	width: 100%;
+	height: 100%;
+}
+
+main > figure > figcaption {
+	font-size: 1.25em;
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-family: "Parkinsans", sans-serif;
+	font-weight: 400;
+	line-height: 1.6;
+	color: #EEE;
+	padding: 10px 15px;
+	background-color: rgba(0, 0, 0, 0.7);
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+
+}
+
+#folders {
+	margin-top: 0.5rem;
+	margin-bottom: 2rem;
+}
+#folders > article {
+	width: 100%;
+	height: 4rem;
+	padding: 0 1.5rem;
+	background-color: #FFF;
+	border-radius: 1rem;
+	line-height: 4rem;
+	transition: all 100ms ease-out;
+}
+#folders > article:hover {
+	box-shadow: 0 16px 16px -4px rgba(0, 0, 0, 0.1);
+	transform: scale(1.02);
+}
+
+/* FOOTER */
+footer {
+	background-color: #edf2f7; /* Similar to bg-blueGray-200 */
+	padding-top: 2rem;
+	padding-bottom: 1.5rem;
+	width: 100%;
+}
+
+footer h4 {
+	font-size: 1.875rem;
+	font-weight: 600;
+	color: #4a5568; /* blueGray-700 */
+}
+
+footer h5 {
+	font-size: 1.125rem;
+	margin-top: 0;
+	margin-bottom: 0.5rem;
+	color: #718096; /* blueGray-600 */
+}
+
+.social-buttons .social-button {
+	background-color: #fff;
+	color: #4299e1; /* lightBlue-400 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	font-weight: normal;
+	height: 2.5rem;
+	width: 2.5rem;
+
+	border-radius: 50%;
+	outline: none;
+	margin-right: 0.5rem;
+	cursor: pointer;
+}
+
+.social-buttons .twitter { color: #1DA1F2; }
+.social-buttons .facebook { color: #1877F2; }
+.social-buttons .dribbble { color: #EA4C89; }
+.social-buttons .github { color: #171515; }
+
+footer .link {
+	color: #718096; /* blueGray-600 */
+	font-weight: 600;
+	padding-bottom: 0.5rem;
+	font-size: 0.875rem;
+	text-decoration: none;
+}
+
+footer .link:hover {
+	color: #2d3748; /* blueGray-800 */
+}
+
+footer hr {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	border-color: #cbd5e0; /* blueGray-300 */
+}
+
+footer .text-sm {
+	font-size: 0.875rem;
+}
+
+footer .font-semibold {
+	font-weight: 600;
 }

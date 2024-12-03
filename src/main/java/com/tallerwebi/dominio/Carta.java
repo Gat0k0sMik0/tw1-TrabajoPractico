@@ -9,10 +9,6 @@ public class Carta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "jugador_id")  // Se asocia con la tabla Jugador
-    private Jugador jugador;  // Relación muchos a uno con Jugador
-
     private Integer valor;
     private Integer numero;
     private String palo;
@@ -23,13 +19,6 @@ public class Carta {
 
     }
 
-    public Jugador getJugador() {
-        return jugador;
-    }
-
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
-    }
 
     @Override
     public String toString() {
@@ -37,32 +26,10 @@ public class Carta {
                 "id=" + id +
                 ", valor=" + valor +
                 ", numero=" + numero +
-                ", palo='" + palo + '\'' +
-                ", img='" + img + '\'' +
+                ", palo='" + palo +
                 ", valorEnvido=" + valorEnvido +
                 '}';
     }
-
-//    public Carta(Integer valor, Integer numero, String palo) {
-//        this.valor = valor;
-//        this.numero = numero;
-//        this.palo = palo;
-//        this.valorEnvido = 0;
-//    }
-//
-//    public Carta(Integer valor, Integer numero, String palo, String img) {
-//        this.valor = valor;
-//        this.numero = numero;
-//        this.palo = palo;
-//        this.img = img;
-//        this.valorEnvido = 0;
-//    }
-
-//    private int calcularValorEnvido(int numero) {
-//        // Lógica para calcular el valorEnvido
-//        return (numero >= 10 && numero <= 12) ? 0 : numero; // O cualquier lógica que necesites
-//    }
-
 
 
     public Integer getValorEnvido() {

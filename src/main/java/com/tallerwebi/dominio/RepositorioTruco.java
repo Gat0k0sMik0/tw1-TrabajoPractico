@@ -1,17 +1,24 @@
 package com.tallerwebi.dominio;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface RepositorioTruco {
-    @Transactional
-    void guardarPartida(Truco2 truco);
+    void guardarPartida(Partida truco);
 
     @Transactional
-    Truco2 buscarPartidaPorId (Long id);
+    void merge(Partida truco);
+
+    @Transactional
+    Partida buscarPartidaPorId (Long id);
 
     @Transactional
     void guardarJugador(Jugador jugador);
 
     @Transactional
     Jugador obtenerJugadorPorID(Long id);
+
+    List<Partida> getPartidasDisponibles();
+
+    List<Partida> getTodasLasPartidas();
 }
