@@ -185,15 +185,14 @@ article svg {
 
 .botones {
     display: flex;
-    justify-content: center; /* Centra el grupo de botones */
-    gap: 20px; /* Espacio entre los botones */
+    justify-content: center;
+    gap: 20px;
     margin: 20px 0;
 }
 
 .styledBtn{
-    background-color: white; /* Fondo blanco */
-    color: #333; /* Texto gris oscuro */
-    border: 2px solid #333; /* Borde del mismo color que el texto */
+    background-color: white;
+    color: #333;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
@@ -324,7 +323,6 @@ input[type="radio"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #ccc;
     border-radius: 10px;
     padding: 0 20px;
     background-color: #f9f9f9;

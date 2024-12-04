@@ -20,10 +20,12 @@
 <header>
     <div>
         <article id="title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
-                <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle> <!-- Círculo de fondo en gris -->
-                <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <!-- Flecha en blanco -->
-            </svg>
+            <a th:href="@{/home}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                    <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle> <!-- Círculo de fondo en gris -->
+                    <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <!-- Flecha en blanco -->
+                </svg>
+            </a>
         </article>
 
         <article id="center">
@@ -65,7 +67,7 @@
                 <!-- CREAR SALA -->
                 <button type="button" id="boton-crear" class="styledBtn" data-bs-toggle="modal" data-bs-target="#myModal">CREAR SALA</button>
                 <!-- VER SALAS -->
-                <button id="boton-buscar" onclick="mostrarPanelSalas()" class="styledBtn">VER SALAS DE ESPERA</button>
+                <button id="boton-buscar" class="styledBtn">VER SALAS DE ESPERA</button>
             </div>
 
             <!-- PANEL OPCIONES DE PARTIDA -->
@@ -136,9 +138,9 @@
                     </div>
 
                     <!-- Salas dinámicas -->
-                    <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="sala" data-puntos="[[${partida.puntosParaGanar}]]">
+                    <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="sala" th:data-puntos="${partida.puntosParaGanar}">
                         <div class="sala-perfil">
-                            <img th:src="${partida.getJ1().getUsuario().getUrlFotoPerfil()}" alt="Perfil" class="foto-perfil">
+                            <img th:src="@{${partida.getJ1().getUsuario().getUrlFotoPerfil()}}" alt="Perfil" class="foto-perfil">
                             <p class="nombre-usuario" th:text="${partida.getJ1().getNombre()}"></p>
                         </div>
                         <div class="sala-detalles">
@@ -292,7 +294,8 @@
 
         // Iterar sobre cada sala
         salas.forEach(function(sala) {
-            var puntosSala = sala.getAttribute('data-puntos');
+            // Obtener el valor de data-puntos y convertirlo a una cadena
+            var puntosSala = sala.getAttribute('data-puntos').toString();
 
             // Verificar si la sala coincide con el filtro
             if (filtroPuntos === 'todos' || puntosSala === filtroPuntos) {
