@@ -73,6 +73,9 @@ public class ServicioManoImpl implements ServicioMano {
         // Asignacion de cartas a los jugadores
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
 
+
+        System.out.println("servicioMano: empezar(): Empieza una mano");
+        System.out.println(m);
         // Guardamos  mano
         repositorioMano.merge(m);
     }
@@ -99,6 +102,9 @@ public class ServicioManoImpl implements ServicioMano {
 
         // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
+
+        System.out.println("Comenzó una nueva mano: ");
+        System.out.println(nueva);
 
         // Guardamos nueva mano
         this.repositorioMano.guardar(nueva);
@@ -138,7 +144,7 @@ public class ServicioManoImpl implements ServicioMano {
     // Guardar mano (usar solo para guardar una vez creada, no para actualizar datos)
     @Override
     public void guardar(Mano mano) {
-        this.repositorioMano.guardar(mano);
+        this.repositorioMano.merge(mano);
     }
 
 
@@ -170,6 +176,7 @@ public class ServicioManoImpl implements ServicioMano {
 
         // Si el jugador tiró y ambos se quedaron sin cartas, terminó la mano
         if (mano.getCartasJ1().isEmpty() && mano.getCartasJ2().isEmpty()) {
+            System.out.println("Limpie cartas a los dos porque no tenian");
             mano.setEstaTerminada(true);
         }
     }
@@ -311,6 +318,8 @@ public class ServicioManoImpl implements ServicioMano {
             mano.setEstaTerminada(true);
             mano.getCartasJ1().clear();
             mano.getCartasJ2().clear();
+            mano.getCartasTiradasJ1().clear();
+            mano.getCartasTiradasJ2().clear();
 
             // Guardamos partida y mano
             this.repositorioTruco.merge(truco);
@@ -363,6 +372,10 @@ public class ServicioManoImpl implements ServicioMano {
 
         if (mano.getPuntosRondaJ1() == 2 || mano.getPuntosRondaJ2() == 2) {
             mano.setEstaTerminada(true);
+            mano.getCartasJ1().clear();
+            mano.getCartasJ2().clear();
+            mano.getCartasTiradasJ1().clear();
+            mano.getCartasTiradasJ2().clear();
         }
 
         if (mano.getEstaTerminada()) {
@@ -390,7 +403,9 @@ public class ServicioManoImpl implements ServicioMano {
     private void obtenerGanadorDeRonda(Partida truco, Mano mano, Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
         if (mano.getCartasTiradasJ1().size() == mano.getCartasTiradasJ2().size()) {
-
+            System.out.println("Ya tiraron los 2, ahora calculo quien gano la ronda");
+            System.out.println("Largo de cartas tiradas J1 " + mano.getCartasTiradasJ1().size());
+            System.out.println("Largo de cartas tiradas J2 " + mano.getCartasTiradasJ2().size());
             // Conseguimos las últimas tiradas.
             Carta cartaJ1 = mano.getCartasTiradasJ1().get(mano.getCartasTiradasJ2().size() - 1);
             Carta cartaJ2 = mano.getCartasTiradasJ2().get(mano.getCartasTiradasJ1().size() - 1);

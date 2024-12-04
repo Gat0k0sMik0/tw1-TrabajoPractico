@@ -76,8 +76,10 @@ public class Jugador {
         return "Jugador{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
+                ", numero=" + numero +
                 ", victorias=" + victorias +
                 ", nivel='" + nivel + '\'' +
+                ", usuario=" + usuario +
                 '}';
     }
 }

@@ -117,7 +117,7 @@ public class ControladorTruco {
                 }
 
                 // Si el usuario actual es el J1, sino el J2
-                if (usuarioActual.getId().equals(partida.getJ1().getId())) {
+                if (usuarioActual.getId().equals(partida.getJ1().getUsuario().getId())) {
                     model.put("yo", partida.getJ1());
                     model.put("rival", partida.getJ2());
                     model.put("misPuntos", partida.getPuntosJ1());
@@ -154,24 +154,15 @@ public class ControladorTruco {
                     );
                 }
 
-                // Manejo de botones
-                System.out.println("Puntos en juego del envido: " + mano.getPuntosEnJuegoEnvido());
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
-
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
-                                && mano.getRespondeAhora().getId().equals(usuarioActual.getId())
+                                && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
                 );
-
-                model.put("puedoUsarTruco", false);
-                model.put("puedoUsarEnvido", false);
-
                 model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
                 model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
-                // ---
-
-                model.put("meTocaTirar", mano.getTiraAhora().getId().equals(usuarioActual.getId()));
+                model.put("meTocaTirar", mano.getTiraAhora().getUsuario().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
 
                 // Atributos independientes de que jugador es cual
@@ -181,9 +172,6 @@ public class ControladorTruco {
                 model.put("partida", partida);
                 model.put("idPartida", partida.getId());
                 model.put("accionAResponder", mano.getUltimaAccionPreguntada());
-
-                System.out.println("Info de mano: " + mano);
-                System.out.println("Usuario actual: " + usuarioActual.getId());
 
 
                 model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
@@ -282,6 +270,8 @@ public class ControladorTruco {
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
         ultimaMano.getCartasTiradasJ1().clear();
         ultimaMano.getCartasTiradasJ2().clear();
+        ultimaMano.getCartasJ1().clear();
+        ultimaMano.getCartasJ2().clear();
         ultimaMano.setConfirmacionTerminada(true);
         servicioMano.guardar(ultimaMano);
         Mano mano = servicioMano.reset(partida);
@@ -315,7 +305,7 @@ public class ControladorTruco {
                 }
 
                 // Si el usuario actual es el J1, sino el J2
-                if (usuarioActual.getId().equals(partida.getJ1().getId())) {
+                if (usuarioActual.getId().equals(partida.getJ1().getUsuario().getId())) {
                     model.put("yo", partida.getJ1());
                     model.put("rival", partida.getJ2());
                     model.put("misPuntos", partida.getPuntosJ1());
@@ -329,7 +319,8 @@ public class ControladorTruco {
                     model.put("accionesNormales", this.filtrarAccionesNormales(
                             servicioMano.tieneFlor(partida.getJ1(), mano),
                             servicioMano.esLaPrimerRonda(mano),
-                            mano.getIndicadorTruco())
+                            mano.getIndicadorTruco(),
+                            mano.getPuntosEnJuegoEnvido())
                     );
                 } else {
                     model.put("yo", partida.getJ2());
@@ -343,23 +334,25 @@ public class ControladorTruco {
                     model.put("miNumero", partida.getJ2().getNumero());
                     model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ2(), mano));
                     model.put("accionesNormales", this.filtrarAccionesNormales(
-                            servicioMano.tieneFlor(partida.getJ2(), mano),
-                            servicioMano.esLaPrimerRonda(mano),
-                            mano.getIndicadorTruco())
+                                    servicioMano.tieneFlor(partida.getJ2(), mano),
+                                    servicioMano.esLaPrimerRonda(mano),
+                                    mano.getIndicadorTruco(),
+                                    mano.getPuntosEnJuegoEnvido()
+                            )
                     );
                 }
 
-                // Manejo de botones
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
-
-                model.put("respondoYo", mano.getRespondeAhora() != null && mano.getRespondeAhora().getId().equals(usuarioActual.getId()));
+                model.put("respondoYo",
+                        mano.getRespondeAhora() != null
+                                && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
+                );
                 model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
                 model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
-                // ---
-
-                model.put("meTocaTirar", mano.getTiraAhora().getId().equals(usuarioActual.getId()));
+                model.put("meTocaTirar", mano.getTiraAhora().getUsuario().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
+
 
                 // Atributos independientes de que jugador es cual
                 model.put("seTermino", mano.getEstaTerminada());
@@ -429,7 +422,6 @@ public class ControladorTruco {
 
         // Retorna jugador que le toca responder si es que responde algo que no sea quiero/no quiero. Si es así, da null;
         servicioMano.responder(mano, accionAlCualResponde, nroRespuesta, Integer.parseInt(nroJugador));
-
 
 
         return new ModelAndView("redirect:/partida-truco");
