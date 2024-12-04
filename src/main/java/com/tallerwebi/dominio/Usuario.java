@@ -24,9 +24,6 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private Set<Amistad> amistades = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private FotoPerfil fotoPerfil;
-
     public Long getId() {
         return id;
     }
@@ -97,14 +94,6 @@ public class Usuario {
 
     public void setAmistades(Set<Amistad> amistades) {
         this.amistades = amistades;
-    }
-
-    public FotoPerfil getFotoPerfil() {
-        return fotoPerfil;
-    }
-
-    public void setFotoPerfil(FotoPerfil fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
     }
 
     public String getUrlFotoPerfil() {

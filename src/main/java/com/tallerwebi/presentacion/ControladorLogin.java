@@ -27,13 +27,11 @@ public class ControladorLogin {
     private ServicioUsuario servicioUsuario;
     private ServicioLogin servicioLogin;
     private ServicioEmail servicioEmail;
-    private ServicioFotoDePerfil servicioFotoDePerfil;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, ServicioEmail servicioEmail, ServicioFotoDePerfil servicioFotoDePerfil, ServicioUsuario servicioUsuario) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioEmail servicioEmail, ServicioUsuario servicioUsuario) {
         this.servicioLogin = servicioLogin;
         this.servicioEmail = servicioEmail;
-        this.servicioFotoDePerfil = servicioFotoDePerfil;
         this.servicioUsuario = servicioUsuario;
     }
 
