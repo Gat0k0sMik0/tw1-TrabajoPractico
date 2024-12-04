@@ -1,132 +1,153 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!--  Estilo Custom  -->
-    <link rel="stylesheet" th:href="@{/css/menu-juego.css}"/>
     <!-- FOOTER -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <!-- FONT FAMILIES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
+    <!--  Estilo Custom  -->
+    <link rel="stylesheet" th:href="@{/css/menu-juego.css}"/>
     <title>Game Interface</title>
 </head>
 <body>
 <!-- HEADER -->
-<header class="col-12 py-3 d-flex align-items-center">
-    <nav class="col-10 mx-auto d-flex flex-wrap justify-content-between align-items-center text-white">
-        <a class="text-decoration-none fs-4 text-white" th:href="@{/home}">
-            Home
-        </a>
-        <h1>TRUCO</h1>
-        <div class="d-flex gap-2 align-items-center">
-            <a class="text-decoration-none text-white" th:href="@{/perfil}">
-                <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+<div id="blurry-filter"></div>
+<header>
+    <div>
+        <article id="title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle> <!-- Círculo de fondo en gris -->
+                <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <!-- Flecha en blanco -->
+            </svg>
+        </article>
+
+        <article id="center">
+            <h1 id="titulo-principal">TRUCO</h1>
+        </article>
+
+        <article id="reference">
+            <a class="text-decoration-none text-white" target="_blank" rel="noopener" th:href="@{/perfil(id=${usuario.id})}">
+                <!-- Si el usuario no tiene foto, mostrar un ícono predeterminado -->
+                <div th:if="${usuario.urlFotoPerfil == null || usuario.urlFotoPerfil == '/img/fotos-perfil/default.png'}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"></path>
+                    </svg>
+                </div>
+
+                <!-- Si el usuario tiene foto de perfil, mostrar la imagen -->
+                <div th:if="${usuario.urlFotoPerfil != null && usuario.urlFotoPerfil != '/img/fotos-perfil/default.png'}">
+                    <img class="foto-perfil" th:src="@{${usuario.urlFotoPerfil}}" alt="Foto de perfil">
+                </div>
             </a>
-            <a href="" class="text-decoration-none text-white fs-5">
-                <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+            <a href="" class="text-decoration-none text-white fs-5" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">
+                    <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1a8.12 8.12 0 0 0-1.69-.98l-.38-2.65A.485.485 0 0 0 14 2h-4c-.25 0-.45.18-.49.42l-.38 2.65c-.62.23-1.2.54-1.69.98l-2.49-1a.494.494 0 0 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98L2.62 14.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.49.44 1.07.75 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.62-.23 1.2-.54 1.69-.98l2.49 1c.23.09.5 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+                </svg>
             </a>
-        </div>
-    </nav>
+        </article>
+    </div>
 </header>
 
-<main class="info-container col-12">
-    <div class="col-10 mx-auto menuJuegoWrapper">
-        <!-- Imagen de portada del juego -->
-        <img th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
+<!-- CONTENIDO PRINCIPAL -->
+<div class="tableta">
+    <main class="info-container">
+        <div class="menuJuegoWrapper">
+            <!-- Imagen de portada del juego -->
+            <img id="foto" th:src="@{/img/fondo-truco.png}" alt="Imagen del juego">
 
-        <div class="botones">
-            <!-- CREAR SALA -->
-            <button type="button" id="boton-crear" class="styledBtn" data-bs-toggle="modal" data-bs-target="#myModal">CREAR SALA</button>
-            <!-- VER SALAS -->
-            <button id="boton-buscar" onclick="mostrarPanelSalas()" class="styledBtn">VER SALAS DE ESPERA</button>
-        </div>
+            <div class="botones">
+                <!-- CREAR SALA -->
+                <button type="button" id="boton-crear" class="styledBtn" data-bs-toggle="modal" data-bs-target="#myModal">CREAR SALA</button>
+                <!-- VER SALAS -->
+                <button id="boton-buscar" onclick="mostrarPanelSalas()" class="styledBtn">VER SALAS DE ESPERA</button>
+            </div>
 
-        <!--   POPUP OPCIONES DE PARTIDA   -->
-        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="myModalLabel">Crear sala</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form type="submit" th:action="@{/crearSala}" class="d-flex flex-column gap-2" method="post">
-                            <!-- Enviar el id del usuario activo como un parámetro oculto -->
-                            <input type="hidden" th:value="${ua.getId()}" name="idUsuario">
-                            <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-                                <!-- PUNTOS PARA GANAR -->
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="puntos" id="option15" value="15" autocomplete="off" checked> 15 puntos
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="puntos" id="option30" value="30" autocomplete="off"> 30 puntos
-                                </label>
-                            </div>
-                            <button class="btn btn-primary" type="submit">Crear sala</button>
-                        </form>
+            <!-- PANEL OPCIONES DE PARTIDA -->
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="myModalLabel">Crear sala</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form type="submit" th:action="@{/crearSala}" class="d-flex flex-column gap-2" method="post">
+                                <input type="hidden" th:value="${usuario.getId()}" name="idUsuario">
+                                <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+                                    <label class="btn btn-primary active">
+                                        <input type="radio" name="puntos" id="option15" value="15" autocomplete="off" checked> 15 puntos
+                                    </label>
+                                    <label class="btn btn-primary">
+                                        <input type="radio" name="puntos" id="option30" value="30" autocomplete="off"> 30 puntos
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Crear sala</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Panel desplegable -->
-        <h2 th:if="${error != null}" th:text="${error}" style="color: red;"></h2>
-        <div id="panel" class="panel oculto">
-            <h3>Salas disponibles</h3>
-            <!-- Contenedor -->
-            <div class="contenedorSalas">
-                <div class="div">
-                    <div class="columna">
-                        <p>Partida: 15</p>
+            <!-- Panel desplegable -->
+            <h2 th:if="${error != null}" th:text="${error}" class="error-msg"></h2>
+            <div id="panel" class="panel oculto">
+                <h3 style="text-align: center; margin-bottom: 20px;">Salas disponibles</h3>
+                <div class="contenedorSalas">
+                    <!-- Sala 1 -->
+                    <div class="sala">
+                        <div class="sala-perfil">
+                            <img th:src="@{/img/fotos-perfil/default.png}" alt="Perfil" class="foto-perfil">
+                            <p class="nombre-usuario">Usuario1</p>
+                        </div>
+                        <div class="sala-detalles">
+                            <p>Partida: 1</p>
+                            <p>Puntos: 15</p>
+                        </div>
+                        <div class="sala-boton">
+                            <a class="styledBtn" href="/unirse?idJugador=123&idPartida=1">Unirse</a>
+                        </div>
                     </div>
-                    <div class="columna">
-                        <p>30 puntos</p>
+
+                    <!-- Sala 2 -->
+                    <div class="sala">
+                        <div class="sala-perfil">
+                            <img th:src="@{/img/fotos-perfil/default.png}" alt="Perfil" class="foto-perfil">
+                            <p class="nombre-usuario">Usuario2</p>
+                        </div>
+                        <div class="sala-detalles">
+                            <p>Partida: 2</p>
+                            <p>Puntos: 30</p>
+                        </div>
+                        <div class="sala-boton">
+                            <a class="styledBtn" href="/unirse?idJugador=123&idPartida=2">Unirse</a>
+                        </div>
                     </div>
-                    <div class="columna">
-                        <a class="btn btn-success" href="#">Unirse</a>
-                    </div>
-                </div>
-                <div class="div">
-                    <div class="columna">
-                        <p>Partida: 15</p>
-                    </div>
-                    <div class="columna">
-                        <p>30 puntos</p>
-                    </div>
-                    <div class="columna">
-                        <a class="btn btn-success" href="#">Unirse</a>
-                    </div>
-                </div>
-                <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="div">
-                    <div class="columna">
-                        <p th:text="${'Partida: ' + partida.getId()}"></p>
-                    </div>
-                    <div class="columna">
-                        <p th:text="${'Puntos ' + partida.getPuntosParaGanar()}"></p>
-                    </div>
-                    <div class="columna">
-                        <a class="btn btn-success" th:href="@{/unirse(idJugador=${ua.getId()}, idPartida=${partida.getId()})}">Unirse</a>
+
+                    <!-- Salas dinámicas -->
+                    <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="sala">
+                        <div class="sala-perfil">
+                            <img th:src="${partida.getJ1().getUsuario.getUrlFotoPerfil()}" alt="Perfil" class="foto-perfil">
+                            <p class="nombre-usuario" th:text="${partida.getJ1().getNombre()}"></p>
+                        </div>
+                        <div class="sala-detalles">
+                            <p th:text="${'Partida: ' + partida.getId()}"></p>
+                            <p th:text="${'Puntos: ' + partida.getPuntosParaGanar()}"></p>
+                        </div>
+                        <div class="sala-boton">
+                            <a class="styledBtn" th:href="@{/unirse(idJugador=${usuario.getId()}, idPartida=${partida.getId()})}">Unirse</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Mensaje de carga -->
-        <div id="loading" style="display: none;">Cargando salas...</div>
-
-        <!-- Estadísticas del juego -->
-        <div class="game-stats">
-            <div class="opciones">
-                <h2 class="opcion1">Estadísticas</h2>
-                <h2 class="opcion2">Historial</h2>
-            </div>
-
-            <div>
+            <!-- Estadísticas del juego -->
+            <div class="game-stats">
                 <h2>Mis Estadísticas</h2>
                 <table>
                     <thead>
@@ -137,7 +158,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Verificamos si 'misEstadisticas' no es null antes de iterar -->
                     <tr th:if="${misEstadisticas == null}">
                         <td colspan="3">No tienes estadísticas registradas.</td>
                     </tr>
@@ -149,35 +169,10 @@
                     </tbody>
                 </table>
             </div>
-
-            <div>
-                <h2>Top Jugadores</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Juego</th>
-                        <th>Victorias</th>
-                        <th>Partidas Jugadas</th>
-                        <th>Jugador</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Verificamos si 'top' no es null antes de iterar -->
-                    <tr th:if="${top == null}">
-                        <td colspan="4">No hay datos para el Top de Jugadores.</td>
-                    </tr>
-                    <tr th:each="estadistica : ${top}">
-                        <td th:text="${estadistica.juego != null ? estadistica.juego : 'Sin datos'}"></td>
-                        <td th:text="${estadistica.ganadas != null ? estadistica.ganadas : 0}"></td>
-                        <td th:text="${estadistica.jugadas != null ? estadistica.jugadas : 0}"></td>
-                        <td th:text="${estadistica.usuario != null && estadistica.usuario.nombreUsuario != null ? estadistica.usuario.nombreUsuario : 'Desconocido'}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
-    </div>
-</main>
+    </main>
+</div>
+
 
 <footer class="relative bg-blueGray-200 pt-8 pb-6">
     <div class="container mx-auto px-4">
@@ -240,16 +235,45 @@
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 <script>
-    function mostrarPanelSalas() {
-        var panel = document.getElementById("panel");
-        panel.classList.toggle("oculto");
-        const offset = 250; // Ajuste en píxeles
-        const panelPosition = panel.getBoundingClientRect().top + window.scrollY - offset;
+    document.addEventListener('DOMContentLoaded', function () {
+        const botonCrear = document.getElementById('boton-crear');
+        const botonBuscar = document.getElementById('boton-buscar');
+        const modalCrear = document.getElementById('myModal');
+        const panelSalas = document.getElementById('panel');
 
-        window.scrollTo({ top: panelPosition, behavior: "smooth" });
-    }
+        // Asegurarse de que ambos paneles estén ocultos inicialmente
+        modalCrear.style.display = 'none';
+        panelSalas.classList.add('oculto');
+
+        // Al hacer clic en "Crear Sala"
+        botonCrear.addEventListener('click', function () {
+            if (modalCrear.style.display === 'none') {
+                // Mostrar el modal de crear sala
+                modalCrear.style.display = 'block';
+
+                // Ocultar el panel de salas si está visible
+                panelSalas.classList.add('oculto');
+            } else {
+                // Ocultar el modal de crear sala
+                modalCrear.style.display = 'none';
+            }
+        });
+
+        // Al hacer clic en "Ver Salas"
+        botonBuscar.addEventListener('click', function () {
+            if (panelSalas.classList.contains('oculto')) {
+                // Mostrar el panel de salas
+                panelSalas.classList.remove('oculto');
+
+                // Ocultar el modal de crear sala si está visible
+                modalCrear.style.display = 'none';
+            } else {
+                // Ocultar el panel de salas
+                panelSalas.classList.add('oculto');
+            }
+        });
+    });
 </script>
 </body>
 </html>

@@ -40,7 +40,7 @@ public class ControladorMenuJuego {
         List <Estadistica> top =  servicioEstadisticas.obtenerTopJugadores();
         Estadistica misEstadisticas = servicioEstadisticas.obtenerUnaEstadisticaDeUnJugador(ua.getId());
         model.put("partidas", partidas);
-        model.put("ua", ua);
+        model.put("usuario", ua);
         model.put("top", top);
         model.put("misEstadisticas", misEstadisticas);
 
