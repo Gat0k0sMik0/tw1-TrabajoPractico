@@ -22,9 +22,9 @@ import java.util.List;
 @Controller
 public class ControladorWebSocket {
 
-    ServicioMensajes servicioMensajes;
-    ServicioUsuario servicioUsuario;
-    SimpMessagingTemplate messagingTemplate;
+    private final ServicioMensajes servicioMensajes;
+    private final ServicioUsuario servicioUsuario;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     public ControladorWebSocket(

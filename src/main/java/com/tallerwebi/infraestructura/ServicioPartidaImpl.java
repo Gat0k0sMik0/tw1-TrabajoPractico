@@ -31,25 +31,44 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
     @Override
-    public Partida preparar(Jugador j1, Integer puntosMaximos) {
+    public Partida preparar(Usuario usuarioActivo, Integer puntosMaximos) {
         Partida truco = new Partida();
-        truco.setPuedeEmpezar(false);
-        truco.setJ1(j1);
-        truco.setPuntosParaGanar(puntosMaximos);
-        truco.setPuntosJ1(0);
-        truco.setJ2(null);
-        truco.setPuntosJ2(0);
-        this.repositorioTruco.guardarJugador(j1);
+        Jugador jugador1 = crearJugador(usuarioActivo, 1);
+        prepararTruco(truco, jugador1, puntosMaximos);
+        this.repositorioTruco.guardarJugador(jugador1);
         this.repositorioTruco.guardarPartida(truco);
         return truco;
     }
 
-    @Override
-    public void agregarJugador(Jugador j2, Partida truco) {
-        truco.setJ2(j2);
+    private void prepararTruco (Partida truco, Jugador j, Integer puntosMaximos) {
+        truco.setPuedeEmpezar(false);
+        truco.setJ1(j);
+        truco.setPuntosParaGanar(puntosMaximos);
+        truco.setPuntosJ1(0);
+        truco.setJ2(null);
         truco.setPuntosJ2(0);
-        this.repositorioTruco.guardarJugador(j2);
+    }
+
+    private Jugador crearJugador (Usuario usuario, Integer numero) {
+        Jugador j = new Jugador();
+        j.setNombre(usuario.getNombreUsuario());
+        j.setNumero(numero);
+        j.setUsuario(usuario);
+        return j;
+    }
+
+    @Override
+    public void agregarJugador(Usuario usuario, Partida truco) {
+        Jugador jugador2 = crearJugador(usuario, 2);
+        agregarJugadorTruco(truco, jugador2);
+        this.repositorioTruco.guardarJugador(jugador2);
         this.repositorioTruco.merge(truco);
+    }
+
+    private void agregarJugadorTruco (Partida truco, Jugador jugador2) {
+        truco.setJ2(jugador2);
+        truco.setPuntosJ2(0);
+        truco.setPuedeEmpezar(true);
     }
 
 
@@ -62,7 +81,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public void empezar(Partida truco) {
         truco.setPuedeEmpezar(true);
-        this.repositorioTruco.guardarPartida(truco);
+        this.repositorioTruco.merge(truco);
     }
 
 

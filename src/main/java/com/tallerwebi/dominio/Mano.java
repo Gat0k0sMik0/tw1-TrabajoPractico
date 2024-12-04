@@ -19,9 +19,13 @@ public class Mano {
     private Integer movimientos = 0;
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
+    private Integer ultimaAccionPreguntada;
 
     @ManyToOne
     private Jugador ganador;
+
+    @ManyToOne
+    private Jugador tiraAhora;
 
     @ManyToOne
     private Jugador respondeAhora;
@@ -51,20 +55,25 @@ public class Mano {
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasTiradasJ2;
 
-//    @ElementCollection
-//    private List<Long> cartasTiradasJ1;
-//
-//    @ElementCollection
-//    private List<Long> cartasTiradasJ2;
-
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Carta> cartasTiradasJ1;
-//
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Carta> cartasTiradasJ2;
 
     public Mano() {
 
+    }
+
+    public Integer getUltimaAccionPreguntada() {
+        return ultimaAccionPreguntada;
+    }
+
+    public void setUltimaAccionPreguntada(Integer ultimaAccionPreguntada) {
+        this.ultimaAccionPreguntada = ultimaAccionPreguntada;
+    }
+
+    public Jugador getTiraAhora() {
+        return tiraAhora;
+    }
+
+    public void setTiraAhora(Jugador tiraAhora) {
+        this.tiraAhora = tiraAhora;
     }
 
     public Jugador getRespondeAhora() {
