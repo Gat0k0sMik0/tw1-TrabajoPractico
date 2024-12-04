@@ -24,6 +24,9 @@ public class Mano {
     private Jugador ganador;
 
     @ManyToOne
+    private Jugador tiraAhora;
+
+    @ManyToOne
     private Jugador respondeAhora;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
@@ -65,6 +68,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Jugador getTiraAhora() {
+        return tiraAhora;
+    }
+
+    public void setTiraAhora(Jugador tiraAhora) {
+        this.tiraAhora = tiraAhora;
     }
 
     public Jugador getRespondeAhora() {

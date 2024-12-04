@@ -6,8 +6,8 @@ import javax.transaction.Transactional;
 
 public interface ServicioPartida {
 
-    Partida preparar(Jugador j1, Integer puntosMaximos);
-    void agregarJugador(Jugador j2, Partida partida);
+    Partida preparar(Usuario usuario, Integer puntosMaximos);
+    void agregarJugador(Usuario usuario, Partida partida);
     void empezar(Partida truco);
 
     Partida obtenerPartidaPorId(Long id);
