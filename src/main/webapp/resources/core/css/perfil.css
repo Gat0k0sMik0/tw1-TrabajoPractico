@@ -1,63 +1,96 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
 /* HEADER MODS */
 .settingsImageContainer {
     width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .settingsImageContainer > img {
     width: 100%;
+    border-radius: 50%; /* Hacer la imagen circular */
+    border: 2px solid #00ADB5; /* Borde acorde al tema */
 }
 
 .userData {
-    background: #515151;
+    background: #303841; /* Fondo oscuro */
     min-height: 100vh;
+    padding: 20px;
+    color: #d6d6d6; /* Texto gris claro */
 }
 
 .userHeader {
     height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #515151; /* Fondo ligeramente más claro */
+    border-bottom: 3px solid #00ADB5; /* Línea inferior decorativa */
 }
 
 .imgStyle {
     height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #00ADB5; /* Borde para destacar */
 }
 
 .progress {
     width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 5px;
+    background-color: #404040; /* Fondo oscuro de la barra */
+    border-radius: 10px;
     overflow: hidden;
     height: 20px;
     padding: 0.25rem;
+    margin: 15px 0;
 }
 
 .progress-bar {
     height: 100%;
-    background-color: #007bff;
+    background-color: #00ADB5; /* Color principal */
     text-align: center;
-    color: white;
+    color: #ffffff; /* Texto blanco */
+    font-size: 0.9em;
     line-height: 20px;
+    transition: width 0.4s ease; /* Animación */
 }
 
 .userImage {
     bottom: 0;
     width: 150px;
     height: 150px;
-    background-color: #95BF39;
+    background-color: #00ADB5; /* Fondo del avatar */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; /* Texto blanco dentro */
+    font-size: 1.5em;
+    font-weight: bold;
+    border: 3px solid #ffffff; /* Borde blanco */
 }
 
 .gameWrapper {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: auto;
-    gap: 0.5rem;
+    gap: 1rem; /* Más espacio entre elementos */
+    margin-top: 20px;
 }
 
 .gameInfo {
-    padding: 0.5rem;
-    height: fit-content;
+    padding: 1rem;
+    background-color: #404040; /* Fondo oscuro para los bloques */
+    border-radius: 10px; /* Bordes redondeados */
     display: flex;
-    gap: 0.5rem
+    gap: 1rem;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
 }
-
 
 .gameFirstCol {
     width: 25%;
@@ -69,20 +102,95 @@
 .gameImage {
     width: 100px;
     height: 100px;
-    background-color: #95BF39;
+    background-color: #00ADB5; /* Color destacado */
+    border-radius: 10px; /* Bordes redondeados */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; /* Texto blanco */
+    font-size: 1.2em;
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
 }
-
 
 .gameSecondCol {
     width: 75%;
+    color: #d6d6d6; /* Texto gris claro */
 }
 
 .progressBar {
-    background: #1D8FF2;
+    background: #00ADB5; /* Color del progreso */
+    border-radius: 5px;
 }
 
 @media screen and (min-width: 768px) {
     .gameWrapper {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+/* FOOTER */
+footer {
+    background-color: #edf2f7; /* Similar to bg-blueGray-200 */
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+    width: 100%;
+}
+
+footer h4 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #4a5568; /* blueGray-700 */
+}
+
+footer h5 {
+    font-size: 1.125rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #718096; /* blueGray-600 */
+}
+
+.social-buttons .social-button {
+    background-color: #fff;
+    color: #4299e1; /* lightBlue-400 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: normal;
+    height: 2.5rem;
+    width: 2.5rem;
+
+    border-radius: 50%;
+    outline: none;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.social-buttons .twitter { color: #1DA1F2; }
+.social-buttons .facebook { color: #1877F2; }
+.social-buttons .dribbble { color: #EA4C89; }
+.social-buttons .github { color: #171515; }
+
+footer .link {
+    color: #718096; /* blueGray-600 */
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+footer .link:hover {
+    color: #2d3748; /* blueGray-800 */
+}
+
+footer hr {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-color: #cbd5e0; /* blueGray-300 */
+}
+
+footer .text-sm {
+    font-size: 0.875rem;
+}
+
+footer .font-semibold {
+    font-weight: 600;
 }
