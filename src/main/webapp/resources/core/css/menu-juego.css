@@ -1,3 +1,60 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
+
+/* HEADER */
+header {
+    background-color: #333; /* Fondo oscuro para resaltar elementos */
+    color: white;
+    width: 100%;
+    height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+header a:hover {
+    color: #FFA726; /* Un color naranja para el hover */
+}
+
+header h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 0;
+    font-family: "Kumar One Outline", sans-serif;
+    text-transform: uppercase;
+}
+
+/* Imágenes del header */
+#usuario,
+#configuracion {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+#usuario:hover,
+#configuracion:hover {
+    transform: scale(1.1);
+}
 body {
 
 }
@@ -198,4 +255,81 @@ td {
 a {
     text-decoration: none;
     cursor: pointer;
+}
+
+/* FOOTER */
+footer {
+    background-color: #edf2f7; /* Similar to bg-blueGray-200 */
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+    width: 100%;
+}
+
+footer h4 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #4a5568; /* blueGray-700 */
+}
+
+footer h5 {
+    font-size: 1.125rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #718096; /* blueGray-600 */
+}
+
+.social-buttons .social-button {
+    background-color: #fff;
+    color: #4299e1; /* lightBlue-400 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: normal;
+    height: 2.5rem;
+    width: 2.5rem;
+
+    border-radius: 50%;
+    outline: none;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.social-buttons .twitter { color: #1DA1F2; }
+.social-buttons .facebook { color: #1877F2; }
+.social-buttons .dribbble { color: #EA4C89; }
+.social-buttons .github { color: #171515; }
+
+footer .link {
+    color: #718096; /* blueGray-600 */
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+footer .link:hover {
+    color: #2d3748; /* blueGray-800 */
+}
+
+footer hr {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-color: #cbd5e0; /* blueGray-300 */
+}
+
+footer .text-sm {
+    font-size: 0.875rem;
+}
+
+footer .font-semibold {
+    font-weight: 600;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
