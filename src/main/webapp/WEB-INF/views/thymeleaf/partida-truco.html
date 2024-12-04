@@ -7,7 +7,7 @@
     <!-- Estilos generales -->
     <link rel="stylesheet" th:href="@{/css/general.css}"/>
     <!-- Estilos custom -->
-    <link rel="stylesheet" th:href="@{/css/partida-truco.css(version=${T(java.lang.System).currentTimeMillis()})}"/>
+    <link rel="stylesheet" th:href="@{/css/partida-truco.css}"/>
 </head>
 <body>
 <header>
@@ -111,6 +111,24 @@
                        th:each="accion : ${accionesNormales}"
                        th:href="@{/accion(mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
+                    </a>
+                </div>
+                <!--      LOGICA DE TINCHO        -->
+                <div class="d-flex gap-1"
+                     th:if="${turnoJugador == 2 && !mostrarRespuestasEnvidoJ1 && !mostrarRespuestasTrucoJ1}">
+                    <a class="btn btn-primary"
+                       th:if="${envidoValido}"
+                       th:href="@{/accion(mano=${mano.getId()}, accion=2, jugador=2)}">Envido
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{/accion(mano=${mano.getId()}, accion=5, jugador=2)}">Truco
+                    </a>
+                    <a class="btn btn-primary"
+                       th:if="${florValidaJ2}"
+                       th:href="@{/accion(mano=${mano.getId()}, accion=8, jugador=2)}">Flor
+                    </a>
+                    <a class="btn btn-primary"
+                       th:href="@{/accion(mano=${mano.getId()}, accion=9, jugador=2)}">Mazo
                     </a>
                 </div>
                 <!-- RESPUESTA ENVIDO -->
