@@ -118,7 +118,7 @@ public class ServicioManoImpl implements ServicioMano {
         m.setTiraAhora(getRandom(truco)); // obtener quien empieza primero de manera random
         m.setRespondeAhora(m.getTiraAhora());
         m.setIndicadorTruco(0);
-        m.setPuntosEnJuegoEnvido(0);
+        m.setPuntosEnJuegoEnvido(99);
         m.setUltimaAccionPreguntada(99);
     }
 
@@ -270,6 +270,7 @@ public class ServicioManoImpl implements ServicioMano {
             this.repositorioMano.merge(mano);
             return receptor;
         } else if (esEnvido(accionRealizada)) {
+            mano.setPuntosEnJuegoEnvido(0);
             preguntarEnvido(accionRealizada, ejecutor, mano);
             mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
             mano.setRespondeAhora(receptor);
@@ -467,6 +468,7 @@ public class ServicioManoImpl implements ServicioMano {
                 break;
             case "FALTA ENVIDO":
                 diceFaltaEnvido = ejecutor;
+                mano.setPuntosEnJuegoEnvido(-1);
                 break;
             default:
                 throw new TrucoException("PreguntarEnvido: ocurrió un error.");
@@ -711,6 +713,7 @@ public class ServicioManoImpl implements ServicioMano {
             this.puntosEnJuegoEnvido += 3;
             return receptor;
         } else if (respuestaDeLaAccion.equals("FALTA ENVIDO")) {
+            mano.setPuntosEnJuegoEnvido(-1);
             this.diceFaltaEnvido = ejecutor;
             return receptor;
         } else {
