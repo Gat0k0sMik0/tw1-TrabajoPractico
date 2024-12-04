@@ -147,16 +147,7 @@ public class ControladorTruco {
                 model.put("accionesEnvido", this.getAccionesEnvido());
                 model.put("accionesTruco", this.getAccionesTruco());
 
-                if (mano.getRespondeAhora().getId().equals(usuarioActual.getId())
-                        && mano.getTiraAhora().getId().equals(usuarioActual.getId())) {
-                    System.out.println("ME TOCA A MI SI");
-                    model.put("respondoYo", true);
-                } else {
-                    System.out.println("NO ME TOCA AAAAAA");
-                    model.put("respondoYo", false);
-                }
-
-                System.out.println("Le toca ahora a: " + mano.getTiraAhora().getNombre());
+                model.put("respondoYo", mano.getRespondeAhora() != null && mano.getRespondeAhora().getId().equals(usuarioActual.getId()));
                 model.put("meTocaTirar", mano.getTiraAhora().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
 
@@ -171,7 +162,7 @@ public class ControladorTruco {
                 model.put("mano", mano);
                 model.put("partida", partida);
                 model.put("idPartida", partida.getId());
-                model.put("accionAResponder", session.getAttribute("accionAResponder"));
+                model.put("accionAResponder", mano.getUltimaAccionPreguntada());
 
             }
             model.put("ganador", partida.getGanador());

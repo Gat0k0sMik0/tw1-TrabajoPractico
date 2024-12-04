@@ -75,6 +75,9 @@
             </div>
             <!-- INFORMACION  -->
             <div class="col-4 d-flex flex-column justify-content-center align-items-center bor3">
+                <div th:if="${partida != null}">
+                    <p class="text-warning" th:if="${partida.getJ1() == null || partida.getJ2() == null}" th:text="${'Falta un jugador'}"></p>
+                </div>
                 <div th:if="${ganador != null}">
                     <p>Ganó <strong th:text="${ganador.getNombre()}"></strong>!</p>
                     <a class="btn btn-danger"
@@ -106,7 +109,7 @@
                 <div class="d-flex gap-1" th:if="${respondoYo}">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesNormales}"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=${accion.nro}, jugador=${miNumero})}"
+                       th:href="@{/accion(mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
@@ -114,7 +117,7 @@
                 <div th:if="${respondoYo}">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesEnvido}"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${null}, jugador=${miNumero})}"
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
@@ -122,7 +125,7 @@
                 <div id="respuesta1" th:if="${respondoYo}">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesTruco}"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${null}, jugador=${miNumero})}"
+                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
