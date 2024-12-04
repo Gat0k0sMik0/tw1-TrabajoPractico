@@ -3,7 +3,7 @@
 
 
 /* Estilo para el título */
-h1, h2, h3 {
+h1, h2, h3, label {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
 }
@@ -190,7 +190,7 @@ article svg {
     margin: 20px 0;
 }
 
-.styledBtn {
+.styledBtn{
     background-color: white; /* Fondo blanco */
     color: #333; /* Texto gris oscuro */
     border: 2px solid #333; /* Borde del mismo color que el texto */
@@ -199,17 +199,17 @@ article svg {
     font-weight: bold;
     border-radius: 40px;
     cursor: pointer;
-    width: 200px; /* Ancho fijo para ambos botones */
+    width: 200px;
     text-align: center;
-    transition: all 0.3s ease; /* Transiciones suaves */
-    box-shadow: none; /* Sin sombra por defecto */
+    transition: all 0.3s ease;
+    box-shadow: none;
 }
 
-.styledBtn:hover {
-    background-color: #333; /* Fondo gris oscuro */
-    color: white; /* Texto blanco */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra al hacer hover */
-    border-color: white; /* Cambia el borde a blanco */
+.styledBtn:hover, #puntosFiltro:hover {
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: white;
 }
 
 /* SALAS */
@@ -225,11 +225,42 @@ article svg {
     text-align: center;
 }
 
-.oculto {
-    display: none;
+/* CREAR SALA */
+#myModal {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
 }
 
-/* Panel */
+.modal-title {
+    margin-top: 0;
+    font-size: larger;
+}
+
+.btn-radio {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+input[type="radio"] {
+    width: 20px;
+}
+
+.radios {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* VER SALAS */
 #panel {
     background-color: white;
     border-radius: 15px;
@@ -250,6 +281,35 @@ article svg {
 #panel:not(.oculto) {
     opacity: 1;
     transform: translateY(0);
+}
+
+.panel h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+    font-size: x-large;
+}
+
+.panel .filtro {
+    font-size: larger;
+    margin-bottom: 10px;
+}
+
+.panel label {
+    font-size: medium;
+}
+
+#puntosFiltro {
+    background-color: white;
+    color: #333;
+    border: 2px solid #333;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 40px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: none;
 }
 
 /* Contenedor de salas */
@@ -304,11 +364,6 @@ article svg {
 }
 
 .sala-boton {
-    text-align: center;
-}
-
-.panel h3 {
-    margin-top: 0;
     text-align: center;
 }
 

@@ -69,27 +69,22 @@
             </div>
 
             <!-- PANEL OPCIONES DE PARTIDA -->
-            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div id="myModal">
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="myModalLabel">Crear sala</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form type="submit" th:action="@{/crearSala}" class="d-flex flex-column gap-2" method="post">
-                                <input type="hidden" th:value="${usuario.getId()}" name="idUsuario">
-                                <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-                                    <label class="btn btn-primary active">
-                                        <input type="radio" name="puntos" id="option15" value="15" autocomplete="off" checked> 15 puntos
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        <input type="radio" name="puntos" id="option30" value="30" autocomplete="off"> 30 puntos
-                                    </label>
-                                </div>
-                                <button class="btn btn-primary" type="submit">Crear sala</button>
-                            </form>
-                        </div>
+                    <h3 class="modal-title">Puntos para ganar:</h3>
+                    <div class="modal-body">
+                        <form type="submit" th:action="@{/crearSala}" method="post">
+                            <input type="hidden" th:value="${usuario.getId()}" name="idUsuario">
+                            <div class="radios">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="puntos" id="option15" value="15" autocomplete="off" checked> 15 puntos
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="puntos" id="option30" value="30" autocomplete="off"> 30 puntos
+                                </label>
+                            </div>
+                            <button class="styledBtn" type="submit">Crear sala</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -97,10 +92,21 @@
             <!-- Panel desplegable -->
             <h2 th:if="${error != null}" th:text="${error}" class="error-msg"></h2>
             <div id="panel" class="panel oculto">
-                <h3 style="text-align: center; margin-bottom: 20px;">Salas disponibles</h3>
+                <h3 style="text-align: center;">Salas disponibles</h3>
+
+                <!-- Filtro de puntos -->
+                <div class="filtro">
+                    <label for="puntosFiltro">Filtrar por puntos:</label>
+                    <select id="puntosFiltro" onchange="filtrarSalas()">
+                        <option value="todos">Todos</option>
+                        <option value="15">15 puntos</option>
+                        <option value="30">30 puntos</option>
+                    </select>
+                </div>
+
                 <div class="contenedorSalas">
                     <!-- Sala 1 -->
-                    <div class="sala">
+                    <div class="sala" data-puntos="15">
                         <div class="sala-perfil">
                             <img th:src="@{/img/fotos-perfil/default.png}" alt="Perfil" class="foto-perfil">
                             <p class="nombre-usuario">Usuario1</p>
@@ -110,12 +116,12 @@
                             <p>Puntos: 15</p>
                         </div>
                         <div class="sala-boton">
-                            <a class="styledBtn" href="/unirse?idJugador=123&idPartida=1">Unirse</a>
+                            <a class="styledBtn" href="#">Unirse</a>
                         </div>
                     </div>
 
                     <!-- Sala 2 -->
-                    <div class="sala">
+                    <div class="sala" data-puntos="30">
                         <div class="sala-perfil">
                             <img th:src="@{/img/fotos-perfil/default.png}" alt="Perfil" class="foto-perfil">
                             <p class="nombre-usuario">Usuario2</p>
@@ -125,14 +131,14 @@
                             <p>Puntos: 30</p>
                         </div>
                         <div class="sala-boton">
-                            <a class="styledBtn" href="/unirse?idJugador=123&idPartida=2">Unirse</a>
+                            <a class="styledBtn" href="#">Unirse</a>
                         </div>
                     </div>
 
                     <!-- Salas dinámicas -->
-                    <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="sala">
+                    <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="sala" data-puntos="[[${partida.puntosParaGanar}]]">
                         <div class="sala-perfil">
-                            <img th:src="${partida.getJ1().getUsuario.getUrlFotoPerfil()}" alt="Perfil" class="foto-perfil">
+                            <img th:src="${partida.getJ1().getUsuario().getUrlFotoPerfil()}" alt="Perfil" class="foto-perfil">
                             <p class="nombre-usuario" th:text="${partida.getJ1().getNombre()}"></p>
                         </div>
                         <div class="sala-detalles">
@@ -236,6 +242,7 @@
 </footer>
 
 <script>
+    // FUNCIONES DE SALAS
     document.addEventListener('DOMContentLoaded', function () {
         const botonCrear = document.getElementById('boton-crear');
         const botonBuscar = document.getElementById('boton-buscar');
@@ -274,6 +281,27 @@
             }
         });
     });
+
+    // FUNCION DE FILTRADO DE SALAS
+    function filtrarSalas() {
+        // Obtener el valor del filtro seleccionado
+        var filtroPuntos = document.getElementById('puntosFiltro').value;
+
+        // Obtener todas las salas
+        var salas = document.querySelectorAll('.sala');
+
+        // Iterar sobre cada sala
+        salas.forEach(function(sala) {
+            var puntosSala = sala.getAttribute('data-puntos');
+
+            // Verificar si la sala coincide con el filtro
+            if (filtroPuntos === 'todos' || puntosSala === filtroPuntos) {
+                sala.style.display = 'flex';  // Mostrar la sala
+            } else {
+                sala.style.display = 'none';  // Ocultar la sala
+            }
+        });
+    }
 </script>
 </body>
 </html>
