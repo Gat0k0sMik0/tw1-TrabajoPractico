@@ -282,39 +282,106 @@ public class ControladorTruco {
         servicioMano.guardar(ultimaMano);
         Mano mano = servicioMano.reset(partida);
 
-        model.put("cartasJugador1", mano.getCartasJ1());
-        model.put("cartasJugador2", mano.getCartasJ2());
+        Usuario usuarioActual = (Usuario) session.getAttribute("usuarioActual");
 
-        model.put("jugador1", partida.getJ1());
-        model.put("jugador2", partida.getJ2());
+        if (usuarioActual == null) return new ModelAndView("redirect:/login");
+        if (idPartida == null) return new ModelAndView("redirect:/home");
 
-        model.put("cartasTiradasJ1", mano.getCartasTiradasJ1());
-        model.put("cartasTiradasJ2", mano.getCartasTiradasJ2());
+        if (partida == null) return new ModelAndView("redirect:/home");
 
-        model.put("puntosJ1", partida.getPuntosJ1());
-        model.put("puntosJ2", partida.getPuntosJ2());
+        if (partida.getJ1() != null && partida.getJ2() != null) {
 
-        model.put("mostrarRespuestasEnvidoJ1", mano.getRespondeAhora());
-        model.put("mostrarRespuestasEnvidoJ2", mano.getRespondeAhora());
+            if (partida.getPuedeEmpezar()) {
 
-        model.put("mostrarRespuestasTrucoJ1", mano.getRespondeAhora());
-        model.put("mostrarRespuestasTrucoJ2", mano.getRespondeAhora());
+                if (partida.getGanador() != null) {
+                    model.put("ganador", partida.getGanador());
+                    model.put("partidaFinalizada", true);
+                    servicioEstadistica.guardarResultado(partida);
+                    return new ModelAndView("partida-truco", model);
+                }
 
-        model.put("mostrarAccionesJ1", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 1);
-        model.put("mostrarAccionesJ2", mano.getRespondeAhora() != null && mano.getRespondeAhora().getNumero() == 2);
+                if (mano == null) {
+                    model.put("respondoYo", false);
+                    model.put("respondoEnvido", false);
+                    model.put("respondoTruco", false);
+                    model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
+                    model.put("ganador", partida.getGanador());
+                    model.put("idPartida", partida.getId());
+                    return new ModelAndView("partida-truco", model);
+                }
 
-        model.put("florValidaJ1", servicioMano.tieneFlor(partida.getJ1(), mano));
-        model.put("florValidaJ2", servicioMano.tieneFlor(partida.getJ2(), mano));
-        model.put("envidoValido", servicioMano.esLaPrimerRonda(mano));
+                // Si el usuario actual es el J1, sino el J2
+                if (usuarioActual.getId().equals(partida.getJ1().getId())) {
+                    model.put("yo", partida.getJ1());
+                    model.put("rival", partida.getJ2());
+                    model.put("misPuntos", partida.getPuntosJ1());
+                    model.put("puntosRival", partida.getPuntosJ2());
+                    model.put("misCartas", mano.getCartasJ1());
+                    model.put("misCartasTiradas", mano.getCartasTiradasJ1());
+                    model.put("cartasOponente", mano.getCartasJ2());
+                    model.put("cartasOponenteTiradas", mano.getCartasTiradasJ2());
+                    model.put("miNumero", partida.getJ1().getNumero());
+                    model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ1(), mano));
+                    model.put("accionesNormales", this.filtrarAccionesNormales(
+                            servicioMano.tieneFlor(partida.getJ1(), mano),
+                            servicioMano.esLaPrimerRonda(mano),
+                            mano.getIndicadorTruco())
+                    );
+                } else {
+                    model.put("yo", partida.getJ2());
+                    model.put("rival", partida.getJ1());
+                    model.put("misPuntos", partida.getPuntosJ2());
+                    model.put("puntosRival", partida.getPuntosJ1());
+                    model.put("misCartas", mano.getCartasJ2());
+                    model.put("misCartasTiradas", mano.getCartasTiradasJ2());
+                    model.put("cartasOponente", mano.getCartasJ1());
+                    model.put("cartasOponenteTiradas", mano.getCartasTiradasJ1());
+                    model.put("miNumero", partida.getJ2().getNumero());
+                    model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ2(), mano));
+                    model.put("accionesNormales", this.filtrarAccionesNormales(
+                            servicioMano.tieneFlor(partida.getJ2(), mano),
+                            servicioMano.esLaPrimerRonda(mano),
+                            mano.getIndicadorTruco())
+                    );
+                }
 
-        model.put("puntosParaGanar", partida.getPuntosParaGanar());
-        model.put("mano", mano);
-        model.put("partida", partida);
-        model.put("partidaIniciada", true);
-        model.put("accionAResponder", null);
+                // Manejo de botones
+                model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
+                model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
 
-        model.put("turnoJugador", 1);
-        model.put("leTocaResponder", mano.getRespondeAhora());
+                model.put("respondoYo", mano.getRespondeAhora() != null && mano.getRespondeAhora().getId().equals(usuarioActual.getId()));
+                model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
+                model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
+                // ---
+
+                model.put("meTocaTirar", mano.getTiraAhora().getId().equals(usuarioActual.getId()));
+                model.put("tiraAhora", mano.getTiraAhora());
+
+                // Atributos independientes de que jugador es cual
+                model.put("seTermino", mano.getEstaTerminada());
+                model.put("puntosParaGanar", partida.getPuntosParaGanar());
+                model.put("mano", mano);
+                model.put("partida", partida);
+                model.put("idPartida", partida.getId());
+                model.put("accionAResponder", mano.getUltimaAccionPreguntada());
+
+                model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
+
+                return new ModelAndView("partida-truco", model);
+            }
+
+            model.put("ganador", partida.getGanador());
+            model.put("idPartida", partida.getId());
+
+            model.put("respondoYo", false);
+            model.put("respondoEnvido", false);
+            model.put("respondoTruco", false);
+        }
+
+        model.put("respondoYo", false);
+        model.put("respondoEnvido", false);
+        model.put("respondoTruco", false);
+        model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
 
         return new ModelAndView("partida-truco", model);
     }
