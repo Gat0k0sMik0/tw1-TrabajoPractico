@@ -20,6 +20,8 @@ public class Mano {
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
     private Integer ultimaAccionPreguntada;
+    private Integer indicadorTruco;
+    private Integer puntosEnJuegoEnvido;
 
     @ManyToOne
     private Jugador ganador;
@@ -58,6 +60,22 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Integer getPuntosEnJuegoEnvido() {
+        return puntosEnJuegoEnvido;
+    }
+
+    public void setPuntosEnJuegoEnvido(Integer puntosEnJuegoEnvido) {
+        this.puntosEnJuegoEnvido = puntosEnJuegoEnvido;
+    }
+
+    public Integer getIndicadorTruco() {
+        return indicadorTruco;
+    }
+
+    public void setIndicadorTruco(Integer indicadorTruco) {
+        this.indicadorTruco = indicadorTruco;
     }
 
     public Integer getUltimaAccionPreguntada() {
@@ -207,11 +225,16 @@ public class Mano {
                 ", movimientos=" + movimientos +
                 ", puntosRondaJ1=" + puntosRondaJ1 +
                 ", puntosRondaJ2=" + puntosRondaJ2 +
+                ", ultimaAccionPreguntada=" + ultimaAccionPreguntada +
+                ", indicadorTruco=" + indicadorTruco +
+                ", puntosEnJuegoEnvido=" + puntosEnJuegoEnvido +
                 ", ganador=" + ganador +
+                ", tiraAhora=" + tiraAhora +
+                ", respondeAhora=" + respondeAhora +
                 ", cartasJ1=" + cartasJ1 +
                 ", cartasJ2=" + cartasJ2 +
-                ", cartasTiradasJ1=" + cartasTiradasJ1.size() +
-                ", cartasTiradasJ2=" + cartasTiradasJ2.size() +
+                ", cartasTiradasJ1=" + cartasTiradasJ1 +
+                ", cartasTiradasJ2=" + cartasTiradasJ2 +
                 '}';
     }
 }

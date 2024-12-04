@@ -13,7 +13,6 @@ public interface ServicioMano {
 
     Mano obtenerManoPorId(Long id);
 
-    Jugador saberQuienTiraAhora();
 
     Integer obtenerPuntosEnJuegoPorTruco();
 

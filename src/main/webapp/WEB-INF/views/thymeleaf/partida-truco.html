@@ -113,26 +113,8 @@
                        th:text="${accion.texto}">
                     </a>
                 </div>
-                <!--      LOGICA DE TINCHO        -->
-                <div class="d-flex gap-1"
-                     th:if="${turnoJugador == 2 && !mostrarRespuestasEnvidoJ1 && !mostrarRespuestasTrucoJ1}">
-                    <a class="btn btn-primary"
-                       th:if="${envidoValido}"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=2, jugador=2)}">Envido
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=5, jugador=2)}">Truco
-                    </a>
-                    <a class="btn btn-primary"
-                       th:if="${florValidaJ2}"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=8, jugador=2)}">Flor
-                    </a>
-                    <a class="btn btn-primary"
-                       th:href="@{/accion(mano=${mano.getId()}, accion=9, jugador=2)}">Mazo
-                    </a>
-                </div>
                 <!-- RESPUESTA ENVIDO -->
-                <div th:if="${respondoYo}">
+                <div th:if="${respondoYo && respondoEnvido}">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesEnvido}"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
@@ -140,7 +122,7 @@
                     </a>
                 </div>
                 <!-- RESPUESTAS TRUCO -->
-                <div id="respuesta1" th:if="${respondoYo}">
+                <div id="respuesta1" th:if="${respondoYo && respondoTruco}">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesTruco}"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"

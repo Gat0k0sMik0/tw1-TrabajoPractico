@@ -46,7 +46,10 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
-    public ModelAndView validarLogin(@ModelAttribute("datosLogin") DatosLogin datosLogin, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public ModelAndView validarLogin(
+            @ModelAttribute("datosLogin") DatosLogin datosLogin,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("usuarioActivo", usuarioBuscado);
@@ -54,6 +57,7 @@ public class ControladorLogin {
             redirectAttributes.addFlashAttribute("email", usuarioBuscado.getEmail());
             request.getSession().setAttribute("email", usuarioBuscado.getEmail());
             request.getSession().setAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
+            request.getSession().setAttribute("usuarioActual", usuarioBuscado);
             return new ModelAndView("redirect:/home");
         } else {
             ModelMap model = new ModelMap();
