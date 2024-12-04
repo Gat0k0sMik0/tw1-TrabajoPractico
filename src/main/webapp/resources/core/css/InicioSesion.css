@@ -27,6 +27,12 @@ header {
     grid-area: texto;
 }
 
+#titulo-principal {
+    font-family: "Kumar One Outline", system-ui;
+    font-size: 60px;
+    margin: 0;
+}
+
 .imagenes {
     grid-area: imagenes;
     display: flex;

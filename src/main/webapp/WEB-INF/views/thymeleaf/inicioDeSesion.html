@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- ESTILOS -->
     <link rel="stylesheet" th:href="@{/css/InicioSesion.css}"/>
+    <!-- FONT FAMILIES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
+
     <title>Inicio de Sesion</title>
 </head>
 <body>
@@ -17,7 +23,7 @@
 </header>
 
 <form id="formulario" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
-    <h1> Iniciar sesión en Aplicación</h1>
+    <h1> Iniciar sesión en <p id="titulo-principal">Trucoteca</p></h1>
 
     <p th:if="${message != null}" style="color: #71df19" th:text="${message}"></p>
     <p th:if="${error != null}" style="color: red" th:text="'Error, ' + ${error}"></p>
