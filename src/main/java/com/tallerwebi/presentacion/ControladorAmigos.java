@@ -35,12 +35,17 @@ public class ControladorAmigos {
         Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
         List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioSesion.getId());
         List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
+
         model.put("amigosSugeridos", filtrados);  // Se pasa la lista correctamente al modelo
+
         if (amigosDelUsuario.isEmpty()) {
             model.put("error", "No tienes amigos, ¡empieza a agregar algunos!");
         } else {
             model.put("amigos", amigosDelUsuario);
         }
+
+        model.put("usuarioActual", usuarioSesion);
+
         return new ModelAndView("amigos", model);
     }
 /*

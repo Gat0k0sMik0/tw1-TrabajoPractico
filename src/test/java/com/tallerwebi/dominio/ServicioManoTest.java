@@ -75,10 +75,8 @@ public class ServicioManoTest {
 
     @Test
     void queSeGuardeLaMano() {
-        when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         Mano p = new Mano();
-        p.setId(0L);
-        when(repositorioMano.obtenerManoPorId(p.getId())).thenReturn(p);
+        when(repositorioMano.obtenerUltimaMano(0L)).thenReturn(p);
         Mano mano = servicioMano.obtenerManoPorId(0L);
         assertThat(mano, notNullValue());
     }
