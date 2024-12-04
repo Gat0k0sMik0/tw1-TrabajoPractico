@@ -18,6 +18,8 @@ public class Usuario {
     private String rol;
     private Boolean activo = false;
     private String UrlFotoPerfil;
+    private Integer victorias = 0;
+    private String nivel;
 
     @OneToMany(mappedBy = "usuario")
     private Set<Amistad> amistades = new HashSet<>();
@@ -113,6 +115,22 @@ public class Usuario {
         this.UrlFotoPerfil = UrlFotoPerfil;
     }
 
+    public Integer getVictorias() {
+        return victorias;
+    }
+
+    public void setVictorias(Integer victorias) {
+        this.victorias = victorias;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,6 +148,8 @@ public class Usuario {
     public String toString() {
         return "Usuario{" +
                 "nombreUsuario='" + nombreUsuario + '\'' +
+                ", victorias=" + victorias +
+                ", nivel='" + nivel + '\'' +
                 '}';
     }
 }

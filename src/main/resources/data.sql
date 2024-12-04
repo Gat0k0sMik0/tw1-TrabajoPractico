@@ -1,13 +1,13 @@
 /* USUARIOS */
-INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id, urlFotoPerfil)
+INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id, urlFotoPerfil, victorias)
 VALUES
-('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, 'default.png'),
-('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, 'default.png'),
-('user1', 'user1@user.com', 'user0000', 'USER', true, 3, 'default.png'),
-('user2', 'user2@user.com', 'user0000', 'USER', true, 4, 'default.png'),
-('user3', 'user3@user.com', 'user0000', 'USER', true, 5, 'default.png'),
-('user4', 'user4@user.com', 'user0000', 'USER', true, 6, 'default.png'),
-('user5', 'user5@user.com', 'user0000', 'USER', true, 7, 'default.png');
+('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, 'default.png', 0),
+('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, 'default.png', 0),
+('user1', 'user1@user.com', 'user0000', 'USER', true, 3, 'default.png', 0),
+('user2', 'user2@user.com', 'user0000', 'USER', true, 4, 'default.png', 0),
+('user3', 'user3@user.com', 'user0000', 'USER', true, 5, 'default.png', 0),
+('user4', 'user4@user.com', 'user0000', 'USER', true, 6, 'default.png', 0),
+('user5', 'user5@user.com', 'user0000', 'USER', true, 7, 'default.png', 0);
 
 /* FOTO DE PERFIL DEFAULT */
 INSERT INTO FotoPerfil(id, imagen)
