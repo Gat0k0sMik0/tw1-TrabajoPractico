@@ -1,18 +1,14 @@
 /* USUARIOS */
 INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id, urlFotoPerfil, victorias)
 VALUES
-('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, 'default.png', 0),
-('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, 'default.png', 0),
-('user1', 'user1@user.com', 'user0000', 'USER', true, 3, 'default.png', 0),
-('user2', 'user2@user.com', 'user0000', 'USER', true, 4, 'default.png', 0),
-('user3', 'user3@user.com', 'user0000', 'USER', true, 5, 'default.png', 0),
-('user4', 'user4@user.com', 'user0000', 'USER', true, 6, 'default.png', 0),
-('user5', 'user5@user.com', 'user0000', 'USER', true, 7, 'default.png', 0);
-
-/* FOTO DE PERFIL DEFAULT */
-INSERT INTO FotoPerfil(id, imagen)
-VALUES
-(1, 'default.png');
+('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, '/img/fotos-perfil/default.png', 0),
+('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, '/img/fotos-perfil/default.png', 0),
+('xXxTuTerrorxXx', 'tuterror@user.com', 'user0000', 'USER', true, 3, '/img/fotos-perfil/foto-perfil-1.jpg', 12),
+('MatiElMasPro', 'mati@user.com', 'user0000', 'USER', true, 4, '/img/fotos-perfil/foto-perfil-2.jpg', 2),
+('Perr0k0sMik0', 'perr0@user.com', 'user0000', 'USER', true, 5, '/img/fotos-perfil/foto-perfil-3.jpg', 16),
+('Gabriel2007', 'gabriel2007@user.com', 'user0000', 'USER', true, 6, '/img/fotos-perfil/foto-perfil-4.jpg', 21),
+('Delicate', 'delicate@user.com', 'user0000', 'USER', true, 7, '/img/fotos-perfil/foto-perfil-5.webp', 32),
+('Gobernador', 'user1@user.com', 'user0000', 'USER', true, 8, '/img/fotos-perfil/foto-perfil-6.png', 55);
 
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)
