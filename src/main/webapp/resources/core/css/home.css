@@ -145,16 +145,15 @@ article svg {
 }
 
 .marquee {
-	width: var(--marquee-width);
+	width: 75%;  /* Establece el ancho del 75% */
 	height: var(--marquee-height);
 	background-color: transparent;
 	color: #eee;
 	overflow: hidden;
 	position: relative;
-	margin-bottom: 10px;
-	margin-left: 22.5%;
-	/* Ajuste del difuminado */
-	mask-image: linear-gradient(to left, black 50%, transparent 10%);  /* Gradiente de derecha a izquierda */
+	/* Centra el elemento en su contenedor */
+	margin: 0 auto 10px;
+	mask-image: linear-gradient(to left, black 50%, transparent 10%);
 	-webkit-mask-image: linear-gradient(to left, black 100%, transparent 100%);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
