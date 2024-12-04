@@ -73,7 +73,9 @@ public class ServicioManoImpl implements ServicioMano {
         m.setCartasTiradasJ1(new ArrayList<>());
         m.setCartasTiradasJ2(new ArrayList<>());
         m.setGanador(null);
-        this.leTocaTirar = getRandom(truco);
+        m.setTiraAhora(getRandom(truco));
+        m.setRespondeAhora(m.getTiraAhora());
+        this.leTocaTirar = m.getTiraAhora();
         this.empezoLaMano = this.leTocaTirar;
 
         // Asignacion de cartas a los jugadores
@@ -82,7 +84,7 @@ public class ServicioManoImpl implements ServicioMano {
         System.out.println(m);
 
         // Guardamos  mano
-        repositorioMano.guardar(m);
+        repositorioMano.merge(m);
     }
 
     @Override
@@ -107,6 +109,7 @@ public class ServicioManoImpl implements ServicioMano {
         nueva.setCartasTiradasJ1(new ArrayList<>());
         nueva.setCartasTiradasJ2(new ArrayList<>());
         nueva.setGanador(null);
+        nueva.setRespondeAhora(truco.getJ1());
 
         // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
@@ -133,6 +136,39 @@ public class ServicioManoImpl implements ServicioMano {
         this.repositorioMano.guardar(mano);
     }
 
+
+
+    @Override
+    public void tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador) {
+        // Buscar carta en el repositorio
+        Carta cartaElegidaParaTirar = this.repositorioCarta.buscarCartaPorId(idCarta);
+        // Saber jugador que tira
+        Jugador jugador = truco.getJ1().getNumero().toString().equals(nroJugador) ? truco.getJ1() : truco.getJ2();
+        // Definir al que le toca ahora (contrario al que tiró)
+        this.leTocaTirar = truco.getJ1().getNumero().toString().equals(nroJugador) ? truco.getJ2() : truco.getJ1();
+        mano.setTiraAhora(this.leTocaTirar);
+
+        if (mano == null) throw new TrucoException("La mano es nula.");
+        if (jugador == null) throw new TrucoException("El jugador es nulo.");
+        if (cartaElegidaParaTirar == null) throw new TrucoException("La carta es nula.");
+
+        // Obtener copias de cartas del que tiró
+        List<Carta> cartasJugador = jugador.getNumero().equals(1) ? mano.getCartasJ1() : mano.getCartasJ2();
+            if (cartasJugador.contains(cartaElegidaParaTirar)) {
+                // Sacarle carta que tira y agregarsela a las que tira
+                sacarCartaDeJugador(jugador, cartaElegidaParaTirar, mano);
+                // Sumar movimiento realizado
+                mano.setMovimientos(mano.getMovimientos() + 1);
+            } else {
+                throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
+            }
+
+        // Si el jugador tiró y ambos se quedaron sin cartas, terminó la mano
+        if (mano.getCartasJ1().isEmpty() && mano.getCartasJ2().isEmpty()) {
+            mano.setEstaTerminada(true);
+        }
+    }
+
     public void sacarCartaDeJugador(Jugador j, Carta c, Mano m) {
         if (j.getNumero().equals(1)) {
             if (m.getCartasJ1().contains(c)) {
@@ -144,44 +180,6 @@ public class ServicioManoImpl implements ServicioMano {
                 m.getCartasJ2().remove(c);
                 m.getCartasTiradasJ2().add(c);
             } else throw new TrucoException("No existe esa carta en la mano del jugador");
-        }
-    }
-
-    @Override
-    public void tirarCarta(Partida truco, Mano mano, Long idCarta, String nroJugador) {
-        // Buscar carta en el repositorio
-        Carta cartaElegidaParaTirar = this.repositorioCarta.buscarCartaPorId(idCarta);
-
-        // Saber jugador que tira
-        Jugador jugador = truco.getJ1().getNumero().toString().equals(nroJugador) ? truco.getJ1() : truco.getJ2();
-
-        // Definir al que le toca ahora (contrario al que tiró)
-        this.leTocaTirar = truco.getJ1().getNumero().toString().equals(nroJugador) ? truco.getJ2() : truco.getJ1();
-
-        if (mano == null) throw new TrucoException("La mano es nula.");
-        if (jugador == null) throw new TrucoException("El jugador es nulo.");
-        if (cartaElegidaParaTirar == null) throw new TrucoException("La carta es nula.");
-
-        // Obtener copias de cartas del que tiró
-        List<Carta> cartasJugador = jugador.getNumero().equals(1) ? mano.getCartasJ1() : mano.getCartasJ2();
-
-
-
-
-            if (cartasJugador.contains(cartaElegidaParaTirar)) {
-                // Sacarle carta que tira y agregarsela a las que tira
-                sacarCartaDeJugador(jugador, cartaElegidaParaTirar, mano);
-
-                // Sumar movimiento realizado
-                mano.setMovimientos(mano.getMovimientos() + 1);
-            } else {
-                throw new TrucoException("La carta seleccionada no está en la mano del jugador.");
-            }
-
-
-        // Si el jugador tiró y ambos se quedaron sin cartas, terminó la mano
-        if (mano.getCartasJ1().isEmpty() && mano.getCartasJ2().isEmpty()) {
-            mano.setEstaTerminada(true);
         }
     }
 
@@ -200,7 +198,6 @@ public class ServicioManoImpl implements ServicioMano {
                 Carta carta = iterator.next();
                 m.getCartasJ1().add(carta);
                 iterator.remove();
-                System.out.println("Asigno a J1: " + carta);
             }
         } else {
             Iterator<Carta> iterator = seisCartasRandom.iterator();
@@ -208,16 +205,14 @@ public class ServicioManoImpl implements ServicioMano {
                 Carta carta = iterator.next();
                 m.getCartasJ2().add(carta);
                 iterator.remove();
-                System.out.println("Asigno a J2: " + carta);
             }
         }
     }
 
     private List<Carta> obtenerSeisCartasRandom(List<Carta> cartas) {
-        System.out.println("Largo de cartas: " + cartas.size());
         List<Carta> cartasBuscadas = new ArrayList<>();
         int indice = 0;
-        int random = 0;
+        int random;
         Random r = new Random();
         while (indice < 6) {
             random = r.nextInt(cartas.size());
@@ -231,7 +226,6 @@ public class ServicioManoImpl implements ServicioMano {
                     indice++;
                 }
             }
-
         }
         return cartasBuscadas;
     }
@@ -376,15 +370,12 @@ public class ServicioManoImpl implements ServicioMano {
 
             // Comparamos quien tiró la más alta, en base a eso damos poder
             if (cartaJ1.getValor() > cartaJ2.getValor()) {
-                System.out.println("Ronda j1");
                 mano.setPuntosRondaJ1(mano.getPuntosRondaJ1() + 1);
                 this.leTocaTirar = jugador1;
             } else if (cartaJ2.getValor() > cartaJ1.getValor()) {
-                System.out.println("Ronda j2");
                 mano.setPuntosRondaJ2(mano.getPuntosRondaJ2() + 1);
                 this.leTocaTirar = jugador2;
             } else {
-                System.out.println("Es parda");
                 if(mano.getCartasTiradasJ1().size() == 1){
                     // Empardaron en la primer ronda, se define el ganador de la mano en la segunda ronda
                     mano.setPuntosRondaJ1(mano.getPuntosRondaJ1() + 1);
@@ -494,7 +485,7 @@ public class ServicioManoImpl implements ServicioMano {
             respondeAhora = manejarRespuestaEnvido(truco, mano, respuestaDeLaAccion, ejecutor, receptor);
         } else if (esFlor(accionQueResponde)) {
         respondeAhora = manejarRespuestaFlor(truco, mano, respuestaDeLaAccion, ejecutor, receptor);
-        
+
         } else {
             throw new TrucoException("Responder: ocurrió un error");
         }
