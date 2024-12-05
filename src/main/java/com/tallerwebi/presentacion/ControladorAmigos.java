@@ -1,9 +1,6 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.ServicioAmistad;
-import com.tallerwebi.dominio.ServicioUsuario;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.AmistadesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -78,4 +75,17 @@ public class ControladorAmigos {
         }
     }
 
+    @RequestMapping(path = "/eliminar-amigo", method = RequestMethod.POST)
+    public ModelAndView eliminarAmigo(@RequestParam("idAmigo") Long idAmigo, HttpServletRequest request) {
+        ModelMap model = new ModelMap();
+        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
+        Usuario amigo = servicioUsuario.buscarPorId(idAmigo);
+        try {
+            servicioAmistad.eliminarAmigo(usuarioSesion, amigo);
+            return new ModelAndView("redirect:/amigos");
+        } catch (AmistadesException e) {
+            model.put("error", e.getMessage());
+            return new ModelAndView("amigos", model);
+        }
+    }
 }
