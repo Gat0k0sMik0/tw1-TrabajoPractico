@@ -35,10 +35,10 @@ public class Estadistica {
             urlNivel = "img/logos/divisiones/Plata.png";
         } else if (this.usuario.getNivel().equals("Bronce") || this.usuario.getVictorias() >= 10) {
             urlNivel = "img/logos/divisiones/Bronce.png";
-        } else if (this.usuario.getNivel().equals("Sin Categoria") || this.usuario.getVictorias() < 50) {
-            urlNivel = "img/logos/divisiones/SinDivision.png";
+        } else if (this.usuario.getNivel().equals("Sin Categoria") || this.usuario.getVictorias() < 10) {
+            urlNivel = "img/logos/divisiones/SinDivision.PNG";
         } else {
-            urlNivel = "img/logos/divisiones/SinDivision.png";
+            urlNivel = "img/logos/divisiones/SinDivision.PNG";
         }
     }
 

@@ -202,6 +202,7 @@ article svg {
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: none;
+    text-decoration: none;
 }
 
 .styledBtn:hover, #puntosFiltro:hover {
