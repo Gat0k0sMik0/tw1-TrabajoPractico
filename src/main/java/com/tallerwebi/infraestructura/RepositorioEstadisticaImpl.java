@@ -35,7 +35,6 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
     @Transactional
     @Override
     public void guardarEstadistica(Estadistica e) {
-        System.out.println("Estadistica guardada: " + e);
         sessionFactory.getCurrentSession().save(e);
     }
 

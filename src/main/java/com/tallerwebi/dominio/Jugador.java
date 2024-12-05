@@ -74,13 +74,9 @@ public class Jugador {
     @Override
     public String toString() {
         return "Jugador{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", numero=" + numero +
-                ", victorias=" + victorias +
-                ", nivel='" + nivel + '\'' +
-                ", usuario=" + usuario +
-                '}';
+                "\n  id=" + id +
+                ",\n  nombre='" + nombre + '\'' +
+                "\n}";
     }
 }
     //
