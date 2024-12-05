@@ -273,10 +273,12 @@ public class ControladorTruco {
 
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
+        if(!ultimaMano.getEstaTerminada()){
+            return new ModelAndView("redirect:/partida-truco");
+        }
         /*ultimaMano.getCartasTiradasJ1().clear();
         ultimaMano.getCartasTiradasJ2().clear();*/
         ultimaMano.setConfirmacionTerminada(true);
-        servicioMano.guardar(ultimaMano);
         Mano mano = servicioMano.reset(partida);
 
         Usuario usuarioActual = (Usuario) session.getAttribute("usuarioActual");

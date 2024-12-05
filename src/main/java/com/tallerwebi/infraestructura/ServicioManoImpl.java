@@ -92,7 +92,6 @@ public class ServicioManoImpl implements ServicioMano {
         this.puntosEnJuegoEnvido = 0;
         this.indicadorTruco = 0;
         this.puntosEnJuegoMano = 0;
-        this.empezoLaMano = this.leTocaTirar;
 
         // Creamos nueva mano y configuramos
         Mano nueva = new Mano();
