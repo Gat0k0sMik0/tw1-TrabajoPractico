@@ -33,10 +33,10 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
         if (truco.getGanador().getNumero().equals(truco.getJ1().getNumero())) {
             // gano J1
-            estadisticaJ1.setGanadas(estadisticaJ1.getGanadas() + 1);
+            estadisticaJ1.getUsuario().setVictorias(estadisticaJ1.getUsuario().getVictorias());
         } else if (truco.getGanador().getNumero().equals(truco.getJ2().getNumero())) {
             // gano J2
-            estadisticaJ2.setGanadas((estadisticaJ2.getGanadas() + 1));
+            estadisticaJ2.getUsuario().setVictorias(estadisticaJ2.getUsuario().getVictorias());
         } else {
             throw new TrucoException("El ganador no fue ni el J1 ni el J2");
         }
@@ -104,7 +104,7 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Estadistica> obtenerTopJugadores() {
-       return this.repositorioEstadistica.obtenerTopJugadoresPorVictorias(5);
+       return this.repositorioEstadistica.obtenerTodasLasEstadisticas();
     }
 
 

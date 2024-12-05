@@ -19,7 +19,7 @@ public class Usuario {
     private Boolean activo = false;
     private String UrlFotoPerfil;
     private Integer victorias = 0;
-    private String nivel;
+    private String nivel = "Sin Categoria";
 
     @OneToMany(mappedBy = "usuario")
     private Set<Amistad> amistades = new HashSet<>();

@@ -14,4 +14,10 @@ public interface RepositorioEstadistica {
 
     @Transactional
     List<Estadistica> obtenerTopJugadoresPorVictorias(int limite);
+
+    @Transactional
+    List<Estadistica> obtenerTodasLasEstadisticas();
+
+    @Transactional
+    List<Estadistica> obtenerTop5JugadoresPorVictorias();
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -113,7 +114,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         // Determinar el ganador
         partida.setGanador(ganador);
-        registrarVictoria(ganador);
+        this.registrarVictoria(ganador);
 
         // Guardar los cambios
         repositorioTruco.merge(partida);
@@ -134,7 +135,29 @@ public class ServicioPartidaImpl implements ServicioPartida {
         } else if (jugador.getVictorias() >= 10) {
             jugador.setNivel("Bronce");
         } else {
-            jugador.setNivel("Sin Categoría");
+            jugador.setNivel("Sin Categoria");
         }
+    }
+
+    @Override
+    public List<Partida> obtenerPartidasDeUnJugador(Usuario usuario) {
+        // Obtener todas las partidas desde el repositorio
+        List<Partida> partidas = repositorioTruco.getTodasLasPartidas();
+
+        // Lista para almacenar las partidas del jugador
+        List<Partida> partidasDelJugador = new ArrayList<>();
+
+        for (Partida partida : partidas) {
+            Jugador jugador1 = partida.getJ1();
+            Jugador jugador2 = partida.getJ2();
+
+            // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
+            if ((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
+                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) {
+                partidasDelJugador.add(partida);
+            }
+        }
+
+        return partidasDelJugador;
     }
 }
