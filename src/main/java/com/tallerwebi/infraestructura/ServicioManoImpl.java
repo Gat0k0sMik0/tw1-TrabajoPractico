@@ -274,6 +274,11 @@ public class ServicioManoImpl implements ServicioMano {
         Jugador ejecutor = nroJugador.equals(1) ? truco.getJ1() : truco.getJ2();
         Jugador receptor = nroJugador.equals(1) ? truco.getJ2() : truco.getJ1();
         String accionRealizada = saberAccion(accion);
+
+        if (mano.getUltimaAccionPreguntada() != 99) {
+            System.out.println("No respondió a lo que le pidieron entes");
+        }
+
         mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
 
         if (esTruco(accionRealizada)) {
@@ -699,7 +704,7 @@ public class ServicioManoImpl implements ServicioMano {
                     // Envido, envido, real envido
                     manejarCalculoEnvidoNormal(truco, tantosJ1, tantosJ2);
                 }
-                mano.setPuntosEnJuegoEnvido(99);
+                mano.setPuntosEnJuegoEnvido(98);
 
             } else {
                 // TODO no acepta, sumar al contrario
@@ -735,7 +740,7 @@ public class ServicioManoImpl implements ServicioMano {
                     }
                 }
             }
-            return null;
+            return mano.getTiraAhora();
         } else if (respuestaDeLaAccion.equals("ENVIDO")) {
             if (ejecutor.getNumero().equals(j1.getNumero())) {
                 this.diceEnvidoJ1 = ejecutor;
@@ -827,9 +832,10 @@ public class ServicioManoImpl implements ServicioMano {
             if (indicadorTruco.equals(1)) {
                 this.puntosEnJuegoMano = 2;
             } else if (indicadorTruco.equals(3)) {
-                mano.setIndicadorTruco(5);
+                this.puntosEnJuegoMano = 3;
             }
-            return null;
+            mano.setIndicadorTruco(5);
+            return mano.getTiraAhora();
         } else if (respuestaDeLaAccion.equals("NO QUIERO")) {
             if (ejecutor.getNumero().equals(1)) {
                 truco.setPuntosJ2(truco.getPuntosJ2() + 1);

@@ -37,6 +37,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         prepararTruco(truco, jugador1, puntosMaximos);
         this.repositorioTruco.guardarJugador(jugador1);
         this.repositorioTruco.guardarPartida(truco);
+        this.repositorioMano.eliminarCartasDeManosPorUsuario(usuarioActivo.getId());
         return truco;
     }
 
@@ -63,6 +64,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         agregarJugadorTruco(truco, jugador2);
         this.repositorioTruco.guardarJugador(jugador2);
         this.repositorioTruco.merge(truco);
+        this.repositorioMano.eliminarCartasDeManosPorUsuario(usuario.getId());
     }
 
     private void agregarJugadorTruco (Partida truco, Jugador jugador2) {
