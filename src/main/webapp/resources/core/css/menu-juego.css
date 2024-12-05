@@ -202,6 +202,7 @@ article svg {
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: none;
+    text-decoration: none;
 }
 
 .styledBtn:hover, #puntosFiltro:hover {
@@ -319,7 +320,7 @@ input[type="radio"] {
 }
 
 /* Sala */
-.sala {
+.sala{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -329,7 +330,7 @@ input[type="radio"] {
     transition: all 0.3s ease;
 }
 
-.sala:hover {
+.sala:hover, .jugador:hover, .lista-partidas:hover  {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
 }
@@ -374,79 +375,171 @@ input[type="radio"] {
 }
 
 
-/* Columnas */
-.columna {
-    flex: 1; /* Cada columna ocupa la misma proporción de espacio */
-    text-align: center; /* Centra el contenido */
-    padding: 0 10px; /* Espaciado interno */
-}
-
-/* Botón "Unirse" */
-.btn-success {
-    padding: 8px 15px;
-    color: #fff;
-    background-color: #28a745;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.btn-success:hover {
-    background-color: #218838;
-}
-
-.game-stats {
+/* ESTADISTICAS Y ULTIMAS PARTIDAS */
+.estadisticas-container {
     width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.opciones {
+/* Cabeceras */
+.cabeceras {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.header {
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.header:hover {
+    color: #333;
+}
+
+.header.active {
+    border-bottom: 3px solid #333;  /* Línea bajo el texto activo */
+}
+
+/* Contenido */
+.content {
+    display: none;
+}
+
+.content.visible {
+    display: block;
+}
+
+/* Estilo de los jugadores */
+.top-jugadores {
+    margin-top: 20px;
+}
+
+.jugador{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.jugador .foto-perfil, .jugador .division,
+.mis-datos .foto-perfil, .mis-datos .division {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.jugador .nombre {
+    font-size: 16px;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.jugador .victorias, .jugador .partidas, .jugador .derrotas, .jugador
+.mis-datos .victorias, .mis-datos .partidas, .mis-datos .derrotas, .mis-datos {
+    font-size: 14px;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.mis-datos {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
-    margin: 15px;
-    padding: 5px;
     width: 100%;
 }
 
-.opcion1 {
-    border-bottom: 6px solid grey;
+.aclaracion {
+    margin: 1px;
+    font-size: small;
+    color: #666;
+}
+
+.estadisticas-propias {
+    margin-top: 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+#alt-text {
     text-align: center;
-    width: 40%;
+    justify-content: center;
 }
 
-.opcion2 {
-    border-bottom: 6px solid transparent;
-    text-align: center;
+hr {
+    margin-top: 15px;
+    width: 100%;
 }
 
-table {
-    margin: 20px;
-    padding: 5px;
-    border-collapse: separate;
-    border-spacing: 10px 10px;
-    font-size: 18px;
+/* ULTIMAS PARTIDAS */
+.lista-partidas {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
 }
 
-th {
-    font-weight: bold;
-    padding: 12px;
-    text-align: center;
-    font-size: 25px;
+.id-partida {
+    margin: 10px;
 }
 
-td {
-    padding: 12px;
-    text-align: center;
+.participantes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
 }
 
-a {
-    text-decoration: none;
-    cursor: pointer;
+.datos-j {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    transition: background-color 0.3s ease;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+.datos-j.ganador:hover {
+    background-color: #d4f7d4; /* Fondo verde suave para el ganador */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+.datos-j.perdedor:hover {
+    background-color: #f7d4d4; /* Fondo rojo suave para el perdedor */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+#derrota, #victoria {
+    display: flex;
+    flex-direction: column;
 }

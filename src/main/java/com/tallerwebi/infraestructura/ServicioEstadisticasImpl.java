@@ -33,10 +33,10 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
         if (truco.getGanador().getNumero().equals(truco.getJ1().getNumero())) {
             // gano J1
-            estadisticaJ1.setGanadas(estadisticaJ1.getGanadas() + 1);
+            estadisticaJ1.getUsuario().setVictorias(estadisticaJ1.getUsuario().getVictorias());
         } else if (truco.getGanador().getNumero().equals(truco.getJ2().getNumero())) {
             // gano J2
-            estadisticaJ2.setGanadas((estadisticaJ2.getGanadas() + 1));
+            estadisticaJ2.getUsuario().setVictorias(estadisticaJ2.getUsuario().getVictorias());
         } else {
             throw new TrucoException("El ganador no fue ni el J1 ni el J2");
         }
@@ -103,8 +103,25 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
     }
 
     @Override
+    public Estadistica obtenerEstadisticasDeUnJugador(Usuario usuario) {
+        // Obtener todas las partidas desde el repositorio
+        List<Estadistica> estadisticas = repositorioEstadistica.obtenerTodasLasEstadisticas();
+
+        for (Estadistica estadistica : estadisticas) {
+            Usuario usuarioBuscado = estadistica.getUsuario();
+
+            // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
+            if ((usuarioBuscado != null && usuarioBuscado.getId().equals(usuario.getId()))) {
+                return estadistica;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Estadistica> obtenerTopJugadores() {
-       return this.repositorioEstadistica.obtenerTopJugadoresPorVictorias(5);
+       return this.repositorioEstadistica.obtenerTodasLasEstadisticas();
     }
 
 

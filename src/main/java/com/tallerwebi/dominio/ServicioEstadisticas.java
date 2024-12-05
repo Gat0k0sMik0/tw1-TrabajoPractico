@@ -8,10 +8,11 @@ public interface ServicioEstadisticas {
 
     List<Estadistica> obtenerEstadisticasDeUnJugador(Long id);
 
-
     Estadistica obtenerUnaEstadisticaDeUnJugador(Long id);
 
     void agregarEstadisticasFicticias(Usuario usuario);
+
+    Estadistica obtenerEstadisticasDeUnJugador(Usuario usuario);
 
     List<Estadistica> obtenerTopJugadores();
 }

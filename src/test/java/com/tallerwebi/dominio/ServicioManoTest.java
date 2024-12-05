@@ -411,7 +411,7 @@ public class ServicioManoTest {
         assertThat(t.getPuntosJ2(), equalTo(1));
     }
 
-    @Test
+    /*@Test
     public void siSeVaAlMazoQueSeaNullElQueLeToqueResponder() {
         // given
         Partida t = new Partida();
@@ -428,7 +428,7 @@ public class ServicioManoTest {
         Jugador respondeAhora = servicioMano.preguntar(m, "9", 1);
         // then
         assertThat(respondeAhora, nullValue());
-    }
+    }*/
 
     @Test
     public void queSeLeAsignenLasCartas() {

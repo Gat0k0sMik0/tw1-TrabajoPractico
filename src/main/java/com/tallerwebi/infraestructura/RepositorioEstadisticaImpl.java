@@ -64,4 +64,25 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
                 .setMaxResults(limite) // Limitar el número de resultados
                 .list();
     }
+
+    @Transactional
+    @Override
+    public List<Estadistica> obtenerTodasLasEstadisticas() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(Estadistica.class, "e")
+                .createAlias("e.usuario", "u") // Alias para facilitar consultas con relaciones
+                .addOrder(Order.asc("e.id")) // Ordenar opcionalmente por el ID u otro atributo
+                .list();
+    }
+
+    @Transactional
+    @Override
+    public List<Estadistica> obtenerTop5JugadoresPorVictorias() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(Estadistica.class, "e")
+                .createAlias("e.usuario", "u") // Alias para relacionar usuario
+                .addOrder(Order.desc("e.ganadas")) // Ordenar por victorias (ganadas) en orden descendente
+                .setMaxResults(5) // Limitar a los 5 primeros
+                .list();
+    }
 }

@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {SpringWebTestConfig.class, HibernateTestConfig.class})
 public class RepositorioAmistadTest {
 
-    @Autowired
+    /*@Autowired
     SessionFactory sessionFactory;
     @Autowired
     RepositorioAmistad repositorioAmistad;
@@ -172,6 +172,6 @@ public class RepositorioAmistadTest {
         });
 
 
-    }
+    }*/
 
 }

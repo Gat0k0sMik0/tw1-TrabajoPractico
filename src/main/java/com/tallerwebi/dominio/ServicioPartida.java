@@ -22,5 +22,7 @@ public interface ServicioPartida {
 
     void finalizarPartida(Long idPartida, Jugador ganador);
 
+    List<Partida> obtenerUltimas3PartidasDeUnJugador(Usuario usuario);
+
     ;
 }
