@@ -22,6 +22,7 @@ public class Mano {
     private Integer ultimaAccionPreguntada;
     private Integer indicadorTruco;
     private Integer puntosEnJuegoEnvido;
+    private Integer puntosEnJuegoFlor;
 
     @ManyToOne
     private Jugador ganador;
@@ -236,6 +237,14 @@ public class Mano {
                 ", cartasTiradasJ1=" + cartasTiradasJ1 +
                 ", cartasTiradasJ2=" + cartasTiradasJ2 +
                 '}';
+    }
+
+    public Integer getPuntosEnJuegoFlor() {
+        return puntosEnJuegoFlor;
+    }
+
+    public void setPuntosEnJuegoFlor(Integer puntosEnJuegoFlor) {
+        this.puntosEnJuegoFlor = puntosEnJuegoFlor;
     }
 }
 

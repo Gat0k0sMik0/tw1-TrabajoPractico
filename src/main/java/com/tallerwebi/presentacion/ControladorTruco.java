@@ -109,6 +109,7 @@ public class ControladorTruco {
                     model.put("respondoYo", false);
                     model.put("respondoEnvido", false);
                     model.put("respondoTruco", false);
+                    //model.put("respondoFlor", false);
                     System.out.println("Partida puede empezar? " + (partida.getPuedeEmpezar() ? "Sí" : "Nó"));
                     model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
                     model.put("ganador", partida.getGanador());
@@ -156,12 +157,14 @@ public class ControladorTruco {
 
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
+                //model.put("accionesFlor", this.filtrarAccionesFlor(mano.getPuntosEnJuegoFlor()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
                                 && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
                 );
                 model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
                 model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
+                //model.put("respondoFlor", this.saberSiFueFlor(mano.getUltimaAccionPreguntada()));
                 model.put("meTocaTirar", mano.getTiraAhora().getUsuario().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
 
@@ -185,12 +188,14 @@ public class ControladorTruco {
             model.put("respondoYo", false);
             model.put("respondoEnvido", false);
             model.put("respondoTruco", false);
+            //model.put("respondoFlor", false);
             System.out.println("Partida puede empezar? " + (partida.getPuedeEmpezar() ? "Sí" : "Nó"));
         }
 
         model.put("respondoYo", false);
         model.put("respondoEnvido", false);
         model.put("respondoTruco", false);
+        //model.put("respondoFlor", false);
         model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
 
         System.out.println("partida-truco: fin");
@@ -268,10 +273,8 @@ public class ControladorTruco {
 
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
-        ultimaMano.getCartasTiradasJ1().clear();
-        ultimaMano.getCartasTiradasJ2().clear();
-        ultimaMano.getCartasJ1().clear();
-        ultimaMano.getCartasJ2().clear();
+        /*ultimaMano.getCartasTiradasJ1().clear();
+        ultimaMano.getCartasTiradasJ2().clear();*/
         ultimaMano.setConfirmacionTerminada(true);
         servicioMano.guardar(ultimaMano);
         Mano mano = servicioMano.reset(partida);
@@ -298,6 +301,7 @@ public class ControladorTruco {
                     model.put("respondoYo", false);
                     model.put("respondoEnvido", false);
                     model.put("respondoTruco", false);
+                    //model.put("respondoFlor", false);
                     model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
                     model.put("ganador", partida.getGanador());
                     model.put("idPartida", partida.getId());
@@ -344,15 +348,16 @@ public class ControladorTruco {
 
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
+                //model.put("accionesFlor", this.filtrarAccionesFlor(mano.getPuntosEnJuegoFlor()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
                                 && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
                 );
                 model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
                 model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
+                //model.put("respondoFlor", this.saberSiFueFlor(mano.getUltimaAccionPreguntada()));
                 model.put("meTocaTirar", mano.getTiraAhora().getUsuario().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
-
 
                 // Atributos independientes de que jugador es cual
                 model.put("seTermino", mano.getEstaTerminada());
@@ -373,11 +378,13 @@ public class ControladorTruco {
             model.put("respondoYo", false);
             model.put("respondoEnvido", false);
             model.put("respondoTruco", false);
+            //model.put("respondoFlor", false);
         }
 
         model.put("respondoYo", false);
         model.put("respondoEnvido", false);
         model.put("respondoTruco", false);
+        //model.put("respondoFlor", false);
         model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
 
         return new ModelAndView("partida-truco", model);
@@ -459,6 +466,14 @@ public class ControladorTruco {
                 .collect(Collectors.toList());
     }
 
+    /*private List<Accion> filtrarAccionesFlor(Integer indicadorFlor) {
+        return getAccionesTruco().stream()
+                .filter(accion -> accion.getNro() != 8 || indicadorFlor == 3)
+                .filter(accion -> accion.getNro() != 10 || indicadorFlor == 6)
+                .filter(accion -> accion.getNro() != 11 || indicadorFlor == (-1))
+                .collect(Collectors.toList());
+    }*/
+
     private Boolean saberSiFueEnvido(Integer ultimaAccionPreguntada) {
         System.out.println("Saber si fue envido: " + ultimaAccionPreguntada);
         List<Integer> ve = Arrays.asList(2, 3, 4);
@@ -470,6 +485,10 @@ public class ControladorTruco {
         return ve.contains(ultimaAccionPreguntada);
     }
 
+    /*private Boolean saberSiFueFlor(Integer ultimaAccionPreguntada) {
+        List<Integer> ve = Arrays.asList(8, 10, 11);
+        return ve.contains(ultimaAccionPreguntada);
+    }*/
 
     private List<Accion> getAccionesNormales() {
         List<Accion> acciones = new ArrayList<>();

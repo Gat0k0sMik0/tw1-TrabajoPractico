@@ -92,6 +92,7 @@ public class ServicioManoImpl implements ServicioMano {
         this.puntosEnJuegoEnvido = 0;
         this.indicadorTruco = 0;
         this.puntosEnJuegoMano = 0;
+        this.empezoLaMano = this.leTocaTirar;
 
         // Creamos nueva mano y configuramos
         Mano nueva = new Mano();
@@ -603,6 +604,7 @@ public class ServicioManoImpl implements ServicioMano {
                     truco.setGanador(truco.getJ2());
                 }
 
+                mano.setPuntosEnJuegoFlor(-1);
                 this.diceContraflorAlResto = ejecutor;
                 return receptor;
             } else {
@@ -622,6 +624,7 @@ public class ServicioManoImpl implements ServicioMano {
                 }
                 this.diceContraflor = ejecutor;
                 this.puntosEnJuegoFlor += 3;
+                mano.setPuntosEnJuegoFlor(mano.getPuntosEnJuegoFlor() + 3);
                 return receptor;
             }
         }
