@@ -207,8 +207,7 @@
                     </div>
                     <div th:if="${partidas != null && !partidas.isEmpty()}" th:each="partida : ${partidas}">
                         <div class="lista-partidas"
-                             th:style="${partida.getGanador().getUsuario().getId() == usuario.getId() ? 'background-color: #d4f7d4;' : (partida.getGanador() == null ? 'background-color: white;' : 'background-color: #f7d4d4;')}">
-                            <p class="id-partida" style="color: #666">Partida N:<span th:text="${partida.getId()}"></span></p>
+                             th:style="${partida.getGanador() != null ? (partida.getGanador().getUsuario().getId() == usuario.getId() ? 'background-color: #d4f7d4;' : 'background-color: #f7d4d4;') : 'background-color: white;'}">                            <p class="id-partida" style="color: #666">Partida N:<span th:text="${partida.getId()}"></span></p>
                             <div class="participantes">
                                 <!-- DATOS DEL JUGADOR 1 -->
                                 <div class="datos-j">

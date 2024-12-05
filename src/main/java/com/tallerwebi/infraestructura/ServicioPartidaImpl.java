@@ -153,8 +153,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
             Jugador jugador2 = partida.getJ2();
 
             // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
-            if ((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
-                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) {
+            if (((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
+                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) && (partida.isPartidaFinalizada())) {
                 partidasDelJugador.add(partida);
             }
         }

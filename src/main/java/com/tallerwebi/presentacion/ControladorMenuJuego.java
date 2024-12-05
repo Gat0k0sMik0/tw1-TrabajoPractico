@@ -31,8 +31,7 @@ public class ControladorMenuJuego {
     @RequestMapping("/menuJuego")
     public ModelAndView mostrarMenuJuego(HttpSession session,
                                          @RequestParam("idUsuario") Long idUsuario) {
-        Usuario ua = (Usuario) session.getAttribute("usuarioActivo");
-        ua = servicioUsuario.buscarPorId(ua.getId());
+        Usuario ua = servicioUsuario.buscarPorId(idUsuario);
         if (ua == null) return new ModelAndView("redirect:/login");
 
         ModelMap model = new ModelMap();
