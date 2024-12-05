@@ -563,8 +563,10 @@ public class ServicioManoImpl implements ServicioMano {
         String accionQueResponde = saberAccion(accion);
         String respuestaDeLaAccion = saberAccion(respuesta);
 
-        System.out.println("Accion que dijo cruda: " + accion);
-        System.out.println("Accion que responde: " + accionQueResponde);
+        if (esEnvido(respuestaDeLaAccion)) {
+            mano.setIndicadorTruco(0);
+            return this.preguntar(mano, respuesta, nroJugador);
+        }
 
         Jugador respondeAhora;
 
@@ -771,21 +773,11 @@ public class ServicioManoImpl implements ServicioMano {
 
     private void manejarCalculoEnvidoNormal(Partida truco, Integer tantosJ1, Integer tantosJ2) {
         if (tantosJ1 > tantosJ2) {
-            System.out.println("servicioMano: manejarCalculoEnvidoNormal(): ");
-            System.out.println("Tantos J1: " + tantosJ1);
-            System.out.println("Tantos J2: " + tantosJ2);
             truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoEnvido);
         } else if (tantosJ1 < tantosJ2) {
-            System.out.println("servicioMano: manejarCalculoEnvidoNormal(): ");
-            System.out.println("Tantos J1: " + tantosJ1);
-            System.out.println("Tantos J2: " + tantosJ2);
             truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoEnvido);
         } else {
             // Mismos tantos
-            System.out.println("servicioMano: manejarCalculoEnvidoNormal(): ");
-            System.out.println("Tantos J1: " + tantosJ1);
-            System.out.println("Tantos J2: " + tantosJ2);
-            System.out.println("empezoLaMano: " + this.empezoLaMano);
             if (this.empezoLaMano.getNumero().equals(truco.getJ1().getNumero())) {
                 truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoEnvido);
             }
@@ -850,10 +842,13 @@ public class ServicioManoImpl implements ServicioMano {
             } else {
                 truco.setPuntosJ1(truco.getPuntosJ1() + 1);
             }
+            mano.setEstaTerminada(true);
+            mano.getCartasJ1().clear();
+            mano.getCartasJ2().clear();
+            mano.getCartasTiradasJ1().clear();
+            mano.getCartasTiradasJ2().clear();
             return null;
         } else {
-            System.out.println("Indicador truco: " + this.indicadorTruco);
-            System.out.println("Respuesta de la accion: " + respuestaDeLaAccion);
             if (mano.getIndicadorTruco().equals(1) && respuestaDeLaAccion.equals("RE TRUCO")) {
                 mano.setIndicadorTruco(2);
                 this.puntosEnJuegoMano = 3;
