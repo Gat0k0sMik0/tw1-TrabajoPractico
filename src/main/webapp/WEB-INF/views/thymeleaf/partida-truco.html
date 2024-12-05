@@ -42,7 +42,7 @@
         <!-- MESA CENTRAL -->
         <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
             <!-- MAZO -->
-            <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
+            <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4 bor1">
                 <a th:href="@{/comenzar-truco(idPartida= ${idPartida})}" th:if="${ganador == null}" class="w-100">
                     <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                 </a>

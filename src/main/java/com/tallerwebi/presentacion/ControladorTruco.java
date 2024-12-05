@@ -220,7 +220,6 @@ public class ControladorTruco {
         System.out.println("/comenzar-truco: inicio");
 
         // Obtén la partida por su ID
-        System.out.println("comenzar-truco: busco una partida con id: " + idPartida);
         Partida partida = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
 
         // Si no existe la partida, redirige a /home
@@ -298,7 +297,10 @@ public class ControladorTruco {
 
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
-        servicioMano.limpiarMano(ultimaMano);
+        if(!ultimaMano.getEstaTerminada()){
+            return new ModelAndView("redirect:/partida-truco");
+        }
+        ultimaMano.setConfirmacionTerminada(true);
         Mano mano = servicioMano.reset(partida);
 
         Usuario usuarioActual = (Usuario) session.getAttribute("usuarioActual");
