@@ -290,7 +290,7 @@ public class ControladorTruco {
 
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
-        if(!ultimaMano.getEstaTerminada()){
+        if (!ultimaMano.getEstaTerminada()) {
             return new ModelAndView("redirect:/partida-truco");
         }
         ultimaMano.setConfirmacionTerminada(true);
@@ -496,7 +496,6 @@ public class ControladorTruco {
         System.out.println("---FiltrarAccionesTruco: FIN");
         List<Integer> valoresQuiero = Arrays.asList(1, 2, 3);
         List<Integer> valoresNoQuiero = Arrays.asList(1, 2, 3);
-        List<Integer> valoresReTruco = Arrays.asList(1, 3);
         return getAccionesTruco().stream()
                 .filter(accion -> accion.getNro() != 0 || (valoresNoQuiero.contains(indicadorTruco) && !hayQuiero))
                 .filter(accion -> accion.getNro() != 1 || (valoresQuiero.contains(indicadorTruco) && !hayQuiero))
@@ -531,11 +530,13 @@ public class ControladorTruco {
     }
 
     private Boolean saberSiFueEnvido(Integer ultimaAccionPreguntada) {
-        List<Integer> ve = Arrays.asList(2, 3, 4, 99);
+        System.out.println("Ultima accion preguntada: " + ultimaAccionPreguntada);
+        List<Integer> ve = Arrays.asList(2, 3, 5, 4, 99);
         return ve.contains(ultimaAccionPreguntada);
     }
 
     private Boolean saberSiFueTruco(Integer ultimaAccionPreguntada) {
+        System.out.println("Ultima accion preguntada: " + ultimaAccionPreguntada);
         List<Integer> ve = Arrays.asList(2, 5, 6, 7);
         return ve.contains(ultimaAccionPreguntada);
     }
