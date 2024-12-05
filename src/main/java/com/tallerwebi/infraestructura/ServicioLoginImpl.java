@@ -19,12 +19,10 @@ import java.util.UUID;
 public class ServicioLoginImpl implements ServicioLogin {
 
     private final RepositorioUsuario repositorioUsuario;
-    private final RepositorioFotoPerfil repositorioFotoPerfil;
 
     @Autowired
-    public ServicioLoginImpl(RepositorioUsuario repositorioUsuario, RepositorioFotoPerfil repositorioFotoPerfil){
+    public ServicioLoginImpl(RepositorioUsuario repositorioUsuario){
         this.repositorioUsuario = repositorioUsuario;
-        this.repositorioFotoPerfil = repositorioFotoPerfil;
     }
 
     @Override
@@ -66,7 +64,7 @@ public class ServicioLoginImpl implements ServicioLogin {
 
     @Override
     public void agregarFotoPerfil(Usuario usuario, MultipartFile fotoPerfil) throws IOException {
-        Path directorioFotos = Paths.get("C:/xampp/htdocs/tw1-TrabajoPractico/img/fotos-perfil");
+        Path directorioFotos = Paths.get("C:/xampp/htdocs/tw1-TrabajoPractico/src/main/webapp/resources/core/img/fotos-perfil");
         if (!Files.exists(directorioFotos)) {
             Files.createDirectories(directorioFotos); // Crear directorio si no existe
         }
@@ -78,26 +76,14 @@ public class ServicioLoginImpl implements ServicioLogin {
         Files.copy(fotoPerfil.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
 
         // Asociar la foto al usuario
-        FotoPerfil foto = new FotoPerfil();
-        foto.setImagen(nombreArchivo); // Guarda solo el nombre del archivo, no la ruta completa
-        usuario.setFotoPerfil(foto);
-        usuario.setUrlFotoPerfil(foto.getImagen());
+        String urlRelativa = "/img/fotos-perfil/" + nombreArchivo;
+        usuario.setUrlFotoPerfil(urlRelativa);
         repositorioUsuario.modificar(usuario);
-        repositorioFotoPerfil.guardarFotoPerfil(foto);
     }
 
     @Override
     public void asignarFotoDefault(Usuario usuario) {
-        // Buscar la foto por defecto en la base de datos (asumiendo que tiene ID = 1)
-        FotoPerfil fotoDefault = repositorioFotoPerfil.buscarFotoPorId(1L);
-
-        if (fotoDefault == null) {
-            throw new IllegalStateException("La foto por defecto no existe en la base de datos.");
-        }
-
-        // Asignar la foto por defecto al usuario
-        usuario.setFotoPerfil(fotoDefault);
-        usuario.setUrlFotoPerfil(fotoDefault.getImagen());
+        usuario.setUrlFotoPerfil("/img/fotos-perfil/default.png");
 
         // Guardar los cambios en el usuario
         repositorioUsuario.modificar(usuario);

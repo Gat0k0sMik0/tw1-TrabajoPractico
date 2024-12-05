@@ -9,19 +9,22 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.swing.*;
 import java.util.List;
 
 @Controller
 public class ControladorMenuJuego {
     private final ServicioUsuario servicioUsuario;
     private final ServicioPartida servicioTruco;
+    private final ServicioEstadisticas  servicioEstadisticas;
 
     @Autowired
     public ControladorMenuJuego(
             ServicioUsuario servicioUsuario,
-            ServicioPartida servicioTruco) {
+            ServicioPartida servicioTruco, ServicioEstadisticas servicioEstadisticas) {
         this.servicioUsuario = servicioUsuario;
         this.servicioTruco = servicioTruco;
+        this.servicioEstadisticas = servicioEstadisticas;
     }
 
     // Método para mostrar el menú de juego
@@ -34,9 +37,12 @@ public class ControladorMenuJuego {
 
         ModelMap model = new ModelMap();
         List<Partida> partidas = servicioTruco.getPartidasDisponibles();
-
+        List <Estadistica> top =  servicioEstadisticas.obtenerTopJugadores();
+        Estadistica misEstadisticas = servicioEstadisticas.obtenerUnaEstadisticaDeUnJugador(ua.getId());
         model.put("partidas", partidas);
-        model.put("ua", ua);
+        model.put("usuario", ua);
+        model.put("top", top);
+        model.put("misEstadisticas", misEstadisticas);
 
         return new ModelAndView("menu-juego", model);
     }

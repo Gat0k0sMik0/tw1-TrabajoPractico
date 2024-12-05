@@ -7,6 +7,7 @@ public class Amistad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String estado;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -46,5 +47,13 @@ public class Amistad {
 
     public void setAmigo(Usuario amigo) {
         this.amigo = amigo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

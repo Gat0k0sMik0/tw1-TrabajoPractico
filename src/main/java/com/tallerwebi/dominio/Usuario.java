@@ -18,12 +18,11 @@ public class Usuario {
     private String rol;
     private Boolean activo = false;
     private String UrlFotoPerfil;
+    private Integer victorias = 0;
+    private String nivel;
 
     @OneToMany(mappedBy = "usuario")
     private Set<Amistad> amistades = new HashSet<>();
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private FotoPerfil fotoPerfil;
 
     public Long getId() {
         return id;
@@ -97,20 +96,28 @@ public class Usuario {
         this.amistades = amistades;
     }
 
-    public FotoPerfil getFotoPerfil() {
-        return fotoPerfil;
-    }
-
-    public void setFotoPerfil(FotoPerfil fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
-    }
-
     public String getUrlFotoPerfil() {
         return UrlFotoPerfil;
     }
 
     public void setUrlFotoPerfil(String UrlFotoPerfil) {
         this.UrlFotoPerfil = UrlFotoPerfil;
+    }
+
+    public Integer getVictorias() {
+        return victorias;
+    }
+
+    public void setVictorias(Integer victorias) {
+        this.victorias = victorias;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
     }
 
     @Override
@@ -130,6 +137,8 @@ public class Usuario {
     public String toString() {
         return "Usuario{" +
                 "nombreUsuario='" + nombreUsuario + '\'' +
+                ", victorias=" + victorias +
+                ", nivel='" + nivel + '\'' +
                 '}';
     }
 }

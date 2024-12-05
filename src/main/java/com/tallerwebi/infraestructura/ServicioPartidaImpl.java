@@ -99,10 +99,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
 
-
-
-
-
     @Override
     public void finalizarPartida(Long idPartida, Jugador ganador) {
         // Obtener la partida
@@ -128,18 +124,20 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     // Método para registrar la victoria de un jugador
     private void registrarVictoria(Jugador ganador) {
-        ganador.setVictorias(ganador.getVictorias() + 1); // Incrementa las victorias
-        actualizarNivel(ganador); // Actualiza el nivel según las victorias
+        ganador.getUsuario().setVictorias(ganador.getUsuario().getVictorias() + 1); // Incrementa las victorias
+        actualizarNivel(ganador.getUsuario()); // Actualiza el nivel según las victorias
     }
 
     // Método para actualizar el nivel según las victorias
-    private void actualizarNivel(Jugador jugador) {
-        if (jugador.getVictorias() >= 30) {
+    private void actualizarNivel(Usuario jugador) {
+        if (jugador.getVictorias() >= 50) {
             jugador.setNivel("Oro");
-        } else if (jugador.getVictorias() >= 20) {
+        } else if (jugador.getVictorias() >= 30) {
             jugador.setNivel("Plata");
-        } else {
+        } else if (jugador.getVictorias() >= 10) {
             jugador.setNivel("Bronce");
+        } else {
+            jugador.setNivel("Sin Categoría");
         }
     }
 }
