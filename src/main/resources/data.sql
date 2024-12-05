@@ -25,14 +25,16 @@ VALUES
 /* PROBAR JUGADORES */
 INSERT INTO Jugador (id, nombre, numero, usuario_id)
 VALUES
-    (1, 'Jugador1', 10, 8), /* Gobernador */
-    (2, 'Jugador2', 20, 2); /* Admin */
+    (1, 'Gobernador', 10, 8), /* Gobernador */
+    (2, 'Perr0k0sMik0', 20, 5); /* Perr0k0sMik0 */
 
 /* PROBAR PARTIDAS HECHAS */
 INSERT INTO Partida (id, j1_id, j2_id, puntosJ1, puntosJ2, puntosParaGanar, ganador_id)
 VALUES
     (1, 1, 2, 15, 10, 15, 1),
-    (2, 2, 1, 30, 10, 30, 2);
+    (2, 2, 1, 30, 10, 30, 2),
+    (3, 2, 1, 30, 10, 30, 1),
+    (4, 1, 2, 30, 10, 30, 1);
 
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)

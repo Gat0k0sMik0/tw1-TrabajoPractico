@@ -141,7 +141,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
     @Override
-    public List<Partida> obtenerPartidasDeUnJugador(Usuario usuario) {
+    public List<Partida> obtenerUltimas3PartidasDeUnJugador(Usuario usuario) {
         // Obtener todas las partidas desde el repositorio
         List<Partida> partidas = repositorioTruco.getTodasLasPartidas();
 
@@ -156,6 +156,16 @@ public class ServicioPartidaImpl implements ServicioPartida {
             if ((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
                     (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) {
                 partidasDelJugador.add(partida);
+            }
+        }
+
+        if (!partidasDelJugador.isEmpty()) {
+            // Ordenar las partidas por ID en orden descendente
+            partidasDelJugador.sort((p1, p2) -> p2.getId().compareTo(p1.getId()));
+
+            // Seleccionar solo las tres primeras partidas, si hay menos de 3, se tomarán todas
+            if (partidasDelJugador.size() > 3) {
+                partidasDelJugador = partidasDelJugador.subList(0, 3);
             }
         }
 

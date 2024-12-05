@@ -103,6 +103,23 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
     }
 
     @Override
+    public Estadistica obtenerEstadisticasDeUnJugador(Usuario usuario) {
+        // Obtener todas las partidas desde el repositorio
+        List<Estadistica> estadisticas = repositorioEstadistica.obtenerTodasLasEstadisticas();
+
+        for (Estadistica estadistica : estadisticas) {
+            Usuario usuarioBuscado = estadistica.getUsuario();
+
+            // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
+            if ((usuarioBuscado != null && usuarioBuscado.getId().equals(usuario.getId()))) {
+                return estadistica;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Estadistica> obtenerTopJugadores() {
        return this.repositorioEstadistica.obtenerTodasLasEstadisticas();
     }

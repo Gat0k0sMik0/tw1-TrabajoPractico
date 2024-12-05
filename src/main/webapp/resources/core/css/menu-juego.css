@@ -420,7 +420,7 @@ input[type="radio"] {
     margin-top: 20px;
 }
 
-.jugador {
+.jugador{
     height: 100%;
     display: flex;
     align-items: center;
@@ -432,7 +432,8 @@ input[type="radio"] {
     margin-bottom: 10px;
 }
 
-.jugador .foto-perfil, .jugador .division {
+.jugador .foto-perfil, .jugador .division,
+.mis-datos .foto-perfil, .mis-datos .division {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -448,10 +449,18 @@ input[type="radio"] {
 }
 
 .jugador .victorias, .jugador .partidas, .jugador .derrotas, .jugador
-.mis-datos .victorias, .mis-datos .partidas, .mis-datos .derrotas, .mis-datos{
+.mis-datos .victorias, .mis-datos .partidas, .mis-datos .derrotas, .mis-datos {
     font-size: 14px;
     text-align: center;
     padding: 0 10px;
+}
+
+.mis-datos {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .aclaracion {
