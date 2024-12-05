@@ -36,4 +36,6 @@ public interface ServicioMano {
     Jugador getDiceEnvidoJ1();
 
     Jugador getDiceEnvidoJ2();
+
+    void limpiarMano(Mano ultimaMano);
 }

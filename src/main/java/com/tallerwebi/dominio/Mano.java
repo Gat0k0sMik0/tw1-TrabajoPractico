@@ -218,24 +218,25 @@ public class Mano {
     @Override
     public String toString() {
         return "Mano{" +
-                "id=" + id +
-                ", partida=" + partida +
-                ", estaTerminada=" + estaTerminada +
-                ", confirmacionTerminada=" + confirmacionTerminada +
-                ", movimientos=" + movimientos +
-                ", puntosRondaJ1=" + puntosRondaJ1 +
-                ", puntosRondaJ2=" + puntosRondaJ2 +
-                ", ultimaAccionPreguntada=" + ultimaAccionPreguntada +
-                ", indicadorTruco=" + indicadorTruco +
-                ", puntosEnJuegoEnvido=" + puntosEnJuegoEnvido +
-                ", ganador=" + ganador +
-                ", tiraAhora=" + tiraAhora +
-                ", respondeAhora=" + respondeAhora +
-                ", cartasJ1=" + cartasJ1 +
-                ", cartasJ2=" + cartasJ2 +
-                ", cartasTiradasJ1=" + cartasTiradasJ1 +
-                ", cartasTiradasJ2=" + cartasTiradasJ2 +
-                '}';
+                "\n  id=" + id +
+                ",\n  partida=" + partida +
+                ",\n  estaTerminada=" + estaTerminada +
+                ",\n  confirmacionTerminada=" + confirmacionTerminada +
+                ",\n  movimientos=" + movimientos +
+                ",\n  puntosRondaJ1=" + puntosRondaJ1 +
+                ",\n  puntosRondaJ2=" + puntosRondaJ2 +
+                ",\n  ultimaAccionPreguntada=" + ultimaAccionPreguntada +
+                ",\n  indicadorTruco=" + indicadorTruco +
+                ",\n  puntosEnJuegoEnvido=" + puntosEnJuegoEnvido +
+                ",\n  ganador=" + ganador +
+                ",\n  tiraAhora=" + tiraAhora +
+                ",\n  respondeAhora=" + respondeAhora +
+                ",\n  cartasJ1=" + cartasJ1 +
+                ",\n  cartasJ2=" + cartasJ2 +
+                ",\n  cartasTiradasJ1=" + cartasTiradasJ1 +
+                ",\n  cartasTiradasJ2=" + cartasTiradasJ2 +
+                "\n}";
     }
+
 }
 
