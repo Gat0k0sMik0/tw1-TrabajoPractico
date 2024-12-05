@@ -40,9 +40,9 @@
         </div>
 
         <!-- MESA CENTRAL -->
-        <div id="cartas-en-juego" class="d-flex flex-wrap order-1 bor2">
+        <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
             <!-- MAZO -->
-            <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4 bor1">
+            <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
                 <a th:href="@{/comenzar-truco(idPartida= ${idPartida})}" th:if="${ganador == null}" class="w-100">
                     <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                 </a>
@@ -51,7 +51,7 @@
                 </a>
             </div>
             <!-- CARTAS TIRADAS -->
-            <div class="col-4 bor2 cartasTiradasContainer" th:if="${mano != null}">
+            <div class="col-4 cartasTiradasContainer" th:if="${mano != null}">
                 <div class="oponenteCartas">
                     <!-- CARTAS OPONENTE TIRADAS -->
                     <div th:each="carta, iterStat : ${cartasOponenteTiradas}"
@@ -74,15 +74,19 @@
                 </div>
             </div>
             <!-- INFORMACION  -->
-            <div class="col-4 d-flex flex-column justify-content-center align-items-center bor3">
+            <div class="col-4 d-flex flex-column justify-content-center align-items-center">
+
                 <div th:if="${partida != null}">
-                    <p class="text-warning" th:if="${partida.getJ1() == null || partida.getJ2() == null}" th:text="${'Falta un jugador'}"></p>
+                    <p class="text-warning" th:if="${partida.getJ1() == null || partida.getJ2() == null}"
+                       th:text="${'Falta un jugador'}"></p>
                 </div>
-                <div th:if="${ganador != null}">
+
+                <div th:if="${ganador != null}" class="d-flex flex-column justify-content-center align-items-center">
                     <p>Ganó <strong th:text="${ganador.getNombre()}"></strong>!</p>
                     <a class="btn btn-danger"
                        th:href="@{/salir(mano=${mano.id})}">Salir</a>
                 </div>
+
                 <div th:if="${ganador == null}">
                     <p th:if="${misPuntos != null && yo != null}"
                        th:text="${'(yo): ' + yo.nombre + ' ' + misPuntos}"></p>
@@ -106,7 +110,7 @@
             <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
                  th:if="${partidaIniciada != null}">
                 <!-- NORMALES -->
-                <div class="d-flex gap-1" th:if="${respondoYo}">
+                <div th:if="${respondoYo}" class="d-flex gap-2">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesNormales}"
                        th:href="@{/accion(mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
@@ -114,16 +118,16 @@
                     </a>
                 </div>
                 <!-- RESPUESTA ENVIDO -->
-                <div th:if="${respondoYo && respondoEnvido}">
-                    <a class="btn btn-primary"
+                <div th:if="${respondoYo && respondoEnvido}" class="d-flex gap-2">
+                    <a class="btn btn-warning"
                        th:each="accion : ${accionesEnvido}"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
                 <!-- RESPUESTAS TRUCO -->
-                <div id="respuesta1" th:if="${respondoYo && respondoTruco}">
-                    <a class="btn btn-primary"
+                <div th:if="${respondoYo && respondoTruco}" class="d-flex gap-2">
+                    <a class="btn btn-danger"
                        th:each="accion : ${accionesTruco}"
                        th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
@@ -145,9 +149,6 @@
             </div>
         </div>
     </div>
-    <p th:if="${jugador1 != null}" th:text="${jugador1}"></p>
-    <p th:if="${jugador2 != null}" th:text="${jugador2}"></p>
-    <p th:if="${partida != null}" th:text="${partida}"></p>
 </main>
 
 <!-- Footer -->
@@ -158,12 +159,11 @@
             <p>Lucas Gavagnin | </p>
             <p>Gonzalo Ramos | </p>
             <p>Martin Zaccardo | </p>
-            <p>Franco Vargas | </p>
             <p>Victoria Croce </p>
         </div>
     </div>
 </footer>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const cartas = document.querySelectorAll('.carta');

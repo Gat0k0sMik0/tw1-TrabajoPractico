@@ -16,12 +16,14 @@ public class Mano {
 
     private Boolean estaTerminada;
     private Boolean confirmacionTerminada;
+    private Boolean hayQuiero;
     private Integer movimientos = 0;
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
     private Integer ultimaAccionPreguntada;
     private Integer indicadorTruco;
     private Integer puntosEnJuegoEnvido;
+    private Integer puntosEnJuegoFlor;
 
     @ManyToOne
     private Jugador ganador;
@@ -32,26 +34,26 @@ public class Mano {
     @ManyToOne
     private Jugador respondeAhora;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ1;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ2;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartasTiradas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasTiradasJ1;
 
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartasTiradas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
@@ -60,6 +62,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Boolean getHayQuiero() {
+        return hayQuiero;
+    }
+
+    public void setHayQuiero(Boolean hayQuiero) {
+        this.hayQuiero = hayQuiero;
     }
 
     public Integer getPuntosEnJuegoEnvido() {
@@ -236,6 +246,14 @@ public class Mano {
                 ", cartasTiradasJ1=" + cartasTiradasJ1 +
                 ", cartasTiradasJ2=" + cartasTiradasJ2 +
                 '}';
+    }
+
+    public Integer getPuntosEnJuegoFlor() {
+        return puntosEnJuegoFlor;
+    }
+
+    public void setPuntosEnJuegoFlor(Integer puntosEnJuegoFlor) {
+        this.puntosEnJuegoFlor = puntosEnJuegoFlor;
     }
 }
 

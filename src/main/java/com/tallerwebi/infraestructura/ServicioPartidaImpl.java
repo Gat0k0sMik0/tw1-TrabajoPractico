@@ -38,6 +38,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         prepararTruco(truco, jugador1, puntosMaximos);
         this.repositorioTruco.guardarJugador(jugador1);
         this.repositorioTruco.guardarPartida(truco);
+        this.repositorioMano.eliminarCartasDeManosPorUsuario(usuarioActivo.getId());
         return truco;
     }
 
@@ -64,6 +65,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         agregarJugadorTruco(truco, jugador2);
         this.repositorioTruco.guardarJugador(jugador2);
         this.repositorioTruco.merge(truco);
+        this.repositorioMano.eliminarCartasDeManosPorUsuario(usuario.getId());
     }
 
     private void agregarJugadorTruco (Partida truco, Jugador jugador2) {
@@ -153,8 +155,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
             Jugador jugador2 = partida.getJ2();
 
             // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
-            if ((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
-                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) {
+            if (((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
+                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) && (partida.isPartidaFinalizada())) {
                 partidasDelJugador.add(partida);
             }
         }

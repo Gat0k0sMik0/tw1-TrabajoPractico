@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- FOOTER -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${T(java.lang.System).currentTimeMillis()})}"/>
+
     <!-- FONT FAMILIES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
     <!--  Estilo Custom  -->
-    <link rel="stylesheet" th:href="@{/css/menu-juego.css}"/>
+    <link rel="stylesheet" th:href="@{/css/menu-juego.css(v=${T(java.lang.System).currentTimeMillis()})}"/>
     <title>Game Interface</title>
 </head>
 <body>
@@ -155,111 +156,32 @@
             </div>
 
             <!-- Estadísticas del juego -->
-            <div class="estadisticas-container">
-                <!-- Cabeceras -->
-                <div class="cabeceras">
-                    <div id="estadisticas-header" class="header active" onclick="toggleContent('estadisticas')">Estadísticas Globales</div>
-                    <div id="ultimas-partidas-header" class="header" onclick="toggleContent('ultimas-partidas')">Últimas Partidas</div>
-                </div>
-
-                <!-- Contenido Estadísticas Globales -->
-                <div id="estadisticas" class="content visible">
-                    <h2>Top 5 Jugadores</h2>
-                    <p class="aclaracion">G = Victorias</p>
-                    <p class="aclaracion">PJ = Partidas Jugadas</p>
-                    <p class="aclaracion">D = Derrotas</p>
-                    <div class="top-jugadores">
-                        <!-- Datos Dinámicos -->
-                        <div th:each="estadistica : ${topJugadores}">
-                            <div class="jugador">
-                                <img th:src="@{${estadistica.getUsuario().getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
-                                <span class="nombre" th:text="${estadistica.getUsuario().getNombreUsuario()}"></span>
-                                <span class="victorias" th:text="${estadistica.getGanadas()} + 'V'"></span>
-                                <span class="partidas" th:text="${estadistica.getJugadas()} + 'PJ'"></span>
-                                <span class="derrotas" th:text="${estadistica.getJugadas() - estadistica.getGanadas()} + 'D'"></span>
-                                <img class="division" th:src="@{${estadistica.getUrlNivel()}}" alt="division"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="estadisticas-propias">
-                        <div class="mis-datos" th:if="${misEstadisticas != null}">
-                            <img th:src="@{${misEstadisticas.getUsuario().getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
-                            <span class="nombre" th:text="${misEstadisticas.getUsuario().getNombreUsuario()}"></span>
-                            <span class="victorias" th:text="${misEstadisticas.getGanadas()} + 'V'"></span>
-                            <span class="partidas" th:text="${misEstadisticas.getJugadas()} + 'PJ'"></span>
-                            <span class="derrotas" th:text="${misEstadisticas.getJugadas() - misEstadisticas.getGanadas()} + 'D'"></span>
-                            <img class="division" th:src="@{${misEstadisticas.getUrlNivel()}}" alt="division"/>
-                        </div>
-                        <div id="alt-text" th:if="${misEstadisticas == null}">
-                            <h3>Aún no tienes estadísticas.</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contenido Últimas Partidas -->
-                <div id="ultimas-partidas" class="content">
-                    <h2>Últimas Partidas</h2>
-                    <div th:if="${partidas == null || partidas.isEmpty()}">
-                        <p>No hay partidas recientes.</p>
-                    </div>
-                    <div th:if="${partidas != null && !partidas.isEmpty()}" th:each="partida : ${partidas}">
-                        <div class="lista-partidas"
-                             th:style="${partida.getGanador().getUsuario().getId() == usuario.getId() ? 'background-color: #d4f7d4;' : (partida.getGanador() == null ? 'background-color: white;' : 'background-color: #f7d4d4;')}">
-                            <p class="id-partida" style="color: #666">Partida N:<span th:text="${partida.getId()}"></span></p>
-                            <div class="participantes">
-                                <!-- DATOS DEL JUGADOR 1 -->
-                                <div class="datos-j">
-                                    <img th:src="@{${partida.j1.usuario.getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
-                                    <span class="nombre" th:text="${partida.j1.usuario.getNombreUsuario()}"></span>
-                                    <span class="total" th:text="${partida.puntosJ1} + 'pts'" style="color: #666"></span>
-                                </div>
-                                <div class="resultado">
-                                    <!-- CHECK DERROTA -->
-                                    <div id="derrota" th:if="${partida.getGanador().getUsuario().id != usuario.getId()}" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-cross">
-                                            <!-- Círculo de fondo transparente -->
-                                            <circle cx="12" cy="12" r="10" fill="transparent" stroke="red" stroke-width="2"></circle>
-                                            <!-- Cruz roja -->
-                                            <path d="M15 9L9 15M9 9l6 6" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                        <span style="color: red">Derrota</span>
-                                    </div>
-                                    <!-- CHECK VICTORIA -->
-                                    <div id="victoria" th:if="${partida.getGanador().getUsuario().id == usuario.getId()}" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-check">
-                                            <!-- Círculo de fondo transparente -->
-                                            <circle cx="12" cy="12" r="10" fill="transparent" stroke="green" stroke-width="2"></circle>
-                                            <!-- Check verde -->
-                                            <path d="M9 12l2 2l4-4" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                        <span style="color: green">Victoria</span>
-                                    </div>
-                                </div>
-                                <!-- DATOS DEL JUGADOR 2 -->
-                                <div class="datos-j">
-                                    <img th:src="@{${partida.j2.usuario.getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
-                                    <span class="nombre" th:text="${partida.j2.usuario.getNombreUsuario()}"></span>
-                                    <span class="total" th:text="${partida.puntosJ2} + 'pts'" style="color: #666"></span>
-                                </div>
-                            </div>
-                            <span class="ganador" th:text="'Ganador: ' + ${partida.getGanador().getUsuario().getNombreUsuario()}" style="color: #666"></span>
-                            <span class="puntos" th:text="'Puntos para ganar: ' + ${partida.puntosParaGanar}" style="color: #666"></span>
-                            <span style="display: none" th:text="${partida.getGanador().getUsuario().getId()}"></span>
-                        </div>
-                    </div>
-                </div>
+            <div class="game-stats">
+                <h2>Mis Estadísticas</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Juego</th>
+                        <th>Victorias</th>
+                        <th>Partidas Jugadas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${misEstadisticas == null}">
+                        <td colspan="3">No tienes estadísticas registradas.</td>
+                    </tr>
+                    <tr th:each="estadistica : ${misEstadisticas}">
+                        <td th:text="${estadistica.juego != null ? estadistica.juego : 'Sin datos'}"></td>
+                        <td th:text="${estadistica.ganadas != null ? estadistica.ganadas : 0}"></td>
+                        <td th:text="${estadistica.jugadas != null ? estadistica.jugadas : 0}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-
         </div>
     </main>
 </div>
 
-
-<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
-<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
 
 <footer class="relative bg-blueGray-200 pt-8 pb-6">
     <div class="container mx-auto px-4">
@@ -321,7 +243,6 @@
         </div>
     </div>
 </footer>
-
 
 <script>
     // FUNCIONES DE SALAS
@@ -385,49 +306,6 @@
             }
         });
     }
-
-    // ESTADISTICAS
-    function toggleContent(tab) {
-        // Ocultar ambos contenidos
-        var estadisticasContent = document.getElementById('estadisticas');
-        var ultimasPartidasContent = document.getElementById('ultimas-partidas');
-        var estadisticasHeader = document.getElementById('estadisticas-header');
-        var ultimasPartidasHeader = document.getElementById('ultimas-partidas-header');
-
-        // Alternar entre las pestañas
-        if (tab === 'estadisticas') {
-            estadisticasContent.classList.add('visible');
-            ultimasPartidasContent.classList.remove('visible');
-            estadisticasHeader.classList.add('active');
-            ultimasPartidasHeader.classList.remove('active');
-        } else if (tab === 'ultimas-partidas') {
-            ultimasPartidasContent.classList.add('visible');
-            estadisticasContent.classList.remove('visible');
-            ultimasPartidasHeader.classList.add('active');
-            estadisticasHeader.classList.remove('active');
-        }
-    }
-
-    /* TOP DE JUGADORES */
-    document.addEventListener('DOMContentLoaded', () => {
-        const jugadoresContainer = document.querySelectorAll('.jugador');
-        const jugadores = Array.from(jugadoresContainer);
-
-        // Ordenar jugadores por victorias en orden descendente
-        jugadores.sort((a, b) => {
-            const victoriasA = parseInt(a.querySelector('.victorias').textContent.trim(), 10);
-            const victoriasB = parseInt(b.querySelector('.victorias').textContent.trim(), 10);
-            return victoriasB - victoriasA;
-        });
-
-        // Limitar a los primeros 5 jugadores
-        const container = document.querySelector('.top-jugadores');
-        container.innerHTML = ''; // Limpiar contenedor
-
-        jugadores.slice(0, 5).forEach(jugador => {
-            container.appendChild(jugador);
-        });
-    });
 </script>
 </body>
 </html>
