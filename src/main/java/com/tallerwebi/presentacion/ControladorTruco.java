@@ -135,9 +135,9 @@ public class ControladorTruco {
                     model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ1(), mano));
                     model.put("accionesNormales", this.filtrarAccionesNormales(
                             servicioMano.tieneFlor(partida.getJ1(), mano),
-                            servicioMano.esLaPrimerRonda(mano),
                             mano.getIndicadorTruco(),
-                            mano.getPuntosEnJuegoEnvido())
+                            mano.getPuntosEnJuegoEnvido(),
+                            mano.getEstaTerminada())
                     );
                 } else {
                     model.put("yo", partida.getJ2());
@@ -152,9 +152,9 @@ public class ControladorTruco {
                     model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ2(), mano));
                     model.put("accionesNormales", this.filtrarAccionesNormales(
                                     servicioMano.tieneFlor(partida.getJ2(), mano),
-                                    servicioMano.esLaPrimerRonda(mano),
                                     mano.getIndicadorTruco(),
-                                    mano.getPuntosEnJuegoEnvido()
+                                    mano.getPuntosEnJuegoEnvido(),
+                                    mano.getEstaTerminada()
                             )
                     );
                 }
@@ -165,8 +165,12 @@ public class ControladorTruco {
                 );
 
 
-                model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
-                model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
+                model.put("accionesEnvido", this.filtrarAccionesEnvido(
+                        mano.getPuntosEnJuegoEnvido(),
+                        servicioMano.esLaPrimerRonda(mano))
+                );
+
+                model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco(), mano.getHayQuiero()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
                                 && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
@@ -346,9 +350,9 @@ public class ControladorTruco {
                     model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ1(), mano));
                     model.put("accionesNormales", this.filtrarAccionesNormales(
                             servicioMano.tieneFlor(partida.getJ1(), mano),
-                            servicioMano.esLaPrimerRonda(mano),
                             mano.getIndicadorTruco(),
-                            mano.getPuntosEnJuegoEnvido())
+                            mano.getPuntosEnJuegoEnvido(),
+                            mano.getEstaTerminada())
                     );
                 } else {
                     model.put("yo", partida.getJ2());
@@ -363,15 +367,18 @@ public class ControladorTruco {
                     model.put("tengoFlor", servicioMano.tieneFlor(partida.getJ2(), mano));
                     model.put("accionesNormales", this.filtrarAccionesNormales(
                                     servicioMano.tieneFlor(partida.getJ2(), mano),
-                                    servicioMano.esLaPrimerRonda(mano),
                                     mano.getIndicadorTruco(),
-                                    mano.getPuntosEnJuegoEnvido()
+                                    mano.getPuntosEnJuegoEnvido(),
+                                    mano.getEstaTerminada()
                             )
                     );
                 }
 
-                model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
-                model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
+                model.put("accionesEnvido", this.filtrarAccionesEnvido(
+                        mano.getPuntosEnJuegoEnvido(),
+                        servicioMano.esLaPrimerRonda(mano))
+                );
+                model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco(), mano.getHayQuiero()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
                                 && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
@@ -468,70 +475,83 @@ public class ControladorTruco {
 
     private List<Accion> filtrarAccionesNormales(
             Boolean tengoFlor,
-            Boolean puedoCantarEnvido,
             Integer indicadorTruco,
-            Integer puntosEnJuegoEnvido) {
+            Integer puntosEnJuegoEnvido,
+            Boolean terminoLaMano) {
         System.out.println("---FiltrarAccionesNormales: INICIO");
         System.out.println("tengoFlor: " + tengoFlor);
-        System.out.println("puedoCantarEnvido: " + puedoCantarEnvido);
         System.out.println("indicadorTruco: " + indicadorTruco);
         System.out.println("puntosEnJuegoEnvido: " + puntosEnJuegoEnvido);
+        System.out.println("terminoLaMano: " + terminoLaMano);
         System.out.println("---FiltrarAccionesNormales: FIN");
         List<Integer> valoresEnvido = Arrays.asList(98, 99);
         return getAccionesNormales().stream()
-                .filter(accion -> accion.getNro() != 2 || (puedoCantarEnvido && puntosEnJuegoEnvido == 99))
                 .filter(accion -> accion.getNro() != 5
                         || (indicadorTruco == 0 && valoresEnvido.contains(puntosEnJuegoEnvido)))
-                .filter(accion -> accion.getNro() != 8 || tengoFlor)
+                .filter(accion -> accion.getNro() != 8 || tengoFlor && puntosEnJuegoEnvido != 98)
+                .filter(accion -> accion.getNro() != 9 || !terminoLaMano)
                 .collect(Collectors.toList());
 
     }
 
-    private List<Accion> filtrarAccionesTruco(Integer indicadorTruco) {
+    private List<Accion> filtrarAccionesTruco(Integer indicadorTruco, Boolean hayQuiero) {
         System.out.println("---FiltrarAccionesTruco: INICIO");
         System.out.println("indicadorTruco: " + indicadorTruco);
+        System.out.println("hayQuiero: " + hayQuiero);
         System.out.println("---FiltrarAccionesTruco: FIN");
+        List<Integer> valoresQuiero = Arrays.asList(1, 2, 3);
+        List<Integer> valoresNoQuiero = Arrays.asList(1, 2, 3);
+        List<Integer> valoresReTruco = Arrays.asList(1, 3);
         return getAccionesTruco().stream()
-                .filter(accion -> accion.getNro() != 0 || indicadorTruco != 5)
-                .filter(accion -> accion.getNro() != 1 || indicadorTruco != 5)
-                .filter(accion -> accion.getNro() != 6 || indicadorTruco == 1)
-                .filter(accion -> accion.getNro() != 7 || indicadorTruco == 2)
+                .filter(accion -> accion.getNro() != 0 || (valoresNoQuiero.contains(indicadorTruco) && !hayQuiero))
+                .filter(accion -> accion.getNro() != 1 || (valoresQuiero.contains(indicadorTruco) && !hayQuiero))
+                .filter(accion -> accion.getNro() != 6 || (hayQuiero || valoresReTruco.contains(indicadorTruco)))
+                .filter(accion -> accion.getNro() != 7 || (!hayQuiero && indicadorTruco == 2))
                 .collect(Collectors.toList());
     }
 
-    private List<Accion> filtrarAccionesEnvido(Integer indicadorEnvido) {
+    private List<Accion> filtrarAccionesEnvido(Integer indicadorEnvido, Boolean puedoCantarEnvido) {
+        System.out.println("---filtrarAccionesEnvido: INICIO");
         System.out.println("Me llegan puntos en juego del envido: " + indicadorEnvido);
-        List<Integer> valoresFaltaEnvido = Arrays.asList(-1, 2, 3, 4, 5, 7);
-        List<Integer> valoresRealEnvido = Arrays.asList(2, 3, 4, 5);
-        List<Integer> valoresEnvido = Arrays.asList(2);
+        System.out.println("puedoCantarEnvido: " + puedoCantarEnvido);
+        System.out.println("---filtrarAccionesEnvido: FIN");
+
+        List<Integer> valoresFaltaEnvido = Arrays.asList(-1, 2, 3, 4, 5, 7, 99);
+        List<Integer> valoresRealEnvido = Arrays.asList(2, 3, 4, 5, 99);
+        List<Integer> valoresEnvido = Arrays.asList(2, 99);
+        List<Integer> valoresQuieroNoQuiero = Arrays.asList(-1, 2, 3, 4, 5, 7);
+
         return getAccionesEnvido().stream()
-                .filter(accion -> accion.getNro() != 0 || valoresFaltaEnvido.contains(indicadorEnvido))
-                .filter(accion -> accion.getNro() != 1 || valoresFaltaEnvido.contains(indicadorEnvido))
-                .filter(accion -> accion.getNro() != 2 || valoresEnvido.contains(indicadorEnvido))
-                .filter(accion -> accion.getNro() != 3 || valoresRealEnvido.contains(indicadorEnvido))
-                .filter(accion -> accion.getNro() != 4 || valoresFaltaEnvido.contains(indicadorEnvido))
+                .filter(accion ->
+                        accion.getNro() != 0 || valoresQuieroNoQuiero.contains(indicadorEnvido))
+                .filter(accion ->
+                        accion.getNro() != 1 || valoresQuieroNoQuiero.contains(indicadorEnvido))
+                .filter(accion ->
+                        accion.getNro() != 2 || (valoresEnvido.contains(indicadorEnvido) && puedoCantarEnvido))
+                .filter(accion ->
+                        accion.getNro() != 3 || (valoresRealEnvido.contains(indicadorEnvido) && puedoCantarEnvido))
+                .filter(accion ->
+                        accion.getNro() != 4 || (valoresFaltaEnvido.contains(indicadorEnvido) && puedoCantarEnvido))
                 .collect(Collectors.toList());
     }
 
     private Boolean saberSiFueEnvido(Integer ultimaAccionPreguntada) {
         System.out.println("Saber si fue envido: " + ultimaAccionPreguntada);
-        List<Integer> ve = Arrays.asList(2, 3, 4);
+        List<Integer> ve = Arrays.asList(2, 3, 4, 99);
         return ve.contains(ultimaAccionPreguntada);
     }
 
     private Boolean saberSiFueTruco(Integer ultimaAccionPreguntada) {
-        List<Integer> ve = Arrays.asList(5, 6, 7);
+        List<Integer> ve = Arrays.asList(2, 5, 6, 7);
         return ve.contains(ultimaAccionPreguntada);
     }
 
 
     private List<Accion> getAccionesNormales() {
         List<Accion> acciones = new ArrayList<>();
-        Accion envido = new Accion(2, "Envido");
         Accion truco = new Accion(5, "Truco");
         Accion flor = new Accion(8, "Flor");
         Accion mazo = new Accion(9, "Mazo");
-        acciones.add(envido);
         acciones.add(truco);
         acciones.add(flor);
         acciones.add(mazo);

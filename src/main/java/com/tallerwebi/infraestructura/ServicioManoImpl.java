@@ -122,10 +122,11 @@ public class ServicioManoImpl implements ServicioMano {
         m.setIndicadorTruco(0);
         m.setPuntosEnJuegoEnvido(99);
         m.setUltimaAccionPreguntada(99);
+        m.setHayQuiero(false);
     }
 
     @Override
-    public void limpiarMano(Mano ultimaMano) {
+    public void     limpiarMano(Mano ultimaMano) {
         System.out.println("Limpiando mano");
         ultimaMano.getCartasTiradasJ1().clear();
         ultimaMano.getCartasTiradasJ2().clear();
@@ -275,16 +276,11 @@ public class ServicioManoImpl implements ServicioMano {
         Jugador receptor = nroJugador.equals(1) ? truco.getJ2() : truco.getJ1();
         String accionRealizada = saberAccion(accion);
 
-        if (mano.getUltimaAccionPreguntada() != 99) {
-            System.out.println("No respondió a lo que le pidieron entes");
-        }
-
         mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
 
         if (esTruco(accionRealizada)) {
-            preguntarTruco(accionRealizada);
+            preguntarTruco(accionRealizada, mano);
             mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
-            mano.setIndicadorTruco(1);
             mano.setRespondeAhora(receptor);
             this.repositorioMano.merge(mano);
             return receptor;
@@ -520,9 +516,13 @@ public class ServicioManoImpl implements ServicioMano {
         }
     }
 
-    private void preguntarTruco(String accionEncontrada) {
+    private void preguntarTruco(String accionEncontrada, Mano mano) {
         if (accionEncontrada.equals("TRUCO")) {
-            this.indicadorTruco++;
+            mano.setIndicadorTruco(1);
+        } else if (accionEncontrada.equals("RE TRUCO")) {
+            mano.setIndicadorTruco(2);
+        } else if (accionEncontrada.equals("VALE 4")) {
+            mano.setIndicadorTruco(3);
         } else {
             throw new TrucoException("PreguntarTruco: ocurrió un error");
         }
@@ -556,12 +556,16 @@ public class ServicioManoImpl implements ServicioMano {
         Jugador ejecutor = nroJugador.equals(1) ? truco.getJ1() : truco.getJ2();
         Jugador receptor = nroJugador.equals(1) ? truco.getJ2() : truco.getJ1();
 
-        if (Objects.equals(accion, "")) {
-            this.preguntar(mano, accion, nroJugador);
+        if (accion.equals("99")) {
+            return this.preguntar(mano, respuesta, nroJugador);
         }
 
         String accionQueResponde = saberAccion(accion);
         String respuestaDeLaAccion = saberAccion(respuesta);
+
+        System.out.println("Accion que dijo cruda: " + accion);
+        System.out.println("Accion que responde: " + accionQueResponde);
+
         Jugador respondeAhora;
 
         if (esTruco(accionQueResponde)) {
@@ -738,6 +742,7 @@ public class ServicioManoImpl implements ServicioMano {
                     }
                 }
             }
+            mano.setPuntosEnJuegoEnvido(98);
             return mano.getTiraAhora();
         } else if (respuestaDeLaAccion.equals("ENVIDO")) {
             if (ejecutor.getNumero().equals(j1.getNumero())) {
@@ -827,12 +832,14 @@ public class ServicioManoImpl implements ServicioMano {
 
     private Jugador manejarRespuestaTruco(Partida truco, Mano mano, String respuestaDeLaAccion, Jugador ejecutor, Jugador receptor) {
         if (respuestaDeLaAccion.equals("QUIERO")) {
-            if (indicadorTruco.equals(1)) {
+            if (mano.getIndicadorTruco().equals(1)) {
                 this.puntosEnJuegoMano = 2;
-            } else if (indicadorTruco.equals(3)) {
+            } else if (mano.getIndicadorTruco().equals(2)) {
                 this.puntosEnJuegoMano = 3;
+            } else if (mano.getIndicadorTruco().equals(3)) {
+                this.puntosEnJuegoMano = 4;
             }
-            mano.setIndicadorTruco(5);
+            mano.setHayQuiero(true);
             return mano.getTiraAhora();
         } else if (respuestaDeLaAccion.equals("NO QUIERO")) {
             if (ejecutor.getNumero().equals(1)) {
@@ -844,13 +851,11 @@ public class ServicioManoImpl implements ServicioMano {
         } else {
             System.out.println("Indicador truco: " + this.indicadorTruco);
             System.out.println("Respuesta de la accion: " + respuestaDeLaAccion);
-            if (this.indicadorTruco.equals(1) && respuestaDeLaAccion.equals("RE TRUCO")) {
-                this.indicadorTruco++;
+            if (mano.getIndicadorTruco().equals(1) && respuestaDeLaAccion.equals("RE TRUCO")) {
                 mano.setIndicadorTruco(2);
                 this.puntosEnJuegoMano = 3;
                 return receptor;
-            } else if (this.indicadorTruco.equals(2) && respuestaDeLaAccion.equals("VALE 4")) {
-                this.indicadorTruco++;
+            } else if (mano.getIndicadorTruco().equals(2) && respuestaDeLaAccion.equals("VALE 4")) {
                 mano.setIndicadorTruco(3);
                 this.puntosEnJuegoMano = 4;
                 return receptor;
