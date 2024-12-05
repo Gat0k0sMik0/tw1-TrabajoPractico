@@ -22,7 +22,6 @@
         <nav class="d-flex flex-wrap gap-5 align-items-center fs-5">
             <a class="text-decoration-none text-white" th:href="@{/perfil(id=${usuario.getId()})}">
             </a>
-            <button class="btn btn-danger">Cerrar sesión</button>
         </nav>
     </div>
     <div>
@@ -44,6 +43,9 @@
             </a>
 
         </article>
+        <a th:href="@{/login}">
+        <button class="btn btn-danger">Cerrar sesión</button>
+        </a>
     </div>
 </header>
 
