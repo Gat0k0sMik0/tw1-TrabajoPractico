@@ -99,6 +99,9 @@ public class ControladorTruco {
                 Mano mano = servicioMano.obtenerManoPorId(partida.getId());
 
                 if (partida.getGanador() != null) {
+                    System.out.println("Hay ganador, guardando todo...");
+                    System.out.println("Te muestro la maon para que la veas");
+                    System.out.println(mano);
                     model.put("ganador", partida.getGanador());
                     model.put("partidaFinalizada", true);
                     model.put("mano", mano);
@@ -108,10 +111,10 @@ public class ControladorTruco {
 
 
                 if (mano == null) {
+                    System.out.println("La mano es nula...");
                     model.put("respondoYo", false);
                     model.put("respondoEnvido", false);
                     model.put("respondoTruco", false);
-                    System.out.println("Partida puede empezar? " + (partida.getPuedeEmpezar() ? "Sí" : "Nó"));
                     model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
                     model.put("ganador", partida.getGanador());
                     model.put("idPartida", partida.getId());
@@ -259,7 +262,6 @@ public class ControladorTruco {
             mano.getCartasTiradasJ2().clear();
             mano.getCartasJ1().clear();
             mano.getCartasJ2().clear();
-            mano.setConfirmacionTerminada(true);
             System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
             System.out.println(mano);
             servicioMano.guardar(mano);
@@ -269,7 +271,6 @@ public class ControladorTruco {
             mano.getCartasTiradasJ2().clear();
             mano.getCartasJ1().clear();
             mano.getCartasJ2().clear();
-            mano.setConfirmacionTerminada(true);
             System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
             System.out.println(mano);
             servicioMano.guardar(mano);
@@ -287,19 +288,13 @@ public class ControladorTruco {
 
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
-        ultimaMano.getCartasTiradasJ1().clear();
-        ultimaMano.getCartasTiradasJ2().clear();
-        ultimaMano.getCartasJ1().clear();
-        ultimaMano.getCartasJ2().clear();
-        ultimaMano.setConfirmacionTerminada(true);
-        servicioMano.guardar(ultimaMano);
+        servicioMano.limpiarMano(ultimaMano);
         Mano mano = servicioMano.reset(partida);
 
         Usuario usuarioActual = (Usuario) session.getAttribute("usuarioActual");
 
         if (usuarioActual == null) return new ModelAndView("redirect:/login");
         if (idPartida == null) return new ModelAndView("redirect:/home");
-
         if (partida == null) return new ModelAndView("redirect:/home");
 
         if (partida.getJ1() != null && partida.getJ2() != null) {
@@ -315,7 +310,7 @@ public class ControladorTruco {
                     mano.getCartasJ1().clear();
                     mano.getCartasJ2().clear();
                     mano.setConfirmacionTerminada(true);
-                    System.out.println("Termino la partida, hay ganador, la mada, hay ganador, la mano quedá así: ");
+                    System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
                     System.out.println(mano);
                     servicioMano.guardar(mano);
                     return new ModelAndView("partida-truco", model);
@@ -383,6 +378,11 @@ public class ControladorTruco {
 
                 // Atributos independientes de que jugador es cual
                 model.put("seTermino", mano.getEstaTerminada());
+
+                if (mano.getEstaTerminada()) {
+                    model.put("respondoYo", false);
+                }
+
                 model.put("puntosParaGanar", partida.getPuntosParaGanar());
                 model.put("mano", mano);
                 model.put("partida", partida);
@@ -416,14 +416,8 @@ public class ControladorTruco {
     ) {
         Mano mano = servicioMano.obtenerManoPorId(Long.parseLong(manoId));
         if (mano == null) return new ModelAndView("redirect:/home");
-        mano.getCartasTiradasJ1().clear();
-        mano.getCartasTiradasJ2().clear();
-        mano.getCartasJ1().clear();
-        mano.getCartasJ2().clear();
-        mano.setConfirmacionTerminada(true);
-        System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
+        System.out.println("Termino la partida, hay ganador, la mano quedá así antes de SALIR: ");
         System.out.println(mano);
-        servicioMano.guardar(mano);
         // TODO agregar logica para sumar puntos o algo al que gano (estadistica)
         return new ModelAndView("redirect:/home");
     }

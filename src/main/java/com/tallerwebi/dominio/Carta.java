@@ -23,13 +23,14 @@ public class Carta {
     @Override
     public String toString() {
         return "Carta{" +
-                "id=" + id +
-                ", valor=" + valor +
-                ", numero=" + numero +
-                ", palo='" + palo +
-                ", valorEnvido=" + valorEnvido +
-                '}';
+                "\n  id=" + id +
+                ",\n  valor=" + valor +
+                ",\n  numero=" + numero +
+                ",\n  palo='" + palo + '\'' +
+                ",\n  valorEnvido=" + valorEnvido +
+                "\n}";
     }
+
 
 
     public Integer getValorEnvido() {
