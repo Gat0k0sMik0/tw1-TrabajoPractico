@@ -48,7 +48,10 @@
                            class="btn btn-success btn-sm">
                             Mensaje
                         </a>
-                        <button class="btn btn-danger btn-sm">Eliminar</button>
+                        <form th:action="@{/eliminar-amigo}" method="post">
+                            <input type="hidden" name="idAmigo" th:value="${amigo.id}">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
                     </div>
                     <!--                    <form th:action="@{/agregar-amigo}" method="post">-->
                     <!--                        <input type="hidden" name="idAmigo" th:value="${amigo.id}">-->
@@ -85,6 +88,32 @@
             </tbody>
         </table>
     </div>
+
+    <form th:action="@{/amistad/enviar}" method="post">
+        <input type="hidden" name="idSolicitado" th:value="${usuario.id}">
+        <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+    </form>
+
+    <h2>Solicitudes Pendientes</h2>
+    <table>
+        <tr>
+            <th>Usuario</th>
+            <th>Acciones</th>
+        </tr>
+        <tr th:each="solicitud : ${solicitudesPendientes}">
+            <td th:text="${solicitud.solicitante.nombre}"></td>
+            <td>
+                <form th:action="@{/amistad/aceptar}" method="post" style="display: inline;">
+                    <input type="hidden" name="idSolicitud" th:value="${solicitud.id}">
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </form>
+                <form th:action="@{/amistad/rechazar}" method="post" style="display: inline;">
+                    <input type="hidden" name="idSolicitud" th:value="${solicitud.id}">
+                    <button type="submit" class="btn btn-danger">Rechazar</button>
+                </form>
+            </td>
+        </tr>
+    </table>
 </main>
 <footer class="col-12 py-4 d-flex flex-column gap-2">
     <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">

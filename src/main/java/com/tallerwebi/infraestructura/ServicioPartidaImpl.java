@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,25 +32,44 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
     @Override
-    public Partida preparar(Jugador j1, Integer puntosMaximos) {
+    public Partida preparar(Usuario usuarioActivo, Integer puntosMaximos) {
         Partida truco = new Partida();
-        truco.setPuedeEmpezar(false);
-        truco.setJ1(j1);
-        truco.setPuntosParaGanar(puntosMaximos);
-        truco.setPuntosJ1(0);
-        truco.setJ2(null);
-        truco.setPuntosJ2(0);
-        this.repositorioTruco.guardarJugador(j1);
+        Jugador jugador1 = crearJugador(usuarioActivo, 1);
+        prepararTruco(truco, jugador1, puntosMaximos);
+        this.repositorioTruco.guardarJugador(jugador1);
         this.repositorioTruco.guardarPartida(truco);
         return truco;
     }
 
-    @Override
-    public void agregarJugador(Jugador j2, Partida truco) {
-        truco.setJ2(j2);
+    private void prepararTruco (Partida truco, Jugador j, Integer puntosMaximos) {
+        truco.setPuedeEmpezar(false);
+        truco.setJ1(j);
+        truco.setPuntosParaGanar(puntosMaximos);
+        truco.setPuntosJ1(0);
+        truco.setJ2(null);
         truco.setPuntosJ2(0);
-        this.repositorioTruco.guardarJugador(j2);
+    }
+
+    private Jugador crearJugador (Usuario usuario, Integer numero) {
+        Jugador j = new Jugador();
+        j.setNombre(usuario.getNombreUsuario());
+        j.setNumero(numero);
+        j.setUsuario(usuario);
+        return j;
+    }
+
+    @Override
+    public void agregarJugador(Usuario usuario, Partida truco) {
+        Jugador jugador2 = crearJugador(usuario, 2);
+        agregarJugadorTruco(truco, jugador2);
+        this.repositorioTruco.guardarJugador(jugador2);
         this.repositorioTruco.merge(truco);
+    }
+
+    private void agregarJugadorTruco (Partida truco, Jugador jugador2) {
+        truco.setJ2(jugador2);
+        truco.setPuntosJ2(0);
+        truco.setPuedeEmpezar(true);
     }
 
 
@@ -62,7 +82,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public void empezar(Partida truco) {
         truco.setPuedeEmpezar(true);
-        this.repositorioTruco.guardarPartida(truco);
+        System.out.println("servicioPartida: empezar() (hace merge): " + truco);
+        this.repositorioTruco.merge(truco);
     }
 
 
@@ -75,10 +96,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
     public List<Partida> getTodasLasPartidas() {
         return this.repositorioTruco.getTodasLasPartidas();
     }
-
-
-
-
 
 
     @Override
@@ -98,7 +115,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         // Determinar el ganador
         partida.setGanador(ganador);
-        registrarVictoria(ganador);
+        this.registrarVictoria(ganador);
 
         // Guardar los cambios
         repositorioTruco.merge(partida);
@@ -106,18 +123,52 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     // Método para registrar la victoria de un jugador
     private void registrarVictoria(Jugador ganador) {
-        ganador.setVictorias(ganador.getVictorias() + 1); // Incrementa las victorias
-        actualizarNivel(ganador); // Actualiza el nivel según las victorias
+        ganador.getUsuario().setVictorias(ganador.getUsuario().getVictorias() + 1); // Incrementa las victorias
+        actualizarNivel(ganador.getUsuario()); // Actualiza el nivel según las victorias
     }
 
     // Método para actualizar el nivel según las victorias
-    private void actualizarNivel(Jugador jugador) {
-        if (jugador.getVictorias() >= 30) {
+    private void actualizarNivel(Usuario jugador) {
+        if (jugador.getVictorias() >= 50) {
             jugador.setNivel("Oro");
-        } else if (jugador.getVictorias() >= 20) {
+        } else if (jugador.getVictorias() >= 30) {
             jugador.setNivel("Plata");
-        } else {
+        } else if (jugador.getVictorias() >= 10) {
             jugador.setNivel("Bronce");
+        } else {
+            jugador.setNivel("Sin Categoria");
         }
+    }
+
+    @Override
+    public List<Partida> obtenerUltimas3PartidasDeUnJugador(Usuario usuario) {
+        // Obtener todas las partidas desde el repositorio
+        List<Partida> partidas = repositorioTruco.getTodasLasPartidas();
+
+        // Lista para almacenar las partidas del jugador
+        List<Partida> partidasDelJugador = new ArrayList<>();
+
+        for (Partida partida : partidas) {
+            Jugador jugador1 = partida.getJ1();
+            Jugador jugador2 = partida.getJ2();
+
+            // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
+            if ((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
+                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) {
+                partidasDelJugador.add(partida);
+            }
+        }
+
+        if (!partidasDelJugador.isEmpty()) {
+            // Ordenar las partidas por ID en orden descendente
+            partidasDelJugador.sort((p1, p2) -> p2.getId().compareTo(p1.getId()));
+
+            // Seleccionar solo las tres primeras partidas, si hay menos de 3, se tomarán todas
+            if (partidasDelJugador.size() > 3) {
+                partidasDelJugador = partidasDelJugador.subList(0, 3);
+            }
+        }
+
+        return partidasDelJugador;
     }
 }

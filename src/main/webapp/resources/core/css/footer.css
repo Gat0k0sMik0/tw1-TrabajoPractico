@@ -1,0 +1,65 @@
+/* FOOTER */
+footer {
+    background-color: #edf2f7; /* Similar to bg-blueGray-200 */
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+    width: 100%;
+}
+
+footer h4 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #4a5568; /* blueGray-700 */
+}
+
+footer h5 {
+    font-size: 1.125rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #718096; /* blueGray-600 */
+}
+
+.social-buttons .social-button {
+    background-color: #fff;
+    color: #4299e1; /* lightBlue-400 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: normal;
+    height: 2.5rem;
+    width: 2.5rem;
+
+    border-radius: 50%;
+    outline: none;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.social-buttons .twitter { color: #1DA1F2; }
+.social-buttons .facebook { color: #1877F2; }
+.social-buttons .dribbble { color: #EA4C89; }
+.social-buttons .github { color: #171515; }
+
+footer .link {
+    color: #718096; /* blueGray-600 */
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+footer .link:hover {
+    color: #2d3748; /* blueGray-800 */
+}
+
+footer hr {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-color: #cbd5e0; /* blueGray-300 */
+}
+
+footer .text-sm {
+    font-size: 0.875rem;
+}
+
+footer .font-semibold {
+    font-weight: 600;
+}

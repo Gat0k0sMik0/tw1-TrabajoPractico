@@ -31,7 +31,7 @@ public class ControladorPerfil {
         Usuario usuario = servicioUsuario.buscarPorId(Long.parseLong(idUsuario));
         if (usuario == null) return new ModelAndView("redirect:/login");
 
-        servicioEstadisticas.agregarEstadisticasFicticias(usuario);
+       /* servicioEstadisticas.agregarEstadisticasFicticias(usuario);*/
         List<Estadistica> estadisticas = servicioEstadisticas.obtenerEstadisticasDeUnJugador(usuario.getId());
 
         System.out.println(estadisticas);

@@ -1,88 +1,271 @@
-/* HEADER MODS */
-.settingsImageContainer {
-    width: 50px;
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
+
+
+/* Estilo para el título */
+h1, h2, h3, label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
 }
 
-.settingsImageContainer > img {
+p, span {
+    font-family: "Parkinsans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* HEADER BORROSO */
+#blurry-filter {
     width: 100%;
+    height: 9rem;
+    mask: linear-gradient(black 7rem, transparent);
+    -webkit-mask: linear-gradient(black 7rem, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    pointer-events: none;
+    touch-action: none;
+    background: #EEE;
 }
 
-.userData {
-    background: #515151;
-    min-height: 100vh;
-}
+/* ESTILOS GENERALES */
+body {
+    margin: 0;
+    padding: 0;
+    background: #EEE;
+    /*background-image: url('https://png.pngtree.com/background/20230610/original/pngtree-city-illustration-background-vector-picture-image_3046717.jpg');
+    background-size: cover;*/
+    font-family: "Open Sans", sans-serif;
+    box-sizing: border-box;
+    cursor: default;
 
-.userHeader {
-    height: 250px;
-}
-
-.imgStyle {
-    height: 200px;
-}
-
-.progress {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-    height: 20px;
-    padding: 0.25rem;
-}
-
-.progress-bar {
-    height: 100%;
-    background-color: #007bff;
-    text-align: center;
-    color: white;
-    line-height: 20px;
-}
-
-.userImage {
-    bottom: 0;
-    width: 150px;
-    height: 150px;
-    background-color: #95BF39;
-}
-
-.gameWrapper {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: auto;
-    gap: 0.5rem;
-}
-
-.gameInfo {
-    padding: 0.5rem;
-    height: fit-content;
     display: flex;
-    gap: 0.5rem
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
+*, *:before, *:after {
+    box-sizing: inherit;
+}
 
-.gameFirstCol {
-    width: 25%;
+/* HEADER */
+header {
+    width: 100%;
+    height: 8rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+    bottom: 50px;
+
+}
+
+header > div {
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+#titulo-principal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Kumar One Outline", system-ui;
+    font-size: 50px;
+    text-align: center; /* Asegura que el texto esté centrado dentro de su contenedor */
+    flex-grow: 1; /* Hace que el título ocupe el espacio disponible */
+    margin: 0;
+}
+
+/* BOTON HOME */
+#back {
+    width: 100%;
+}
+
+#back .parent {
+    line-height: 1em;
+    color: #666;
+}
+
+.circle-arrow {
+    transition: all 0.3s ease;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
 }
 
+.circle-arrow circle {
+    transition: all 0.3s ease;
+}
+
+.circle-arrow path {
+    transition: all 0.3s ease;
+}
+
+/* Estado por defecto */
+.circle-arrow circle {
+    fill: transparent;
+    stroke: #333;
+}
+
+.circle-arrow path {
+    stroke: #333;  /* La flecha es blanca */
+}
+
+/* Hover: colores invertidos */
+.circle-arrow:hover circle, .circle-arrow:hover path {
+    fill: #333;
+    stroke: white; /* El borde del círculo se vuelve gris */
+}
+.circle-arrow:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);  /* Añade una sombra al hacer hover */
+}
+
+/* Estilo general para el contenedor principal */
+main {
+    padding-top: 80px; /* Espacio suficiente para no solapar el header fijo */
+}
+
+/* Estilo para la sección de datos del usuario */
+.userData {
+    align-content: center;
+    color: black; /* Texto en color negro */
+    margin-top: 20px;
+}
+
+/* Estilo del nombre y correo del usuario */
+.userData p {
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    margin: 5px 0;
+}
+
+/* Contenedor principal de estadísticas */
+.gameWrapper {
+    margin-top: 20px;
+}
+
+/* Estilo general para cada bloque de estadísticas */
+.gameInfo {
+    display: flex;
+    padding: 15px;
+    border: 1px solid #ccc; /* Borde gris suave */
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+/* Estilo para la primera columna (imagen del juego) */
+.gameFirstCol {
+    width: 80px;
+    height: 80px;
+    background-color: #f0f0f0; /* Fondo gris claro */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+}
+
+/* Estilo para la imagen dentro de la primera columna */
 .gameImage {
-    width: 100px;
-    height: 100px;
-    background-color: #95BF39;
+    width: 60px;
+    height: 60px;
+    background-color: #d0d0d0; /* Fondo gris para la imagen */
+    border-radius: 50%;
 }
 
-
+/* Estilo para la segunda columna (información del juego) */
 .gameSecondCol {
-    width: 75%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.progressBar {
-    background: #1D8FF2;
+/* Estilo para los textos dentro de la segunda columna */
+.gameSecondCol p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: black;
 }
 
-@media screen and (min-width: 768px) {
-    .gameWrapper {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Estilo para las barras de progreso */
+.progress-bar {
+    background-color: #28a745; /* Verde para el progreso */
+    height: 20px;
+    border-radius: 10px;
+}
+
+/* Estilo para la barra de progreso que muestra el progreso del nivel */
+.progress {
+    margin-top: 10px;
+}
+
+/* Estilo para la parte de las jugadas y partidas */
+.gameSecondCol .d-flex {
+    margin-top: 10px;
+}
+
+/* Estilo para los contenedores de cada elemento en la barra de progreso */
+.gameSecondCol .col-12 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+/* Estilo de los botones u otros enlaces si se agregan */
+.btn-volver {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.btn-volver:hover {
+    background-color: #0056b3;
+}
+
+
+/* Estilo para la imagen de perfil */
+.userImage {
+    width: 150px;  /* Tamaño de la imagen */
+    height: 150px;
+    background-color: #f0f0f0;  /* Fondo gris claro si no hay imagen */
+    border-radius: 50%;  /* Forma circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 4px solid #fff;
+    position: absolute;
+   left: 557px;
+    top: -130px;
+}
+
+/* Estilo para la imagen dentro del div.userImage */
+.userImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

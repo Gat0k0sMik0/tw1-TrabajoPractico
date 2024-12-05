@@ -19,7 +19,6 @@ p, span {
 #blurry-filter {
 	width: 100%;
 	height: 9rem;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='1'/%3E%3C/filter%3E%3Crect width='100' height='100' style='filter:url(%23f)' opacity='.2'/%3E%3C/svg%3E");
 	mask: linear-gradient(black 7rem, transparent);
 	-webkit-mask: linear-gradient(black 7rem, transparent);
 	backdrop-filter: blur(8px);
@@ -67,13 +66,13 @@ header {
 }
 
 header > div {
-	width: calc(100% - 3rem);
+	width: 100%;
 	max-width: 800px;
 	height: 100%;
 	margin: 0 auto;
 	display: flex;
 	align-items: center;
-	justify-content: space-between; /* Mantiene el espacio entre los elementos */
+	justify-content: space-between;
 	position: relative;
 }
 
@@ -83,7 +82,7 @@ header > div {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-family: "Kumar One Outline", system-ui;
-	font-size: 60px;
+	font-size: 50px;
 	text-align: center; /* Asegura que el texto esté centrado dentro de su contenedor */
 	flex-grow: 1; /* Hace que el título ocupe el espacio disponible */
 }
@@ -98,10 +97,23 @@ header > div {
 }
 
 #title .name {
-	font-size: 2em;
+	font-size: 1.5em;
 	font-weight: bold;
 	color: #333;
 	mix-blend-mode: difference;
+}
+
+.foto-perfil {
+	width: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	overflow: hidden;
+}
+
+article svg {
+	width: 40px;
+	height: 40px;
+	margin: 0;
 }
 
 #reference {
@@ -126,23 +138,22 @@ header > div {
 /* CARROUSEL */
 :root {
 	--marquee-width: 55%;
-	--marquee-height: 20vh;
-	--marquee-elements-displayed: 5;
+	--marquee-height: 25vh;
+	--marquee-elements-displayed: 7;
 	--marquee-element-width: calc(var(--marquee-width) / var(--marquee-elements-displayed));
 	--marquee-animation-duration: calc(var(--marquee-elements) * 7s);
 }
 
 .marquee {
-	width: var(--marquee-width);
+	width: 75%;  /* Establece el ancho del 75% */
 	height: var(--marquee-height);
 	background-color: transparent;
 	color: #eee;
 	overflow: hidden;
 	position: relative;
-	margin-bottom: 10px;
-	margin-left: 22.5%;
-	/* Ajuste del difuminado */
-	mask-image: linear-gradient(to left, black 50%, transparent 10%);  /* Gradiente de derecha a izquierda */
+	/* Centra el elemento en su contenedor */
+	margin: 0 auto 10px;
+	mask-image: linear-gradient(to left, black 50%, transparent 10%);
 	-webkit-mask-image: linear-gradient(to left, black 100%, transparent 100%);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
@@ -188,7 +199,7 @@ header > div {
 	align-items: center;
 	flex-shrink: 0;
 	max-height: 100%;
-	margin: 0; /* Eliminar cualquier margen entre los elementos */
+	margin: 10px; /* Eliminar cualquier margen entre los elementos */
 }
 
 .marquee-content p {
@@ -310,68 +321,3 @@ main > figure > figcaption {
 	transform: scale(1.02);
 }
 
-/* FOOTER */
-footer {
-	background-color: #edf2f7; /* Similar to bg-blueGray-200 */
-	padding-top: 2rem;
-	padding-bottom: 1.5rem;
-	width: 100%;
-}
-
-footer h4 {
-	font-size: 1.875rem;
-	font-weight: 600;
-	color: #4a5568; /* blueGray-700 */
-}
-
-footer h5 {
-	font-size: 1.125rem;
-	margin-top: 0;
-	margin-bottom: 0.5rem;
-	color: #718096; /* blueGray-600 */
-}
-
-.social-buttons .social-button {
-	background-color: #fff;
-	color: #4299e1; /* lightBlue-400 */
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	font-weight: normal;
-	height: 2.5rem;
-	width: 2.5rem;
-
-	border-radius: 50%;
-	outline: none;
-	margin-right: 0.5rem;
-	cursor: pointer;
-}
-
-.social-buttons .twitter { color: #1DA1F2; }
-.social-buttons .facebook { color: #1877F2; }
-.social-buttons .dribbble { color: #EA4C89; }
-.social-buttons .github { color: #171515; }
-
-footer .link {
-	color: #718096; /* blueGray-600 */
-	font-weight: 600;
-	padding-bottom: 0.5rem;
-	font-size: 0.875rem;
-	text-decoration: none;
-}
-
-footer .link:hover {
-	color: #2d3748; /* blueGray-800 */
-}
-
-footer hr {
-	margin-top: 1.5rem;
-	margin-bottom: 1.5rem;
-	border-color: #cbd5e0; /* blueGray-300 */
-}
-
-footer .text-sm {
-	font-size: 0.875rem;
-}
-
-footer .font-semibold {
-	font-weight: 600;
-}

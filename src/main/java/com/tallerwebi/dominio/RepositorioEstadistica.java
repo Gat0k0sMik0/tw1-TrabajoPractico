@@ -11,4 +11,13 @@ public interface RepositorioEstadistica {
     void guardarEstadistica(Estadistica e);
 
     List<Estadistica> obtenerTodasLasEstadisticasDeUnJugador(Long id);
+
+    @Transactional
+    List<Estadistica> obtenerTopJugadoresPorVictorias(int limite);
+
+    @Transactional
+    List<Estadistica> obtenerTodasLasEstadisticas();
+
+    @Transactional
+    List<Estadistica> obtenerTop5JugadoresPorVictorias();
 }

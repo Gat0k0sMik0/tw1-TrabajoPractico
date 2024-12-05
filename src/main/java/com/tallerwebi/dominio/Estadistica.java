@@ -12,27 +12,34 @@ public class Estadistica {
     private Integer ganadas;
     private Integer jugadas;
     private String juego;
+    private String urlNivel;
 
     @ManyToOne
-    @JoinColumn(name = "jugador_id", nullable = false) // Clave foránea
-    private Jugador jugador;
+    @JoinColumn(name = "usuario_id", nullable = false) // Clave foránea
+    private Usuario usuario;
 
     public Estadistica() {
     }
 
-    public Estadistica(Integer ganadas, Integer jugadas, Jugador jugador, String juego) {
+    public Estadistica(Integer ganadas, Integer jugadas, Usuario usuario, String juego) {
         this.ganadas = ganadas;
         this.jugadas = jugadas;
-        this.jugador = jugador;
+        this.usuario = usuario;
         this.juego = juego;
     }
 
-    public String calcularNivel () {
-        String nivel = "";
-        if (this.ganadas >= 50) nivel = "Avanzado";
-        else if (this.ganadas > 10) nivel = "Intermedio";
-        else nivel = "Novato";
-        return nivel;
+    public void calcularNivel () {
+        if(this.usuario.getNivel().equals("Oro") || this.usuario.getVictorias() >= 50) {
+            urlNivel = "img/logos/divisiones/Oro.png";
+        } else if (this.usuario.getNivel().equals("Plata") || this.usuario.getVictorias() >= 30) {
+            urlNivel = "img/logos/divisiones/Plata.png";
+        } else if (this.usuario.getNivel().equals("Bronce") || this.usuario.getVictorias() >= 10) {
+            urlNivel = "img/logos/divisiones/Bronce.png";
+        } else if (this.usuario.getNivel().equals("Sin Categoria") || this.usuario.getVictorias() < 50) {
+            urlNivel = "img/logos/divisiones/SinDivision.png";
+        } else {
+            urlNivel = "img/logos/divisiones/SinDivision.png";
+        }
     }
 
     public int getProgresoNivel() {
@@ -70,10 +77,12 @@ public class Estadistica {
     }
 
     public Integer getGanadas() {
+        this.ganadas = this.usuario.getVictorias();
         return ganadas;
     }
 
     public void setGanadas(Integer ganadas) {
+        this.usuario.setVictorias(ganadas);
         this.ganadas = ganadas;
     }
 
@@ -85,12 +94,21 @@ public class Estadistica {
         this.jugadas = jugadas;
     }
 
-    public Jugador getJugador() {
-        return jugador;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getUrlNivel() {
+        this.calcularNivel();
+        return urlNivel;
+    }
+
+    public void setUrlNivel(String urlNivel) {
+        this.urlNivel = urlNivel;
     }
 
     @Override
@@ -100,7 +118,7 @@ public class Estadistica {
                 ", ganadas=" + ganadas +
                 ", jugadas=" + jugadas +
                 ", juego='" + juego + '\'' +
-                ", jugador=" + jugador +
+                ", usuario=" + usuario +
                 '}';
     }
 }
