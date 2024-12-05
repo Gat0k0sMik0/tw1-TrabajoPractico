@@ -840,6 +840,7 @@ public class ServicioManoImpl implements ServicioMano {
                 this.puntosEnJuegoMano = 3;
             } else if (mano.getIndicadorTruco().equals(3)) {
                 this.puntosEnJuegoMano = 4;
+                mano.setIndicadorTruco(5);
             }
             mano.setHayQuiero(true);
             return mano.getTiraAhora();

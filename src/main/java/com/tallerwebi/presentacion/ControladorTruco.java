@@ -159,17 +159,10 @@ public class ControladorTruco {
                     );
                 }
 
-                System.out.println("Respondo yo: ");
-                System.out.println(mano.getRespondeAhora() != null
-                        && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
-                );
-
-
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(
                         mano.getPuntosEnJuegoEnvido(),
                         servicioMano.esLaPrimerRonda(mano))
                 );
-
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco(), mano.getHayQuiero()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
@@ -507,7 +500,7 @@ public class ControladorTruco {
         return getAccionesTruco().stream()
                 .filter(accion -> accion.getNro() != 0 || (valoresNoQuiero.contains(indicadorTruco) && !hayQuiero))
                 .filter(accion -> accion.getNro() != 1 || (valoresQuiero.contains(indicadorTruco) && !hayQuiero))
-                .filter(accion -> accion.getNro() != 6 || (hayQuiero || valoresReTruco.contains(indicadorTruco)))
+                .filter(accion -> accion.getNro() != 6 || (!hayQuiero && indicadorTruco == 1))
                 .filter(accion -> accion.getNro() != 7 || (!hayQuiero && indicadorTruco == 2))
                 .collect(Collectors.toList());
     }
@@ -538,7 +531,6 @@ public class ControladorTruco {
     }
 
     private Boolean saberSiFueEnvido(Integer ultimaAccionPreguntada) {
-        System.out.println("Saber si fue envido: " + ultimaAccionPreguntada);
         List<Integer> ve = Arrays.asList(2, 3, 4, 99);
         return ve.contains(ultimaAccionPreguntada);
     }
