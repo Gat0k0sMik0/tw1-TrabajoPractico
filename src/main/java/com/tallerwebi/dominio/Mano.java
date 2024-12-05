@@ -32,26 +32,26 @@ public class Mano {
     @ManyToOne
     private Jugador respondeAhora;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ1;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ2;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartasTiradas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasTiradasJ1;
 
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartasTiradas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))

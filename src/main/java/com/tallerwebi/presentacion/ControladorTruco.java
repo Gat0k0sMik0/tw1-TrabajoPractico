@@ -96,14 +96,16 @@ public class ControladorTruco {
 
             if (partida.getPuedeEmpezar()) {
 
+                Mano mano = servicioMano.obtenerManoPorId(partida.getId());
+
                 if (partida.getGanador() != null) {
                     model.put("ganador", partida.getGanador());
                     model.put("partidaFinalizada", true);
+                    model.put("mano", mano);
                     servicioEstadistica.guardarResultado(partida);
                     return new ModelAndView("partida-truco", model);
                 }
 
-                Mano mano = servicioMano.obtenerManoPorId(partida.getId());
 
                 if (mano == null) {
                     model.put("respondoYo", false);
@@ -205,6 +207,7 @@ public class ControladorTruco {
         System.out.println("/comenzar-truco: inicio");
 
         // Obtén la partida por su ID
+        System.out.println("comenzar-truco: busco una partida con id: " +idPartida);
         Partida partida = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
 
         // Si no existe la partida, redirige a /home
@@ -252,8 +255,24 @@ public class ControladorTruco {
         // Verificar si debe finalizarse
         if (partida.getPuntosJ1() >= partida.getPuntosParaGanar()) {
             servicioTruco.finalizarPartida(idPartida, partida.getJ1());
+            mano.getCartasTiradasJ1().clear();
+            mano.getCartasTiradasJ2().clear();
+            mano.getCartasJ1().clear();
+            mano.getCartasJ2().clear();
+            mano.setConfirmacionTerminada(true);
+            System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
+            System.out.println(mano);
+            servicioMano.guardar(mano);
         } else if (partida.getPuntosJ2() >= partida.getPuntosParaGanar()) {
             servicioTruco.finalizarPartida(idPartida, partida.getJ2());
+            mano.getCartasTiradasJ1().clear();
+            mano.getCartasTiradasJ2().clear();
+            mano.getCartasJ1().clear();
+            mano.getCartasJ2().clear();
+            mano.setConfirmacionTerminada(true);
+            System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
+            System.out.println(mano);
+            servicioMano.guardar(mano);
         }
 
         return new ModelAndView("redirect:/partida-truco");
@@ -291,6 +310,14 @@ public class ControladorTruco {
                     model.put("ganador", partida.getGanador());
                     model.put("partidaFinalizada", true);
                     servicioEstadistica.guardarResultado(partida);
+                    mano.getCartasTiradasJ1().clear();
+                    mano.getCartasTiradasJ2().clear();
+                    mano.getCartasJ1().clear();
+                    mano.getCartasJ2().clear();
+                    mano.setConfirmacionTerminada(true);
+                    System.out.println("Termino la partida, hay ganador, la mada, hay ganador, la mano quedá así: ");
+                    System.out.println(mano);
+                    servicioMano.guardar(mano);
                     return new ModelAndView("partida-truco", model);
                 }
 
@@ -384,7 +411,19 @@ public class ControladorTruco {
     }
 
     @RequestMapping("/salir")
-    public ModelAndView cambiarMano() {
+    public ModelAndView salirDeLaPartida(
+            @RequestParam("mano") String manoId
+    ) {
+        Mano mano = servicioMano.obtenerManoPorId(Long.parseLong(manoId));
+        if (mano == null) return new ModelAndView("redirect:/home");
+        mano.getCartasTiradasJ1().clear();
+        mano.getCartasTiradasJ2().clear();
+        mano.getCartasJ1().clear();
+        mano.getCartasJ2().clear();
+        mano.setConfirmacionTerminada(true);
+        System.out.println("Termino la partida, hay ganador, la mano quedá así: ");
+        System.out.println(mano);
+        servicioMano.guardar(mano);
         // TODO agregar logica para sumar puntos o algo al que gano (estadistica)
         return new ModelAndView("redirect:/home");
     }

@@ -81,7 +81,7 @@
                 <div th:if="${ganador != null}">
                     <p>Ganó <strong th:text="${ganador.getNombre()}"></strong>!</p>
                     <a class="btn btn-danger"
-                       th:href="@{/salir}">Salir</a>
+                       th:href="@{/salir(mano=${mano.id})}">Salir</a>
                 </div>
                 <div th:if="${ganador == null}">
                     <p th:if="${misPuntos != null && yo != null}"

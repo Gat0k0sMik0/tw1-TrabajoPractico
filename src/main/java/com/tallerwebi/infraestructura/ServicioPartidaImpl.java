@@ -81,6 +81,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public void empezar(Partida truco) {
         truco.setPuedeEmpezar(true);
+        System.out.println("servicioPartida: empezar() (hace merge): " + truco);
         this.repositorioTruco.merge(truco);
     }
 

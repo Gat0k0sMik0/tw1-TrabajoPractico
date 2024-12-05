@@ -74,10 +74,11 @@ public class ServicioManoImpl implements ServicioMano {
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
 
 
+
         System.out.println("servicioMano: empezar(): Empieza una mano");
         System.out.println(m);
         // Guardamos  mano
-        repositorioMano.merge(m);
+        repositorioMano.guardar(m);
     }
 
 
@@ -103,11 +104,11 @@ public class ServicioManoImpl implements ServicioMano {
         // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
 
-        System.out.println("Comenzó una nueva mano: ");
-        System.out.println(nueva);
-
         // Guardamos nueva mano
         this.repositorioMano.guardar(nueva);
+
+        System.out.println("Comenzó una nueva mano: ");
+        System.out.println(nueva);
 
         return nueva;
     }
@@ -685,6 +686,7 @@ public class ServicioManoImpl implements ServicioMano {
                         }
                     }
 
+                    // FIXME: si gano el envido y me paso de los puntos máximos para cortar, no corta
                     if (truco.getPuntosJ1().equals(truco.getPuntosParaGanar())) {
                         truco.setGanador(truco.getJ1());
                     } else if (truco.getPuntosJ2().equals(truco.getPuntosParaGanar())) {

@@ -28,8 +28,6 @@ public class RepositorioTrucoImpl implements RepositorioTruco {
     @Transactional
     @Override
     public void guardarPartida(Partida truco) {
-        System.out.println("Guardo: ");
-        System.out.println(truco);
         sessionFactory.getCurrentSession().save(truco);
     }
 
