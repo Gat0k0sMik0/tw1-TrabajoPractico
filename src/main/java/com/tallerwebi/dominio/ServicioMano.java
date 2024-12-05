@@ -13,7 +13,6 @@ public interface ServicioMano {
 
     Mano obtenerManoPorId(Long id);
 
-    Jugador saberQuienTiraAhora();
 
     Integer obtenerPuntosEnJuegoPorTruco();
 
@@ -27,4 +26,16 @@ public interface ServicioMano {
     void determinarGanadorRonda(Partida truco, Mano mano);
 
     Jugador responder(Mano mano, String accion, String respuesta, Integer nroJugador);
+
+    boolean esLaPrimerRonda(Mano mano);
+
+    Jugador getRandom(Partida truco);
+
+    Integer getIndicadorTruco();
+
+    Jugador getDiceEnvidoJ1();
+
+    Jugador getDiceEnvidoJ2();
+
+    void limpiarMano(Mano ultimaMano);
 }

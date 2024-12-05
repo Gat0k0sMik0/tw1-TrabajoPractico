@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public class RepositorioManoImpl implements RepositorioMano {
@@ -27,14 +28,16 @@ public class RepositorioManoImpl implements RepositorioMano {
     @Transactional
     @Override
     public void guardar(Mano mano) {
-        System.out.println("Guardando Mano");
+        System.out.println("Guardando Mano: ");
         System.out.println(mano);
-        sessionFactory.getCurrentSession().saveOrUpdate(mano);
+        sessionFactory.getCurrentSession().save(mano);
     }
 
     @Transactional
     @Override
     public void merge(Mano mano) {
+        System.out.println("Merge de mano: ");
+        System.out.println(mano);
         entityManager.merge(mano);
     }
 
@@ -48,6 +51,13 @@ public class RepositorioManoImpl implements RepositorioMano {
                 .addOrder(Order.desc("id"))
                 .setMaxResults(1)
                 .uniqueResult();
+    }
+
+    @Transactional
+    public List<Mano> getAllManos() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(Mano.class)
+                .list();
     }
 
 

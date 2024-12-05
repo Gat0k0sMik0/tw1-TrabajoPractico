@@ -20,6 +20,8 @@ public class Mano {
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
     private Integer ultimaAccionPreguntada;
+    private Integer indicadorTruco;
+    private Integer puntosEnJuegoEnvido;
 
     @ManyToOne
     private Jugador ganador;
@@ -30,26 +32,26 @@ public class Mano {
     @ManyToOne
     private Jugador respondeAhora;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ1;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ2;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartasTiradas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasTiradasJ1;
 
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "mano_cartasTiradas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
@@ -58,6 +60,22 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Integer getPuntosEnJuegoEnvido() {
+        return puntosEnJuegoEnvido;
+    }
+
+    public void setPuntosEnJuegoEnvido(Integer puntosEnJuegoEnvido) {
+        this.puntosEnJuegoEnvido = puntosEnJuegoEnvido;
+    }
+
+    public Integer getIndicadorTruco() {
+        return indicadorTruco;
+    }
+
+    public void setIndicadorTruco(Integer indicadorTruco) {
+        this.indicadorTruco = indicadorTruco;
     }
 
     public Integer getUltimaAccionPreguntada() {
@@ -200,19 +218,25 @@ public class Mano {
     @Override
     public String toString() {
         return "Mano{" +
-                "id=" + id +
-                ", partida=" + partida +
-                ", estaTerminada=" + estaTerminada +
-                ", confirmacionTerminada=" + confirmacionTerminada +
-                ", movimientos=" + movimientos +
-                ", puntosRondaJ1=" + puntosRondaJ1 +
-                ", puntosRondaJ2=" + puntosRondaJ2 +
-                ", ganador=" + ganador +
-                ", cartasJ1=" + cartasJ1 +
-                ", cartasJ2=" + cartasJ2 +
-                ", cartasTiradasJ1=" + cartasTiradasJ1.size() +
-                ", cartasTiradasJ2=" + cartasTiradasJ2.size() +
-                '}';
+                "\n  id=" + id +
+                ",\n  partida=" + partida +
+                ",\n  estaTerminada=" + estaTerminada +
+                ",\n  confirmacionTerminada=" + confirmacionTerminada +
+                ",\n  movimientos=" + movimientos +
+                ",\n  puntosRondaJ1=" + puntosRondaJ1 +
+                ",\n  puntosRondaJ2=" + puntosRondaJ2 +
+                ",\n  ultimaAccionPreguntada=" + ultimaAccionPreguntada +
+                ",\n  indicadorTruco=" + indicadorTruco +
+                ",\n  puntosEnJuegoEnvido=" + puntosEnJuegoEnvido +
+                ",\n  ganador=" + ganador +
+                ",\n  tiraAhora=" + tiraAhora +
+                ",\n  respondeAhora=" + respondeAhora +
+                ",\n  cartasJ1=" + cartasJ1 +
+                ",\n  cartasJ2=" + cartasJ2 +
+                ",\n  cartasTiradasJ1=" + cartasTiradasJ1 +
+                ",\n  cartasTiradasJ2=" + cartasTiradasJ2 +
+                "\n}";
     }
+
 }
 
