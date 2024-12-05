@@ -22,6 +22,7 @@ public class Mano {
     private Integer ultimaAccionPreguntada;
     private Integer indicadorTruco;
     private Integer puntosEnJuegoEnvido;
+    private Integer puntosEnJuegoFlor;
 
     @ManyToOne
     private Jugador ganador;
@@ -32,26 +33,26 @@ public class Mano {
     @ManyToOne
     private Jugador respondeAhora;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ1;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasJ2;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartasTiradas_j1",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
     private List<Carta> cartasTiradasJ1;
 
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     @JoinTable(name = "mano_cartasTiradas_j2",
             joinColumns = @JoinColumn(name = "mano_id"),
             inverseJoinColumns = @JoinColumn(name = "carta_id"))
@@ -218,25 +219,32 @@ public class Mano {
     @Override
     public String toString() {
         return "Mano{" +
-                "\n  id=" + id +
-                ",\n  partida=" + partida +
-                ",\n  estaTerminada=" + estaTerminada +
-                ",\n  confirmacionTerminada=" + confirmacionTerminada +
-                ",\n  movimientos=" + movimientos +
-                ",\n  puntosRondaJ1=" + puntosRondaJ1 +
-                ",\n  puntosRondaJ2=" + puntosRondaJ2 +
-                ",\n  ultimaAccionPreguntada=" + ultimaAccionPreguntada +
-                ",\n  indicadorTruco=" + indicadorTruco +
-                ",\n  puntosEnJuegoEnvido=" + puntosEnJuegoEnvido +
-                ",\n  ganador=" + ganador +
-                ",\n  tiraAhora=" + tiraAhora +
-                ",\n  respondeAhora=" + respondeAhora +
-                ",\n  cartasJ1=" + cartasJ1 +
-                ",\n  cartasJ2=" + cartasJ2 +
-                ",\n  cartasTiradasJ1=" + cartasTiradasJ1 +
-                ",\n  cartasTiradasJ2=" + cartasTiradasJ2 +
-                "\n}";
+                "id=" + id +
+                ", partida=" + partida +
+                ", estaTerminada=" + estaTerminada +
+                ", confirmacionTerminada=" + confirmacionTerminada +
+                ", movimientos=" + movimientos +
+                ", puntosRondaJ1=" + puntosRondaJ1 +
+                ", puntosRondaJ2=" + puntosRondaJ2 +
+                ", ultimaAccionPreguntada=" + ultimaAccionPreguntada +
+                ", indicadorTruco=" + indicadorTruco +
+                ", puntosEnJuegoEnvido=" + puntosEnJuegoEnvido +
+                ", ganador=" + ganador +
+                ", tiraAhora=" + tiraAhora +
+                ", respondeAhora=" + respondeAhora +
+                ", cartasJ1=" + cartasJ1 +
+                ", cartasJ2=" + cartasJ2 +
+                ", cartasTiradasJ1=" + cartasTiradasJ1 +
+                ", cartasTiradasJ2=" + cartasTiradasJ2 +
+                '}';
     }
 
+    public Integer getPuntosEnJuegoFlor() {
+        return puntosEnJuegoFlor;
+    }
+
+    public void setPuntosEnJuegoFlor(Integer puntosEnJuegoFlor) {
+        this.puntosEnJuegoFlor = puntosEnJuegoFlor;
+    }
 }
 
