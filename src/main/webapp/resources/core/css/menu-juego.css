@@ -319,7 +319,7 @@ input[type="radio"] {
 }
 
 /* Sala */
-.sala {
+.sala{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -329,7 +329,7 @@ input[type="radio"] {
     transition: all 0.3s ease;
 }
 
-.sala:hover {
+.sala:hover, .jugador:hover, .lista-partidas:hover  {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
 }
@@ -481,4 +481,55 @@ input[type="radio"] {
 hr {
     margin-top: 15px;
     width: 100%;
+}
+
+/* ULTIMAS PARTIDAS */
+.lista-partidas {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.id-partida {
+    margin: 10px;
+}
+
+.participantes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.datos-j {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    transition: background-color 0.3s ease;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+.datos-j.ganador:hover {
+    background-color: #d4f7d4; /* Fondo verde suave para el ganador */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+.datos-j.perdedor:hover {
+    background-color: #f7d4d4; /* Fondo rojo suave para el perdedor */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+#derrota, #victoria {
+    display: flex;
+    flex-direction: column;
 }

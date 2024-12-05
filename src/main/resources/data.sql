@@ -32,7 +32,7 @@ VALUES
 INSERT INTO Partida (id, j1_id, j2_id, puntosJ1, puntosJ2, puntosParaGanar, ganador_id)
 VALUES
     (1, 1, 2, 15, 10, 15, 1),
-    (2, 2, 1, 30, 10, 30, 1);
+    (2, 2, 1, 30, 10, 30, 2);
 
 /* INSERT DE CARTAS PARA EL TRUCO */
 INSERT INTO Carta(valor, numero, palo, img)
