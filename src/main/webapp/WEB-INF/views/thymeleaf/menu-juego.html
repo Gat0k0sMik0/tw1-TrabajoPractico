@@ -138,7 +138,7 @@
                     </div>
 
                     <!-- Salas dinámicas -->
-                    <div th:if="${!partidas.isEmpty()}" th:each="partida : ${partidas}" class="sala" th:data-puntos="${partida.puntosParaGanar}">
+                    <div th:if="${!partidasDisponibles.isEmpty()}" th:each="partida : ${partidasDisponibles}" class="sala" th:data-puntos="${partida.puntosParaGanar}">
                         <div class="sala-perfil">
                             <img th:src="@{${partida.getJ1().getUsuario().getUrlFotoPerfil()}}" alt="Perfil" class="foto-perfil">
                             <p class="nombre-usuario" th:text="${partida.getJ1().getNombre()}"></p>
