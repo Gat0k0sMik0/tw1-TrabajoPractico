@@ -159,6 +159,12 @@ public class ControladorTruco {
                     );
                 }
 
+                System.out.println("Respondo yo: ");
+                System.out.println(mano.getRespondeAhora() != null
+                        && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
+                );
+
+
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(mano.getPuntosEnJuegoEnvido()));
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco()));
                 model.put("respondoYo",
@@ -210,7 +216,7 @@ public class ControladorTruco {
         System.out.println("/comenzar-truco: inicio");
 
         // Obtén la partida por su ID
-        System.out.println("comenzar-truco: busco una partida con id: " +idPartida);
+        System.out.println("comenzar-truco: busco una partida con id: " + idPartida);
         Partida partida = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
 
         // Si no existe la partida, redirige a /home
@@ -465,16 +471,29 @@ public class ControladorTruco {
             Boolean puedoCantarEnvido,
             Integer indicadorTruco,
             Integer puntosEnJuegoEnvido) {
+        System.out.println("---FiltrarAccionesNormales: INICIO");
+        System.out.println("tengoFlor: " + tengoFlor);
+        System.out.println("puedoCantarEnvido: " + puedoCantarEnvido);
+        System.out.println("indicadorTruco: " + indicadorTruco);
+        System.out.println("puntosEnJuegoEnvido: " + puntosEnJuegoEnvido);
+        System.out.println("---FiltrarAccionesNormales: FIN");
+        List<Integer> valoresEnvido = Arrays.asList(98, 99);
         return getAccionesNormales().stream()
-                .filter(accion -> accion.getNro() != 8 || tengoFlor)
                 .filter(accion -> accion.getNro() != 2 || (puedoCantarEnvido && puntosEnJuegoEnvido == 99))
-                .filter(accion -> accion.getNro() != 5 || indicadorTruco == 0)
+                .filter(accion -> accion.getNro() != 5
+                        || (indicadorTruco == 0 && valoresEnvido.contains(puntosEnJuegoEnvido)))
+                .filter(accion -> accion.getNro() != 8 || tengoFlor)
                 .collect(Collectors.toList());
 
     }
 
     private List<Accion> filtrarAccionesTruco(Integer indicadorTruco) {
+        System.out.println("---FiltrarAccionesTruco: INICIO");
+        System.out.println("indicadorTruco: " + indicadorTruco);
+        System.out.println("---FiltrarAccionesTruco: FIN");
         return getAccionesTruco().stream()
+                .filter(accion -> accion.getNro() != 0 || indicadorTruco != 5)
+                .filter(accion -> accion.getNro() != 1 || indicadorTruco != 5)
                 .filter(accion -> accion.getNro() != 6 || indicadorTruco == 1)
                 .filter(accion -> accion.getNro() != 7 || indicadorTruco == 2)
                 .collect(Collectors.toList());
@@ -482,10 +501,12 @@ public class ControladorTruco {
 
     private List<Accion> filtrarAccionesEnvido(Integer indicadorEnvido) {
         System.out.println("Me llegan puntos en juego del envido: " + indicadorEnvido);
-        List<Integer> valoresFaltaEnvido = Arrays.asList(2, 3, 4, 5, 7);
+        List<Integer> valoresFaltaEnvido = Arrays.asList(-1, 2, 3, 4, 5, 7);
         List<Integer> valoresRealEnvido = Arrays.asList(2, 3, 4, 5);
         List<Integer> valoresEnvido = Arrays.asList(2);
         return getAccionesEnvido().stream()
+                .filter(accion -> accion.getNro() != 0 || valoresFaltaEnvido.contains(indicadorEnvido))
+                .filter(accion -> accion.getNro() != 1 || valoresFaltaEnvido.contains(indicadorEnvido))
                 .filter(accion -> accion.getNro() != 2 || valoresEnvido.contains(indicadorEnvido))
                 .filter(accion -> accion.getNro() != 3 || valoresRealEnvido.contains(indicadorEnvido))
                 .filter(accion -> accion.getNro() != 4 || valoresFaltaEnvido.contains(indicadorEnvido))
