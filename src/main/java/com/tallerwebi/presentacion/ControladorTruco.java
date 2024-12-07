@@ -34,27 +34,23 @@ public class ControladorTruco {
     @GetMapping("/espera")
     public ModelAndView espera(
             @RequestParam("idJugador") String idJugador,
-            @RequestParam("ptsmax") String puntosMaximos,
-            HttpSession session
+            @RequestParam("ptsmax") String puntosMaximos
     ) {
         // Obtener el usuario activo
         Usuario usuarioActivo = servicioUsuario.buscarPorId(Long.parseLong(idJugador));
         if (usuarioActivo == null) return new ModelAndView("redirect:/login");
 
-        // SE INSTANCIA LA PARTIDA CON LOS PUNTOS PARA GANAR
+        // Instanciar la partida con los puntos para ganar
         Partida truco = servicioTruco.preparar(usuarioActivo, Integer.parseInt(puntosMaximos));
 
-        session.setAttribute("idPartida", truco.getId());
-        session.setAttribute("usuarioActual", usuarioActivo);
-
-        return new ModelAndView("redirect:/partida-truco");
+        // Redirigir a la vista de la partida con el ID de la partida en la URL
+        return new ModelAndView("redirect:/partida-truco?idPartida=" + truco.getId() + "&idJugador=" + usuarioActivo.getId());
     }
 
     @GetMapping("/unirse")
     public ModelAndView unirse(
             @RequestParam("idPartida") String idPartida,
-            @RequestParam("idJugador") String idJugador,
-            HttpSession session
+            @RequestParam("idJugador") String idJugador
     ) {
         // Obtener el usuario activo
         Usuario usuarioActivo = servicioUsuario.buscarPorId(Long.parseLong(idJugador));
@@ -65,27 +61,26 @@ public class ControladorTruco {
 
         servicioTruco.agregarJugador(usuarioActivo, truco);
 
-        session.setAttribute("idPartida", truco.getId());
-
-        return new ModelAndView("redirect:/partida-truco");
+        // Redirigir a la vista de la partida con el ID de la partida en la URL
+        return new ModelAndView("redirect:/partida-truco?idPartida=" + truco.getId() + "&idJugador=" + usuarioActivo.getId());
     }
 
     @RequestMapping("/partida-truco")
-    public ModelAndView irAPartidaTruco(HttpSession session) {
-
+    public ModelAndView irAPartidaTruco(
+            @RequestParam("idPartida") Long partidaId,
+            @RequestParam("idJugador") Long idJugador
+    ) {
         System.out.println("partida-truco: ejecutado");
         ModelMap model = new ModelMap();
 
-        Long partidaId = (Long) session.getAttribute("idPartida");
-        Usuario usuarioActual = (Usuario) session.getAttribute("usuarioActual");
+        // Obtener el usuario activo desde la base de datos
+        Usuario usuarioActual = servicioUsuario.buscarPorId(idJugador);
+        if (usuarioActual == null) return new ModelAndView("redirect:/login");
 
         System.out.println("partida-truco: usuarioActual " + usuarioActual);
-        System.out.println("partida-truco: idPartida de session " + partidaId);
+        System.out.println("partida-truco: idPartida de URL " + partidaId);
 
-        if (usuarioActual == null) return new ModelAndView("redirect:/login");
-        if (partidaId == null) return new ModelAndView("redirect:/home");
-
-        System.out.println("partida-truco: Recibo id de partida: " + partidaId);
+        // Obtener la partida desde la base de datos
         Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
         if (partida == null) return new ModelAndView("redirect:/home");
 
@@ -93,14 +88,12 @@ public class ControladorTruco {
         System.out.println(partida);
 
         if (partida.getJ1() != null && partida.getJ2() != null) {
-
             if (partida.getPuedeEmpezar()) {
-
                 Mano mano = servicioMano.obtenerManoPorId(partida.getId());
 
                 if (partida.getGanador() != null) {
                     System.out.println("Hay ganador, guardando todo...");
-                    System.out.println("Te muestro la maon para que la veas");
+                    System.out.println("Te muestro la mano para que la veas");
                     System.out.println(mano);
                     model.put("ganador", partida.getGanador());
                     model.put("partidaFinalizada", true);
@@ -108,7 +101,6 @@ public class ControladorTruco {
                     servicioEstadistica.guardarResultado(partida);
                     return new ModelAndView("partida-truco", model);
                 }
-
 
                 if (mano == null) {
                     System.out.println("La mano es nula...");
@@ -181,7 +173,6 @@ public class ControladorTruco {
                 model.put("idPartida", partida.getId());
                 model.put("accionAResponder", mano.getUltimaAccionPreguntada());
 
-
                 model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
 
                 return new ModelAndView("partida-truco", model);
@@ -193,7 +184,6 @@ public class ControladorTruco {
             model.put("respondoYo", false);
             model.put("respondoEnvido", false);
             model.put("respondoTruco", false);
-            System.out.println("Partida puede empezar? " + (partida.getPuedeEmpezar() ? "Sí" : "Nó"));
         }
 
         model.put("respondoYo", false);
@@ -203,6 +193,36 @@ public class ControladorTruco {
 
         System.out.println("partida-truco: fin");
         return new ModelAndView("partida-truco", model);
+    }
+
+    @GetMapping("/comenzar-truco")
+    public ModelAndView comenzarTruco(
+            @RequestParam("idPartida") String idPartida,
+            @RequestParam("idJugador") Long idJugador
+    ) {
+        System.out.println("/comenzar-truco: inicio");
+
+        // Obtén la partida por su ID
+        Partida partida = servicioTruco.obtenerPartidaPorId(Long.parseLong(idPartida));
+
+        // Si no existe la partida, redirige a /home
+        if (partida == null) {
+            System.out.println("Partida no encontrada");
+            return new ModelAndView("redirect:/home");
+        }
+
+        Usuario usuarioActual = servicioUsuario.buscarPorId(idJugador);
+        if (usuarioActual == null) return new ModelAndView("redirect:/login");
+
+        // Empezamos la partida y la mano
+        servicioTruco.empezar(partida);
+        servicioMano.empezar(partida);
+
+        System.out.println("Partida iniciada: " + partida);
+        System.out.println("/comenzar-truco: fin");
+
+        // Redirigir a la vista de la partida con el ID de la partida y el ID del jugador en la URL
+        return new ModelAndView("redirect:/partida-truco?idPartida=" + partida.getId() + "&idJugador=" + usuarioActual.getId());
     }
 
 
