@@ -29,8 +29,7 @@ public class ControladorMenuJuego {
 
     // Método para mostrar el menú de juego
     @RequestMapping("/menuJuego")
-    public ModelAndView mostrarMenuJuego(HttpSession session,
-                                         @RequestParam("idUsuario") Long idUsuario) {
+    public ModelAndView mostrarMenuJuego(@RequestParam("idUsuario") Long idUsuario) {
         Usuario ua = servicioUsuario.buscarPorId(idUsuario);
         if (ua == null) return new ModelAndView("redirect:/login");
 
