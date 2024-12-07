@@ -39,6 +39,9 @@ public class ControladorMenuJuego {
         List<Partida> partidas = servicioTruco.obtenerUltimas3PartidasDeUnJugador(ua);
         List <Estadistica> top =  servicioEstadisticas.obtenerTopJugadores();
         Estadistica misEstadisticas = servicioEstadisticas.obtenerEstadisticasDeUnJugador(ua);
+
+        System.out.println(partidasDisponibles);
+
         model.put("partidasDisponibles", partidasDisponibles);
         model.put("partidas", partidas);
         model.put("usuario", ua);

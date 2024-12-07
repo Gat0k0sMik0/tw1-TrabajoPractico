@@ -16,6 +16,7 @@ public class Mano {
 
     private Boolean estaTerminada;
     private Boolean confirmacionTerminada;
+    private Boolean hayQuiero;
     private Integer movimientos = 0;
     private Integer puntosRondaJ1 = 0;
     private Integer puntosRondaJ2 = 0;
@@ -61,6 +62,14 @@ public class Mano {
 
     public Mano() {
 
+    }
+
+    public Boolean getHayQuiero() {
+        return hayQuiero;
+    }
+
+    public void setHayQuiero(Boolean hayQuiero) {
+        this.hayQuiero = hayQuiero;
     }
 
     public Integer getPuntosEnJuegoEnvido() {
