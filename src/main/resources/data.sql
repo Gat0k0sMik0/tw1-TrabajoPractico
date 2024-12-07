@@ -11,16 +11,16 @@ VALUES
 ('Gobernador', 'user1@user.com', 'user0000', 'USER', true, 8, '/img/fotos-perfil/foto-perfil-6.png', 55, 'Oro');
 
 /* CREAMOS ESTADISTICAS PARA CADA JUGADOR */
-INSERT INTO Estadistica(usuario_id, jugadas)
+INSERT INTO Estadistica(id, usuario_id, jugadas)
 VALUES
-    (1, 0),
-    (2, 0),
-    (3, 21),
-    (4, 35),
-    (5, 25),
-    (6, 56),
-    (7, 106),
-    (8, 56);
+    (1, 1, 0),
+    (2, 2, 0),
+    (3, 3, 21),
+    (4, 4, 35),
+    (5, 5, 25),
+    (6, 6, 56),
+    (7, 7, 106),
+    (8, 8, 56);
 
 /* PROBAR JUGADORES */
 INSERT INTO Jugador (id, nombre, numero, usuario_id)
