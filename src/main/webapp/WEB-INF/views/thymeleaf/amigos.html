@@ -148,7 +148,7 @@
                             <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
                             <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <button class="btn">Agregar amigo</button>
+                                <button th:href="@/{}" class="btn">Agregar amigo</button>
                             </div>
                         </div>
                     </div>
