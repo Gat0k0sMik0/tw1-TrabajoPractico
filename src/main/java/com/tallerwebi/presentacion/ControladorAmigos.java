@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ControladorAmigos {
     }
 
     @RequestMapping("/amigos")
-    public ModelAndView irAChatAmigos(@RequestParam("idUsuario") Long idUsuario) throws AmistadesException {
+    public ModelAndView irAmigos(@RequestParam("idUsuario") Long idUsuario) throws AmistadesException {
         ModelMap model = new ModelMap();
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
         List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioActual.getId());
@@ -61,17 +62,18 @@ public class ControladorAmigos {
         return new ModelAndView("amigos", model);
     }*/
 
-    @RequestMapping(path = "/agregar-amigo", method = RequestMethod.POST)
-    public ModelAndView agregarAmigo(@RequestParam("idAmigo") Long idAmigo, HttpServletRequest request) {
+    @RequestMapping(path = "/agregar-amigo")
+    public ModelAndView agregarAmigo(@RequestParam("idAmigo") Long idAmigo, @RequestParam("idUsuario") Long idUsuario,
+                                     RedirectAttributes redirectAttributes) throws AmistadesException {
         ModelMap model = new ModelMap();
-        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
+        Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
         Usuario amigo = servicioUsuario.buscarPorId(idAmigo);
         try {
-            servicioAmistad.agregarAmigo(usuarioSesion, amigo);
-            return new ModelAndView("redirect:/amigos");
+            servicioAmistad.agregarAmigo(usuario, amigo);
+            return new ModelAndView("redirect:/amigos?idUsuario" + idUsuario);
         } catch (AmistadesException e) {
-            model.put("error", e.getMessage());
-            return new ModelAndView("amigos", model);
+           redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return new ModelAndView("redirect:/amigos?idUsuario" + idUsuario);
         }
     }
 
