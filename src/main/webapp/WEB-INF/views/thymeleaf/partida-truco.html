@@ -43,8 +43,7 @@
         <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
             <!-- MAZO -->
             <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
-                <a th:href="@{/comenzar-truco(idPartida= ${idPartida}, idJugador=${yo.id})}" th:if="${ganador == null}" class="w-100">
-                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                <a th:href="@{/comenzar-truco(idPartida= ${idPartida}, idUsuario=${idUsuario})}" th:if="${ganador == null}" class="w-100">                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                 </a>
                 <a th:if="${ganador != null}" class="w-100">
                     <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">

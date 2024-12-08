@@ -148,7 +148,7 @@
                             <p th:text="${'Puntos: ' + partida.getPuntosParaGanar()}"></p>
                         </div>
                         <div class="sala-boton">
-                            <a class="styledBtn" th:href="@{/unirse(idJugador=${usuario.getId()}, idPartida=${partida.getId()})}">Unirse</a>
+                            <a class="styledBtn" th:href="@{/unirse(idPartida=${partida.getId()}, idUsuario=${usuario.getId()})}">Unirse</a>
                         </div>
                     </div>
                 </div>
