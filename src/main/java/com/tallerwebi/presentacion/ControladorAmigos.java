@@ -70,17 +70,18 @@ public class ControladorAmigos {
         }
     }
 
-    @RequestMapping(path = "/eliminar-amigo", method = RequestMethod.POST)
-    public ModelAndView eliminarAmigo(@RequestParam("idAmigo") Long idAmigo, HttpServletRequest request) {
+    @RequestMapping(path = "/eliminar-amigo")
+    public ModelAndView eliminarAmigo(@RequestParam("idAmigo") Long idAmigo, @RequestParam("idUsuario") Long idUsuario,
+                                      RedirectAttributes redirectAttributes) {
         ModelMap model = new ModelMap();
-        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
+        Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
         Usuario amigo = servicioUsuario.buscarPorId(idAmigo);
         try {
-            servicioAmistad.eliminarAmigo(usuarioSesion, amigo);
-            return new ModelAndView("redirect:/amigos");
+            servicioAmistad.eliminarAmigo(usuario, amigo);
+            return new ModelAndView("redirect:/amigos?idUsuario=" + idUsuario);
         } catch (AmistadesException e) {
             model.put("error", e.getMessage());
-            return new ModelAndView("amigos", model);
+            return new ModelAndView("redirect:/amigos?idUsuario=" + usuario.getId());
         }
     }
 }

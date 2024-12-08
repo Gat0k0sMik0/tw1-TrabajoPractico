@@ -81,7 +81,8 @@
                             <h2 class="profile-user-handle" th:text="${amigo.nombreUsuario}"></h2>
                             <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <button class="btn">Enviar mensaje</button>
+                                <a th:href="@{/chat(idUser1=${usuarioActual.id}, idUser2=${amigo.id})}" class="btn">Enviar mensaje</a>
+                                <a  th:href="@{/eliminar-amigo(idAmigo=${amigo.id}, idUsuario=${usuarioActual.id})}" class="btn">Eliminar amigo</a>
                             </div>
                         </div>
                     </div>
