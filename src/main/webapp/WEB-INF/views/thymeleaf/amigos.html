@@ -62,12 +62,12 @@
         <div class="tus-amigos">
             <section class="friends-slider">
                 <h2>Tus amigos</h2>
-                <div class="sin-amigos">
-                    <h1 th:text="${error}"></h1>
+                <div th:if="${amigos == null}" class="sin-amigos">
+                    <h1>No tienes amigos, ¡Revisa tus recomendados :D!</h1>
                 </div>
                 <div class="slider-container" th:if="${amigos} != null">
                     <!-- Flecha izquierda -->
-                    <button class="slider-arrow left" onclick="moveSlider('recomendados-slider', 1)">
+                    <button th:if="${amigos.size()} >= 5" class="slider-arrow left" onclick="moveSlider('amigos-slider', 1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -79,13 +79,14 @@
                                 <img th:src="@{${amigo.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
                             </div>
                             <h2 class="profile-user-handle" th:text="${amigo.nombreUsuario}"></h2>
-                            <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;}'}"></small>                                <div class="profile-actions">
-                            <button class="btn">Enviar mensaje</button>
-                        </div>
+                            <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <div class="profile-actions">
+                                <button class="btn">Enviar mensaje</button>
+                            </div>
                         </div>
                     </div>
                     <!-- Flecha derecha -->
-                    <button class="slider-arrow right" onclick="moveSlider('recomendados-slider', -1)">
+                    <button th:if="${amigos.size()} >= 5" class="slider-arrow right" onclick="moveSlider('amigos-slider', -1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -98,9 +99,12 @@
         <div class="sugerencias">
             <section class="friends-slider">
                 <h2>Recomendados para ti</h2>
+                <div th:if="${amigosSugeridos.size()} <= 0" class="sin-amigos">
+                    <h1>No tienes sugerencias por ahora, ¡Revisa tus solicitudes :D!</h1>
+                </div>
                 <div class="slider-container">
                     <!-- Flecha izquierda -->
-                    <button class="slider-arrow left" onclick="moveSlider('recomendados-slider', 1)">
+                    <button th:if="${amigosSugeridos.size()} >= 5" class="slider-arrow left" onclick="moveSlider('recomendados-slider', 1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -119,7 +123,7 @@
                         </div>
                     </div>
                     <!-- Flecha derecha -->
-                    <button class="slider-arrow right" onclick="moveSlider('recomendados-slider', -1)">
+                    <button th:if="${amigosSugeridos.size()} >= 5" class="slider-arrow right" onclick="moveSlider('recomendados-slider', -1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -148,7 +152,7 @@
                             <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
                             <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <button th:href="@/{}" class="btn">Agregar amigo</button>
+                                <button class="btn">Agregar amigo</button>
                             </div>
                         </div>
                     </div>
@@ -265,14 +269,16 @@
 </footer>
 <script>
     /* MOVER SLIDER */
+    // Función para mostrar u ocultar las flechas dependiendo de la cantidad de elementos en el slider
     function toggleSliderButtons(sliderId) {
         var slider = document.getElementById(sliderId);
         var totalItems = slider.children.length;
 
-        // Solo mostramos los botones si hay más de 5 elementos
+        // Seleccionamos las flechas
         var leftButton = document.querySelector(`#${sliderId} .slider-arrow.left`);
         var rightButton = document.querySelector(`#${sliderId} .slider-arrow.right`);
 
+        // Si hay más de 5 elementos, mostramos las flechas; si no, las ocultamos
         if (totalItems > 5) {
             leftButton.style.display = 'block';
             rightButton.style.display = 'block';
@@ -282,6 +288,12 @@
         }
     }
 
+    // Llamar a la función de mostrar/ocultar flechas cuando se carga la página
+    window.onload = function() {
+        toggleSliderButtons('amigos-slider');  // Cambia 'amigos-slider' por el id de tu slider
+    };
+
+    // Función para mover el slider
     function moveSlider(sliderId, direction) {
         var slider = document.getElementById(sliderId);
         var totalItems = slider.children.length;
@@ -297,13 +309,16 @@
         }
 
         // Límite derecho: asegurarse de que el slider solo se mueva hasta el último elemento
-        var maxOffset = -(totalItems - 5) * itemWidth;
+        var maxOffset = -(totalItems - 4) * itemWidth;
         if (newTransform < maxOffset) {
             newTransform = maxOffset;
         }
 
         // Aplicamos el nuevo desplazamiento
         slider.style.transform = `translateX(${newTransform}px)`;
+
+        // Vuelve a verificar si se deben mostrar las flechas después de mover el slider
+        toggleSliderButtons(sliderId);
     }
 </script>
 </body>

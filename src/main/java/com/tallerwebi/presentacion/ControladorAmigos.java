@@ -28,20 +28,14 @@ public class ControladorAmigos {
     }
 
     @RequestMapping("/amigos")
-    public ModelAndView irAmigos(@RequestParam("idUsuario") Long idUsuario) throws AmistadesException {
+    public ModelAndView irAmigos(@ModelAttribute("idUsuario") Long idUsuario) throws AmistadesException {
         ModelMap model = new ModelMap();
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
         List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioActual.getId());
         List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioActual.getId());
 
-        model.put("amigosSugeridos", filtrados);  // Se pasa la lista correctamente al modelo
-
-        if (amigosDelUsuario.isEmpty()) {
-            model.put("error", "No tienes amigos, ¡Revisa tus recomendados :D!");
-        } else {
-            model.put("amigos", amigosDelUsuario);
-        }
-
+        model.put("amigosSugeridos", filtrados);
+        model.put("amigos", amigosDelUsuario);
         model.put("usuarioActual", usuarioActual);
 
         return new ModelAndView("amigos", model);
@@ -65,15 +59,14 @@ public class ControladorAmigos {
     @RequestMapping(path = "/agregar-amigo")
     public ModelAndView agregarAmigo(@RequestParam("idAmigo") Long idAmigo, @RequestParam("idUsuario") Long idUsuario,
                                      RedirectAttributes redirectAttributes) throws AmistadesException {
-        ModelMap model = new ModelMap();
         Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
         Usuario amigo = servicioUsuario.buscarPorId(idAmigo);
         try {
             servicioAmistad.agregarAmigo(usuario, amigo);
-            return new ModelAndView("redirect:/amigos?idUsuario" + idUsuario);
+            return new ModelAndView("redirect:/amigos?idUsuario=" + idUsuario);
         } catch (AmistadesException e) {
            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return new ModelAndView("redirect:/amigos?idUsuario" + idUsuario);
+            return new ModelAndView("redirect:/amigos?idUsuario=" + usuario.getId());
         }
     }
 

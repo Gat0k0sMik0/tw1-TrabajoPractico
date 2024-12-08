@@ -198,13 +198,16 @@ main {
 }
 
 .slider-container {
+    position: relative;  /* Esto asegura que las flechas se posicionen en relación a este contenedor */
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     position: relative;
-    width: 80%; /* Ajustado a 80% */
+    /* width: 80%; */
     overflow: hidden;
     padding: 10px;
+    align-content: stretch;
+    flex-direction: row;
 }
 
 .slider {

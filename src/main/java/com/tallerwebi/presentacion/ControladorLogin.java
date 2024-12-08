@@ -45,13 +45,10 @@ public class ControladorLogin {
 
     @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
     public ModelAndView validarLogin(
-            @ModelAttribute("datosLogin") DatosLogin datosLogin,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+            @ModelAttribute("datosLogin") DatosLogin datosLogin) {
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
-            redirectAttributes.addFlashAttribute("idUsuario", usuarioBuscado.getId());
-            return new ModelAndView("redirect:/home");
+            return new ModelAndView("redirect:/home?idUsuario=" + usuarioBuscado.getId());
         } else {
             ModelMap model = new ModelMap();
             model.put("error", "El usuario o clave son incorrectos");
