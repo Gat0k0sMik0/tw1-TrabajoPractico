@@ -3,137 +3,308 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!-- Estilos generales -->
-    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!-- FOOTER -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <!-- FONT FAMILIES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
     <!--  Estilo Custom  -->
     <link rel="stylesheet" th:href="@{/css/amigos.css}"/>
     <title>Amigos</title>
 </head>
 <body>
 <!-- HEADER -->
-<header class="col-12 py-3 d-flex align-items-center">
-    <nav class="col-10 mx-auto d-flex flex-wrap justify-content-between align-items-center text-white">
-        <a class="text-decoration-none fs-4 text-white" th:href="@{/home}">
-            Home
-        </a>
-        <div class="d-flex gap-2 align-items-center">
-            <a class="text-decoration-none text-white" th:href="@{/perfil}">
-                <img id="usuario" alt="Usuario" th:src="@{/img/usuario.png}"/>
+<div id="blurry-filter"></div>
+<header>
+    <div>
+        <article id="title">
+            <a th:href="@{/home(idUsuario=${usuarioActual.id})}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                    <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle> <!-- Círculo de fondo en gris -->
+                    <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <!-- Flecha en blanco -->
+                </svg>
             </a>
-            <a href="" class="text-decoration-none text-white fs-5">
-                <img id="configuracion" alt="Configuracion" th:src="@{/img/configuracion.png}"/>
+        </article>
+
+        <article id="center">
+            <h1 id="titulo-principal">AMIGOS</h1>
+        </article>
+
+        <article id="reference">
+            <a class="text-decoration-none text-white" target="_blank" rel="noopener" th:href="@{/perfil(id=${usuarioActual.id})}">
+                <!-- Si el usuario no tiene foto, mostrar un ícono predeterminado -->
+                <div th:if="${usuarioActual.urlFotoPerfil == null || usuarioActual.urlFotoPerfil == '/img/fotos-perfil/default.png'}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"></path>
+                    </svg>
+                </div>
+
+                <!-- Si el usuario tiene foto de perfil, mostrar la imagen -->
+                <div th:if="${usuarioActual.urlFotoPerfil != null && usuarioActual.urlFotoPerfil != '/img/fotos-perfil/default.png'}">
+                    <img class="foto-perfil" th:src="@{${usuarioActual.urlFotoPerfil}}" alt="Foto de perfil">
+                </div>
             </a>
-        </div>
-    </nav>
+            <a href="" class="text-decoration-none text-white fs-5" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">
+                    <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1a8.12 8.12 0 0 0-1.69-.98l-.38-2.65A.485.485 0 0 0 14 2h-4c-.25 0-.45.18-.49.42l-.38 2.65c-.62.23-1.2.54-1.69.98l-2.49-1a.494.494 0 0 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98L2.62 14.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.49.44 1.07.75 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.62-.23 1.2-.54 1.69-.98l2.49 1c.23.09.5 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+                </svg>
+            </a>
+        </article>
+    </div>
 </header>
-<main class="d-flex mx-auto justify-content-center gap-2">
-    <!--  TABLA AMIGOS  -->
-    <div class="d-flex flex-column align-items-center tablaAmigos" th:if="${amigos != null}">
-        <p class="text-white fs-5">Tus amigos</p>
-        <table class="table table-striped table-bordered bg-white" style="height: fit-content;">
-            <thead class="table-dark">
-            <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col" class="text-center">Acción</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="amigo : ${amigos}">
-                <td th:text="${amigo.id} + ' - ' + ${amigo.nombreUsuario}"></td>
-                <td class="text-center">
-                    <div class="d-flex gap-1">
-                        <a th:href="@{/chat(idUser1=${usuarioActual.id}, idUser2=${amigo.id})}"
-                           class="btn btn-success btn-sm">
-                            Mensaje
-                        </a>
-                        <form th:action="@{/eliminar-amigo}" method="post">
-                            <input type="hidden" name="idAmigo" th:value="${amigo.id}">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                        </form>
+
+<div class="tableta">
+    <main class="info-container">
+        <!-- CARTAS DE PERFIL -->
+        <div class="tus-amigos">
+            <section class="friends-slider">
+                <h2>Tus amigos</h2>
+                <div class="sin-amigos">
+                    <h1 th:text="${error}"></h1>
+                </div>
+                <div class="slider-container" th:if="${amigos} != null">
+                    <!-- Flecha izquierda -->
+                    <button class="slider-arrow left" onclick="moveSlider('recomendados-slider', 1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <div class="slider" id="amigos-slider">
+                        <div th:if="${amigos != null}" th:each="amigo : ${amigos}" class="profile">
+                            <div class="profile-image">
+                                <img th:src="@{${amigo.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
+                            </div>
+                            <h2 class="profile-user-handle" th:text="${amigo.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;}'}"></small>                                <div class="profile-actions">
+                            <button class="btn">Enviar mensaje</button>
+                        </div>
+                        </div>
                     </div>
-                    <!--                    <form th:action="@{/agregar-amigo}" method="post">-->
-                    <!--                        <input type="hidden" name="idAmigo" th:value="${amigo.id}">-->
-                    <!--                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>-->
-                    <!--                    </form>-->
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <!--  TABLA RECOMENDADOS  -->
-    <div class="d-flex flex-column align-items-center tablaAmigos" th:if="${#lists.isEmpty(amigosSugeridos) == false}">
-        <p class="text-white fs-5" th:if="${error != null}">No tienes amigos, te recomendamos estos.</p>
-        <p class="text-white fs-5" th:unless="${error != null}">Recomendados</p>
-        <table class="table table-striped table-bordered bg-white" style="height: fit-content;">
-            <thead class="table-dark">
-            <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col" class="text-center">
-                    Acción
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="amigo : ${amigosSugeridos}">
-                <td th:text="${amigo.id} + ' - ' + ${amigo.nombreUsuario}"></td>
-                <td class="text-center">
-                    <form th:action="@{/agregar-amigo}" method="post">
-                        <input type="hidden" name="idAmigo" th:value="${amigo.id}">
-                        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                    <!-- Flecha derecha -->
+                    <button class="slider-arrow right" onclick="moveSlider('recomendados-slider', -1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+        </div>
 
-    <form th:action="@{/amistad/enviar}" method="post">
-        <input type="hidden" name="idSolicitado" th:value="${usuario.id}">
-        <button type="submit" class="btn btn-primary">Enviar solicitud</button>
-    </form>
+        <div class="sugerencias">
+            <section class="friends-slider">
+                <h2>Recomendados para ti</h2>
+                <div class="slider-container">
+                    <!-- Flecha izquierda -->
+                    <button class="slider-arrow left" onclick="moveSlider('recomendados-slider', 1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <div class="slider" id="recomendados-slider">
+                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                            <div class="profile-image">
+                                <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
+                            </div>
+                            <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <div class="profile-actions">
+                                <button class="btn">Agregar amigo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Flecha derecha -->
+                    <button class="slider-arrow right" onclick="moveSlider('recomendados-slider', -1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+        </div>
 
-    <h2>Solicitudes Pendientes</h2>
-    <table>
-        <tr>
-            <th>Usuario</th>
-            <th>Acciones</th>
-        </tr>
-        <tr th:each="solicitud : ${solicitudesPendientes}">
-            <td th:text="${solicitud.solicitante.nombre}"></td>
-            <td>
-                <form th:action="@{/amistad/aceptar}" method="post" style="display: inline;">
-                    <input type="hidden" name="idSolicitud" th:value="${solicitud.id}">
-                    <button type="submit" class="btn btn-success">Aceptar</button>
-                </form>
-                <form th:action="@{/amistad/rechazar}" method="post" style="display: inline;">
-                    <input type="hidden" name="idSolicitud" th:value="${solicitud.id}">
-                    <button type="submit" class="btn btn-danger">Rechazar</button>
-                </form>
-            </td>
-        </tr>
-    </table>
-</main>
-<footer class="col-12 py-4 d-flex flex-column gap-2">
-    <div class="footerWrapper col-10 mx-auto d-flex align-items-center text-white">
-        <div class="col-4 d-flex flex-wrap justify-content-center gap-4">
-            <div><img th:src="@{/img/logos/javalogo.webp}" class="footerImage"/></div>
-            <div><img th:src="@{/img/logos/springlogo.svg}" class="footerImage"/></div>
+        <div class="sugerencias">
+            <section class="friends-slider">
+                <h2>Solicitudes recibidas</h2>
+                <div class="slider-container">
+                    <!-- Flecha izquierda -->
+                    <button class="slider-arrow left" onclick="moveSlider('recibidas-slider', 1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <div class="slider" id="recibidas-slider">
+                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                            <div class="profile-image">
+                                <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
+                            </div>
+                            <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <div class="profile-actions">
+                                <button class="btn">Agregar amigo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Flecha derecha -->
+                    <button class="slider-arrow right" onclick="moveSlider('recibidas-slider', -1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
         </div>
-        <div class="col-4 d-flex flex-column align-items-center gap-2 flex-wrap fs-5 separationBar">
-            <p>Victoria Croce</p>
-            <p>Lucas Gavagnin</p>
-            <p>Gonzalo Ramos</p>
-            <p>Franco Vargas</p>
-            <p>Martin Zaccardo</p>
+
+        <div class="sugerencias">
+            <section class="friends-slider">
+                <h2>Solicitudes pendientes</h2>
+                <div class="slider-container">
+                    <!-- Flecha izquierda -->
+                    <button class="slider-arrow left" onclick="moveSlider('enviadas-slider', 1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <div class="slider" id="enviadas-slider">
+                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                            <div class="profile-image">
+                                <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
+                            </div>
+                            <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <div class="profile-actions">
+                                <button class="btn">Agregar amigo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Flecha derecha -->
+                    <button class="slider-arrow right" onclick="moveSlider('enviadas-slider', -1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
         </div>
-        <div class="col-4 d-flex flex-wrap justify-content-center">
-            <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="footerImage"/></div>
+    </main>
+</div>
+
+
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+<footer class="relative bg-blueGray-200 pt-8 pb-6">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap text-left lg:text-left">
+            <div class="w-full lg:w-6/12 px-4">
+                <h4 class="text-3xl font-semibold text-blueGray-700">¡Sigamos en contacto!</h4>
+                <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
+                    las mejores partidas comienzan con una buena estrategia y terminan con grandes recuerdos.
+                </h5>
+                <div class="mt-6 lg:mb-0 mb-6 social-buttons">
+                    <button class="social-button twitter" type="button">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="social-button facebook" type="button">
+                        <i class="fab fa-facebook-square"></i>
+                    </button>
+                    <button class="social-button dribbble" type="button">
+                        <i class="fab fa-dribbble"></i>
+                    </button>
+                    <button class="social-button github" type="button">
+                        <i class="fab fa-github"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+                <div class="flex flex-wrap items-top mb-6">
+                    <div class="w-full lg:w-4/12 px-4 ml-auto">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Miembros</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Ramos Gonzalo</a></li>
+                            <li><a class="link" href="">Croce Victoria</a></li>
+                            <li><a class="link" href="">Zaccardo Martín</a></li>
+                            <li><a class="link" href="">Gavagnin Lucas</a></li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-4/12 px-4">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Enlaces</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Preguntas Frecuentes</a></li>
+                            <li><a class="link" href="">Terminos & Condiciones</a></li>
+                            <li><a class="link" href="">Política de Privacidad</a></li>
+                            <li><a class="link" href="">Contactanos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-blueGray-300">
+        <div class="flex flex-wrap items-center md:justify-between justify-center">
+            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-blueGray-500 font-semibold py-1">
+                    Copyright © <span id="get-current-year">2024</span>
+                    <a href="" class="text-blueGray-500 hover:text-gray-800" target="_blank">
+                        Trucoteca.
+                    </a>
+                    <a href="" class="text-blueGray-500 hover:text-blueGray-800">Los Maestros Del Mazo</a>.
+                </div>
+            </div>
         </div>
     </div>
-    <hr class="col-10 mx-auto text-white"/>
-    <p class="py-1 text-center fs-5 text-white">&copy; 2024 UNLaM. Todos los derechos reservados.</p>
 </footer>
+<script>
+    /* MOVER SLIDER */
+    function toggleSliderButtons(sliderId) {
+        var slider = document.getElementById(sliderId);
+        var totalItems = slider.children.length;
+
+        // Solo mostramos los botones si hay más de 5 elementos
+        var leftButton = document.querySelector(`#${sliderId} .slider-arrow.left`);
+        var rightButton = document.querySelector(`#${sliderId} .slider-arrow.right`);
+
+        if (totalItems > 5) {
+            leftButton.style.display = 'block';
+            rightButton.style.display = 'block';
+        } else {
+            leftButton.style.display = 'none';
+            rightButton.style.display = 'none';
+        }
+    }
+
+    function moveSlider(sliderId, direction) {
+        var slider = document.getElementById(sliderId);
+        var totalItems = slider.children.length;
+        var itemWidth = slider.children[0].offsetWidth + 20; // Incluye el margen
+        var currentTransform = parseInt(window.getComputedStyle(slider).transform.split(',')[4]) || 0;
+
+        // Calculamos el nuevo desplazamiento
+        var newTransform = currentTransform + direction * itemWidth;
+
+        // Límite izquierdo: no permitir mover a la izquierda más allá del primer elemento
+        if (newTransform > 0) {
+            newTransform = 0;
+        }
+
+        // Límite derecho: asegurarse de que el slider solo se mueva hasta el último elemento
+        var maxOffset = -(totalItems - 5) * itemWidth;
+        if (newTransform < maxOffset) {
+            newTransform = maxOffset;
+        }
+
+        // Aplicamos el nuevo desplazamiento
+        slider.style.transform = `translateX(${newTransform}px)`;
+    }
+</script>
 </body>
 </html>

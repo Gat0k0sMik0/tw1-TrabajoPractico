@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
     <!--  Estilo Custom  -->
     <link rel="stylesheet" th:href="@{/css/menu-juego.css}"/>
-    <title>Game Interface</title>
+    <title>Menú Truco</title>
 </head>
 <body>
 <!-- HEADER -->
@@ -20,7 +20,7 @@
 <header>
     <div>
         <article id="title">
-            <a th:href="@{/home}">
+            <a th:href="@{/home(idUsuario=${usuario.id})}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                     <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle> <!-- Círculo de fondo en gris -->
                     <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <!-- Flecha en blanco -->

@@ -196,7 +196,7 @@ public class ControladorTruco {
 
     @GetMapping("/comenzar-truco")
     public ModelAndView comenzarTruco(@RequestParam("idPartida") Long idPartida,
-                                      @RequestParam("idUsuario") Long idUsuario
+                                      @ModelAttribute("idUsuario") Long idUsuario
             ) {
         // Obtén la partida por su ID
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);

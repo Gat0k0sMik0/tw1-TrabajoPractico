@@ -50,12 +50,7 @@ public class ControladorLogin {
             RedirectAttributes redirectAttributes) {
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
-            request.getSession().setAttribute("usuarioActivo", usuarioBuscado);
-            redirectAttributes.addFlashAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
-            redirectAttributes.addFlashAttribute("email", usuarioBuscado.getEmail());
-            request.getSession().setAttribute("email", usuarioBuscado.getEmail());
-            request.getSession().setAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
-            request.getSession().setAttribute("usuarioActual", usuarioBuscado);
+            redirectAttributes.addFlashAttribute("idUsuario", usuarioBuscado.getId());
             return new ModelAndView("redirect:/home");
         } else {
             ModelMap model = new ModelMap();

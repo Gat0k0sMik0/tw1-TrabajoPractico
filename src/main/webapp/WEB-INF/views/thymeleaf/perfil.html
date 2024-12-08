@@ -3,18 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!-- Estilo custom -->
-    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
-    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+    <!-- FOOTER -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <!-- FONT FAMILIES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
+    <!-- Estilo custom -->
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
     <title>Editar perfil</title>
 </head>
-<body><!-- HEADER -->
+<body>
+<!-- HEADER -->
 <div id="blurry-filter"></div>
 <header>
     <div>
@@ -85,7 +86,7 @@
                             <p th:text="${estadistica.calcularNivel()}">Nivel</p>
                             <div class="d-flex flex-wrap gap-2">
                                 <p th:text="${'Jugadas: ' + estadistica.getJugadas()}">Partidas: 777</p>
-                                <p th:text="${'Ganadas: ' + estadistica.getVictorias()}">Ganadas: -777</p>
+                                <p th:text="${'Ganadas: ' + estadistica.getGanadas()()}">Ganadas: -777</p>
                             </div>
                         </div>
                     </div>

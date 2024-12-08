@@ -54,7 +54,7 @@
 
 <div class="tableta">
     <span class="cursive">Usuarios sugeridos</span>
-    <a th:href="@{/amigos}">
+    <a th:href="@{/amigos(idUsuario=${usuario.id})}">
         <div class="marquee">
             <ul class="marquee-content" >
                 <li th:each="usuario : ${usuariosSugeridos}">

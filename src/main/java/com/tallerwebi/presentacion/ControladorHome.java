@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,15 +29,11 @@ public class ControladorHome {
 
     @RequestMapping("/home")
     public ModelAndView irAlHome(
-            HttpSession session) {
+            @ModelAttribute("idUsuario") String idUsuario) {
         ModelMap model = new ModelMap();
 
-        // Recuperar el email desde la sesión
-        String email = (String) session.getAttribute("email");
-        if (email == null) return new ModelAndView("redirect:/login");
-
         // Buscar el usuario en base al email
-        Usuario usuario = servicioUsuario.buscar(email);
+        Usuario usuario = servicioUsuario.buscarPorId(Long.valueOf(idUsuario));
         if (usuario == null) return new ModelAndView("redirect:/login");
 
         // Obtén las recomendaciones de amigos
@@ -46,7 +43,7 @@ public class ControladorHome {
         model.put("usuariosSugeridos", usuariosSugeridos);
         model.put("email", usuario.getEmail());
         model.put("usuario", usuario);
-        model.put("IdUsuario", usuario.getId());
+        model.put("idUsuario", usuario.getId());
 
         return new ModelAndView("home", model);  // Retorna la vista home.html
     }

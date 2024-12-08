@@ -27,21 +27,21 @@ public class ControladorAmigos {
     }
 
     @RequestMapping("/amigos")
-    public ModelAndView irAChatAmigos(HttpServletRequest request) throws AmistadesException {
+    public ModelAndView irAChatAmigos(@RequestParam("idUsuario") Long idUsuario) throws AmistadesException {
         ModelMap model = new ModelMap();
-        Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuarioActivo");
-        List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioSesion.getId());
-        List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioSesion.getId());
+        Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
+        List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioActual.getId());
+        List<Usuario> filtrados = servicioAmistad.obtenerRecomendacionesQueNoSeanSusAmigos(usuarioActual.getId());
 
         model.put("amigosSugeridos", filtrados);  // Se pasa la lista correctamente al modelo
 
         if (amigosDelUsuario.isEmpty()) {
-            model.put("error", "No tienes amigos, ¡empieza a agregar algunos!");
+            model.put("error", "No tienes amigos, ¡Revisa tus recomendados :D!");
         } else {
             model.put("amigos", amigosDelUsuario);
         }
 
-        model.put("usuarioActual", usuarioSesion);
+        model.put("usuarioActual", usuarioActual);
 
         return new ModelAndView("amigos", model);
     }

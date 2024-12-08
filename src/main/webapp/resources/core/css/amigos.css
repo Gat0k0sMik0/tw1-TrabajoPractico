@@ -1,82 +1,352 @@
-#usuario{
-    width: 60px;
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
+
+/* Estilo para el título */
+h1, h2, h3, label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
 }
 
-#configuracion{
-    width: 40px;
+p, span {
+    font-family: "Parkinsans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
 }
 
-/*CONTENIDO*/
-.container {
+/* HEADER BORROSO */
+#blurry-filter {
+    width: 100%;
+    height: 9rem;
+    mask: linear-gradient(black 7rem, transparent);
+    -webkit-mask: linear-gradient(black 7rem, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    pointer-events: none;
+    touch-action: none;
+    background: #EEE;
+}
+
+/* ESTILOS GENERALES */
+body {
+    margin: 0;
+    padding: 0;
+    background: #EEE;
+    /*background-image: url('https://png.pngtree.com/background/20230610/original/pngtree-city-illustration-background-vector-picture-image_3046717.jpg');
+    background-size: cover;*/
+    font-family: "Open Sans", sans-serif;
+    box-sizing: border-box;
+    cursor: default;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* HEADER */
+header {
+    width: 100%;
+    height: 8rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+
+}
+
+header > div {
+    width: 100%;
     max-width: 800px;
-    min-height: 500px;
-    margin: 30px auto;
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+#titulo-principal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Kumar One Outline", system-ui;
+    font-size: 50px;
+    text-align: center; /* Asegura que el texto esté centrado dentro de su contenedor */
+    flex-grow: 1; /* Hace que el título ocupe el espacio disponible */
+    margin: 0;
 }
 
-.tablaAmigos {
-    width: fit-content;
+/* BOTON HOME */
+#back {
+    width: 100%;
 }
 
-
-.friends-list {
-    float: left;
-    width: 40%;
-    min-height: 500px;
+#back .parent {
+    line-height: 1em;
+    color: #666;
 }
 
-.friends-list ul {
-    list-style: none;
-}
-
-.friends-list li {
-    background-color: #f0f0f0;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+.circle-arrow {
+    transition: all 0.3s ease;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
 }
 
-.friends-list li:hover {
-    background-color: #e0e0e0;
+.circle-arrow circle {
+    transition: all 0.3s ease;
 }
 
-.friend-details {
-    float: right;
-    width: 55%;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+.circle-arrow path {
+    transition: all 0.3s ease;
 }
 
-.friend-details h2 {
-    margin-bottom: 15px;
-    color: #555;
+/* Estado por defecto */
+.circle-arrow circle {
+    fill: transparent;
+    stroke: #333;
 }
 
-#details-content {
+.circle-arrow path {
+    stroke: #333;  /* La flecha es blanca */
+}
+
+/* Hover: colores invertidos */
+.circle-arrow:hover circle, .circle-arrow:hover path {
+    fill: #333;
+    stroke: white; /* El borde del círculo se vuelve gris */
+}
+.circle-arrow:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);  /* Añade una sombra al hacer hover */
+}
+
+.foto-perfil {
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+article svg {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+}
+
+#reference {
+    display: flex;
+}
+
+#reference > a {
+    color: #444;
+}
+
+#reference > a + a {
+    margin-left: 1rem;
+}
+
+/* CONTENIDO */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tableta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%; /* Ajustado a 80% */
+    margin: 0 auto; /* Centrado horizontalmente */
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.info-container {
+    width: 100%;
+    max-width: 100%; /* Asegura que no se expanda más allá del 100% */
+    text-align: center; /* Centra el contenido dentro de cada sección */
+}
+
+.mis-amigos, .sugerencias {
+    margin-bottom: 2rem; /* Espaciado entre secciones */
+}
+
+.friends-slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 80%; /* Ajustado a 80% */
+    overflow: hidden;
+    padding: 10px;
+}
+
+.slider {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    transition: transform 0.3s ease;
+    width: 75%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .tableta {
+        width: 90%; /* 90% en pantallas más pequeñas */
+    }
+
+    .slider-container {
+        width: 90%; /* Asegura que el slider se ajuste en pantallas pequeñas */
+    }
+}
+
+.sin-amigos h1 {
+    color: #666;
+    font-style: italic;
+}
+
+.friends-container {
+    width: 70%;
+}
+
+/* ESTILOS DE CARTAS DE PERFIL */
+.profile {
+    min-width: 200px;
+    max-width: 200px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.profile:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+.profile-image {
+    border-radius: 100%; /* Hace que el contenedor sea completamente circular */
+    overflow: hidden; /* Asegura que la imagen no se desborde */
+    width: 150px;
+    height: 150px;
+    position: relative;
+
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.profile-username {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+}
+
+.profile-user-handle {
     color: #333;
+}
+
+.descripcion {
+    color: #7d8396;
+    font-style: italic;
+}
+
+.profile-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > * {
+        margin: 0 0.25rem;
+    }
+}
+
+.btn {
+    background-color: #ddd;
+    color: #333;
+    padding: 10px 20px;
     font-size: 16px;
+    font-weight: bold;
+    border-radius: 40px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    text-decoration: none;
 }
 
-#button-chat{
-    width: 200px;
-    height: 30px;
-    border-radius: 5px;
+.btn:hover {
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: white;
 }
 
-#button-chat:hover {
-    background-color: #e0e0e0;
+/* Botones carousel */
+.slider-arrow svg {
+    display: block;
+    margin: 0 auto;
+    width: 50px;  /* Ajusta según lo necesites */
+    height: 50px; /* Ajusta según lo necesites */
+    z-index: 2;
 }
 
+.slider-arrow {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    color: #333;
+    padding: 0 1rem;
+    transition: color 0.3s;
+}
+
+.left {
+    left: 10px;
+}
+
+.right {
+    right: 10px;
+}
+
+div h1, div h2 {
+    margin: 15px;
+}
