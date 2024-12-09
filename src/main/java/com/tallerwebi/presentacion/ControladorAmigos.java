@@ -35,6 +35,7 @@ public class ControladorAmigos {
     public ModelAndView irAmigos(@ModelAttribute("idUsuario") Long idUsuario) throws AmistadesException {
         ModelMap model = new ModelMap();
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
+
         // Obtenemos a nuestros amigos
         List<Usuario> amigosDelUsuario = servicioAmistad.getAmigosDeUnUsuarioPorId(usuarioActual.getId());
         // Filtramos a los usuarios, sacamos a los amigos y a los que enviamos o nos enviaron solicitud

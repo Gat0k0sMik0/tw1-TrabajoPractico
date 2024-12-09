@@ -173,4 +173,30 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         return partidasDelJugador;
     }
+
+    @Override
+    public Partida obtenerUltimaPartidaDeUnJugador(Usuario usuario) {
+        // Obtener todas las partidas desde el repositorio
+        List<Partida> partidas = repositorioTruco.getTodasLasPartidas();
+
+        // Variable para almacenar la última partida encontrada
+        Partida ultimaPartida = null;
+
+        for (Partida partida : partidas) {
+            Jugador jugador1 = partida.getJ1();
+            Jugador jugador2 = partida.getJ2();
+
+            // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
+            if (((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
+                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) && (partida.isPartidaFinalizada())) {
+
+                // Si es la primera partida encontrada o tiene un ID más alto que la actual
+                if (ultimaPartida == null || partida.getId() > ultimaPartida.getId()) {
+                    ultimaPartida = partida;
+                }
+            }
+        }
+
+        return ultimaPartida;
+    }
 }

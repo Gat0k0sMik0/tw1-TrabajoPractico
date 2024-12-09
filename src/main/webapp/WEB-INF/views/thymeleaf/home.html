@@ -25,11 +25,11 @@
         </article>
 
         <article id="center">
-            <h1 id="titulo-principal">Trucoteca</h1>
+            <h1 id="titulo-principal">TRUCOTECA</h1>
         </article>
 
         <article id="reference">
-            <a class="text-decoration-none text-white" target="_blank" rel="noopener" th:href="@{/perfil(id=${usuario.id})}">
+            <a class="text-decoration-none text-white" th:href="@{/perfil(id=${usuario.id})}">
                 <!-- Si el usuario no tiene foto, mostrar un ícono predeterminado -->
                 <div th:if="${usuario.urlFotoPerfil == null || usuario.urlFotoPerfil == '/img/fotos-perfil/default.png'}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">

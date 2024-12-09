@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400;500&display=swap');
 
@@ -64,7 +63,6 @@ header {
     display: flex;
     justify-content: center; /* Centra el contenido horizontalmente */
     align-items: center; /* Centra el contenido verticalmente */
-    bottom: 50px;
 
 }
 
@@ -139,132 +137,297 @@ header > div {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);  /* Añade una sombra al hacer hover */
 }
 
-/* Estilo general para el contenedor principal */
+/* CONTENIDO */
 main {
     padding-top: 80px; /* Espacio suficiente para no solapar el header fijo */
 }
 
-/* Estilo para la sección de datos del usuario */
-.userData {
-    align-content: center;
-    color: black; /* Texto en color negro */
-    margin-top: 20px;
+/* DIVISION DE CUADRADOS GRID */
+.perfil-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: repeat(3, auto);
+    gap: 10px; /* Espaciado entre los elementos */
+    width: 100%;
+    max-width: 800px;
+    margin: 0 0 60px; /* Centrar horizontalmente */
 }
 
-/* Estilo del nombre y correo del usuario */
-.userData p {
-    font-size: 18px;
-    font-weight: 600;
-    color: black;
-    margin: 5px 0;
-}
-
-/* Contenedor principal de estadísticas */
-.gameWrapper {
-    margin-top: 20px;
-}
-
-/* Estilo general para cada bloque de estadísticas */
-.gameInfo {
+.perfil-rectangulo {
+    grid-row: span 2; /* Ocupa dos filas */
+    grid-column: 1; /* En la primera columna */
+    background-color: #DDEEFF; /* Color de fondo */
+    text-align: center;
     display: flex;
-    padding: 15px;
-    border: 1px solid #ccc; /* Borde gris suave */
-    margin-bottom: 10px;
-    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 2rem 2rem;
+
+    h1 {
+        margin: 15px;
+    }
 }
 
-/* Estilo para la primera columna (imagen del juego) */
-.gameFirstCol {
+.amigos-rectangulo {
+    min-height: 150px;
+    grid-row: 1; /* Primera fila */
+    grid-column: 2; /* Segunda columna */
+    background-color: #CCEEDD;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 2rem 2rem;
+
+    h1 {
+        margin: 15px;
+    }
+}
+
+.partida-rectangulo {
+    grid-row: 2; /* Segunda fila */
+    grid-column: 2; /* Segunda columna */
+    background-color: #FFDDCC;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 2rem 2rem;
+
+    h1 {
+        margin: 15px;
+    }
+}
+
+.estadisticas-rectangulo {
+    grid-row: 3; /* Tercera fila */
+    grid-column: span 2; /* Ocupa ambas columnas */
+    background-color: #DDCCFF;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 1rem 1rem;
+
+    h1 {
+        margin: 15px;
+    }
+}
+
+/* TARJETA DE PERFIL */
+.profile {
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 320px;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #EEE;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.profile-image {
+    border-radius: 100%; /* Hace que el contenedor sea completamente circular */
+    overflow: hidden; /* Asegura que la imagen no se desborde */
+    width: 150px;
+    height: 150px;
+    position: relative;
+
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.profile-actions {
+    margin-top: 10px;
+}
+
+.btn {
+    background-color: #fff;
+    color: #333;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 40px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    text-decoration: none;
+    margin: 2px;
+}
+
+.btn:hover {
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: white;
+}
+
+.profile-actions button.guardar:hover {
+    background: #38e338;
+}
+
+.profile-actions button.cancelar:hover {
+    background: #dc2121;
+}
+
+.hidden {
+    display: none;
+}
+
+.input, textarea {
+    border-radius: 40px; /* LO DEFINI EN CADA ELEMENTO DEL HTML */
+    border: none;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* AMIGOS */
+.sin-amigos h1 {
+    color: #666;
+    font-style: italic;
+}
+
+.listaDeAmigos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.listaDeAmigos div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.foto-perfil-grande {
     width: 80px;
     height: 80px;
-    background-color: #f0f0f0; /* Fondo gris claro */
     border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #333;
+}
+
+/* ULTIMA PARTIDA */
+.lista-partidas {
+    min-height: 212px;
+    width: 95%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.id-partida {
+    margin: 10px;
+}
+
+.participantes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.foto-perfil {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #333;
+}
+
+.datos-j {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-right: 15px;
+    width: 150px;
+    transition: background-color 0.3s ease;
+    border-radius: 100%;
+    overflow: hidden;
 }
 
-/* Estilo para la imagen dentro de la primera columna */
-.gameImage {
-    width: 60px;
-    height: 60px;
-    background-color: #d0d0d0; /* Fondo gris para la imagen */
-    border-radius: 50%;
+.datos-j.ganador:hover {
+    background-color: #d4f7d4; /* Fondo verde suave para el ganador */
+    transform: scale(1.05); /* Efecto de agrandamiento */
 }
 
-/* Estilo para la segunda columna (información del juego) */
-.gameSecondCol {
-    flex-grow: 1;
+.datos-j.perdedor:hover {
+    background-color: #f7d4d4; /* Fondo rojo suave para el perdedor */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+#derrota, #victoria {
     display: flex;
     flex-direction: column;
 }
 
-/* Estilo para los textos dentro de la segunda columna */
-.gameSecondCol p {
-    margin: 5px 0;
-    font-size: 16px;
-    color: black;
-}
-
-/* Estilo para las barras de progreso */
-.progress-bar {
-    background-color: #28a745; /* Verde para el progreso */
-    height: 20px;
-    border-radius: 10px;
-}
-
-/* Estilo para la barra de progreso que muestra el progreso del nivel */
-.progress {
-    margin-top: 10px;
-}
-
-/* Estilo para la parte de las jugadas y partidas */
-.gameSecondCol .d-flex {
-    margin-top: 10px;
-}
-
-/* Estilo para los contenedores de cada elemento en la barra de progreso */
-.gameSecondCol .col-12 {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-}
-
-/* Estilo de los botones u otros enlaces si se agregan */
-.btn-volver {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    margin-top: 20px;
-}
-
-.btn-volver:hover {
-    background-color: #0056b3;
-}
-
-
-/* Estilo para la imagen de perfil */
-.userImage {
-    width: 150px;  /* Tamaño de la imagen */
-    height: 150px;
-    background-color: #f0f0f0;  /* Fondo gris claro si no hay imagen */
-    border-radius: 50%;  /* Forma circular */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border: 4px solid #fff;
-    position: absolute;
-   left: 557px;
-    top: -130px;
-}
-
-/* Estilo para la imagen dentro del div.userImage */
-.userImage img {
-    width: 100%;
+/* ESTADISTICAS */
+.estadisticas-propias {
+    margin-top: 15px;
     height: 100%;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.mis-datos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+}
+
+#alt-text {
+    text-align: center;
+    justify-content: center;
+}
+
+.jugador .foto-perfil, .jugador .division,
+.mis-datos .foto-perfil, .mis-datos .division {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     object-fit: cover;
 }
