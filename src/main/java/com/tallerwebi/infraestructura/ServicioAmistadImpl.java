@@ -24,18 +24,18 @@ public class ServicioAmistadImpl implements ServicioAmistad {
 
     @Override
     public List<Usuario> getAmigosDeUnUsuarioPorId(Long id) {
-        List<Amistad> amistadesDelUsuario = repositorioAmistad.verAmigos(id);
-        if (amistadesDelUsuario.isEmpty()) {
-            return new ArrayList<>();
-        } else {
-            List<Usuario> amigosDelUsuario = new ArrayList<>();
-            for (Amistad amistadDelUsuario : amistadesDelUsuario) {
-                Usuario amigo = amistadDelUsuario.getAmigo();
-                amigosDelUsuario.add(amigo);
+        List<Amistad> todasLasAmistades = repositorioAmistad.obtenerTodasLasAmistades();
+        List<Usuario> amigosDelUsuario = new ArrayList<>();
+
+        for (Amistad amistad : todasLasAmistades) {
+            if (amistad.getUsuario().getId().equals(id)) {
+                amigosDelUsuario.add(amistad.getAmigo());
+            } else if (amistad.getAmigo().getId().equals(id)) {
+                amigosDelUsuario.add(amistad.getUsuario());
             }
-            return amigosDelUsuario;
         }
 
+        return amigosDelUsuario;
     }
 
 
@@ -46,7 +46,17 @@ public class ServicioAmistadImpl implements ServicioAmistad {
 
     @Override
     public void eliminarAmigo(Usuario usuario, Usuario amigo) throws AmistadesException {
-        repositorioAmistad.eliminarAmigo(usuario, amigo);
+        List<Amistad> todasLasAmistades = repositorioAmistad.obtenerTodasLasAmistades();
+
+        for (Amistad amistad : todasLasAmistades) {
+            if (amistad.getUsuario().getId().equals(usuario.getId()) &&
+                    amistad.getAmigo().getId().equals(amigo.getId())) {
+                repositorioAmistad.eliminarAmigo(usuario, amigo);
+            } else if (amistad.getUsuario().getId().equals(amigo.getId()) &&
+                        amistad.getAmigo().getId().equals(usuario.getId())) {
+                repositorioAmistad.eliminarAmigo(amigo, usuario);
+            }
+        }
     }
 
     @Transactional

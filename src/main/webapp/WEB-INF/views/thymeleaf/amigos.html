@@ -62,7 +62,7 @@
         <div class="tus-amigos">
             <section class="friends-slider">
                 <h2>Tus amigos</h2>
-                <div th:if="${amigos == null}" class="sin-amigos">
+                <div th:if="${amigos.size()} <= 0" class="sin-amigos">
                     <h1>No tienes amigos, ¡Revisa tus recomendados :D!</h1>
                 </div>
                 <div class="slider-container" th:if="${amigos} != null">
@@ -74,15 +74,15 @@
                         </svg>
                     </button>
                     <div class="slider" id="amigos-slider">
-                        <div th:if="${amigos != null}" th:each="amigo : ${amigos}" class="profile">
+                        <div th:if="${amigos != null}" th:each="amigo : ${amigos}" class="profile amigo">
                             <div class="profile-image">
                                 <img th:src="@{${amigo.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
                             </div>
                             <h2 class="profile-user-handle" th:text="${amigo.nombreUsuario}"></h2>
                             <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <a th:href="@{/chat(idUser1=${usuarioActual.id}, idUser2=${amigo.id})}" class="btn">Enviar mensaje</a>
-                                <a  th:href="@{/eliminar-amigo(idAmigo=${amigo.id}, idUsuario=${usuarioActual.id})}" class="btn">Eliminar amigo</a>
+                                <a th:href="@{/chat(idUser1=${usuarioActual.id}, idUser2=${amigo.id})}" class="btn mensaje">Enviar mensaje</a>
+                                <a th:href="@{/eliminar-amigo(idAmigo=${amigo.id}, idUsuario=${usuarioActual.id})}" class="btn eliminar">Eliminar amigo</a>
                             </div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                         </svg>
                     </button>
                     <div class="slider" id="recomendados-slider">
-                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile recomendado">
                             <div class="profile-image">
                                 <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
                             </div>
@@ -310,7 +310,7 @@
         }
 
         // Límite derecho: asegurarse de que el slider solo se mueva hasta el último elemento
-        var maxOffset = -(totalItems - 4) * itemWidth;
+        var maxOffset = -(totalItems - 5) * itemWidth;
         if (newTransform < maxOffset) {
             newTransform = maxOffset;
         }

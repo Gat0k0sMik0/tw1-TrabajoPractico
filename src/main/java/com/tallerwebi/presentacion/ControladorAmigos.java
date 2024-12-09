@@ -71,8 +71,8 @@ public class ControladorAmigos {
     }
 
     @RequestMapping(path = "/eliminar-amigo")
-    public ModelAndView eliminarAmigo(@RequestParam("idAmigo") Long idAmigo, @RequestParam("idUsuario") Long idUsuario,
-                                      RedirectAttributes redirectAttributes) {
+    public ModelAndView eliminarAmigo(@RequestParam("idAmigo") Long idAmigo,
+                                      @RequestParam("idUsuario") Long idUsuario) {
         ModelMap model = new ModelMap();
         Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
         Usuario amigo = servicioUsuario.buscarPorId(idAmigo);

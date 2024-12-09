@@ -9,4 +9,6 @@ public interface RepositorioAmistad {
     Amistad eliminarAmigo(Usuario usuario, Usuario amigo) throws AmistadesException;
     List<Amistad> verAmigos(Long userId);
     Amistad buscarAmigoDeUsuario(Usuario usuario, Usuario amigo) throws AmistadesException;
+
+    List<Amistad> obtenerTodasLasAmistades();
 }
