@@ -24,5 +24,7 @@ public interface ServicioPartida {
 
     List<Partida> obtenerUltimas3PartidasDeUnJugador(Usuario usuario);
 
+    Partida obtenerUltimaPartidaDeUnJugador(Usuario usuario);
+
     ;
 }

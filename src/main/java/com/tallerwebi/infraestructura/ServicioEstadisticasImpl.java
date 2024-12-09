@@ -66,18 +66,6 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         return nuevaEstadistica;
     }
 
-    @Override
-    public List<Estadistica> obtenerEstadisticasDeUnJugador(Long id) {
-        System.out.println("Buscando estadisticas de jugador ID: " + id);
-        return this.repositorioEstadistica.obtenerTodasLasEstadisticasDeUnJugador(id);
-    }
-
-    @Override
-    public Estadistica obtenerUnaEstadisticaDeUnJugador(Long id) {
-        System.out.println("Buscando estadisticas de jugador ID: " + id);
-        return this.repositorioEstadistica.obtenerEstadisticaDeJugador(id);
-    }
-
 
     @Override
     public void agregarEstadisticasFicticias(Usuario usuario) {
