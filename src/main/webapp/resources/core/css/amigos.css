@@ -201,12 +201,12 @@ main {
     position: relative;  /* Esto asegura que las flechas se posicionen en relación a este contenedor */
     display: flex;
     align-items: center;
-    min-width: 14rem;
     width: 80%;
     overflow: hidden;
     padding: 10px;
     align-content: stretch;
     flex-direction: row;
+    min-width: 900px;
 }
 
 .slider {
