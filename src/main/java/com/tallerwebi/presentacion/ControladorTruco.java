@@ -50,9 +50,11 @@ public class ControladorTruco {
 
     @GetMapping("/unirse")
     public ModelAndView unirse(
-            @RequestParam("idPartida") Long idPartida,
-            @RequestParam("idUsuario") Long idUsuario
+            @ModelAttribute PartidaModel partidaModel
     ) {
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
+
         // Obtener el usuario activo
         Usuario usuarioActivo = servicioUsuario.buscarPorId(idUsuario);
         if (usuarioActivo == null) return new ModelAndView("redirect:/login");
@@ -68,19 +70,18 @@ public class ControladorTruco {
     }
 
     @RequestMapping("/partida-truco")
-    public ModelAndView irAPartidaTruco(
-            @RequestParam("idPartida") Long partidaId,
-            @RequestParam("idUsuario") Long idUsuario
-    ) {
+    public ModelAndView irAPartidaTruco(@ModelAttribute PartidaModel partidaModel) {
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
         ModelMap model = new ModelMap();
 
         // Obtener usuario
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
         if (usuarioActual == null) return new ModelAndView("redirect:/login");
-        if (partidaId == null) return new ModelAndView("redirect:/home");
+        if (idPartida == null) return new ModelAndView("redirect:/home");
 
         // Obtener partida
-        Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
+        Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         if (partida == null) return new ModelAndView("redirect:/home");
 
         if (partida.getJ1() != null && partida.getJ2() != null) {
@@ -177,8 +178,9 @@ public class ControladorTruco {
             }
 
             model.put("ganador", partida.getGanador());
-            model.put("idPartida", partida.getId());
+            model.put("idPartida", idPartida);
             model.put("idUsuario", idUsuario);
+            model.put("partidaModel", partidaModel);
 
             model.put("respondoYo", false);
             model.put("respondoEnvido", false);
@@ -195,9 +197,11 @@ public class ControladorTruco {
 
 
     @GetMapping("/comenzar-truco")
-    public ModelAndView comenzarTruco(@RequestParam("idPartida") Long idPartida,
-                                      @ModelAttribute("idUsuario") Long idUsuario
+    public ModelAndView comenzarTruco(@ModelAttribute PartidaModel partidaModel
             ) {
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
+
         // Obtén la partida por su ID
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
 
@@ -207,7 +211,10 @@ public class ControladorTruco {
             return new ModelAndView("redirect:/home");
         }
 
-        System.out.println("El ID es " + idUsuario);
+        //if (idUsuario == null) return new ModelAndView("redirect:/login");
+
+        System.out.println("El ID de la partida es " + idPartida);
+        System.out.println("El ID del usuario es " + idUsuario);
 
         // Empezamos la partida y la mano
         servicioTruco.empezar(partida);
@@ -218,11 +225,13 @@ public class ControladorTruco {
 
     @GetMapping(path = "/accion-tirar")
     public ModelAndView accionTirarCarta(
-            @RequestParam("idPartida") Long idPartida,
-            @RequestParam("idUsuario") Long idUsuario,
+            @ModelAttribute PartidaModel partidaModel,
             @RequestParam("cartaId") Long cartaId,
             @RequestParam("manoId") String manoId,
             @RequestParam("nroJugador") String nroJugador) {
+
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
 
         // Obtener partida
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
@@ -263,42 +272,41 @@ public class ControladorTruco {
 
     @RequestMapping("/cambiar-mano")
     public ModelAndView cambiarMano(
-            @RequestParam("idPartida") Long idPartida,
-            @RequestParam("idUsuario") Long idUsuario
+            @ModelAttribute PartidaModel partidaModel
     ) {
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
+
         ModelMap model = new ModelMap();
-        model.put("idUsuario", idUsuario);
 
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
         if (!ultimaMano.getEstaTerminada()) {
-            return new ModelAndView("redirect:/partida-truco?idPartida=" + partida.getId() + "&idUsuario=" + usuarioActual.getId());
+            return new ModelAndView("redirect:/partida-truco?idPartida=" + idPartida + "&idUsuario=" + idUsuario);
         }
         ultimaMano.setConfirmacionTerminada(true);
         Mano mano = servicioMano.reset(partida);
 
+        if (idUsuario == null) return new ModelAndView("redirect:/login");
         if (usuarioActual == null) return new ModelAndView("redirect:/login");
         if (idPartida == null) return new ModelAndView("redirect:/home");
         if (partida == null) return new ModelAndView("redirect:/home");
 
+
         if (partida.getJ1() != null && partida.getJ2() != null) {
-
+            // Comenzar partida
             if (partida.getPuedeEmpezar()) {
-
+                // Verificar si hay ganador
                 if (partida.getGanador() != null) {
                     model.put("ganador", partida.getGanador());
                     model.put("partidaFinalizada", true);
+                    model.put("mano", mano);
                     servicioEstadistica.guardarResultado(partida);
-                    mano.getCartasTiradasJ1().clear();
-                    mano.getCartasTiradasJ2().clear();
-                    mano.getCartasJ1().clear();
-                    mano.getCartasJ2().clear();
-                    mano.setConfirmacionTerminada(true);
-                    servicioMano.guardar(mano);
                     return new ModelAndView("partida-truco", model);
                 }
 
+                // Verificar que haya mano
                 if (mano == null) {
                     model.put("respondoYo", false);
                     model.put("respondoEnvido", false);
@@ -347,28 +355,25 @@ public class ControladorTruco {
                     );
                 }
 
+                // ACCIONES ENVIDO
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(
                         mano.getPuntosEnJuegoEnvido(),
                         servicioMano.esLaPrimerRonda(mano))
                 );
+                // ACCIONES TRUCO
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco(), mano.getHayQuiero()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
                                 && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
                 );
+                // RESPUESTAS
                 model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
                 model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
                 model.put("meTocaTirar", mano.getTiraAhora().getUsuario().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
 
-
                 // Atributos independientes de que jugador es cual
                 model.put("seTermino", mano.getEstaTerminada());
-
-                if (mano.getEstaTerminada()) {
-                    model.put("respondoYo", false);
-                }
-
                 model.put("puntosParaGanar", partida.getPuntosParaGanar());
                 model.put("mano", mano);
                 model.put("partida", partida);
@@ -381,7 +386,9 @@ public class ControladorTruco {
             }
 
             model.put("ganador", partida.getGanador());
-            model.put("idPartida", partida.getId());
+            model.put("idPartida", idPartida);
+            model.put("idUsuario", idUsuario);
+            model.put("partidaModel", partidaModel);
 
             model.put("respondoYo", false);
             model.put("respondoEnvido", false);
@@ -398,24 +405,30 @@ public class ControladorTruco {
 
     @RequestMapping("/salir")
     public ModelAndView salirDeLaPartida(
-            @RequestParam("mano") String manoId
+            @RequestParam("mano") String manoId,
+            @ModelAttribute PartidaModel partidaModel
     ) {
+        Long idUsuario = partidaModel.getIdUsuario();
+
         Mano mano = servicioMano.obtenerManoPorId(Long.parseLong(manoId));
-        if (mano == null) return new ModelAndView("redirect:/home");
-        // Termino la partida, hay ganador, la mano quedá así antes de SALIR:
+
+        if (mano == null) {return new ModelAndView("redirect:/home?idUsuario=" + idUsuario);}
+
         // TODO agregar logica para sumar puntos o algo al que gano (estadistica)
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/home?idUsuario=" + idUsuario);
     }
 
 
     @GetMapping(path = "/accion")
     public ModelAndView accion(
-            @RequestParam("idPartida") Long idPartida,
-            @RequestParam("idUsuario") Long idUsuario,
+            @ModelAttribute PartidaModel partidaModel,
             @RequestParam("accion") String accionValue,
             @RequestParam("jugador") String nroJugador,
             RedirectAttributes redirectAttributes
     ) {
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
+
         redirectAttributes.addFlashAttribute("accionAResponder", accionValue);
 
         // Obtener partida y mano
@@ -429,12 +442,13 @@ public class ControladorTruco {
 
     @GetMapping(path = "/respuesta")
     public ModelAndView responder(
-            @RequestParam("idPartida") Long idPartida,
-            @RequestParam("idUsuario") Long idUsuario,
+            @ModelAttribute PartidaModel partidaModel,
             @RequestParam("accion") String accionAlCualResponde,
             @RequestParam("respuesta") String nroRespuesta,
             @RequestParam("jugador") String nroJugador
     ) {
+        Long idPartida = partidaModel.getIdPartida();
+        Long idUsuario = partidaModel.getIdUsuario();
 
         Mano mano = servicioMano.obtenerManoPorId(idPartida);
 

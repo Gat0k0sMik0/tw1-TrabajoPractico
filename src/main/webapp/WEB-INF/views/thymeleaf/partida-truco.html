@@ -43,8 +43,13 @@
         <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
             <!-- MAZO -->
             <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
-                <a th:href="@{/comenzar-truco(idPartida= ${idPartida}, idUsuario=${idUsuario})}" th:if="${ganador == null}" class="w-100">                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
-                </a>
+                <form th:action="@{/comenzar-truco}" method="get" th:if="${ganador == null}" class="w-100">
+                    <input type="hidden" name="idPartida" th:value="${partidaModel.idPartida}">
+                    <input type="hidden" name="idUsuario" th:value="${partidaModel.idUsuario}">
+                    <button type="submit" class="w-100" style="border: none; background: none; padding: 0;">
+                        <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                    </button>
+                </form>
                 <a th:if="${ganador != null}" class="w-100">
                     <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                 </a>
@@ -83,7 +88,7 @@
                 <div th:if="${ganador != null}" class="d-flex flex-column justify-content-center align-items-center">
                     <p>Ganó <strong th:text="${ganador.getNombre()}"></strong>!</p>
                     <a class="btn btn-danger"
-                       th:href="@{/salir(mano=${mano.id})}">Salir</a>
+                       th:href="@{/salir(mano=${mano.id}, idUsuario=${partidaModel.idUsuario})}">Salir</a>
                 </div>
 
                 <div th:if="${ganador == null}">
@@ -98,7 +103,7 @@
                     <a th:if="${seTermino}"
                        class="btn btn-danger"
                        th:text="'Jugar otra mano'"
-                       th:href="@{/cambiar-mano}"></a>
+                       th:href="@{/cambiar-mano(idPartida=${partidaModel.idPartida}, idUsuario=${partidaModel.idUsuario})}"></a>
                 </div>
 
             </div>
@@ -112,7 +117,7 @@
                 <div th:if="${respondoYo}" class="d-flex gap-2">
                     <a class="btn btn-primary"
                        th:each="accion : ${accionesNormales}"
-                       th:href="@{/accion(mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
+                       th:href="@{/accion(idPartida=${partidaModel.idPartida}, idUsuario=${partidaModel.idUsuario}, mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
@@ -120,7 +125,7 @@
                 <div th:if="${respondoYo && respondoEnvido}" class="d-flex gap-2">
                     <a class="btn btn-warning"
                        th:each="accion : ${accionesEnvido}"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                       th:href="@{/respuesta(idPartida=${partidaModel.idPartida}, idUsuario=${partidaModel.idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
@@ -128,7 +133,7 @@
                 <div th:if="${respondoYo && respondoTruco}" class="d-flex gap-2">
                     <a class="btn btn-danger"
                        th:each="accion : ${accionesTruco}"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                       th:href="@{/respuesta(idPartida=${partidaModel.idPartida}, idUsuario=${partidaModel.idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                        th:text="${accion.texto}">
                     </a>
                 </div>
@@ -137,7 +142,7 @@
             <!--  MIS CARTAS -->
             <div class="gap-2 cartasJugadorContainer col-4">
                 <th:block th:each="carta : ${misCartas}" th:if="${meTocaTirar}">
-                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=${miNumero})}"
+                    <a th:href="@{/accion-tirar(idPartida=${partidaModel.idPartida}, idUsuario=${partidaModel.idUsuario}, cartaId=${carta.id}, manoId=${mano.id}, nroJugador=${miNumero})}"
                        class="cartaTirarBtn">
                         <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                     </a>
