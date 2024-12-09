@@ -273,14 +273,24 @@ main {
     }
 }
 
+/* TIPOS DE CARTAS */
 .amigo {
     background: #fad0d0;
 }
 
 .recomendado {
-    background: #fdfdfd;
+    background: #d6ad8f;
 }
 
+.solicitudRecibida {
+    background: #d4f7d4;
+}
+
+.solicitudEnviada {
+    background: #96a0d3;
+}
+
+/* CARTAS CONTENIDO */
 .profile-username {
     font-size: 1.5rem;
     font-weight: 600;
@@ -292,10 +302,11 @@ main {
 }
 
 .descripcion {
-    color: #7d8396;
+    color: #555;
     font-style: italic;
 }
 
+/* BOTONES */
 .profile-actions {
     margin-top: 1.5rem;
     display: flex;
@@ -334,7 +345,8 @@ main {
     background: #71b9ff;
 }
 
-.profile-actions a.eliminar:hover {
+.profile-actions a.eliminar:hover, .profile-actions a.rechazar:hover,
+.profile-actions a.cancelar:hover {
     background: #dc2121;
 }
 
@@ -345,6 +357,10 @@ main {
 .profile-actions a.agregar:hover {
     background: #333;
     color: white;
+}
+
+.profile-actions a.aceptar:hover {
+    background: #38e338;
 }
 
 
@@ -369,13 +385,15 @@ main {
 }
 
 .left {
-    left: 10px;
+    left: 1px;
 }
 
 .right {
-    right: 10px;
+    right: 1px;
 }
 
 div h1, div h2 {
     margin: 15px;
+    font-size: 20px;
+    text-align: center;
 }

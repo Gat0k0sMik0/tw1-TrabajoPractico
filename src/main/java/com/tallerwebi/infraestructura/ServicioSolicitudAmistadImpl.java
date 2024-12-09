@@ -22,6 +22,7 @@ public class ServicioSolicitudAmistadImpl implements ServicioSolicitudAmistad {
         this.repositorioAmistad = repositorioAmistad;
     }
 
+    /* ACCIONES: ENVIAR, ACEPTAR, RECHAZAR */
     @Override
     @Transactional
     public void enviarSolicitudAmistad(Long solicitanteId, Long receptorId) {
@@ -71,10 +72,10 @@ public class ServicioSolicitudAmistadImpl implements ServicioSolicitudAmistad {
             throw new RuntimeException("La solicitud no puede ser procesada");
         }
 
-        solicitud.setEstado("rechazada");
-        repositorioSolicitudAmistad.guardarSolicitudAmistad(solicitud);
+        repositorioSolicitudAmistad.eliminarSolicitudAmistad(solicitudId);
     }
 
+    /* FUNCIONA PARA MOSTRAR EN HTML */
     @Override
     public List<SolicitudAmistad> obtenerSolicitudesEnviadas(Long idUsuario) {
         // Listar todas las solicitudes de amistad
@@ -85,7 +86,7 @@ public class ServicioSolicitudAmistadImpl implements ServicioSolicitudAmistad {
 
         // Filtrar las solicitudes que tengan el idUsuario como solicitante y el estado 'ENVIADO'
         for (SolicitudAmistad solicitud : todasLasSolicitudes) {
-            if (solicitud.getSolicitante().getId().equals(idUsuario) && solicitud.getEstado().equals("enviada")) {
+            if (solicitud.getSolicitante().getId().equals(idUsuario) && solicitud.getEstado().equals("enviado")) {
                 solicitudesEnviadas.add(solicitud);
             }
         }
@@ -93,6 +94,7 @@ public class ServicioSolicitudAmistadImpl implements ServicioSolicitudAmistad {
         return solicitudesEnviadas;
     }
 
+    /* FUNCIONA PARA MOSTRAR EN HTML */
     @Override
     public List<SolicitudAmistad> obtenerSolicitudesRecibidasNoAceptadas(Long idUsuario) {
         // Listar todas las solicitudes de amistad
@@ -111,6 +113,7 @@ public class ServicioSolicitudAmistadImpl implements ServicioSolicitudAmistad {
         return solicitudesRecibidasNoAceptadas;
     }
 
+    /* BUSCAR SOLICITUDES */
     @Override
     public List<Usuario> queNoTenganSolicitudesEntreEllos(Long idUsuario, List<Usuario> usuarios) {
         List<Usuario> usuariosSinSolicitud = new ArrayList<>();
@@ -140,6 +143,7 @@ public class ServicioSolicitudAmistadImpl implements ServicioSolicitudAmistad {
         return usuariosSinSolicitud;
     }
 
+    /* ELIMINAR */
     @Override
     public void eliminarSolicitudEntreAmbos(Long idUsuario, Long idAmigo) {
         repositorioSolicitudAmistad.eliminarSolicitudEntreAmbos(idUsuario, idAmigo);

@@ -53,21 +53,6 @@ public class ControladorAmigos {
         return new ModelAndView("amigos", model);
     }
 
-//    @RequestMapping(path = "/agregar-amigo")
-//    public ModelAndView agregarAmigo(@ModelAttribute("idAmigo") Long idAmigo,
-//                                     @ModelAttribute("idUsuario") Long idUsuario,
-//                                     RedirectAttributes redirectAttributes) {
-//        Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
-//        Usuario amigo = servicioUsuario.buscarPorId(idAmigo);
-//        try {
-//            servicioAmistad.agregarAmigo(usuario, amigo);
-//            return new ModelAndView("redirect:/amigos?idUsuario=" + idUsuario);
-//        } catch (AmistadesException e) {
-//           redirectAttributes.addFlashAttribute("error", e.getMessage());
-//            return new ModelAndView("redirect:/amigos?idUsuario=" + usuario.getId());
-//        }
-//    }
-
     @RequestMapping(path = "/eliminar-amigo")
     public ModelAndView eliminarAmigo(@RequestParam("idAmigo") Long idAmigo,
                                       @RequestParam("idUsuario") Long idUsuario) {
@@ -109,7 +94,7 @@ public class ControladorAmigos {
             servicioSolicitudAmistad.aceptarSolicitudAmistad(solicitudId);
             redirectAttributes.addFlashAttribute("mensaje", "Solicitud de amistad aceptada.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "La solicitud expiró.");
         } catch (AmistadesException e) {
             throw new RuntimeException(e);
         }
@@ -126,9 +111,37 @@ public class ControladorAmigos {
             servicioSolicitudAmistad.rechazarSolicitudAmistad(solicitudId);
             redirectAttributes.addFlashAttribute("mensaje", "Solicitud de amistad rechazada.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "La solicitud expiró.");
         }
         servicioSolicitudAmistad.eliminarSolicitud(solicitudId);
         return new ModelAndView("redirect:/amigos?idUsuario=" + idUsuario);
     }
+
+    @RequestMapping("/cancelar-solicitud")
+    public ModelAndView cancelarSolicitud(@ModelAttribute("solicitudId") Long solicitudId,
+                                          @ModelAttribute("idUsuario") Long idUsuario,
+                                          RedirectAttributes redirectAttributes) {
+        try {
+            servicioSolicitudAmistad.eliminarSolicitud(solicitudId);
+            redirectAttributes.addFlashAttribute("mensaje", "Solicitud de amistad cancelada.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "La solicitud ya ha sido respondida.");
+        }
+        return new ModelAndView("redirect:/amigos?idUsuario=" + idUsuario);
+    }
+
+    //    @RequestMapping(path = "/agregar-amigo")
+//    public ModelAndView agregarAmigo(@ModelAttribute("idAmigo") Long idAmigo,
+//                                     @ModelAttribute("idUsuario") Long idUsuario,
+//                                     RedirectAttributes redirectAttributes) {
+//        Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
+//        Usuario amigo = servicioUsuario.buscarPorId(idAmigo);
+//        try {
+//            servicioAmistad.agregarAmigo(usuario, amigo);
+//            return new ModelAndView("redirect:/amigos?idUsuario=" + idUsuario);
+//        } catch (AmistadesException e) {
+//           redirectAttributes.addFlashAttribute("error", e.getMessage());
+//            return new ModelAndView("redirect:/amigos?idUsuario=" + usuario.getId());
+//        }
+//    }
 }
