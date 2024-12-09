@@ -431,3 +431,11 @@ main {
     border-radius: 50%;
     object-fit: cover;
 }
+
+
+.contrasena{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}

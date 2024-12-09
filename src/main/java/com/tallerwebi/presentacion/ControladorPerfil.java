@@ -30,7 +30,7 @@ public class ControladorPerfil {
     }
 
     @RequestMapping("/perfil")
-    public ModelAndView perfilUsuario(@RequestParam("id") Long idUsuario) {
+    public ModelAndView perfilUsuario(@RequestParam(value = "id", required = false) Long idUsuario) {
         ModelMap model = new ModelMap();
 
         Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
@@ -98,7 +98,7 @@ public class ControladorPerfil {
             servicioUsuario.actualizarPerfil(usuario);
 
             model.addAttribute("mensaje", "Perfil actualizado con exito.");
-            return "redirect:/perfil";
+            return "redirect:/perfil?id=" + usuario.getId();
         } catch (Exception e) {
             model.addAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
             return "perfil"; // Mostrar error
