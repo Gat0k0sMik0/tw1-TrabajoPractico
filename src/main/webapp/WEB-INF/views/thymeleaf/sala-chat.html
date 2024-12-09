@@ -28,7 +28,7 @@
                     <div th:class="${'message' + idUsuario1.equals(usuarioActual.id)
                     ? 'bg-success-subtle rightMessage pe-4 ps-3'
                     : 'bg-primary-subtle leftMessage ps-4 pe-3'}">
-                        <strong th:text="${idUsuario1.equals(usuarioActual.id) ? 'Tú' : 'Usuario ' + idUsuario2 + ': '}"></strong>
+                        <strong th:text="${idUsuario1.equals(usuarioActual.id) ? 'Tú' : u2.nombreUsuario + ': '}"></strong>
                         <span th:text="${mensaje.content}"></span>
                     </div>
                 </div>

@@ -201,9 +201,8 @@ main {
     position: relative;  /* Esto asegura que las flechas se posicionen en relación a este contenedor */
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    position: relative;
-    /* width: 80%; */
+    min-width: 14rem;
+    width: 80%;
     overflow: hidden;
     padding: 10px;
     align-content: stretch;
@@ -242,7 +241,6 @@ main {
 .profile {
     min-width: 200px;
     max-width: 200px;
-    background: #fff;
     border-radius: 10px;
     padding: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -275,6 +273,24 @@ main {
     }
 }
 
+/* TIPOS DE CARTAS */
+.amigo {
+    background: #fad0d0;
+}
+
+.recomendado {
+    background: #d6ad8f;
+}
+
+.solicitudRecibida {
+    background: #d4f7d4;
+}
+
+.solicitudEnviada {
+    background: #96a0d3;
+}
+
+/* CARTAS CONTENIDO */
 .profile-username {
     font-size: 1.5rem;
     font-weight: 600;
@@ -286,13 +302,15 @@ main {
 }
 
 .descripcion {
-    color: #7d8396;
+    color: #555;
     font-style: italic;
 }
 
+/* BOTONES */
 .profile-actions {
     margin-top: 1.5rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     & > * {
@@ -301,7 +319,7 @@ main {
 }
 
 .btn {
-    background-color: #ddd;
+    background-color: #fff;
     color: #333;
     padding: 10px 20px;
     font-size: 16px;
@@ -313,6 +331,7 @@ main {
     transition: all 0.3s ease;
     box-shadow: none;
     text-decoration: none;
+    margin: 2px;
 }
 
 .btn:hover {
@@ -321,6 +340,29 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-color: white;
 }
+
+.profile-actions a.mensaje:hover {
+    background: #71b9ff;
+}
+
+.profile-actions a.eliminar:hover, .profile-actions a.rechazar:hover,
+.profile-actions a.cancelar:hover {
+    background: #dc2121;
+}
+
+.profile-actions a.agregar {
+    background: #EEEEEE;
+}
+
+.profile-actions a.agregar:hover {
+    background: #333;
+    color: white;
+}
+
+.profile-actions a.aceptar:hover {
+    background: #38e338;
+}
+
 
 /* Botones carousel */
 .slider-arrow svg {
@@ -343,13 +385,15 @@ main {
 }
 
 .left {
-    left: 10px;
+    left: 1px;
 }
 
 .right {
-    right: 10px;
+    right: 1px;
 }
 
 div h1, div h2 {
     margin: 15px;
+    font-size: 20px;
+    text-align: center;
 }

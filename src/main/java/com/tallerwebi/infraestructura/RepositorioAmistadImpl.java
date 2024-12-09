@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -76,5 +75,28 @@ public class RepositorioAmistadImpl implements RepositorioAmistad {
                 .add(Restrictions.eq("amigo.id", idAmigo))
                 .uniqueResult();
         return encontrada;
+    }
+
+    @Override
+    @Transactional
+    public List<Amistad> obtenerTodasLasAmistades() {
+        return (List<Amistad>) sessionFactory.getCurrentSession()
+                .createCriteria(Amistad.class)
+                .list();
+    }
+
+    @Override
+    @Transactional
+    public void eliminarAmistad(Long idAmistad) {
+        // Buscar la solicitud por su ID
+        Amistad amistad = (Amistad) sessionFactory.getCurrentSession()
+                .createCriteria(Amistad.class)
+                .add(Restrictions.eq("id", idAmistad))
+                .uniqueResult();
+
+        // Si la solicitud existe, eliminarla
+        if (amistad != null) {
+            sessionFactory.getCurrentSession().delete(amistad);
+        }
     }
 }

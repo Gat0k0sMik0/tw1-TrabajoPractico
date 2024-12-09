@@ -58,47 +58,15 @@
 
 <div class="tableta">
     <main class="info-container">
+        <span th:text="${error}" style="color: red"></span>
+        <span th:text="${mensaje}" style="color: green"></span>
         <!-- CARTAS DE PERFIL -->
-        <div class="tus-amigos">
-            <section class="friends-slider">
-                <h2>Tus amigos</h2>
-                <div th:if="${amigos == null}" class="sin-amigos">
-                    <h1>No tienes amigos, ¡Revisa tus recomendados :D!</h1>
-                </div>
-                <div class="slider-container" th:if="${amigos} != null">
-                    <!-- Flecha izquierda -->
-                    <button th:if="${amigos.size()} >= 5" class="slider-arrow left" onclick="moveSlider('amigos-slider', 1)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
-                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
-                            <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </button>
-                    <div class="slider" id="amigos-slider">
-                        <div th:if="${amigos != null}" th:each="amigo : ${amigos}" class="profile">
-                            <div class="profile-image">
-                                <img th:src="@{${amigo.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
-                            </div>
-                            <h2 class="profile-user-handle" th:text="${amigo.nombreUsuario}"></h2>
-                            <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
-                            <div class="profile-actions">
-                                <button class="btn">Enviar mensaje</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Flecha derecha -->
-                    <button th:if="${amigos.size()} >= 5" class="slider-arrow right" onclick="moveSlider('amigos-slider', -1)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
-                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
-                            <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </button>
-                </div>
-            </section>
-        </div>
 
+        <!-- PERFILES SUGERIDOS -->
         <div class="sugerencias">
             <section class="friends-slider">
                 <h2>Recomendados para ti</h2>
+                <span th:text="${error}" style="color: red; font-weight: bold"></span>
                 <div th:if="${amigosSugeridos.size()} <= 0" class="sin-amigos">
                     <h1>No tienes sugerencias por ahora, ¡Revisa tus solicitudes :D!</h1>
                 </div>
@@ -111,14 +79,14 @@
                         </svg>
                     </button>
                     <div class="slider" id="recomendados-slider">
-                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile recomendado">
                             <div class="profile-image">
                                 <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
                             </div>
                             <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
                             <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <a th:href="@{/agregar-amigo(idAmigo=${recomendado.id}, idUsuario=${usuarioActual.id})}" class="btn">Agregar amigo</a>
+                                <a th:href="@{/enviar-solicitud(receptorId=${recomendado.id}, idUsuario=${usuarioActual.id})}" class="btn agregar">Agregar amigo</a>
                             </div>
                         </div>
                     </div>
@@ -133,31 +101,36 @@
             </section>
         </div>
 
-        <div class="sugerencias">
+        <!-- MIS AMIGOS -->
+        <div class="tus-amigos">
             <section class="friends-slider">
-                <h2>Solicitudes recibidas</h2>
-                <div class="slider-container">
+                <h2>Tus amigos</h2>
+                <div th:if="${amigos.size()} <= 0" class="sin-amigos">
+                    <h1>No tienes amigos, ¡Revisa tus recomendados :D!</h1>
+                </div>
+                <div class="slider-container" th:if="${amigos} != null">
                     <!-- Flecha izquierda -->
-                    <button class="slider-arrow left" onclick="moveSlider('recibidas-slider', 1)">
+                    <button th:if="${amigos.size()} >= 5" class="slider-arrow left" onclick="moveSlider('amigos-slider', 1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                     </button>
-                    <div class="slider" id="recibidas-slider">
-                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                    <div class="slider" id="amigos-slider">
+                        <div th:if="${amigos != null}" th:each="amigo : ${amigos}" class="profile amigo">
                             <div class="profile-image">
-                                <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
+                                <img th:src="@{${amigo.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
                             </div>
-                            <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
-                            <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <h2 class="profile-user-handle" th:text="${amigo.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${amigo.descripcion != null ? '&quot;' + amigo.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <button class="btn">Agregar amigo</button>
+                                <a th:href="@{/chat(idUser1=${usuarioActual.id}, idUser2=${amigo.id})}" class="btn mensaje">Enviar mensaje</a>
+                                <a th:href="@{/eliminar-amigo(idAmigo=${amigo.id}, idUsuario=${usuarioActual.id})}" class="btn eliminar">Eliminar amigo</a>
                             </div>
                         </div>
                     </div>
                     <!-- Flecha derecha -->
-                    <button class="slider-arrow right" onclick="moveSlider('recibidas-slider', -1)">
+                    <button th:if="${amigos.size()} >= 5" class="slider-arrow right" onclick="moveSlider('amigos-slider', -1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -167,31 +140,75 @@
             </section>
         </div>
 
-        <div class="sugerencias">
+        <!-- SOLICITUDES RECIBIDAS -->
+        <div class="solicitudes-recibidas">
             <section class="friends-slider">
-                <h2>Solicitudes pendientes</h2>
+                <h2>Solicitudes de Amistad Recibidas</h2>
+                <div th:if="${solicitudesRecibidas.size()} <= 0" class="sin-amigos">
+                    <h1>No tienes solicitudes pendientes, ¡Revisa tus amigos :D!</h1>
+                </div>
                 <div class="slider-container">
                     <!-- Flecha izquierda -->
-                    <button class="slider-arrow left" onclick="moveSlider('enviadas-slider', 1)">
+                    <button th:if="${solicitudesRecibidas.size()} >= 5" class="slider-arrow left" onclick="moveSlider('solicitudes-slider', 1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                     </button>
-                    <div class="slider" id="enviadas-slider">
-                        <div th:if="${amigosSugeridos != null}" th:each="recomendado : ${amigosSugeridos}" class="profile">
+                    <div class="slider" id="solicitudes-slider">
+                        <div th:if="${solicitudesRecibidas != null}" th:each="solicitud : ${solicitudesRecibidas}" class="profile solicitudRecibida">
                             <div class="profile-image">
-                                <img th:src="@{${recomendado.urlFotoPerfil}}" alt="Foto de perfil de [[${recomendado.nombre}]]" />
+                                <img th:src="@{${solicitud.solicitante.urlFotoPerfil}}" alt="Foto de perfil de [[${solicitud.solicitante.nombre}]]" />
                             </div>
-                            <h2 class="profile-user-handle" th:text="${recomendado.nombreUsuario}"></h2>
-                            <small class="descripcion" th:text="${recomendado.descripcion != null ? '&quot;' + recomendado.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <h2 class="profile-user-handle" th:text="${solicitud.solicitante.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${solicitud.solicitante.descripcion != null ? '&quot;' + solicitud.solicitante.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
                             <div class="profile-actions">
-                                <button class="btn">Agregar amigo</button>
+                                <a th:href="@{/aceptar-solicitud(solicitudId=${solicitud.id}, idUsuario=${usuarioActual.id})}" class="btn aceptar">Aceptar solicitud</a>
+                                <a th:href="@{/rechazar-solicitud(solicitudId=${solicitud.id}, idUsuario=${usuarioActual.id})}" class="btn rechazar">Rechazar solicitud</a>
                             </div>
                         </div>
                     </div>
                     <!-- Flecha derecha -->
-                    <button class="slider-arrow right" onclick="moveSlider('enviadas-slider', -1)">
+                    <button th:if="${solicitudesRecibidas.size()} >= 5" class="slider-arrow right" onclick="moveSlider('solicitudes-slider', -1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- SOLICITUDES ENVIADAS -->
+        <div class="solicitudes-enviadas">
+            <section class="friends-slider">
+                <h2>Solicitudes de Amistad Enviadas</h2>
+                <div th:if="${solicitudesEnviadas.size()} <= 0" class="sin-amigos">
+                    <h1>No tienes solicitudes enviadas, ¡Revisa tus amigos :D!</h1>
+                </div>
+                <div class="slider-container">
+                    <!-- Flecha izquierda -->
+                    <button th:if="${solicitudesEnviadas.size()} >= 5" class="slider-arrow left" onclick="moveSlider('solicitudes-enviadas-slider', 1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                            <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                            <path d="M9 12H15M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <div class="slider" id="solicitudes-enviadas-slider">
+                        <div th:if="${solicitudesEnviadas != null}" th:each="solicitud : ${solicitudesEnviadas}" class="profile solicitudEnviada">
+                            <div class="profile-image">
+                                <img th:src="@{${solicitud.receptor.urlFotoPerfil}}" alt="Foto de perfil de [[${solicitud.receptor.nombre}]]" />
+                            </div>
+                            <h2 class="profile-user-handle" th:text="${solicitud.receptor.nombreUsuario}"></h2>
+                            <small class="descripcion" th:text="${solicitud.receptor.descripcion != null ? '&quot;' + solicitud.receptor.descripcion + '&quot;' : '&quot; Sin descripción. &quot;'}"></small>
+                            <div class="profile-actions">
+                                <!-- Botón para cancelar la solicitud enviada -->
+                                <a th:href="@{/cancelar-solicitud(solicitudId=${solicitud.id}, idUsuario=${usuarioActual.id})}" class="btn cancelar">Cancelar solicitud</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Flecha derecha -->
+                    <button th:if="${solicitudesEnviadas.size()} >= 5" class="slider-arrow right" onclick="moveSlider('solicitudes-enviadas-slider', -1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
                             <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
                             <path d="M15 12H9M15 12l-4-4M15 12l-4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -309,7 +326,7 @@
         }
 
         // Límite derecho: asegurarse de que el slider solo se mueva hasta el último elemento
-        var maxOffset = -(totalItems - 4) * itemWidth;
+        var maxOffset = -(totalItems - 5) * itemWidth;
         if (newTransform < maxOffset) {
             newTransform = maxOffset;
         }
