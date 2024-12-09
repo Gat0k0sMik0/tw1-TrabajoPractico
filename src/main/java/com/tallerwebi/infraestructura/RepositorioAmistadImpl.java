@@ -84,4 +84,19 @@ public class RepositorioAmistadImpl implements RepositorioAmistad {
                 .createCriteria(Amistad.class)
                 .list();
     }
+
+    @Override
+    @Transactional
+    public void eliminarAmistad(Long idAmistad) {
+        // Buscar la solicitud por su ID
+        Amistad amistad = (Amistad) sessionFactory.getCurrentSession()
+                .createCriteria(Amistad.class)
+                .add(Restrictions.eq("id", idAmistad))
+                .uniqueResult();
+
+        // Si la solicitud existe, eliminarla
+        if (amistad != null) {
+            sessionFactory.getCurrentSession().delete(amistad);
+        }
+    }
 }

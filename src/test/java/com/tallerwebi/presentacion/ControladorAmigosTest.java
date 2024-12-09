@@ -1,10 +1,12 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioAmistad;
+import com.tallerwebi.dominio.ServicioSolicitudAmistad;
 import com.tallerwebi.dominio.ServicioUsuario;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.AmistadesException;
 import com.tallerwebi.infraestructura.ServicioAmistadImpl;
+import com.tallerwebi.infraestructura.ServicioSolicitudAmistadImpl;
 import com.tallerwebi.infraestructura.ServicioUsuarioImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,8 @@ import static org.mockito.Mockito.when;
 public class ControladorAmigosTest {
     ServicioAmistad servicioAmistad = mock(ServicioAmistadImpl.class);
     ServicioUsuario servicioUsuario = mock(ServicioUsuarioImpl.class);
-    ControladorAmigos controladorAmigos = new ControladorAmigos(servicioAmistad, servicioUsuario);
+    ServicioSolicitudAmistad servicioSolicitudAmistad = mock(ServicioSolicitudAmistadImpl.class);
+    ControladorAmigos controladorAmigos = new ControladorAmigos(servicioAmistad, servicioUsuario, servicioSolicitudAmistad);
 
     @Test
     public void obtenerAmigosDeUsuarioPorId() throws AmistadesException {
