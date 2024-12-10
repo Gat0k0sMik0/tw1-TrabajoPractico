@@ -285,7 +285,7 @@ public class ServicioManoImpl implements ServicioMano {
             this.repositorioMano.merge(mano);
             return receptor;
         } else if (esEnvido(accionRealizada)) {
-            mano.setPuntosEnJuegoEnvido(0);
+            if (mano.getPuntosEnJuegoEnvido().equals(99)) mano.setPuntosEnJuegoEnvido(0);
             preguntarEnvido(accionRealizada, ejecutor, mano);
             mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
             mano.setRespondeAhora(receptor);

@@ -411,25 +411,6 @@ public class ServicioManoTest {
         assertThat(t.getPuntosJ2(), equalTo(1));
     }
 
-    /*@Test
-    public void siSeVaAlMazoQueSeaNullElQueLeToqueResponder() {
-        // given
-        Partida t = new Partida();
-        Mano m = new Mano();
-        t.setPuntosParaGanar(30);
-        t.setPuntosJ1(0);
-        t.setPuntosJ2(0);
-        t.setJ1(j1);
-        t.setJ2(j2);
-        m.setCartasJ1(new ArrayList<>());
-        m.setCartasJ2(new ArrayList<>());
-        m.setPartida(t);
-        // when
-        Jugador respondeAhora = servicioMano.preguntar(m, "9", 1);
-        // then
-        assertThat(respondeAhora, nullValue());
-    }*/
-
     @Test
     public void queSeLeAsignenLasCartas() {
         // given
@@ -456,19 +437,34 @@ public class ServicioManoTest {
     }
 
     @Test
-    public void queTireUnaCarta() {
-//        // given
-//        when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
-//        when(repositorioCarta.buscarCartaPorId(0L)).thenReturn(esperadas.get(0));
-//        Partida t = new Partida();
-//        t.setJ1(j1);
-//        t.setJ2(j2);
-//        Mano m = servicioMano.empezar(t, j1, j2);
-//        // when
-//        whenAsignoTresCartasAlJugador(j1, esperadas, m);
-//        servicioMano.tirarCarta(t, m, 0L, j1.getNumero().toString());
-//        // then
-//        assertThat(m.getCartasTiradasJ1().size(), equalTo(2));
+    public void queLosPuntosEnJuegoDelEnvidoSeanLosEsperados() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoEnvido(0);
+        m.setPuntosEnJuegoEnvido(0);
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        Jugador respondeAhora;
+        respondeAhora = servicioMano.preguntar(m, "2", 1); // ENVIDO
+        mensaje("mano despues de primer paso");
+        mensaje(m);
+        respondeAhora = servicioMano.preguntar(m, "2", 2); // ENVIDO
+
+        assertThat(m.getPuntosEnJuegoEnvido(), equalTo(4));
+    }
+
+    private void mensaje(Object m) {
+        System.out.println("\n" + m);
     }
 
     @Test

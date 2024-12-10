@@ -88,11 +88,11 @@ public class ControladorTruco {
         model.put("partida", partida);
 
         // Obtenemos estadisticas de jugadores en caso de existir
-        if(partida.getJ1() != null) {
+        if (partida.getJ1() != null) {
             Estadistica estadisticasJ1 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ1().getUsuario());
             model.put("estadisticasJ1", estadisticasJ1);
         }
-        if(partida.getJ2() != null) {
+        if (partida.getJ2() != null) {
             Estadistica estadisticasJ2 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ2().getUsuario());
             model.put("estadisticasJ2", estadisticasJ2);
         }
@@ -208,19 +208,15 @@ public class ControladorTruco {
 
 
     @GetMapping("/comenzar-truco")
-    public ModelAndView comenzarTruco(@ModelAttribute("idPartida") Long idPartida,
-                                      @ModelAttribute("idUsuario") Long idUsuario
-            ) {
+    public ModelAndView comenzarTruco(
+            @ModelAttribute("idPartida") Long idPartida,
+            @ModelAttribute("idUsuario") Long idUsuario
+    ) {
         // Obtén la partida por su ID
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
 
         // Si no existe la partida, redirige a /home
-        if (partida == null) {
-            System.out.println("Partida no encontrada");
-            return new ModelAndView("redirect:/home");
-        }
-
-        System.out.println("El ID es " + idUsuario);
+        if (partida == null) return new ModelAndView("redirect:/home");
 
         // Empezamos la partida y la mano
         servicioTruco.empezar(partida);
@@ -291,11 +287,11 @@ public class ControladorTruco {
         model.put("partida", partida);
 
         // Obtenemos estadisticas de jugadores en caso de existir
-        if(partida.getJ1() != null) {
+        if (partida.getJ1() != null) {
             Estadistica estadisticasJ1 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ1().getUsuario());
             model.put("estadisticasJ1", estadisticasJ1);
         }
-        if(partida.getJ2() != null) {
+        if (partida.getJ2() != null) {
             Estadistica estadisticasJ2 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ2().getUsuario());
             model.put("estadisticasJ2", estadisticasJ2);
         }
@@ -309,7 +305,6 @@ public class ControladorTruco {
 
         if (usuarioActual == null) return new ModelAndView("redirect:/login");
         if (idPartida == null) return new ModelAndView("redirect:/home");
-        if (partida == null) return new ModelAndView("redirect:/home");
 
         if (partida.getJ1() != null && partida.getJ2() != null) {
 
@@ -438,8 +433,8 @@ public class ControladorTruco {
 
     @RequestMapping("/abandonar")
     public ModelAndView abandonarPartida(
-                @ModelAttribute("idPartida") Long partidaId,
-                @ModelAttribute("idUsuario") Long idUsuario
+            @ModelAttribute("idPartida") Long partidaId,
+            @ModelAttribute("idUsuario") Long idUsuario
     ) {
         ModelMap model = new ModelMap();
 
@@ -490,7 +485,6 @@ public class ControladorTruco {
         // Retorna jugador que le toca responder si es que responde algo que no sea quiero/no quiero. Si es así, da null;
         servicioMano.responder(mano, accionAlCualResponde, nroRespuesta, Integer.parseInt(nroJugador));
 
-
         return new ModelAndView("redirect:/partida-truco?idPartida=" + idPartida + "&idUsuario=" + idUsuario);
     }
 
@@ -499,12 +493,12 @@ public class ControladorTruco {
             Integer indicadorTruco,
             Integer puntosEnJuegoEnvido,
             Boolean terminoLaMano) {
-        System.out.println("---FiltrarAccionesNormales: INICIO");
-        System.out.println("tengoFlor: " + tengoFlor);
-        System.out.println("indicadorTruco: " + indicadorTruco);
-        System.out.println("puntosEnJuegoEnvido: " + puntosEnJuegoEnvido);
-        System.out.println("terminoLaMano: " + terminoLaMano);
-        System.out.println("---FiltrarAccionesNormales: FIN");
+//        System.out.println("---FiltrarAccionesNormales: INICIO");
+//        System.out.println("tengoFlor: " + tengoFlor);
+//        System.out.println("indicadorTruco: " + indicadorTruco);
+//        System.out.println("puntosEnJuegoEnvido: " + puntosEnJuegoEnvido);
+//        System.out.println("terminoLaMano: " + terminoLaMano);
+//        System.out.println("---FiltrarAccionesNormales: FIN");
         List<Integer> valoresEnvido = Arrays.asList(98, 99);
         return getAccionesNormales().stream()
                 .filter(accion -> accion.getNro() != 5
@@ -516,10 +510,10 @@ public class ControladorTruco {
     }
 
     private List<Accion> filtrarAccionesTruco(Integer indicadorTruco, Boolean hayQuiero) {
-        System.out.println("---FiltrarAccionesTruco: INICIO");
-        System.out.println("indicadorTruco: " + indicadorTruco);
-        System.out.println("hayQuiero: " + hayQuiero);
-        System.out.println("---FiltrarAccionesTruco: FIN");
+//        System.out.println("---FiltrarAccionesTruco: INICIO");
+//        System.out.println("indicadorTruco: " + indicadorTruco);
+//        System.out.println("hayQuiero: " + hayQuiero);
+//        System.out.println("---FiltrarAccionesTruco: FIN");
         List<Integer> valoresQuiero = Arrays.asList(1, 2, 3);
         List<Integer> valoresNoQuiero = Arrays.asList(1, 2, 3);
         return getAccionesTruco().stream()
@@ -531,13 +525,12 @@ public class ControladorTruco {
     }
 
     private List<Accion> filtrarAccionesEnvido(Integer indicadorEnvido, Boolean puedoCantarEnvido) {
-        System.out.println("---filtrarAccionesEnvido: INICIO");
-        System.out.println("Me llegan puntos en juego del envido: " + indicadorEnvido);
-        System.out.println("puedoCantarEnvido: " + puedoCantarEnvido);
-        System.out.println("---filtrarAccionesEnvido: FIN");
-
-        List<Integer> valoresFaltaEnvido = Arrays.asList(-1, 2, 3, 4, 5, 7, 99);
-        List<Integer> valoresRealEnvido = Arrays.asList(2, 3, 4, 5, 99);
+//        System.out.println("---filtrarAccionesEnvido: INICIO");
+//        System.out.println("Me llegan puntos en juego del envido: " + indicadorEnvido);
+//        System.out.println("puedoCantarEnvido: " + puedoCantarEnvido);
+//        System.out.println("---filtrarAccionesEnvido: FIN");
+        List<Integer> valoresFaltaEnvido = Arrays.asList(2, 3, 4, 5, 7, 99);
+        List<Integer> valoresRealEnvido = Arrays.asList(2, 4, 99);
         List<Integer> valoresEnvido = Arrays.asList(2, 99);
         List<Integer> valoresQuieroNoQuiero = Arrays.asList(-1, 2, 3, 4, 5, 7);
 
@@ -556,13 +549,11 @@ public class ControladorTruco {
     }
 
     private Boolean saberSiFueEnvido(Integer ultimaAccionPreguntada) {
-        System.out.println("Ultima accion preguntada: " + ultimaAccionPreguntada);
         List<Integer> ve = Arrays.asList(2, 3, 5, 4, 99);
         return ve.contains(ultimaAccionPreguntada);
     }
 
     private Boolean saberSiFueTruco(Integer ultimaAccionPreguntada) {
-        System.out.println("Ultima accion preguntada: " + ultimaAccionPreguntada);
         List<Integer> ve = Arrays.asList(2, 5, 6, 7);
         return ve.contains(ultimaAccionPreguntada);
     }
