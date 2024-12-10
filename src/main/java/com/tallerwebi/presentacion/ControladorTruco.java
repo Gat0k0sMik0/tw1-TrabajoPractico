@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.infraestructura.ServicioEstadisticasImpl;
+import com.tallerwebi.infraestructura.ServicioPartidaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -275,14 +276,30 @@ public class ControladorTruco {
 
     @RequestMapping("/cambiar-mano")
     public ModelAndView cambiarMano(
-            @RequestParam("idPartida") Long idPartida,
-            @RequestParam("idUsuario") Long idUsuario
+            @ModelAttribute("idPartida") Long idPartida,
+            @ModelAttribute("idUsuario") Long idUsuario
     ) {
         ModelMap model = new ModelMap();
         model.put("idUsuario", idUsuario);
 
-        Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
+        model.put("usuarioActual", usuarioActual);
+
+        // Obtener partida
+        Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
+        if (partida == null) return new ModelAndView("redirect:/home");
+        model.put("partida", partida);
+
+        // Obtenemos estadisticas de jugadores en caso de existir
+        if(partida.getJ1() != null) {
+            Estadistica estadisticasJ1 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ1().getUsuario());
+            model.put("estadisticasJ1", estadisticasJ1);
+        }
+        if(partida.getJ2() != null) {
+            Estadistica estadisticasJ2 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ2().getUsuario());
+            model.put("estadisticasJ2", estadisticasJ2);
+        }
+
         Mano ultimaMano = servicioMano.obtenerManoPorId(idPartida);
         if (!ultimaMano.getEstaTerminada()) {
             return new ModelAndView("redirect:/partida-truco?idPartida=" + partida.getId() + "&idUsuario=" + usuarioActual.getId());
@@ -410,13 +427,33 @@ public class ControladorTruco {
 
     @RequestMapping("/salir")
     public ModelAndView salirDeLaPartida(
-            @RequestParam("mano") String manoId
+            @ModelAttribute("mano") String manoId
     ) {
         Mano mano = servicioMano.obtenerManoPorId(Long.parseLong(manoId));
         if (mano == null) return new ModelAndView("redirect:/home");
         // Termino la partida, hay ganador, la mano quedá así antes de SALIR:
         // TODO agregar logica para sumar puntos o algo al que gano (estadistica)
         return new ModelAndView("redirect:/home");
+    }
+
+    @RequestMapping("/abandonar")
+    public ModelAndView abandonarPartida(
+                @ModelAttribute("idPartida") Long partidaId,
+                @ModelAttribute("idUsuario") Long idUsuario
+    ) {
+        ModelMap model = new ModelMap();
+
+        // Obtener usuario
+        Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
+        if (usuarioActual == null) return new ModelAndView("redirect:/login");
+
+        // Obtener partida
+        Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
+        if (partida == null) return new ModelAndView("redirect:/home");
+
+        servicioTruco.jugadorAbandona(partidaId, idUsuario);
+
+        return new ModelAndView("redirect:/partida-truco?idPartida=" + partida.getId() + "&idUsuario=" + usuarioActual.getId());
     }
 
 
@@ -511,7 +548,6 @@ public class ControladorTruco {
         List<Integer> ve = Arrays.asList(2, 5, 6, 7);
         return ve.contains(ultimaAccionPreguntada);
     }
-
 
     private List<Accion> getAccionesNormales() {
         List<Accion> acciones = new ArrayList<>();

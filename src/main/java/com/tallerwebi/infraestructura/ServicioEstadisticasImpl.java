@@ -53,8 +53,8 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         estadisticaJ2.setJugadas(estadisticaJ2.getJugadas() + 1);
 
         // Guardar o actualizar estadísticas
-        this.repositorioEstadistica.guardarEstadistica(estadisticaJ1);
-        this.repositorioEstadistica.guardarEstadistica(estadisticaJ2);
+        this.repositorioEstadistica.actualizarEstadistica(estadisticaJ1);
+        this.repositorioEstadistica.actualizarEstadistica(estadisticaJ2);
     }
 
     @Override
@@ -64,6 +64,8 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         nuevaEstadistica.setJugadas(0); // Inicialmente 0
         nuevaEstadistica.setGanadas(0); // Inicialmente 0
         nuevaEstadistica.setJuego("Truco"); // Juego asociado
+        this.repositorioEstadistica.guardarEstadistica(nuevaEstadistica);
+
         return nuevaEstadistica;
     }
 

@@ -82,10 +82,26 @@
                 <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
                     <a th:href="@{/comenzar-truco(idPartida= ${idPartida}, idUsuario=${idUsuario})}" th:if="${ganador == null}" class="w-100">                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                     </a>
+                    <!-- IMAGEN REPARTIR -->
                     <a th:if="${ganador != null}" class="mazo">
                         <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
-                        <img th:if="${!partidaIniciada}" th:src="/img/cartas-truco/repartir-cartas-v2.png" alt="">
+                        <img th:if="${partida.puntosJ2 == null} and ${partida.puntosJ1 == null}" th:src="/img/cartas-truco/repartir-cartas-v2.png" alt="">
                     </a>
+                    <!-- CAMBIAR MANO -->
+                    <a th:if="${seTermino}"
+                       class="btn cambiar-mano"
+                       th:text="'Jugar otra mano'"
+                       th:href="@{/cambiar-mano(idPartida=${idPartida}, idUsuario=${idUsuario})}"></a>
+                </div>
+                <!-- MENSAJE FIN DE PARTIDA -->
+                <div th:if="${ganador != null}" class="final">
+                    <!-- GANADOR -->
+                    <p>¡<strong class="italic" th:text="${ganador != null ? ganador.getNombre() : 'Por definir.'}"
+                                           th:style="${ganador != null && ganador.usuario != null && ganador.usuario.id != null && ganador.usuario.id == usuarioActual.id ? 'color: green;' : 'color: red;'}"></strong> ha ganado la partida!
+                    </p>
+                    <!-- SALIR -->
+                    <a th:class="${ganador != null && ganador.usuario.id == usuarioActual.id ? 'btn cambiar-mano' : 'btn envido'}"
+                       th:href="@{/home(idUsuario=${usuarioActual.id})}">Salir</a>
                 </div>
                 <!-- CARTAS TIRADAS -->
                 <div class="col-4 cartasTiradasContainer" th:if="${mano != null}">
@@ -157,12 +173,6 @@
                     </th:block>
                 </div>
 
-                <div th:if="${ganador != null}">
-                    <p>Ganador: <strong th:text="${ganador != null ? ganador.getNombre() + '.' : 'Por definir.'}"></strong>!</p>
-                    <a class="btn btn-danger"
-                       th:href="@{/salir(mano=${mano.id})}">Salir</a>
-                </div>
-
             </div>
         </div>
 
@@ -202,11 +212,9 @@
                     </p>
                     <!-- ID PARTIDA -->
                     <p th:text="'Partida N: ' + ${partida.id}"></p>
-                    <!-- BOTON CAMBIAR MANO -->
-                    <a th:if="${seTermino}"
-                       class="btn btn-danger"
-                       th:text="'Jugar otra mano'"
-                       th:href="@{/cambiar-mano(idPartida=${idPartida}, idUsuario=${idUsuario})}"></a>
+                    <!-- BOTON ABANDONAR -->
+                    <a class="btn envido"
+                       th:href="@{/abandonar(idPartida=${idPartida}, idUsuario=${idUsuario})}">ABANDONAR</a>
                 </div>
             </div>
 

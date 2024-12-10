@@ -423,8 +423,18 @@ h3 {
 }
 .envido:hover {
     background-color: white;
-    color: #c9302c;;
+    color: #c9302c;
     border: solid 3px #c9302c;
+    box-sizing: border-box;
+}
+
+.cambiar-mano {
+    background-color: #09aa4d;
+}
+.cambiar-mano:hover {
+    background-color: white;
+    color: #09aa4d;;
+    border: solid 3px #09aa4d;
     box-sizing: border-box;
 }
 
@@ -480,5 +490,14 @@ h3 {
     font-weight: lighter;
 }
 
+/* ABANDONAR/GANAR */
+.final {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+}
 
 
