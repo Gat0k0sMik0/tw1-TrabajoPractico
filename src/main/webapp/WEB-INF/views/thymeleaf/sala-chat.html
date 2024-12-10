@@ -23,7 +23,7 @@
             <!-- Aquí se mostrarán los mensajes -->
             <th:block>
                 <div
-                        th:class="${'d-flex styledContenedorMensaje' + idUsuario1.equals(usuarioActual.id) ? 'align-self-end' : 'align-self-start'}"
+                        th:class="${'d-flex styledContenedorMensaje' + (idUsuario1.equals(usuarioActual.id) ? 'align-self-end' : 'align-self-start')}"
                         th:each="mensaje : ${historial}">
                     <div th:class="${'message' + idUsuario1.equals(usuarioActual.id)
                     ? 'bg-success-subtle rightMessage pe-4 ps-3'

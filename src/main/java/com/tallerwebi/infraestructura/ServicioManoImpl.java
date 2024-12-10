@@ -429,9 +429,6 @@ public class ServicioManoImpl implements ServicioMano {
     private void obtenerGanadorDeRonda(Partida truco, Mano mano, Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
         if (mano.getCartasTiradasJ1().size() == mano.getCartasTiradasJ2().size()) {
-            System.out.println("Ya tiraron los 2, ahora calculo quien gano la ronda");
-            System.out.println("Largo de cartas tiradas J1 " + mano.getCartasTiradasJ1().size());
-            System.out.println("Largo de cartas tiradas J2 " + mano.getCartasTiradasJ2().size());
             // Conseguimos las últimas tiradas.
             Carta cartaJ1 = mano.getCartasTiradasJ1().get(mano.getCartasTiradasJ2().size() - 1);
             Carta cartaJ2 = mano.getCartasTiradasJ2().get(mano.getCartasTiradasJ1().size() - 1);

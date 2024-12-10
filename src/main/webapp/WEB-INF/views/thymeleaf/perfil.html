@@ -77,7 +77,7 @@
                         </div>
                         <div class="progress col-12">
                             <div class="progress-bar" role="progressbar"
-                                 th:style="'width:' + ${estadistica.getProgresoNivel()} + '%;'"
+                                 th:style="${'width:' + ${estadistica.getProgresoNivel()} + '%'}"
                                  th:text="${estadistica.getProgresoNivel() + '%'}">
                             </div>
                         </div>

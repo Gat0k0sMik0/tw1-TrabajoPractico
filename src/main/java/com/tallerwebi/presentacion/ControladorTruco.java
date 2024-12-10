@@ -73,24 +73,16 @@ public class ControladorTruco {
     @RequestMapping("/partida-truco")
     public ModelAndView irAPartidaTruco(HttpSession session) {
 
-        System.out.println("partida-truco: ejecutado");
         ModelMap model = new ModelMap();
 
         Long partidaId = (Long) session.getAttribute("idPartida");
         Usuario usuarioActual = (Usuario) session.getAttribute("usuarioActual");
 
-        System.out.println("partida-truco: usuarioActual " + usuarioActual);
-        System.out.println("partida-truco: idPartida de session " + partidaId);
-
         if (usuarioActual == null) return new ModelAndView("redirect:/login");
         if (partidaId == null) return new ModelAndView("redirect:/home");
 
-        System.out.println("partida-truco: Recibo id de partida: " + partidaId);
         Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
         if (partida == null) return new ModelAndView("redirect:/home");
-
-        System.out.println("partida-truco: Partida encontrada: ");
-        System.out.println(partida);
 
         if (partida.getJ1() != null && partida.getJ2() != null) {
 
@@ -99,9 +91,6 @@ public class ControladorTruco {
                 Mano mano = servicioMano.obtenerManoPorId(partida.getId());
 
                 if (partida.getGanador() != null) {
-                    System.out.println("Hay ganador, guardando todo...");
-                    System.out.println("Te muestro la maon para que la veas");
-                    System.out.println(mano);
                     model.put("ganador", partida.getGanador());
                     model.put("partidaFinalizada", true);
                     model.put("mano", mano);
