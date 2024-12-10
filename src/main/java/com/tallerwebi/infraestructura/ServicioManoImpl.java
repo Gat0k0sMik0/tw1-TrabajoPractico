@@ -122,6 +122,7 @@ public class ServicioManoImpl implements ServicioMano {
         m.setRespondeAhora(m.getTiraAhora());
         m.setIndicadorTruco(0);
         m.setPuntosEnJuegoEnvido(99);
+        m.setPuntosEnJuegoFlor(0);
         m.setUltimaAccionPreguntada(99);
         m.setHayQuiero(false);
     }
@@ -203,12 +204,26 @@ public class ServicioManoImpl implements ServicioMano {
     }
 
     private void asignarCartasJugadores(Jugador j1, Jugador j2, Mano m) {
-        List<Carta> cartas = repositorioCarta.obtenerCartas();
+        /*List<Carta> cartas = repositorioCarta.obtenerCartas();
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom, m);
-        asignarCartasJugador(j2, seisCartasRandom, m);
-        System.out.println("asignarCartasJugadores: Cartas J1: " + m.getCartasJ1());
-        System.out.println("asignarCartasJugadores: Cartas J2: " + m.getCartasJ2());
+        asignarCartasJugador(j2, seisCartasRandom, m);*/
+        List<Carta> cartas = repositorioCarta.obtenerCartas();
+        Carta espada1 = cartas.get(2);
+        Carta espada2 = cartas.get(6);
+        Carta espada3 = cartas.get(11);
+
+        Carta oro1 = cartas.get(0);
+        Carta oro2 = cartas.get(4);
+        Carta oro3 = cartas.get(14);
+
+        m.getCartasJ1().add(espada1);
+        m.getCartasJ1().add(espada2);
+        m.getCartasJ1().add(espada3);
+
+        m.getCartasJ2().add(oro1);
+        m.getCartasJ2().add(oro2);
+        m.getCartasJ2().add(oro3);
     }
 
     private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano m) {
@@ -286,7 +301,7 @@ public class ServicioManoImpl implements ServicioMano {
             this.repositorioMano.merge(mano);
             return receptor;
         } else if (esEnvido(accionRealizada)) {
-            mano.setPuntosEnJuegoEnvido(0);
+            if (mano.getPuntosEnJuegoEnvido().equals(99)) mano.setPuntosEnJuegoEnvido(0);
             preguntarEnvido(accionRealizada, ejecutor, mano);
             mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
             mano.setRespondeAhora(receptor);
@@ -306,7 +321,11 @@ public class ServicioManoImpl implements ServicioMano {
             } else {
                 truco.setPuntosJ2(truco.getPuntosJ2() + 3);
             }
+            mano.setPuntosEnJuegoFlor(98);
+            mano.setPuntosEnJuegoEnvido(98);
             this.repositorioTruco.merge(truco);
+            this.repositorioMano.merge(mano);
+
 
             return ejecutor;
         } else if (accionRealizada.equals("MAZO")) {
@@ -430,9 +449,6 @@ public class ServicioManoImpl implements ServicioMano {
     private void obtenerGanadorDeRonda(Partida truco, Mano mano, Jugador jugador1, Jugador jugador2) {
         // Si ya tiraron los 2
         if (mano.getCartasTiradasJ1().size() == mano.getCartasTiradasJ2().size()) {
-            System.out.println("Ya tiraron los 2, ahora calculo quien gano la ronda");
-            System.out.println("Largo de cartas tiradas J1 " + mano.getCartasTiradasJ1().size());
-            System.out.println("Largo de cartas tiradas J2 " + mano.getCartasTiradasJ2().size());
             // Conseguimos las últimas tiradas.
             Carta cartaJ1 = mano.getCartasTiradasJ1().get(mano.getCartasTiradasJ2().size() - 1);
             Carta cartaJ2 = mano.getCartasTiradasJ2().get(mano.getCartasTiradasJ1().size() - 1);
@@ -614,7 +630,6 @@ public class ServicioManoImpl implements ServicioMano {
                     // Envido, envido, real envido
                     manejarCalculoFlorNormal(truco, tantosJ1, tantosJ2);
                 }
-                mano.setPuntosEnJuegoFlor(98);
 
             } else {
                 // TODO no acepta, sumar al contrario
@@ -624,7 +639,7 @@ public class ServicioManoImpl implements ServicioMano {
                     } else {
                         truco.setPuntosJ2(truco.getPuntosJ2() + 2);
                     }
-                } else if (mano.getPuntosEnJuegoEnvido().equals(6)) {
+                } else if (mano.getPuntosEnJuegoFlor().equals(6)) {
                     if (receptor.getNumero().equals(truco.getJ1().getNumero())) {
                         truco.setPuntosJ1(truco.getPuntosJ1() + 3);
                     } else {
@@ -632,6 +647,7 @@ public class ServicioManoImpl implements ServicioMano {
                     }
                 }
             }
+            mano.setPuntosEnJuegoFlor(98);
             mano.setPuntosEnJuegoEnvido(98);
             return mano.getTiraAhora();
         } else if (respuestaDeLaAccion.equals("CONTRAFLOR")) {
@@ -833,14 +849,15 @@ public class ServicioManoImpl implements ServicioMano {
             truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
         } else {
             // Mismos tantos
-            if (this.empezoLaMano.equals(truco.getJ1())) {
+            if (this.empezoLaMano.getNumero().equals(truco.getJ1().getNumero())) {
                 puntosParaElGanador = truco.getPuntosParaGanar() - puntosJ2;
                 truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
             }
-            if (this.empezoLaMano.equals(truco.getJ2())) {
+            if (this.empezoLaMano.getNumero().equals(truco.getJ2().getNumero())) {
                 puntosParaElGanador = truco.getPuntosParaGanar() - puntosJ1;
                 truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
             }
+
         }
 
         // Saber si alguno llego a los puntos para terminar la partida

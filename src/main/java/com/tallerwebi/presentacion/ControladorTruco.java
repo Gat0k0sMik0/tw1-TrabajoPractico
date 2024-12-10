@@ -228,11 +228,8 @@ public class ControladorTruco {
 
         // Si no existe la partida, redirige a /home
         if (partida == null) {
-            System.out.println("Partida no encontrada");
             return new ModelAndView("redirect:/home");
         }
-
-        System.out.println("El ID es " + idUsuario);
 
         // Empezamos la partida y la mano
         servicioTruco.empezar(partida);
@@ -458,8 +455,8 @@ public class ControladorTruco {
 
     @RequestMapping("/abandonar")
     public ModelAndView abandonarPartida(
-                @ModelAttribute("idPartida") Long partidaId,
-                @ModelAttribute("idUsuario") Long idUsuario
+            @ModelAttribute("idPartida") Long partidaId,
+            @ModelAttribute("idUsuario") Long idUsuario
     ) {
         ModelMap model = new ModelMap();
 
@@ -489,7 +486,7 @@ public class ControladorTruco {
 
         // Obtener partida y mano
         Mano mano = servicioMano.obtenerManoPorId(idPartida);
-
+        System.out.println("Accion que llegó: " + accionValue);
         servicioMano.preguntar(mano, accionValue, Integer.parseInt(nroJugador));
 
         return new ModelAndView("redirect:/partida-truco?idPartida=" + idPartida + "&idUsuario=" + idUsuario);
@@ -520,6 +517,8 @@ public class ControladorTruco {
             Integer puntosEnJuegoEnvido,
             Boolean terminoLaMano) {
         List<Integer> valoresEnvido = Arrays.asList(98, 99);
+        System.out.println("Puntos en juego envido: " + puntosEnJuegoEnvido);
+
         return getAccionesNormales().stream()
                 .filter(accion -> accion.getNro() != 5
                         || (indicadorTruco == 0 && valoresEnvido.contains(puntosEnJuegoEnvido)))
@@ -540,8 +539,8 @@ public class ControladorTruco {
     }
 
     private List<Accion> filtrarAccionesEnvido(Integer indicadorEnvido, Boolean puedoCantarEnvido) {
-        List<Integer> valoresFaltaEnvido = Arrays.asList(-1, 2, 3, 4, 5, 7, 99);
-        List<Integer> valoresRealEnvido = Arrays.asList(2, 3, 4, 5, 99);
+        List<Integer> valoresFaltaEnvido = Arrays.asList(2, 3, 4, 5, 7, 99);
+        List<Integer> valoresRealEnvido = Arrays.asList(2, 4, 99);
         List<Integer> valoresEnvido = Arrays.asList(2, 99);
         List<Integer> valoresQuieroNoQuiero = Arrays.asList(-1, 2, 3, 4, 5, 7);
 
@@ -561,10 +560,11 @@ public class ControladorTruco {
 
     //TODO: Ver si está bien
     private List<Accion> filtrarAccionesFlor(Integer puntosEnJuegoFlor, Boolean puedoCantarFlor) {
-        List<Integer> valoresContraflorAlResto = Arrays.asList(-1, 3, 6, 99);
-        List<Integer> valoresContraflor = Arrays.asList(0, 3); // Seria solo el 3, agrego el 0 pq no se puede poner solo un valor
+        List<Integer> valoresContraflorAlResto = Arrays.asList(3, 6);
+        List<Integer> valoresContraflor = Arrays.asList(-2, 3); // Seria solo el 3, agrego el -2 pq no se puede poner solo un valor
         List<Integer> valoresQuieroNoQuiero = Arrays.asList(-1, 3, 6);
 
+        System.out.println("Puntos en juego " + puntosEnJuegoFlor);
         return getAccionesFlor().stream()
                 .filter(accion ->
                         accion.getNro() != 0 || valoresQuieroNoQuiero.contains(puntosEnJuegoFlor))
