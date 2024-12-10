@@ -62,23 +62,41 @@
                     <button class="btn" onclick="toggleEditForm()">Editar Perfil</button>
                 </div>
             </div>
-
-            <form id="formEditarUsuario" th:action="@{/actualizar-perfil}" method="post" accept-charset="UTF-8" class="hidden">
+            <!--EDITAR PERFIL-->
+            <form id="formEditarUsuario"th:action="@{/actualizar-perfil(id=${usuarioActual.id})}" method="post" accept-charset="UTF-8" class="hidden">
                 <label for="nombre">Nombre de usuario</label>
                 <input name="nombreUsuario" class="input" type="text" id="nombre"
-                       th:value="${usuarioActual.nombreUsuario}" placeholder="Ej: Jaimito4570" style="border-radius: 40px;" required>
+                       th:value="${usuarioActual.nombreUsuario}" placeholder="Ej: Jaimito4570" style="border-radius: 40px;" >
 
                 <label for="email">Correo Electrónico</label>
                 <input name="email" class="input" type="email" id="email"
-                       th:value="${usuarioActual.email}" placeholder="Ej: name@example.com" style="border-radius: 40px;" required>
+                       th:value="${usuarioActual.email}" placeholder="Ej: name@example.com" style="border-radius: 40px;" >
 
                 <label for="password">Contraseña</label>
-                <input name="password" class="input" type="password" id="password"
-                       placeholder="Entre 5 y 15 caracteres" style="border-radius: 40px;" required>
+                <div class="contrasena">
+                    <input name="password" class="input" type="password" id="password"
+                           th:value="${usuarioActual.password}" placeholder="Entre 5 y 15 caracteres" style="border-radius: 40px;" >
+                    <button type="button" onclick="togglePasswordVisibility('password', this)">
+                        <!-- SVG de un ojo (abierto por defecto) -->
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
 
                 <label for="password2">Repetir Contraseña</label>
-                <input name="confirmPassword" class="input" type="password" id="password2"
-                       placeholder="Entre 5 y 15 caracteres" style="border-radius: 40px;" required>
+                <div class="contrasena">
+                    <input name="confirmPassword" class="input" type="password" id="password2"
+                           th:value="${usuarioActual.password}"   placeholder="Entre 5 y 15 caracteres" style="border-radius: 40px;" >
+                    <button type="button" onclick="togglePasswordVisibility('password2', this)">
+                        <!-- SVG de un ojo (abierto por defecto) -->
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
 
                 <label for="descripcion">Actualiza tu descripción</label>
                 <textarea name="descripcion" id="descripcion"
@@ -257,6 +275,11 @@
             datosUsuario.classList.add('hidden');
             formEditarUsuario.classList.remove('hidden');
         }
+    }
+    //BOTON DE VER CONTRA
+    function togglePasswordVisibility(fieldId) {
+        const field = document.getElementById(fieldId);
+        field.type = field.type === 'password' ? 'text' : 'password';
     }
 </script>
 </body>
