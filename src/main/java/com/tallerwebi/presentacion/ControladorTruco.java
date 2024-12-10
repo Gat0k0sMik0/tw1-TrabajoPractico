@@ -193,6 +193,7 @@ public class ControladorTruco {
 
                 model.put("partidaIniciada", partida.getPuedeEmpezar() != null ? partida.getPuedeEmpezar() : false);
 
+                model.put("mostrarMazo", true);
                 return new ModelAndView("partida-truco", model);
             }
 
@@ -223,6 +224,7 @@ public class ControladorTruco {
     public ModelAndView comenzarTruco(@ModelAttribute("idPartida") Long idPartida,
                                       @ModelAttribute("idUsuario") Long idUsuario
             ) {
+        ModelMap model = new ModelMap();
         // Obtén la partida por su ID
         Partida partida = servicioTruco.obtenerPartidaPorId(idPartida);
 
@@ -235,6 +237,7 @@ public class ControladorTruco {
         servicioTruco.empezar(partida);
         servicioMano.empezar(partida);
 
+        model.put("mostrarMazo", false);
         return new ModelAndView("redirect:/partida-truco?idPartida=" + partida.getId() + "&idUsuario=" + idUsuario);
     }
 
@@ -386,35 +389,33 @@ public class ControladorTruco {
                     );
                 }
 
+                // ACCIONES ENVIDO
                 model.put("accionesEnvido", this.filtrarAccionesEnvido(
                         mano.getPuntosEnJuegoEnvido(),
                         servicioMano.esLaPrimerRonda(mano))
                 );
+                // ACCIONES TRUCO
                 model.put("accionesTruco", this.filtrarAccionesTruco(mano.getIndicadorTruco(), mano.getHayQuiero()));
                 model.put("respondoYo",
                         mano.getRespondeAhora() != null
                                 && mano.getRespondeAhora().getUsuario().getId().equals(usuarioActual.getId())
                 );
+                // ACCIONES FLOR
                 model.put("accionesFlor", this.filtrarAccionesFlor(
                         mano.getPuntosEnJuegoFlor(),
                         servicioMano.esLaPrimerRonda(mano))
                 );
+                // RESPUESTAS
                 model.put("respondoEnvido", this.saberSiFueEnvido(mano.getUltimaAccionPreguntada()));
                 model.put("respondoTruco", this.saberSiFueTruco(mano.getUltimaAccionPreguntada()));
+                model.put("respondoFlor", this.saberSiFueFlor(mano.getUltimaAccionPreguntada()));
                 model.put("meTocaTirar", mano.getTiraAhora().getUsuario().getId().equals(usuarioActual.getId()));
                 model.put("tiraAhora", mano.getTiraAhora());
 
-
                 // Atributos independientes de que jugador es cual
                 model.put("seTermino", mano.getEstaTerminada());
-
-                if (mano.getEstaTerminada()) {
-                    model.put("respondoYo", false);
-                }
-
                 model.put("puntosParaGanar", partida.getPuntosParaGanar());
                 model.put("mano", mano);
-                model.put("partida", partida);
                 model.put("idPartida", partida.getId());
                 model.put("accionAResponder", mano.getUltimaAccionPreguntada());
 
@@ -425,6 +426,7 @@ public class ControladorTruco {
 
             model.put("ganador", partida.getGanador());
             model.put("idPartida", partida.getId());
+            model.put("idUsuario", idUsuario);
 
             model.put("respondoYo", false);
             model.put("respondoEnvido", false);
@@ -486,7 +488,6 @@ public class ControladorTruco {
 
         // Obtener partida y mano
         Mano mano = servicioMano.obtenerManoPorId(idPartida);
-        System.out.println("Accion que llegó: " + accionValue);
         servicioMano.preguntar(mano, accionValue, Integer.parseInt(nroJugador));
 
         return new ModelAndView("redirect:/partida-truco?idPartida=" + idPartida + "&idUsuario=" + idUsuario);
@@ -517,7 +518,6 @@ public class ControladorTruco {
             Integer puntosEnJuegoEnvido,
             Boolean terminoLaMano) {
         List<Integer> valoresEnvido = Arrays.asList(98, 99);
-        System.out.println("Puntos en juego envido: " + puntosEnJuegoEnvido);
 
         return getAccionesNormales().stream()
                 .filter(accion -> accion.getNro() != 5
@@ -564,7 +564,6 @@ public class ControladorTruco {
         List<Integer> valoresContraflor = Arrays.asList(-2, 3); // Seria solo el 3, agrego el -2 pq no se puede poner solo un valor
         List<Integer> valoresQuieroNoQuiero = Arrays.asList(-1, 3, 6);
 
-        System.out.println("Puntos en juego " + puntosEnJuegoFlor);
         return getAccionesFlor().stream()
                 .filter(accion ->
                         accion.getNro() != 0 || valoresQuieroNoQuiero.contains(puntosEnJuegoFlor))

@@ -74,7 +74,6 @@ public class ServicioManoImpl implements ServicioMano {
         // Asignacion de cartas a los jugadores
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
 
-        System.out.println("Guardo una mano nueva");
         // Guardamos  mano
         repositorioMano.guardar(m);
     }
@@ -102,7 +101,6 @@ public class ServicioManoImpl implements ServicioMano {
         // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
 
-        System.out.println("Comenzó una nueva mano: ");
         // Guardamos nueva mano
         this.repositorioMano.guardar(nueva);
 
@@ -129,14 +127,12 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public void     limpiarMano(Mano ultimaMano) {
-        System.out.println("Limpiando mano");
         ultimaMano.getCartasTiradasJ1().clear();
         ultimaMano.getCartasTiradasJ2().clear();
         ultimaMano.getCartasJ1().clear();
         ultimaMano.getCartasJ2().clear();
         ultimaMano.setConfirmacionTerminada(true);
 
-        System.out.println("Guardo una mano vieja limpia");
         this.repositorioMano.guardar(ultimaMano);
     }
 
@@ -150,8 +146,6 @@ public class ServicioManoImpl implements ServicioMano {
         Hibernate.initialize(m.getCartasJ2());
         Hibernate.initialize(m.getCartasTiradasJ1());
         Hibernate.initialize(m.getCartasTiradasJ2());
-        System.out.println("Mano pedida: ");
-        System.out.println(m);
         return m;
     }
 
@@ -204,14 +198,15 @@ public class ServicioManoImpl implements ServicioMano {
     }
 
     private void asignarCartasJugadores(Jugador j1, Jugador j2, Mano m) {
-        /*List<Carta> cartas = repositorioCarta.obtenerCartas();
+        List<Carta> cartas = repositorioCarta.obtenerCartas();
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom, m);
-        asignarCartasJugador(j2, seisCartasRandom, m);*/
-        List<Carta> cartas = repositorioCarta.obtenerCartas();
+        asignarCartasJugador(j2, seisCartasRandom, m);
+        // PARA VER LAS RESPUESTAS DE FLOR
+        /*List<Carta> cartas = repositorioCarta.obtenerCartas();
         Carta espada1 = cartas.get(2);
         Carta espada2 = cartas.get(6);
-        Carta espada3 = cartas.get(11);
+        Carta espada3 = cartas.get(10);
 
         Carta oro1 = cartas.get(0);
         Carta oro2 = cartas.get(4);
@@ -223,7 +218,7 @@ public class ServicioManoImpl implements ServicioMano {
 
         m.getCartasJ2().add(oro1);
         m.getCartasJ2().add(oro2);
-        m.getCartasJ2().add(oro3);
+        m.getCartasJ2().add(oro3);*/
     }
 
     private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano m) {
@@ -928,7 +923,6 @@ public class ServicioManoImpl implements ServicioMano {
         if (tieneDosDelMismoPalo.isEmpty()) {
             return 0;
         } else {
-            System.out.println("Encontré dos o más con el mismo palo");
             return this.obtenerSumaDeLasMasAltas(tieneDosDelMismoPalo);
         }
     }
