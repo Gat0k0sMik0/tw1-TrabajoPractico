@@ -74,12 +74,15 @@ public class ServicioPartidaImpl implements ServicioPartida {
         truco.setPuedeEmpezar(true);
     }
 
-
     @Override
-    public List<Partida> getPartidasDisponibles() {
-        return this.repositorioTruco.getPartidasDisponibles();
+    public List<Partida> getPartidasDisponibles(Long idUsuario) {
+        return this.repositorioTruco.getPartidasDisponibles(idUsuario);
     }
 
+    @Override
+    public List<Partida> obtenerPartidasNoTerminadas(Long idUsuario) {
+        return repositorioTruco.buscarPartidasNoTerminadas(idUsuario);
+    }
 
     @Override
     public void empezar(Partida truco) {
@@ -121,7 +124,18 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         // Guardar los cambios
         repositorioTruco.merge(partida);
-}
+    }
+
+    @Override
+    public void jugadorAbandona(Long idPartida, Long idUsuario) {
+        Partida partida = repositorioTruco.buscarPartidaPorId(idPartida);
+        if (partida.getJ1().getUsuario().getId().equals(idUsuario)) {
+            partida.setGanador(partida.getJ2());
+        } else {
+            partida.setGanador(partida.getJ1());
+        }
+        repositorioTruco.merge(partida);
+    }
 
     // Método para registrar la victoria de un jugador
     private void registrarVictoria(Jugador ganador) {

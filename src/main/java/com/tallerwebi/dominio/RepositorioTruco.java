@@ -18,7 +18,11 @@ public interface RepositorioTruco {
     @Transactional
     Jugador obtenerJugadorPorID(Long id);
 
-    List<Partida> getPartidasDisponibles();
+    @Transactional
+    List<Partida> getPartidasDisponibles(Long idUsuario);
+
+    @Transactional
+    List<Partida> buscarPartidasNoTerminadas(Long idUsuario);
 
     List<Partida> getTodasLasPartidas();
 }

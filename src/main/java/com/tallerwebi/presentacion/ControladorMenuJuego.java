@@ -35,8 +35,9 @@ public class ControladorMenuJuego {
         if (ua == null) return new ModelAndView("redirect:/login");
 
         ModelMap model = new ModelMap();
-        List<Partida> partidasDisponibles = servicioTruco.getPartidasDisponibles();
+        List<Partida> partidasDisponibles = servicioTruco.getPartidasDisponibles(idUsuario);
         List<Partida> partidas = servicioTruco.obtenerUltimas3PartidasDeUnJugador(ua);
+        List<Partida> partidasNoTerminadas = servicioTruco.obtenerPartidasNoTerminadas(idUsuario);
         List <Estadistica> top =  servicioEstadisticas.obtenerTopJugadores();
         Estadistica misEstadisticas = servicioEstadisticas.obtenerEstadisticasDeUnJugador(ua);
 
@@ -44,6 +45,7 @@ public class ControladorMenuJuego {
 
         model.put("partidasDisponibles", partidasDisponibles);
         model.put("partidas", partidas);
+        model.put("partidasNoTerminadas", partidasNoTerminadas);
         model.put("usuario", ua);
         model.put("topJugadores", top);
         model.put("misEstadisticas", misEstadisticas);

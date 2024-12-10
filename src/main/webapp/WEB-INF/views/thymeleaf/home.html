@@ -70,7 +70,7 @@
     <main>
         <figure style="width: 100%; height: 219px; background-size: cover; background-position: center;">
             <figcaption>Truco</figcaption>
-            <form th:action="@{/menuJuego}" method="get" >
+            <form th:action="@{/menuJuego}" method="post" >
                 <!-- Campo oculto para pasar el usuario -->
                 <input type="hidden" name="idUsuario" th:value="${usuario.id}">
 

@@ -21,6 +21,7 @@ public class ServicioManoImpl implements ServicioMano {
     private Integer puntosEnJuegoEnvido;
     private Integer puntosEnJuegoFlor;
     private Integer indicadorTruco; // 1 -> truco, 2 -> retruco, 3 -> vale 4
+    private Integer indicadorFlor; // 1 -> flor, 2 -> contraflor, 3 -> contraflor al resto
     private Integer puntosEnJuegoMano;
 
     private Jugador diceEnvidoJ1;
@@ -268,7 +269,7 @@ public class ServicioManoImpl implements ServicioMano {
         return this.puntosEnJuegoEnvido;
     }
 
-
+    //TODO: Ver si flor está bien y hacer que cuando se cante ya no se pueda hacer otra vez (quitar boton)
     @Override
     public Jugador preguntar(Mano mano, String accion, Integer nroJugador) {
         Partida truco = mano.getPartida();
@@ -294,7 +295,7 @@ public class ServicioManoImpl implements ServicioMano {
         } else if (esFlor(accionRealizada)) {
             mano.setUltimaAccionPreguntada(Integer.parseInt(accion));
             if (tieneFlor(receptor, mano)) {
-                preguntarFlor(accionRealizada, ejecutor);
+                preguntarFlor(accionRealizada, ejecutor, mano);
                 mano.setRespondeAhora(receptor);
                 this.repositorioMano.merge(mano);
                 return receptor;
@@ -528,8 +529,8 @@ public class ServicioManoImpl implements ServicioMano {
         }
     }
 
-    private void preguntarFlor(String accionRealizada, Jugador ejecutor) {
-        switch (accionRealizada) {
+    private void preguntarFlor(String accionEncontrada, Jugador ejecutor, Mano mano) {
+        switch (accionEncontrada) {
             case "FLOR":
                 if (ejecutor.getNumero().equals(1)) {
                     this.diceFlorJ1 = ejecutor;
@@ -537,16 +538,19 @@ public class ServicioManoImpl implements ServicioMano {
                     this.diceFlorJ2 = ejecutor;
                 }
                 puntosEnJuegoFlor = 3;
+                mano.setPuntosEnJuegoFlor(3);
                 break;
             case "CONTRAFLOR":
                 diceContraflor = ejecutor;
                 puntosEnJuegoFlor = 6;
+                mano.setPuntosEnJuegoFlor(6);
                 break;
-            case "FALTA ENVIDO":
+            case "CONTRAFLOR AL RESTO":
                 diceContraflorAlResto = ejecutor;
+                mano.setPuntosEnJuegoFlor(-1);
                 break;
             default:
-                throw new TrucoException("Preguntar flor: ocurrió un error.");
+                throw new TrucoException("PreguntarFlor: ocurrió un error.");
         }
     }
 
@@ -564,6 +568,11 @@ public class ServicioManoImpl implements ServicioMano {
         String respuestaDeLaAccion = saberAccion(respuesta);
 
         if (esEnvido(respuestaDeLaAccion)) {
+            mano.setIndicadorTruco(0);
+            return this.preguntar(mano, respuesta, nroJugador);
+        }
+
+        if (esFlor(respuestaDeLaAccion)) {
             mano.setIndicadorTruco(0);
             return this.preguntar(mano, respuesta, nroJugador);
         }
@@ -592,78 +601,100 @@ public class ServicioManoImpl implements ServicioMano {
         Jugador j1 = ejecutor.getNumero().equals(1) ? ejecutor : receptor;
         Jugador j2 = ejecutor.getNumero().equals(2) ? ejecutor : receptor;
 
-        if (!tieneFlor(receptor, mano)) {
-            return null;
-        }
+        if (respuestaDeLaAccion.equals("QUIERO") || respuestaDeLaAccion.equals("NO QUIERO")) {
+            // RESPUESTAS DIRECTAS
+            if (respuestaDeLaAccion.equals("QUIERO")) {
+                // ACEPTA Y CALCULAMOS TANTOS
+                Integer tantosJ1 = this.calcularTantosFlor(j1, mano);
+                Integer tantosJ2 = this.calcularTantosFlor(j2, mano);
+                if (this.diceContraflorAlResto != null) {
+                    // falta envido (anula todos los anteriores)
+                    manejarCalculoContraflorAlResto(truco, tantosJ1, tantosJ2);
+                } else {
+                    // Envido, envido, real envido
+                    manejarCalculoFlorNormal(truco, tantosJ1, tantosJ2);
+                }
+                mano.setPuntosEnJuegoFlor(98);
 
-        if (respuestaDeLaAccion.equals("NO QUIERO")) {
-            if (ejecutor.getNumero().equals(1)) {
-                truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoFlor + 1);
             } else {
-                truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoFlor + 1);
+                // TODO no acepta, sumar al contrario
+                if (mano.getPuntosEnJuegoFlor().equals(3)) {
+                    if (receptor.getNumero().equals(truco.getJ1().getNumero())) {
+                        truco.setPuntosJ1(truco.getPuntosJ1() + 2);
+                    } else {
+                        truco.setPuntosJ2(truco.getPuntosJ2() + 2);
+                    }
+                } else if (mano.getPuntosEnJuegoEnvido().equals(6)) {
+                    if (receptor.getNumero().equals(truco.getJ1().getNumero())) {
+                        truco.setPuntosJ1(truco.getPuntosJ1() + 3);
+                    } else {
+                        truco.setPuntosJ2(truco.getPuntosJ2() + 3);
+                    }
+                }
             }
-            return null;
-        }
-        // RESPUESTAS DIRECTAS
-        if (respuestaDeLaAccion.equals("CONTRAFLOR")) {
-
-            Integer tantosJ1 = this.calcularTantosFlor(j1, mano);
-            Integer tantosJ2 = this.calcularTantosFlor(j2, mano);
-            if (this.diceContraflorAlResto != null) {
-                // Contraflor al resto (anula todos los anteriores)
-                Integer puntosParaGanar = truco.getPuntosParaGanar();
-                Integer puntosJ1 = truco.getPuntosJ1();
-                Integer puntosJ2 = truco.getPuntosJ2();
-                Integer puntosParaElGanador;
-                if (tantosJ1 > tantosJ2) {
-                    puntosParaElGanador = puntosParaGanar - puntosJ2;
-                    truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
-                } else if (tantosJ1 < tantosJ2) {
-                    puntosParaElGanador = puntosParaGanar - puntosJ1;
-                    truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
-                } else {
-                    if (this.empezoLaMano.equals(truco.getJ1())) {
-                        puntosParaElGanador = puntosParaGanar - puntosJ2;
-                        truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
-                    }
-
-                    if (this.empezoLaMano.equals(truco.getJ2())) {
-                        puntosParaElGanador = puntosParaGanar - puntosJ1;
-                        truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
-                    }
-                }
-
-                if (truco.getPuntosJ1().equals(truco.getPuntosParaGanar())) {
-                    truco.setGanador(truco.getJ1());
-                } else if (truco.getPuntosJ2().equals(truco.getPuntosParaGanar())) {
-                    truco.setGanador(truco.getJ2());
-                }
-
-                mano.setPuntosEnJuegoFlor(-1);
-                this.diceContraflorAlResto = ejecutor;
-                return receptor;
-            } else {
-                // Contraflor
-                if (tantosJ1 > tantosJ2) {
-                    truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoFlor);
-                } else if (tantosJ1 < tantosJ2) {
-                    truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoFlor);
-                } else {
-                    if (this.empezoLaMano.equals(truco.getJ1())) {
-                        truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoFlor);
-                    }
-
-                    if (this.empezoLaMano.equals(truco.getJ2())) {
-                        truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoFlor);
-                    }
-                }
+            mano.setPuntosEnJuegoEnvido(98);
+            return mano.getTiraAhora();
+        } else if (respuestaDeLaAccion.equals("CONTRAFLOR")) {
+            if (ejecutor.getNumero().equals(j1.getNumero())) {
                 this.diceContraflor = ejecutor;
-                this.puntosEnJuegoFlor += 3;
-                mano.setPuntosEnJuegoFlor(mano.getPuntosEnJuegoFlor() + 3);
-                return receptor;
+            } else {
+                this.diceContraflor = receptor;
+            }
+            this.puntosEnJuegoFlor = 6;
+            mano.setPuntosEnJuegoFlor(6);
+            return receptor;
+        } else if (respuestaDeLaAccion.equals("CONTRAFLOR AL RESTO")) {
+            mano.setPuntosEnJuegoFlor(-1);
+            this.diceContraflorAlResto = ejecutor;
+            return receptor;
+        } else {
+            throw new TrucoException("ManejarFlor: ocurrió un error.");
+        }
+    }
+
+    private void manejarCalculoFlorNormal(Partida truco, Integer tantosJ1, Integer tantosJ2) {
+        if (tantosJ1 > tantosJ2) {
+            truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoFlor);
+        } else if (tantosJ1 < tantosJ2) {
+            truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoFlor);
+        } else {
+            // Mismos tantos
+            if (this.empezoLaMano.getNumero().equals(truco.getJ1().getNumero())) {
+                truco.setPuntosJ1(truco.getPuntosJ1() + this.puntosEnJuegoFlor);
+            }
+            if (this.empezoLaMano.getNumero().equals(truco.getJ2().getNumero())) {
+                truco.setPuntosJ2(truco.getPuntosJ2() + this.puntosEnJuegoFlor);
             }
         }
-        return null;
+
+        // Saber si alguno llego a los puntos para terminar la partida
+        saberSiAlgunoLlegoALosPuntosMaximos(truco);
+    }
+
+    private void manejarCalculoContraflorAlResto(Partida truco, Integer tantosJ1, Integer tantosJ2) {
+        Integer puntosJ1 = truco.getPuntosJ1();
+        Integer puntosJ2 = truco.getPuntosJ2();
+        Integer puntosParaElGanador;
+        if (tantosJ1 > tantosJ2) {
+            puntosParaElGanador = truco.getPuntosParaGanar() - puntosJ2;
+            truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
+        } else if (tantosJ1 < tantosJ2) {
+            puntosParaElGanador = truco.getPuntosParaGanar() - puntosJ1;
+            truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
+        } else {
+            // Mismos tantos
+            if (this.empezoLaMano.equals(truco.getJ1())) {
+                puntosParaElGanador = truco.getPuntosParaGanar() - puntosJ2;
+                truco.setPuntosJ1(truco.getPuntosJ1() + puntosParaElGanador);
+            }
+            if (this.empezoLaMano.equals(truco.getJ2())) {
+                puntosParaElGanador = truco.getPuntosParaGanar() - puntosJ1;
+                truco.setPuntosJ2(truco.getPuntosJ2() + puntosParaElGanador);
+            }
+        }
+
+        // Saber si alguno llego a los puntos para terminar la partida
+        saberSiAlgunoLlegoALosPuntosMaximos(truco);
     }
 
 

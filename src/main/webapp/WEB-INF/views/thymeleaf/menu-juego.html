@@ -160,6 +160,7 @@
                 <div class="cabeceras">
                     <div id="estadisticas-header" class="header active" onclick="toggleContent('estadisticas')">Estadísticas Globales</div>
                     <div id="ultimas-partidas-header" class="header" onclick="toggleContent('ultimas-partidas')">Últimas Partidas</div>
+                    <div id="partidas-abandonadas-header" class="header" onclick="toggleContent('partidas-abandonadas')">Partidas En Curso</div>
                 </div>
 
                 <!-- Contenido Estadísticas Globales -->
@@ -247,6 +248,50 @@
                             <span class="ganador" th:text="'Ganador: ' + ${partida.getGanador().getUsuario().getNombreUsuario()}" style="color: #666"></span>
                             <span class="puntos" th:text="'Puntos para ganar: ' + ${partida.puntosParaGanar}" style="color: #666"></span>
                             <span style="display: none" th:text="${partida.getGanador().getUsuario().getId()}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VOLVER A PARTIDA -->
+                <div id="partidas-abandonadas" class="content">
+                    <h2>Partidas Sin Terminar</h2>
+                    <div th:if="${partidasNoTerminadas == null || partidasNoTerminadas.isEmpty()}">
+                        <p>No hay partidas activas.</p>
+                    </div>
+                    <div th:if="${partidasNoTerminadas != null && !partidasNoTerminadas.isEmpty()}" th:each="partida : ${partidasNoTerminadas}">
+                        <div class="lista-partidas"
+                             th:style="'background-color: #fff8dc;'"> <!-- Fondo amarillo claro para destacar partidas activas -->
+                            <p class="id-partida" style="color: #666">Partida N:<span th:text="${partida.getId()}"></span></p>
+                            <div class="participantes">
+                                <!-- DATOS DEL JUGADOR 1 -->
+                                <div class="datos-j">
+                                    <img th:src="@{${partida.j1.usuario.getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
+                                    <span class="nombre" th:text="${partida.j1.usuario.getNombreUsuario()}"></span>
+                                    <span class="total" th:text="${partida.puntosJ1} + 'pts'" style="color: #666"></span>
+                                </div>
+                                <!-- Indicador de partida activa -->
+                                <div class="resultado" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" fill="none" stroke="#fff">
+                                        <!-- Círculo amarillo -->
+                                        <circle cx="12" cy="12" r="10" fill="transparent" stroke="orange" stroke-width="2"></circle>
+                                        <!-- Icono de reloj -->
+                                        <path d="M12 7v5l3 3" stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span style="color: orange">Partida en curso</span>
+                                </div>
+                                <!-- DATOS DEL JUGADOR 2 -->
+                                <div class="datos-j">
+                                    <img th:src="@{${partida.j2.usuario.getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
+                                    <span class="nombre" th:text="${partida.j2.usuario.getNombreUsuario()}"></span>
+                                    <span class="total" th:text="${partida.puntosJ2} + 'pts'" style="color: #666"></span>
+                                </div>
+                            </div>
+                            <span class="puntos" th:text="'Puntos actuales: ' + ${partida.j1.usuario.id == usuario.id ? partida.puntosJ1 : partida.puntosJ2}" style="color: #666"></span>
+                            <span class="puntos-para-ganar" th:text="'Puntos para ganar: ' + ${partida.puntosParaGanar}" style="color: #666"></span>
+                            <div class="opciones">
+                                <a class="styledBtn regresar" th:href="@{/partida-truco(idPartida=${partida.id}, idUsuario=${usuario.id})}">Regresar</a>
+                                <a class="styledBtn abandonar" th:href="@{/abandonar(idPartida=${partida.id}, idUsuario=${usuario.id})}">Abandonar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -387,23 +432,32 @@
 
     // ESTADISTICAS
     function toggleContent(tab) {
-        // Ocultar ambos contenidos
+        // Ocultar todos los contenidos
         var estadisticasContent = document.getElementById('estadisticas');
         var ultimasPartidasContent = document.getElementById('ultimas-partidas');
+        var partidasAbandonadasContent = document.getElementById('partidas-abandonadas');
         var estadisticasHeader = document.getElementById('estadisticas-header');
         var ultimasPartidasHeader = document.getElementById('ultimas-partidas-header');
+        var partidasAbandonadasHeader = document.getElementById('partidas-abandonadas-header');
+
+        // Resetear las clases de visibilidad y activación
+        estadisticasContent.classList.remove('visible');
+        ultimasPartidasContent.classList.remove('visible');
+        partidasAbandonadasContent.classList.remove('visible');
+        estadisticasHeader.classList.remove('active');
+        ultimasPartidasHeader.classList.remove('active');
+        partidasAbandonadasHeader.classList.remove('active');
 
         // Alternar entre las pestañas
         if (tab === 'estadisticas') {
             estadisticasContent.classList.add('visible');
-            ultimasPartidasContent.classList.remove('visible');
             estadisticasHeader.classList.add('active');
-            ultimasPartidasHeader.classList.remove('active');
         } else if (tab === 'ultimas-partidas') {
             ultimasPartidasContent.classList.add('visible');
-            estadisticasContent.classList.remove('visible');
             ultimasPartidasHeader.classList.add('active');
-            estadisticasHeader.classList.remove('active');
+        } else if (tab === 'partidas-abandonadas') {
+            partidasAbandonadasContent.classList.add('visible');
+            partidasAbandonadasHeader.classList.add('active');
         }
     }
 

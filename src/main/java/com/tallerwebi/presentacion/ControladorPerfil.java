@@ -3,7 +3,9 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -28,7 +30,7 @@ public class ControladorPerfil {
     }
 
     @RequestMapping("/perfil")
-    public ModelAndView perfilUsuario(@ModelAttribute("id") Long idUsuario) {
+    public ModelAndView perfilUsuario(@RequestParam(value = "id", required = false) Long idUsuario) {
         ModelMap model = new ModelMap();
 
         Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
@@ -51,31 +53,56 @@ public class ControladorPerfil {
     }
 
 
-    @RequestMapping("/modificar-perfil")
-    public ModelAndView irAModificarPerfil(@ModelAttribute("id") Long idUsuario) {
+   /* @RequestMapping("/modificar-perfil")
+    public ModelAndView irAModificarPerfil(@RequestParam("idUsuario") Long idUsuario) {
         Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
-        if (usuario == null) return new ModelAndView("redirect:/login");
+        if (usuario == null) {
+            return new ModelAndView("redirect:/login");
+        }
 
         ModelMap model = new ModelMap();
-
-        model.put("datosUsuario", new Usuario());
-        model.put("usuario", usuario);
-
+        model.put("usuarioActual", usuario); // Utiliza el usuario existente
         return new ModelAndView("modificar-perfil", model);
-    }
-
+    }*/
 
     @PostMapping("/actualizar-perfil")
-    public ModelAndView actualizarPerfil(
-            @ModelAttribute("datosUsuario") Usuario usuarioActual,
-            RedirectAttributes redirectAttributes) {
+    public String actualizarPerfil(
+            @RequestParam("idUsuario") Long idUsuario,
+            @RequestParam("nombreUsuario") String nombreUsuario,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("confirmPassword") String confirmPassword,
+            @RequestParam(value = "descripcion", required = false) String descripcion,
+            Model model) {
 
-        servicioUsuario.actualizarPerfil(usuarioActual);
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("error", "Las contraseñas no coinciden.");
+            return "perfil"; // Mostrar error y redirigir a la vista del perfil
+        }
 
-        Usuario usuarioActualizado = servicioUsuario.actualizarPerfil(usuarioActual);
-        redirectAttributes.addAttribute("mensaje", "Usuario actualizado correctamente.");
+        try {
+            // Buscar el usuario en la base de datos
+            Usuario usuario = servicioUsuario.buscarPorId(idUsuario);
+            if (usuario == null) {
+                model.addAttribute("error", "Usuario no encontrado.");
+                return "perfil";
+            }
 
-        return new ModelAndView("modificar-perfil");
+            // Actualizar los datos del usuario
+            usuario.setNombreUsuario(nombreUsuario);
+            usuario.setEmail(email);
+            usuario.setPassword(password);  // Recuerda encriptar la contraseña
+            usuario.setDescripcion(descripcion);
+
+            // Guardar el usuario actualizado
+            servicioUsuario.actualizarPerfil(usuario);
+
+            model.addAttribute("mensaje", "Perfil actualizado con exito.");
+            return "redirect:/perfil?id=" + usuario.getId();
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
+            return "perfil"; // Mostrar error
+        }
     }
 
     @GetMapping("/volver-home")

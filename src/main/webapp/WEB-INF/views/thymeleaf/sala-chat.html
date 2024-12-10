@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Estilos generales -->
-    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!-- FOOTER -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <!-- FONT FAMILIES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
     <!-- Estilos custom -->
     <link rel="stylesheet" th:href="@{/css/sala-chat.css}"/>
     <title>Sala de chat</title>
@@ -16,18 +20,61 @@
 </head>
 
 <body>
-<header class="styledHeader"><h3 class="m-0" id="chattingWith"></h3></header>
-<main class="chat-container col-12">
-    <div class="col-8 col-lg-6 mx-auto chatContainer bg-secondary">
-        <div class="col-12 chat-messages d-flex flex-column gap-2 bor2" id="chat-messages">
+<<!-- HEADER -->
+<div id="blurry-filter"></div>
+
+<header>
+    <div>
+        <article id="title">
+            <a th:href="@{/amigos(idUsuario=${usuarioActual.id})}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                    <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle>
+                    <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </a>
+        </article>
+
+        <article id="center">
+            <h1 id="titulo-principal">CHAT</h1>
+        </article>
+
+        <article id="reference">
+            <a class="text-decoration-none text-white" target="_blank" rel="noopener" th:href="@{/perfil(id=${usuarioActual.id})}">
+                <div th:if="${usuarioActual.urlFotoPerfil == null || usuarioActual.urlFotoPerfil == '/img/fotos-perfil/default.png'}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"></path>
+                    </svg>
+                </div>
+
+                <h1 style="display: none" id="chattingWith"></h1>
+
+                <div th:if="${usuarioActual.urlFotoPerfil != null && usuarioActual.urlFotoPerfil != '/img/fotos-perfil/default.png'}">
+                    <img class="foto-perfil" th:src="@{${usuarioActual.urlFotoPerfil}}" alt="Foto de perfil">
+                </div>
+            </a>
+            <a href="" class="text-decoration-none text-white fs-5" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#333">
+                    <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1a8.12 8.12 0 0 0-1.69-.98l-.38-2.65A.485.485 0 0 0 14 2h-4c-.25 0-.45.18-.49.42l-.38 2.65c-.62.23-1.2.54-1.69.98l-2.49-1a.494.494 0 0 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98L2.62 14.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.49.44 1.07.75 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.62-.23 1.2-.54 1.69-.98l2.49 1c.23.09.5 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+                </svg>
+            </a>
+        </article>
+    </div>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="chat-container">
+    <div class="chatContainer">
+        <div class="chat-messages" id="chat-messages">
+            <div class="info-usuario">
+                <img th:src="@{${u2.getUrlFotoPerfil()}}" class="foto-perfil" alt="">
+                <h1 th:text="${u2.nombreUsuario}"></h1>
+            </div>
+
             <!-- Aquí se mostrarán los mensajes -->
-            <th:block>
-                <div
-                        th:class="${'d-flex styledContenedorMensaje' + idUsuario1.equals(usuarioActual.id) ? 'align-self-end' : 'align-self-start'}"
-                        th:each="mensaje : ${historial}">
-                    <div th:class="${'message' + idUsuario1.equals(usuarioActual.id)
-                    ? 'bg-success-subtle rightMessage pe-4 ps-3'
-                    : 'bg-primary-subtle leftMessage ps-4 pe-3'}">
+            <th:block th:each="mensaje : ${historial}">
+                <div th:class="${'d-flex styledContenedorMensaje ' + (idUsuario1.equals(usuarioActual.id) ? 'align-self-end' : 'align-self-start')}">
+                    <div th:class="${'message ' + (idUsuario1.equals(usuarioActual.id) ? 'bg-success-subtle rightMessage pe-4 ps-3' : 'bg-primary-subtle leftMessage ps-4 pe-3')}">
                         <strong th:text="${idUsuario1.equals(usuarioActual.id) ? 'Tú' : u2.nombreUsuario + ': '}"></strong>
                         <span th:text="${mensaje.content}"></span>
                     </div>
@@ -44,10 +91,75 @@
                        onkeydown="handleEnter(event)"
                 />
             </div>
-            <button onclick="sendMessage()" class="col-2 bg-success styledButton">Enviar</button>
+            <button onclick="sendMessage()" class="col-2 styledButton">Enviar</button>
         </div>
     </div>
 </main>
+
+<!-- FOOTER -->
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+<footer class="relative bg-blueGray-200 pt-8 pb-6">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap text-left lg:text-left">
+            <div class="w-full lg:w-6/12 px-4">
+                <h4 class="text-3xl font-semibold text-blueGray-700">¡Sigamos en contacto!</h4>
+                <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
+                    las mejores partidas comienzan con una buena estrategia y terminan con grandes recuerdos.
+                </h5>
+                <div class="mt-6 lg:mb-0 mb-6 social-buttons">
+                    <button class="social-button twitter" type="button">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="social-button facebook" type="button">
+                        <i class="fab fa-facebook-square"></i>
+                    </button>
+                    <button class="social-button dribbble" type="button">
+                        <i class="fab fa-dribbble"></i>
+                    </button>
+                    <button class="social-button github" type="button">
+                        <i class="fab fa-github"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+                <div class="flex flex-wrap items-top mb-6">
+                    <div class="w-full lg:w-4/12 px-4 ml-auto">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Miembros</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Ramos Gonzalo</a></li>
+                            <li><a class="link" href="">Croce Victoria</a></li>
+                            <li><a class="link" href="">Zaccardo Martín</a></li>
+                            <li><a class="link" href="">Gavagnin Lucas</a></li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-4/12 px-4">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Enlaces</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Preguntas Frecuentes</a></li>
+                            <li><a class="link" href="">Terminos & Condiciones</a></li>
+                            <li><a class="link" href="">Política de Privacidad</a></li>
+                            <li><a class="link" href="">Contactanos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-blueGray-300">
+        <div class="flex flex-wrap items-center md:justify-between justify-center">
+            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-blueGray-500 font-semibold py-1">
+                    Copyright © <span id="get-current-year">2024</span>
+                    <a href="" class="text-blueGray-500 hover:text-gray-800" target="_blank">
+                        Trucoteca.
+                    </a>
+                    <a href="" class="text-blueGray-500 hover:text-blueGray-800">Los Maestros Del Mazo</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

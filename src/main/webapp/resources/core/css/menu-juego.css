@@ -543,3 +543,33 @@ hr {
     display: flex;
     flex-direction: column;
 }
+
+/* BOTONES PARTIDA EN CURSO */
+.opciones {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.regresar {
+    background-color: #d5d002;
+}
+.regresar:hover {
+    background-color: white;
+    color: #d5d002;
+    border: solid 3px #d5d002;
+    box-sizing: border-box;
+}
+
+.abandonar {
+    background-color: #c9302c;
+}
+.abandonar:hover {
+    background-color: white;
+    color: #c9302c;
+    border: solid 3px #c9302c;
+    box-sizing: border-box;
+}

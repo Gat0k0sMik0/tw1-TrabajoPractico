@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.*;
+import com.tallerwebi.infraestructura.ServicioEstadisticasImpl;
 import com.tallerwebi.infraestructura.ServicioUsuarioImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,12 +28,14 @@ public class ControladorLogin {
     private ServicioUsuario servicioUsuario;
     private ServicioLogin servicioLogin;
     private ServicioEmail servicioEmail;
+    private ServicioEstadisticas servicioEstadisticas;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, ServicioEmail servicioEmail, ServicioUsuario servicioUsuario) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioEmail servicioEmail, ServicioUsuario servicioUsuario, ServicioEstadisticas servicioEstadisticas) {
         this.servicioLogin = servicioLogin;
         this.servicioEmail = servicioEmail;
         this.servicioUsuario = servicioUsuario;
+        this.servicioEstadisticas = servicioEstadisticas;
     }
 
     // MÉTODOS PARA EL LOGIN
@@ -139,6 +142,10 @@ public class ControladorLogin {
             servicioLogin.guardarUsuario(usuario); // Lógica para guardar al usuario
             ModelMap model = new ModelMap();
             model.addAttribute(usuario);
+
+            // Instanciar estadisticas para el usuario
+            servicioEstadisticas.crearEstadisticaParaUsuario(usuario);
+
             return new ModelAndView("subir-foto", model);
         } else {
             // Si el código es incorrecto, redirigir con mensaje de error
