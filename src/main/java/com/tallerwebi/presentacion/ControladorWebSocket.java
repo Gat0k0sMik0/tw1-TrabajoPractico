@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -50,9 +51,6 @@ public class ControladorWebSocket {
 
         List<Mensaje> historial = servicioMensajes.obtenerMensajesEntreUsuarios(u1.getId(), u2.getId());
 
-        System.out.println(historial.isEmpty() ? "No hay mensajes" : "Si hay mensajes");
-        System.out.println(historial);
-
         model.put("u1", u1);
         model.put("idUsuario1", u1.getId());
         model.put("idUsuario2", u2.getId());
@@ -68,14 +66,10 @@ public class ControladorWebSocket {
     public String handleChat(
             MensajeDTO mensaje
     ) throws JsonProcessingException {
-        System.out.println("Conectado");
-        System.out.println("Envia: " + mensaje.getIdUsuario1());
-        System.out.println("Recibe: " + mensaje.getIdUsuario2());
-        System.out.println("Mensaje: " + mensaje.getContent());
 
         Usuario fromUser = servicioUsuario.buscarPorId(Long.parseLong(mensaje.getIdUsuario1()));
         Usuario toUser = servicioUsuario.buscarPorId(Long.parseLong(mensaje.getIdUsuario2()));
-        Mensaje enviado = servicioMensajes.guardar(fromUser, toUser, mensaje.getContent());
+        servicioMensajes.guardar(fromUser, toUser, mensaje.getContent());
 
         // Crear un canal unificado basado en los IDs
         String chatChannel = String.format("/queue/chat/%s-%s",

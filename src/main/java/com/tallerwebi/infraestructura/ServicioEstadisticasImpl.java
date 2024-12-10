@@ -25,6 +25,7 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
     public void guardarResultado(Partida truco) {
         if (truco == null) throw new TrucoException("No se puede guardar el resultado");
 
+
         // Obtener estadísticas existentes
         Estadistica estadisticaJ1 = obtenerEstadisticasDeUnJugador(truco.getJ1().getUsuario());
         Estadistica estadisticaJ2 = obtenerEstadisticasDeUnJugador(truco.getJ2().getUsuario());
@@ -55,6 +56,10 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         // Guardar o actualizar estadísticas
         this.repositorioEstadistica.actualizarEstadistica(estadisticaJ1);
         this.repositorioEstadistica.actualizarEstadistica(estadisticaJ2);
+
+        truco.setSeGuardo(true);
+
+        this.repositorioTruco.merge(truco);
     }
 
     @Override

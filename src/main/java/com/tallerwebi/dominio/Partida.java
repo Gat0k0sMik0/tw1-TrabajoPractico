@@ -22,6 +22,7 @@ public class Partida {
     private Integer puntosJ2;
     private Integer puntosParaGanar;
     private Boolean puedeEmpezar;
+    private Boolean seGuardo;
 
     @OneToOne
     private Jugador ganador;
@@ -29,6 +30,14 @@ public class Partida {
 
     public Partida() {
 
+    }
+
+    public Boolean getSeGuardo() {
+        return seGuardo;
+    }
+
+    public void setSeGuardo(Boolean seGuardo) {
+        this.seGuardo = seGuardo;
     }
 
     public Boolean getPuedeEmpezar() {

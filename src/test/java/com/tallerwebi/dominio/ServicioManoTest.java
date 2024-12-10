@@ -196,7 +196,7 @@ public class ServicioManoTest {
     }
 
     @Test
-    public void queSeCalculeBienLosTantosDeUnJugador () {
+    public void queSeCalculeBienLosTantosDeUnJugador() {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         Partida t = new Partida();
@@ -287,7 +287,6 @@ public class ServicioManoTest {
         // Then
         assertThat(servicioMano.obtenerPuntosEnJuegoPorTruco(), equalTo(3));
     }
-
 
 
     @Test
@@ -461,6 +460,31 @@ public class ServicioManoTest {
         respondeAhora = servicioMano.preguntar(m, "2", 2); // ENVIDO
 
         assertThat(m.getPuntosEnJuegoEnvido(), equalTo(4));
+    }
+
+    @Test
+    public void quePaseAlgo() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoEnvido(0);
+        m.setPuntosEnJuegoEnvido(0);
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        servicioMano.preguntar(m, "2", 1); // ENVIDO
+        servicioMano.preguntar(m, "3", 2); // ENVIDO
+        servicioMano.responder(m, "3", "1", 1); // ENVIDO
+
+        assertThat(m.getGanador(), nullValue());
     }
 
     private void mensaje(Object m) {

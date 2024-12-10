@@ -73,7 +73,6 @@ public class ServicioManoImpl implements ServicioMano {
         // Asignacion de cartas a los jugadores
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), m);
 
-        System.out.println("Guardo una mano nueva");
         // Guardamos  mano
         repositorioMano.guardar(m);
     }
@@ -101,7 +100,6 @@ public class ServicioManoImpl implements ServicioMano {
         // Asignacion de cartas nuevas
         this.asignarCartasJugadores(truco.getJ1(), truco.getJ2(), nueva);
 
-        System.out.println("Comenzó una nueva mano: ");
         // Guardamos nueva mano
         this.repositorioMano.guardar(nueva);
 
@@ -127,14 +125,11 @@ public class ServicioManoImpl implements ServicioMano {
 
     @Override
     public void     limpiarMano(Mano ultimaMano) {
-        System.out.println("Limpiando mano");
         ultimaMano.getCartasTiradasJ1().clear();
         ultimaMano.getCartasTiradasJ2().clear();
         ultimaMano.getCartasJ1().clear();
         ultimaMano.getCartasJ2().clear();
         ultimaMano.setConfirmacionTerminada(true);
-
-        System.out.println("Guardo una mano vieja limpia");
         this.repositorioMano.guardar(ultimaMano);
     }
 
@@ -148,8 +143,6 @@ public class ServicioManoImpl implements ServicioMano {
         Hibernate.initialize(m.getCartasJ2());
         Hibernate.initialize(m.getCartasTiradasJ1());
         Hibernate.initialize(m.getCartasTiradasJ2());
-        System.out.println("Mano pedida: ");
-        System.out.println(m);
         return m;
     }
 
@@ -206,8 +199,6 @@ public class ServicioManoImpl implements ServicioMano {
         List<Carta> seisCartasRandom = obtenerSeisCartasRandom(cartas);
         asignarCartasJugador(j1, seisCartasRandom, m);
         asignarCartasJugador(j2, seisCartasRandom, m);
-        System.out.println("asignarCartasJugadores: Cartas J1: " + m.getCartasJ1());
-        System.out.println("asignarCartasJugadores: Cartas J2: " + m.getCartasJ2());
     }
 
     private void asignarCartasJugador(Jugador j, List<Carta> seisCartasRandom, Mano m) {
@@ -704,11 +695,11 @@ public class ServicioManoImpl implements ServicioMano {
                     // falta envido (anula todos los anteriores)
                     manejarCalculoFaltaEnvido(truco, tantosJ1, tantosJ2);
                 } else {
+                    this.puntosEnJuegoEnvido = mano.getPuntosEnJuegoEnvido();
                     // Envido, envido, real envido
                     manejarCalculoEnvidoNormal(truco, tantosJ1, tantosJ2);
                 }
                 mano.setPuntosEnJuegoEnvido(98);
-
             } else {
                 // TODO no acepta, sumar al contrario
                 if (mano.getPuntosEnJuegoEnvido().equals(2)) {
@@ -877,7 +868,6 @@ public class ServicioManoImpl implements ServicioMano {
         if (tieneDosDelMismoPalo.isEmpty()) {
             return 0;
         } else {
-            System.out.println("Encontré dos o más con el mismo palo");
             return this.obtenerSumaDeLasMasAltas(tieneDosDelMismoPalo);
         }
     }

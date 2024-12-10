@@ -42,12 +42,17 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
     @Transactional
     @Override
     public void guardarEstadistica(Estadistica e) {
+
+        System.out.println("Guardo estadistica");
+        System.out.println("J: " + e.getUsuario().getNombreUsuario() + " | Wins: " + e.getGanadas() + " | Jugadas: " + e.getJugadas());
         sessionFactory.getCurrentSession().save(e);
     }
 
     @Transactional
     @Override
     public void actualizarEstadistica(Estadistica e) {
+        System.out.println("Guardo estadistica");
+        System.out.println("J: " + e.getUsuario().getNombreUsuario() + " | Wins: " + e.getGanadas() + " | Jugadas: " + e.getJugadas());
         sessionFactory.getCurrentSession().update(e);
     }
 

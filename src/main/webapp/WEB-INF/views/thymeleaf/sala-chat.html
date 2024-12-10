@@ -73,9 +73,9 @@
 
             <!-- Aquí se mostrarán los mensajes -->
             <th:block th:each="mensaje : ${historial}">
-                <div th:class="${'d-flex styledContenedorMensaje ' + (idUsuario1.equals(usuarioActual.id) ? 'align-self-end' : 'align-self-start')}">
-                    <div th:class="${'message ' + (idUsuario1.equals(usuarioActual.id) ? 'bg-success-subtle rightMessage pe-4 ps-3' : 'bg-primary-subtle leftMessage ps-4 pe-3')}">
-                        <strong th:text="${idUsuario1.equals(usuarioActual.id) ? 'Tú' : u2.nombreUsuario + ': '}"></strong>
+                <div th:class="${'d-flex styledContenedorMensaje ' + (usuarioActual.id.equals(mensaje.fromUser.id) ? 'align-self-end' : 'align-self-start')}">
+                    <div th:class="${'message ' + (usuarioActual.id.equals(mensaje.fromUser.id) ? 'bg-success-subtle rightMessage pe-4 ps-3' : 'bg-primary-subtle leftMessage ps-4 pe-3')}">
+                        <strong th:text="${usuarioActual.id.equals(mensaje.fromUser.id) ? 'Tú: ' : u2.nombreUsuario + ': '}"></strong>
                         <span th:text="${mensaje.content}"></span>
                     </div>
                 </div>
