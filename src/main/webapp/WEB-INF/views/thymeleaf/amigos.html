@@ -284,59 +284,5 @@
         </div>
     </div>
 </footer>
-<script>
-    /* MOVER SLIDER */
-    // Función para mostrar u ocultar las flechas dependiendo de la cantidad de elementos en el slider
-    function toggleSliderButtons(sliderId) {
-        var slider = document.getElementById(sliderId);
-        var totalItems = slider.children.length;
-
-        // Seleccionamos las flechas
-        var leftButton = document.querySelector(`#${sliderId} .slider-arrow.left`);
-        var rightButton = document.querySelector(`#${sliderId} .slider-arrow.right`);
-
-        // Si hay más de 5 elementos, mostramos las flechas; si no, las ocultamos
-        if (totalItems > 4) {
-            leftButton.style.display = 'block';
-            rightButton.style.display = 'block';
-        } else {
-            leftButton.style.display = 'none';
-            rightButton.style.display = 'none';
-        }
-    }
-
-    // Llamar a la función de mostrar/ocultar flechas cuando se carga la página
-    window.onload = function() {
-        toggleSliderButtons('amigos-slider');  // Cambia 'amigos-slider' por el id de tu slider
-    };
-
-    // Función para mover el slider
-    function moveSlider(sliderId, direction) {
-        var slider = document.getElementById(sliderId);
-        var totalItems = slider.children.length;
-        var itemWidth = slider.children[0].offsetWidth + 20; // Incluye el margen
-        var currentTransform = parseInt(window.getComputedStyle(slider).transform.split(',')[4]) || 0;
-
-        // Calculamos el nuevo desplazamiento
-        var newTransform = currentTransform + direction * itemWidth;
-
-        // Límite izquierdo: no permitir mover a la izquierda más allá del primer elemento
-        if (newTransform > 0) {
-            newTransform = 0;
-        }
-
-        // Límite derecho: asegurarse de que el slider solo se mueva hasta el último elemento
-        var maxOffset = -(totalItems - 5) * itemWidth;
-        if (newTransform < maxOffset) {
-            newTransform = maxOffset;
-        }
-
-        // Aplicamos el nuevo desplazamiento
-        slider.style.transform = `translateX(${newTransform}px)`;
-
-        // Vuelve a verificar si se deben mostrar las flechas después de mover el slider
-        toggleSliderButtons(sliderId);
-    }
-</script>
 </body>
 </html>

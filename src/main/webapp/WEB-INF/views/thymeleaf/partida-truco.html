@@ -102,8 +102,16 @@
             <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
                 <!-- MAZO -->
                 <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
-                    <a th:href="@{/comenzar-truco(idPartida= ${idPartida}, idUsuario=${idUsuario})}" th:if="${ganador == null}" class="w-100">                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                    <!-- Vínculo que solo aparece si la condición se cumple -->
+                    <a th:href="@{/comenzar-truco(idPartida=${idPartida}, idUsuario=${idUsuario})}"
+                       th:if="${ganador == null && mostrarMazo == null}" class="w-100">
+                        <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                     </a>
+
+                    <!-- Solo la imagen, sin vínculo, si no se cumple la condición -->
+                    <img th:if="${ganador != null || mostrarMazo != null}" class="mazo"
+                         th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+
                     <!-- IMAGEN REPARTIR -->
                     <a th:if="${ganador != null}" class="mazo">
                         <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
@@ -176,6 +184,14 @@
                     <div th:if="${respondoYo && respondoTruco}" class="d-flex gap-2">
                         <a class="btn truco"
                            th:each="accion : ${accionesTruco}"
+                           th:href="@{/respuesta(idPartida=${idPartida}, idUsuario=${idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                           th:text="${accion.texto}">
+                        </a>
+                    </div>
+                    <!-- BOTONES RESPUESTAS FLOR -->
+                    <div th:if="${respondoYo && respondoFlor}" class="d-flex gap-2">
+                        <a class="btn truco"
+                           th:each="accion : ${accionesFlor}"
                            th:href="@{/respuesta(idPartida=${idPartida}, idUsuario=${idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                            th:text="${accion.texto}">
                         </a>

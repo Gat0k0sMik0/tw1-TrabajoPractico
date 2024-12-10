@@ -29,7 +29,8 @@ public class ControladorMenuJuego {
 
     // Método para mostrar el menú de juego
     @RequestMapping("/menuJuego")
-    public ModelAndView mostrarMenuJuego(@RequestParam("idUsuario") Long idUsuario) {
+    public ModelAndView mostrarMenuJuego(@ModelAttribute PartidaModel partidaModel) {
+        Long idUsuario = partidaModel.getIdUsuario();
         Usuario ua = servicioUsuario.buscarPorId(idUsuario);
         if (ua == null) return new ModelAndView("redirect:/login");
 
@@ -55,9 +56,10 @@ public class ControladorMenuJuego {
     // Método para crear una sala
     @PostMapping("/crearSala")
     public ModelAndView crearSala(
-            @RequestParam("idUsuario") Long idUsuario,
+            @ModelAttribute PartidaModel partidaModel,
             @RequestParam("puntos") String puntosMaximos
     ) {
+        Long idUsuario = partidaModel.getIdUsuario();
 
         // Obtener el usuario activo
         Usuario usuarioActivo = servicioUsuario.buscarPorId(idUsuario);

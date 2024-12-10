@@ -42,16 +42,17 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return truco;
     }
 
-    private void prepararTruco (Partida truco, Jugador j, Integer puntosMaximos) {
+    private void prepararTruco(Partida truco, Jugador j, Integer puntosMaximos) {
         truco.setPuedeEmpezar(false);
         truco.setJ1(j);
         truco.setPuntosParaGanar(puntosMaximos);
         truco.setPuntosJ1(0);
         truco.setJ2(null);
         truco.setPuntosJ2(0);
+        truco.setSeGuardo(false);
     }
 
-    private Jugador crearJugador (Usuario usuario, Integer numero) {
+    private Jugador crearJugador(Usuario usuario, Integer numero) {
         Jugador j = new Jugador();
         j.setNombre(usuario.getNombreUsuario());
         j.setNumero(numero);
@@ -68,7 +69,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         this.repositorioMano.eliminarCartasDeManosPorUsuario(usuario.getId());
     }
 
-    private void agregarJugadorTruco (Partida truco, Jugador jugador2) {
+    private void agregarJugadorTruco(Partida truco, Jugador jugador2) {
         truco.setJ2(jugador2);
         truco.setPuntosJ2(0);
         truco.setPuedeEmpezar(true);
@@ -87,7 +88,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public void empezar(Partida truco) {
         truco.setPuedeEmpezar(true);
-        System.out.println("servicioPartida: empezar() (hace merge): " + truco);
         this.repositorioTruco.merge(truco);
     }
 
@@ -109,14 +109,10 @@ public class ServicioPartidaImpl implements ServicioPartida {
         Partida partida = repositorioTruco.buscarPartidaPorId(idPartida);
 
         // Validar la existencia de la partida
-        if (partida == null) {
-            throw new TrucoException("La partida no existe.");
-        }
+        if (partida == null) throw new TrucoException("La partida no existe.");
 
         // Verificar si ya tiene un ganador
-        if (partida.isPartidaFinalizada()) {
-            throw new TrucoException("La partida ya ha finalizado.");
-        }
+        if (partida.isPartidaFinalizada()) throw new TrucoException("La partida ya ha finalizado.");
 
         // Determinar el ganador
         partida.setGanador(ganador);

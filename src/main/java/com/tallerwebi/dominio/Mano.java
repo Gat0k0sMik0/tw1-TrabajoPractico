@@ -22,6 +22,7 @@ public class Mano {
     private Integer puntosRondaJ2 = 0;
     private Integer ultimaAccionPreguntada;
     private Integer indicadorTruco;
+    private Integer indicadorFlor;
     private Integer puntosEnJuegoEnvido;
     private Integer puntosEnJuegoFlor;
 
@@ -254,6 +255,14 @@ public class Mano {
 
     public void setPuntosEnJuegoFlor(Integer puntosEnJuegoFlor) {
         this.puntosEnJuegoFlor = puntosEnJuegoFlor;
+    }
+
+    public Integer getIndicadorFlor() {
+        return indicadorFlor;
+    }
+
+    public void setIndicadorFlor(Integer indicadorFlor) {
+        this.indicadorFlor = indicadorFlor;
     }
 }
 

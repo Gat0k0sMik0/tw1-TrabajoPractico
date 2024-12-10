@@ -33,15 +33,56 @@ public class ServicioManoTest {
         j2.setNombre("leo");
         j1.setNumero(1);
         j2.setNumero(2);
+        List<Carta> cartas = repositorioCarta.obtenerCartas();
+
         mano.setCartasJ1(new ArrayList<>());
         mano.setCartasJ2(new ArrayList<>());
+
         Carta carta1 = new Carta();
         Carta carta2 = new Carta();
         Carta carta3 = new Carta();
         Carta carta4 = new Carta();
         Carta carta5 = new Carta();
         Carta carta6 = new Carta();
+
         carta1.setId(0L);
+        carta1.setNumero(4);
+        carta1.setValor(0);
+        carta1.setPalo("Oro");
+
+        carta2.setId(1L);
+        carta2.setNumero(6);
+        carta2.setValor(2);
+        carta2.setPalo("Oro");
+
+        carta3.setId(2L);
+        carta3.setNumero(5);
+        carta3.setValor(1);
+        carta3.setPalo("Oro");
+
+        carta4.setId(3L);
+        carta4.setNumero(4);
+        carta4.setValor(0);
+        carta4.setPalo("Copa");
+
+        carta5.setId(4L);
+        carta5.setNumero(5);
+        carta5.setValor(1);
+        carta5.setPalo("Copa");
+
+        carta6.setId(5L);
+        carta6.setNumero(4);
+        carta6.setValor(0);
+        carta6.setPalo("Basto");
+
+        esperadas.add(carta1);
+        esperadas.add(carta2);
+        esperadas.add(carta3);
+        esperadas.add(carta4);
+        esperadas.add(carta5);
+        esperadas.add(carta6);
+
+        /*carta1.setId(0L);
         carta1.setNumero(4);
         carta1.setValor(0);
         carta1.setPalo("Espadas");
@@ -70,7 +111,7 @@ public class ServicioManoTest {
         esperadas.add(carta3);
         esperadas.add(carta4);
         esperadas.add(carta5);
-        esperadas.add(carta6);
+        esperadas.add(carta6);*/
     }
 
     @Test
@@ -196,7 +237,7 @@ public class ServicioManoTest {
     }
 
     @Test
-    public void queSeCalculeBienLosTantosDeUnJugador () {
+    public void queSeCalculeBienLosTantosDeUnJugador() {
         // given
         when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
         Partida t = new Partida();
@@ -411,25 +452,6 @@ public class ServicioManoTest {
         assertThat(t.getPuntosJ2(), equalTo(1));
     }
 
-    /*@Test
-    public void siSeVaAlMazoQueSeaNullElQueLeToqueResponder() {
-        // given
-        Partida t = new Partida();
-        Mano m = new Mano();
-        t.setPuntosParaGanar(30);
-        t.setPuntosJ1(0);
-        t.setPuntosJ2(0);
-        t.setJ1(j1);
-        t.setJ2(j2);
-        m.setCartasJ1(new ArrayList<>());
-        m.setCartasJ2(new ArrayList<>());
-        m.setPartida(t);
-        // when
-        Jugador respondeAhora = servicioMano.preguntar(m, "9", 1);
-        // then
-        assertThat(respondeAhora, nullValue());
-    }*/
-
     @Test
     public void queSeLeAsignenLasCartas() {
         // given
@@ -456,19 +478,138 @@ public class ServicioManoTest {
     }
 
     @Test
-    public void queTireUnaCarta() {
-//        // given
-//        when(repositorioCarta.obtenerCartas()).thenReturn(esperadas);
-//        when(repositorioCarta.buscarCartaPorId(0L)).thenReturn(esperadas.get(0));
-//        Partida t = new Partida();
-//        t.setJ1(j1);
-//        t.setJ2(j2);
-//        Mano m = servicioMano.empezar(t, j1, j2);
-//        // when
-//        whenAsignoTresCartasAlJugador(j1, esperadas, m);
-//        servicioMano.tirarCarta(t, m, 0L, j1.getNumero().toString());
-//        // then
-//        assertThat(m.getCartasTiradasJ1().size(), equalTo(2));
+    public void queLosPuntosEnJuegoDelEnvidoSeanLosEsperados() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoEnvido(0);
+        m.setPuntosEnJuegoEnvido(0);
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        Jugador respondeAhora;
+        respondeAhora = servicioMano.preguntar(m, "2", 1); // ENVIDO
+        mensaje("mano despues de primer paso");
+        mensaje(m);
+        respondeAhora = servicioMano.preguntar(m, "2", 2); // ENVIDO
+
+        assertThat(m.getPuntosEnJuegoEnvido(), equalTo(4));
+    }
+
+    @Test
+    public void quePaseAlgo() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoEnvido(0);
+        m.setPuntosEnJuegoEnvido(0);
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        servicioMano.preguntar(m, "2", 1); // ENVIDO
+        servicioMano.preguntar(m, "3", 2); // ENVIDO
+        servicioMano.responder(m, "3", "1", 1); // ENVIDO
+
+        assertThat(m.getGanador(), nullValue());
+    }
+
+    @Test
+    public void queLosPuntosEnJuegoDeLaFlorSeanLosEsperados() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoFlor(0);
+        m.setPuntosEnJuegoFlor(0);
+
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        Jugador respondeAhora;
+        respondeAhora = servicioMano.preguntar(m, "8", 1); // ENVIDO
+        respondeAhora = servicioMano.responder(m, "8", "0",  2); // ENVIDO
+
+        assertThat(m.getPuntosEnJuegoFlor(), equalTo(3));
+    }
+
+    @Test
+    public void queLosPuntosEnJuegoDeLaContraFlorSeanLosEsperados() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoFlor(0);
+        m.setPuntosEnJuegoFlor(0);
+
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        Jugador respondeAhora;
+        respondeAhora = servicioMano.preguntar(m, "8", 1);
+        respondeAhora = servicioMano.preguntar(m, "10", 2); // ENVIDO
+        respondeAhora = servicioMano.responder(m, "10", "0",  1);
+        assertThat(m.getPuntosEnJuegoFlor(), equalTo(98));
+    }
+
+    @Test
+    public void queAlCantarFlorDesaparezcaElBoton() {
+        // given
+        Partida t = new Partida();
+        Mano m = new Mano();
+        t.setPuntosParaGanar(30);
+        t.setPuntosJ1(0);
+        t.setPuntosJ2(0);
+        t.setJ1(j1);
+        t.setJ2(j2);
+        m.setCartasJ1(new ArrayList<>());
+        m.setCartasJ2(new ArrayList<>());
+        m.setPartida(t);
+        m.setPuntosEnJuegoFlor(0);
+        m.setPuntosEnJuegoFlor(0);
+
+        whenAsignoTresCartasAlJugador(j1, esperadas, m);
+        whenAsignoTresCartasAlJugador(j2, esperadas, m);
+        // When/then
+        Jugador respondeAhora;
+        respondeAhora = servicioMano.preguntar(m, "8", 1); // ENVIDO
+
+        assertThat(m.getPuntosEnJuegoFlor(), equalTo(98));
+        assertThat(m.getPuntosEnJuegoEnvido(), equalTo(98));
+
+    }
+
+    private void mensaje(Object m) {
+        System.out.println("\n" + m);
     }
 
     @Test
