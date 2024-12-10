@@ -74,12 +74,15 @@ public class ServicioPartidaImpl implements ServicioPartida {
         truco.setPuedeEmpezar(true);
     }
 
-
     @Override
-    public List<Partida> getPartidasDisponibles() {
-        return this.repositorioTruco.getPartidasDisponibles();
+    public List<Partida> getPartidasDisponibles(Long idUsuario) {
+        return this.repositorioTruco.getPartidasDisponibles(idUsuario);
     }
 
+    @Override
+    public List<Partida> obtenerPartidasNoTerminadas(Long idUsuario) {
+        return repositorioTruco.buscarPartidasNoTerminadas(idUsuario);
+    }
 
     @Override
     public void empezar(Partida truco) {
@@ -121,7 +124,18 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         // Guardar los cambios
         repositorioTruco.merge(partida);
-}
+    }
+
+    @Override
+    public void jugadorAbandona(Long idPartida, Long idUsuario) {
+        Partida partida = repositorioTruco.buscarPartidaPorId(idPartida);
+        if (partida.getJ1().getUsuario().getId().equals(idUsuario)) {
+            partida.setGanador(partida.getJ2());
+        } else {
+            partida.setGanador(partida.getJ1());
+        }
+        repositorioTruco.merge(partida);
+    }
 
     // Método para registrar la victoria de un jugador
     private void registrarVictoria(Jugador ganador) {
@@ -172,5 +186,31 @@ public class ServicioPartidaImpl implements ServicioPartida {
         }
 
         return partidasDelJugador;
+    }
+
+    @Override
+    public Partida obtenerUltimaPartidaDeUnJugador(Usuario usuario) {
+        // Obtener todas las partidas desde el repositorio
+        List<Partida> partidas = repositorioTruco.getTodasLasPartidas();
+
+        // Variable para almacenar la última partida encontrada
+        Partida ultimaPartida = null;
+
+        for (Partida partida : partidas) {
+            Jugador jugador1 = partida.getJ1();
+            Jugador jugador2 = partida.getJ2();
+
+            // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
+            if (((jugador1 != null && jugador1.getUsuario().getId().equals(usuario.getId())) ||
+                    (jugador2 != null && jugador2.getUsuario().getId().equals(usuario.getId()))) && (partida.isPartidaFinalizada())) {
+
+                // Si es la primera partida encontrada o tiene un ID más alto que la actual
+                if (ultimaPartida == null || partida.getId() > ultimaPartida.getId()) {
+                    ultimaPartida = partida;
+                }
+            }
+        }
+
+        return ultimaPartida;
     }
 }

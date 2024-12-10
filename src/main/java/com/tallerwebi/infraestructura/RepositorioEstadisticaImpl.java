@@ -45,6 +45,12 @@ public class RepositorioEstadisticaImpl implements RepositorioEstadistica {
         sessionFactory.getCurrentSession().save(e);
     }
 
+    @Transactional
+    @Override
+    public void actualizarEstadistica(Estadistica e) {
+        sessionFactory.getCurrentSession().update(e);
+    }
+
     @Override
     public List<Estadistica> obtenerTodasLasEstadisticasDeUnJugador(Long idUsuario) {
         return (List<Estadistica>) sessionFactory.getCurrentSession()

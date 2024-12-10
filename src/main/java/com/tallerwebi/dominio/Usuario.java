@@ -20,6 +20,7 @@ public class Usuario {
     private String UrlFotoPerfil;
     private Integer victorias = 0;
     private String nivel = "Sin Categoria";
+    private String descripcion;
 
     @OneToMany(mappedBy = "usuario")
     private Set<Amistad> amistades = new HashSet<>();
@@ -118,6 +119,14 @@ public class Usuario {
 
     public void setNivel(String nivel) {
         this.nivel = nivel;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @Override

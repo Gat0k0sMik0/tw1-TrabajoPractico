@@ -10,6 +10,9 @@ public interface RepositorioEstadistica {
     @Transactional
     void guardarEstadistica(Estadistica e);
 
+    @Transactional
+    void actualizarEstadistica(Estadistica e);
+
     List<Estadistica> obtenerTodasLasEstadisticasDeUnJugador(Long id);
 
     @Transactional

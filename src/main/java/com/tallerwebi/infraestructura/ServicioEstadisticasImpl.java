@@ -25,39 +25,48 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
     public void guardarResultado(Partida truco) {
         if (truco == null) throw new TrucoException("No se puede guardar el resultado");
 
-        Estadistica estadisticaJ1 = this.repositorioEstadistica.obtenerEstadisticaDeJugador(truco.getJ1().getUsuario().getId());
-        Estadistica estadisticaJ2 = this.repositorioEstadistica.obtenerEstadisticaDeJugador(truco.getJ2().getUsuario().getId());
+        // Obtener estadísticas existentes
+        Estadistica estadisticaJ1 = obtenerEstadisticasDeUnJugador(truco.getJ1().getUsuario());
+        Estadistica estadisticaJ2 = obtenerEstadisticasDeUnJugador(truco.getJ2().getUsuario());
 
-        if (estadisticaJ1 == null) estadisticaJ1 = crearEstadisticaParaUsuario(truco, 1);
-        if (estadisticaJ2 == null) estadisticaJ2 = crearEstadisticaParaUsuario(truco, 2);
-
-        if (truco.getGanador().getNumero().equals(truco.getJ1().getNumero())) {
-            // gano J1
-            estadisticaJ1.getUsuario().setVictorias(estadisticaJ1.getUsuario().getVictorias());
-        } else if (truco.getGanador().getNumero().equals(truco.getJ2().getNumero())) {
-            // gano J2
-            estadisticaJ2.getUsuario().setVictorias(estadisticaJ2.getUsuario().getVictorias());
-        } else {
-            throw new TrucoException("El ganador no fue ni el J1 ni el J2");
+        // Crear estadísticas nuevas si no existen
+        if (estadisticaJ1 == null) {
+            estadisticaJ1 = crearEstadisticaParaUsuario(truco.getJ1().getUsuario());
+        }
+        if (estadisticaJ2 == null) {
+            estadisticaJ2 = crearEstadisticaParaUsuario(truco.getJ2().getUsuario());
         }
 
+        // Actualizar estadísticas según el ganador
+        if (truco.getGanador() != null) {
+            if (truco.getGanador().getNumero().equals(truco.getJ1().getNumero())) {
+                estadisticaJ1.getUsuario().setVictorias(estadisticaJ1.getUsuario().getVictorias() + 1);
+            } else if (truco.getGanador().getNumero().equals(truco.getJ2().getNumero())) {
+                estadisticaJ2.getUsuario().setVictorias(estadisticaJ2.getUsuario().getVictorias() + 1);
+            } else {
+                throw new TrucoException("El ganador no fue ni el J1 ni el J2");
+            }
+        }
+
+        // Incrementar partidas jugadas
         estadisticaJ1.setJugadas(estadisticaJ1.getJugadas() + 1);
         estadisticaJ2.setJugadas(estadisticaJ2.getJugadas() + 1);
 
-        this.repositorioEstadistica.guardarEstadistica(estadisticaJ1);
-        this.repositorioEstadistica.guardarEstadistica(estadisticaJ2);
+        // Guardar o actualizar estadísticas
+        this.repositorioEstadistica.actualizarEstadistica(estadisticaJ1);
+        this.repositorioEstadistica.actualizarEstadistica(estadisticaJ2);
     }
 
     @Override
-    public List<Estadistica> obtenerEstadisticasDeUnJugador(Long id) {
-        System.out.println("Buscando estadisticas de jugador ID: " + id);
-        return this.repositorioEstadistica.obtenerTodasLasEstadisticasDeUnJugador(id);
-    }
+    public Estadistica crearEstadisticaParaUsuario(Usuario usuario) {
+        Estadistica nuevaEstadistica = new Estadistica();
+        nuevaEstadistica.setUsuario(usuario);
+        nuevaEstadistica.setJugadas(0); // Inicialmente 0
+        nuevaEstadistica.setGanadas(0); // Inicialmente 0
+        nuevaEstadistica.setJuego("Truco"); // Juego asociado
+        this.repositorioEstadistica.guardarEstadistica(nuevaEstadistica);
 
-    @Override
-    public Estadistica obtenerUnaEstadisticaDeUnJugador(Long id) {
-        System.out.println("Buscando estadisticas de jugador ID: " + id);
-        return this.repositorioEstadistica.obtenerEstadisticaDeJugador(id);
+        return nuevaEstadistica;
     }
 
 
@@ -112,6 +121,7 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
             // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
             if ((usuarioBuscado != null && usuarioBuscado.getId().equals(usuario.getId()))) {
+                estadistica.calcularNivel();
                 return estadistica;
             }
         }
@@ -121,7 +131,13 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Estadistica> obtenerTopJugadores() {
-       return this.repositorioEstadistica.obtenerTodasLasEstadisticas();
+        List<Estadistica> estadisticasBuscadas = this.repositorioEstadistica.obtenerTodasLasEstadisticas();
+
+        for (Estadistica estadistica : estadisticasBuscadas) {
+            estadistica.calcularNivel();
+            repositorioEstadistica.actualizarEstadistica(estadistica);
+        }
+        return estadisticasBuscadas;
     }
 
 

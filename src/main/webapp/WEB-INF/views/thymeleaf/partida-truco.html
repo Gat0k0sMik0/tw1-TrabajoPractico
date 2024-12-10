@@ -2,164 +2,310 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Truco - Partida</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!-- Estilos generales -->
-    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <!-- FOOTER -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <!-- FONT FAMILIES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumar+One+Outline&family=Edu+AU+VIC+WA+NT+Arrows:wght@700&family=Kaushan+Script&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
     <!-- Estilos custom -->
     <link rel="stylesheet" th:href="@{/css/partida-truco.css}"/>
 </head>
 <body>
+<!-- HEADER -->
+<div id="blurry-filter"></div>
 <header>
-    <h1 class="texto-bienvenida">PARTIDA DE TRUCO</h1>
-    <div class="imagenes">
-        <img th:src="@{/img/logos/javalogo.webp}" class="headerImage"/>
-        <img th:src="@{/img/logos/springlogo.svg}" class="headerImage"/>
-        <div class="division"></div>
-        <div><img th:src="@{/img/logos/unlamsinfondo.svg}" class="headerImage"/></div>
-    </div>
     <div>
-        <a th:href="@{/home}">Volver al menu</a>
+        <article id="title">
+            <a th:href="@{/home(idUsuario=${usuarioActual.id})}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="none" stroke="#fff" class="circle-arrow">
+                    <circle cx="12" cy="12" r="10" fill="#333" stroke="white" stroke-width="2"></circle> <!-- Círculo de fondo en gris -->
+                    <path d="M15 12H9M9 12l4-4M9 12l4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <!-- Flecha en blanco -->
+                </svg>
+            </a>
+        </article>
+
+        <article id="center">
+            <h1 id="titulo-principal">TRUCO</h1>
+        </article>
+
+        <article id="reference">
+            <a class="text-decoration-none text-white" target="_blank" rel="noopener" th:href="@{/perfil(id=${usuarioActual.id})}">
+                <!-- Si el usuario no tiene foto, mostrar un ícono predeterminado -->
+                <div th:if="${usuarioActual.urlFotoPerfil == null || usuarioActual.urlFotoPerfil == '/img/fotos-perfil/default.png'}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#27ae60">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"></path>
+                    </svg>
+                </div>
+
+                <!-- Si el usuario tiene foto de perfil, mostrar la imagen -->
+                <div th:if="${usuarioActual.urlFotoPerfil != null && usuarioActual.urlFotoPerfil != '/img/fotos-perfil/default.png'}">
+                    <img class="foto-perfil" th:src="@{${usuarioActual.urlFotoPerfil}}" alt="Foto de perfil">
+                </div>
+            </a>
+            <a href="" class="text-decoration-none text-white fs-5" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 24 24" fill="#27ae60">
+                    <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1a8.12 8.12 0 0 0-1.69-.98l-.38-2.65A.485.485 0 0 0 14 2h-4c-.25 0-.45.18-.49.42l-.38 2.65c-.62.23-1.2.54-1.69.98l-2.49-1a.494.494 0 0 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98L2.62 14.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.49.44 1.07.75 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.62-.23 1.2-.54 1.69-.98l2.49 1c.23.09.5 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+                </svg>
+            </a>
+        </article>
     </div>
 </header>
 
+
 <main>
-    <h3 th:if="${partida != null}" th:text="${partida.puedeEmpezar ? 'Listos' : 'Falta un jugador'}"></h3>
-    <div id="mesa" class="gap-2">
-        <!-- OPONENTE -->
-        <div id="cartas-contrincante" class="gap-1 order-0">
-            <!--  OPONENTE CARTAS  -->
-            <div class="gap-2 cartasJugadorContainer col-4">
-                <!--  OPONENTE CARTAS -->
-                <th:block th:each="carta : ${cartasOponente}">
-                    <a class="cartaTirarBtn">
-                        <img th:src="@{/img/cartaAlReves.png}" alt="Carta" class="carta"/>
+    <div class="estadisticas-propias">
+        <!-- Datos Jugador 1-->
+        <div class="mis-datos" th:if="${estadisticasJ1 != null && partida.getJ1() != null}">
+            <img th:src="@{${partida.getJ1().getUsuario().getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
+            <span class="nombre" th:text="${partida.getJ1().getUsuario().getNombreUsuario()}"></span>
+            <img class="division" th:src="@{${estadisticasJ1.getUrlNivel()}}" alt="division"/>
+        </div>
+        <div class="mis-datos" th:if="${partida.getJ1() == null}">
+            <span>Esperando al Jugador 1</span>
+        </div>
+
+        <!-- VERSUS -->
+        <h1 class="versus">VS.</h1>
+
+        <!-- Datos Jugador 2-->
+        <div class="datos-rival" th:if="${estadisticasJ2 != null && partida.getJ2() != null}">
+            <img class="division" th:src="@{${estadisticasJ2.getUrlNivel()}}" alt="division"/>
+            <span class="nombre" th:text="${partida.getJ2().getUsuario().getNombreUsuario()}"></span>
+            <img th:src="@{${partida.getJ2().getUsuario().getUrlFotoPerfil()}}" alt="Foto de {jugador.nombre}" class="foto-perfil">
+        </div>
+        <div class="datos-rival" th:if="${partida.getJ2() == null}">
+            <span>Esperando al Jugador 2...</span>
+        </div>
+    </div>
+
+    <!-- MESA DE JUEGO -->
+    <section class="partida-datos">
+        <div id="mesa" class="gap-2">
+
+            <!-- OPONENTE -->
+            <div id="cartas-contrincante">
+                <!--  OPONENTE CARTAS  -->
+                <div class="cartasJugadorContainer">
+                    <!--  OPONENTE CARTAS -->
+                    <th:block th:each="carta : ${cartasOponente}">
+                        <a class="cartaTirarBtn">
+                            <img th:src="@{/img/cartaAlReves.png}" alt="Carta" class="carta"/>
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+
+            <!-- MESA CENTRAL -->
+            <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
+                <!-- MAZO -->
+                <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
+                    <a th:href="@{/comenzar-truco(idPartida= ${idPartida}, idUsuario=${idUsuario})}" th:if="${ganador == null}" class="w-100">                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
                     </a>
-                </th:block>
+                    <!-- IMAGEN REPARTIR -->
+                    <a th:if="${ganador != null}" class="mazo">
+                        <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
+                        <img th:if="${partida.puntosJ2 == null} and ${partida.puntosJ1 == null}" th:src="/img/cartas-truco/repartir-cartas-v2.png" alt="">
+                    </a>
+                    <!-- CAMBIAR MANO -->
+                    <a th:if="${seTermino}"
+                       class="btn cambiar-mano"
+                       th:text="'Jugar otra mano'"
+                       th:href="@{/cambiar-mano(idPartida=${idPartida}, idUsuario=${idUsuario})}"></a>
+                </div>
+                <!-- MENSAJE FIN DE PARTIDA -->
+                <div th:if="${ganador != null}" class="final">
+                    <!-- GANADOR -->
+                    <p>¡<strong class="italic" th:text="${ganador != null ? ganador.getNombre() : 'Por definir.'}"
+                                           th:style="${ganador != null && ganador.usuario != null && ganador.usuario.id != null && ganador.usuario.id == usuarioActual.id ? 'color: green;' : 'color: red;'}"></strong> ha ganado la partida!
+                    </p>
+                    <!-- SALIR -->
+                    <a th:class="${ganador != null && ganador.usuario.id == usuarioActual.id ? 'btn cambiar-mano' : 'btn envido'}"
+                       th:href="@{/home(idUsuario=${usuarioActual.id})}">Salir</a>
+                </div>
+                <!-- CARTAS TIRADAS -->
+                <div class="col-4 cartasTiradasContainer" th:if="${mano != null}">
+                    <div class="oponenteCartas">
+                        <!-- CARTAS OPONENTE TIRADAS -->
+                        <div th:each="carta, iterStat : ${cartasOponenteTiradas}"
+                             th:if="${cartasOponenteTiradas != null}"
+                             th:class="'carta espacio-' + ${iterStat.index + 1}">
+                            <img th:src="@{${carta.img}}"
+                                 alt="Carta"
+                                 class="cartaTirada"/>
+                        </div>
+                    </div>
+                    <!-- MIS CARTAS TIRADAS -->
+                    <div class="misCartas">
+                        <div th:each="carta, iterStat : ${misCartasTiradas}"
+                             th:if="${misCartasTiradas != null}"
+                             th:class="'carta espacio-' + ${iterStat.index + 1}">
+                            <img th:src="@{${carta.img}}"
+                                 alt="Carta"
+                                 class="cartaTirada"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MIS COSAS -->
+            <div id="cartas_jugador" class="order-2 gap-1">
+
+                <!--BOTONERA -->
+                <div class="botonera"
+                     th:if="${partidaIniciada != null}">
+                    <!-- BOTONES NORMALES -->
+                    <div th:if="${respondoYo}" class="varios-botones">
+                        <a class="btn normal"
+                           th:each="accion : ${accionesNormales}"
+                           th:href="@{/accion(idPartida=${idPartida}, idUsuario=${idUsuario}, mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
+                           th:text="${accion.texto}">
+                        </a>
+                    </div>
+                    <!-- BOTONES RESPUESTA ENVIDO -->
+                    <div th:if="${respondoYo && respondoEnvido}" class="d-flex gap-2">
+                        <a class="btn envido"
+                           th:each="accion : ${accionesEnvido}"
+                           th:href="@{/respuesta(idPartida=${idPartida}, idUsuario=${idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                           th:text="${accion.texto}">
+                        </a>
+                    </div>
+                    <!-- BOTONES RESPUESTAS TRUCO -->
+                    <div th:if="${respondoYo && respondoTruco}" class="d-flex gap-2">
+                        <a class="btn truco"
+                           th:each="accion : ${accionesTruco}"
+                           th:href="@{/respuesta(idPartida=${idPartida}, idUsuario=${idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                           th:text="${accion.texto}">
+                        </a>
+                    </div>
+                </div>
+
+                <!--  MIS CARTAS -->
+                <div class="gap-2 cartasJugadorContainer col-4">
+                    <th:block th:each="carta : ${misCartas}" th:if="${meTocaTirar}">
+                        <a th:href="@{/accion-tirar(idPartida=${idPartida}, idUsuario=${idUsuario}, cartaId=${carta.id}, manoId=${mano.id}, nroJugador=${miNumero})}"
+                           class="cartaTirarBtn">
+                            <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
+                        </a>
+                    </th:block>
+                    <th:block th:each="carta : ${misCartas}" th:if="${!meTocaTirar}">
+                        <img th:src="@{${carta.img}}" alt="Carta" class="carta cursorNegado"/>
+                    </th:block>
+                </div>
+
             </div>
         </div>
 
-        <!-- MESA CENTRAL -->
-        <div id="cartas-en-juego" class="d-flex flex-wrap order-1">
-            <!-- MAZO -->
-            <div th:if="${partidaIniciada != null && partidaIniciada}" class="col-4">
-                <a th:href="@{/comenzar-truco(idPartida= ${idPartida})}" th:if="${ganador == null}" class="w-100">
-                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
-                </a>
-                <a th:if="${ganador != null}" class="w-100">
-                    <img class="mazo" th:src="@{/img/cartas-truco/mazo2.png}" alt="Mazo de Cartas">
-                </a>
-            </div>
-            <!-- CARTAS TIRADAS -->
-            <div class="col-4 cartasTiradasContainer" th:if="${mano != null}">
-                <div class="oponenteCartas">
-                    <!-- CARTAS OPONENTE TIRADAS -->
-                    <div th:each="carta, iterStat : ${cartasOponenteTiradas}"
-                         th:if="${cartasOponenteTiradas != null}"
-                         th:class="'carta espacio-' + ${iterStat.index + 1}">
-                        <img th:src="@{${carta.img}}"
-                             alt="Carta"
-                             class="cartaTirada"/>
-                    </div>
-                </div>
-                <!-- MIS CARTAS TIRADAS -->
-                <div class="misCartas">
-                    <div th:each="carta, iterStat : ${misCartasTiradas}"
-                         th:if="${misCartasTiradas != null}"
-                         th:class="'carta espacio-' + ${iterStat.index + 1}">
-                        <img th:src="@{${carta.img}}"
-                             alt="Carta"
-                             class="cartaTirada"/>
-                    </div>
-                </div>
-            </div>
-            <!-- INFORMACION  -->
-            <div class="col-4 d-flex flex-column justify-content-center align-items-center">
+        <!-- DATOS DE LA PARTIDA -->
+        <div class="datos-partida">
+            <h1>DATOS DE LA PARTIDA</h1>
 
-                <div th:if="${partida != null}">
+            <div class="datos">
+                <div th:if="${partida != null && partida.getJ1() != null && partida.getJ2() != null}">
                     <p class="text-warning" th:if="${partida.getJ1() == null || partida.getJ2() == null}"
                        th:text="${'Falta un jugador'}"></p>
                 </div>
 
-                <div th:if="${ganador != null}" class="d-flex flex-column justify-content-center align-items-center">
-                    <p>Ganó <strong th:text="${ganador.getNombre()}"></strong>!</p>
-                    <a class="btn btn-danger"
-                       th:href="@{/salir(mano=${mano.id})}">Salir</a>
+                <div class="ganador">
+                    <h1>GANADOR</h1>
+                    <p>¡<strong th:text="${ganador != null ? ganador.getNombre() + '.' : 'Por definir'}"></strong>!</p>
                 </div>
 
                 <div th:if="${ganador == null}">
-                    <p th:if="${misPuntos != null && yo != null}"
-                       th:text="${'(yo): ' + yo.nombre + ' ' + misPuntos}"></p>
-                    <p th:if="${puntosRival != null && rival != null}"
-                       th:text="${'(rival): ' + rival.nombre + ' ' + puntosRival}"></p>
-                    <p th:if="${tiraAhora != null}"
-                       th:text="'Turno de jugador ' + ${tiraAhora.getNombre()}"></p>
-                    <p th:if="${partida != null}"
-                       th:text="'Partida a  ' + ${partida.getPuntosParaGanar() +  ' puntos'}"></p>
-                    <a th:if="${seTermino}"
-                       class="btn btn-danger"
-                       th:text="'Jugar otra mano'"
-                       th:href="@{/cambiar-mano}"></a>
+                    <!-- PUNTOS -->
+                    <h1 th:if="${partidaIniciada}">PUNTOS</h1>
+                    <div class="puntos">
+                        <p th:if="${misPuntos != null && yo != null}"
+                        th:text="${'Mis puntos: ' + misPuntos}"></p>
+                        <p th:if="${puntosRival != null && rival != null}"
+                           th:text="${'rival: ' + puntosRival}"></p>
+                    </div>
+                    <!-- TURNO -->
+                    <h1 th:if="${partidaIniciada}" >TURNO</h1>
+                    <p th:if="${tiraAhora != null}">Turno de:
+                        <span class="italic" th:text="${tiraAhora.getNombre()}"></span>
+                    </p>
+                    <!-- PTS MAXIMOS -->
+                    <h1>OTROS DATOS</h1>
+                    <p th:if="${partida != null}">
+                        Puntos para ganar: <span th:text="${partida.getPuntosParaGanar()}" class="italic"></span>
+                    </p>
+                    <!-- ID PARTIDA -->
+                    <p th:text="'Partida N: ' + ${partida.id}"></p>
+                    <!-- BOTON ABANDONAR -->
+                    <a class="btn envido"
+                       th:href="@{/abandonar(idPartida=${idPartida}, idUsuario=${idUsuario})}">ABANDONAR</a>
                 </div>
+            </div>
 
-            </div>
         </div>
-        <!-- MIS COSAS -->
-        <div id="cartas_jugador" class="order-2 gap-1">
-            <!--BOTONERA -->
-            <div class="d-flex flex-wrap gap-1 col-12 justify-content-center"
-                 th:if="${partidaIniciada != null}">
-                <!-- NORMALES -->
-                <div th:if="${respondoYo}" class="d-flex gap-2">
-                    <a class="btn btn-primary"
-                       th:each="accion : ${accionesNormales}"
-                       th:href="@{/accion(mano=${mano.id}, accion=${accion.nro}, jugador=${miNumero})}"
-                       th:text="${accion.texto}">
-                    </a>
-                </div>
-                <!-- RESPUESTA ENVIDO -->
-                <div th:if="${respondoYo && respondoEnvido}" class="d-flex gap-2">
-                    <a class="btn btn-warning"
-                       th:each="accion : ${accionesEnvido}"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
-                       th:text="${accion.texto}">
-                    </a>
-                </div>
-                <!-- RESPUESTAS TRUCO -->
-                <div th:if="${respondoYo && respondoTruco}" class="d-flex gap-2">
-                    <a class="btn btn-danger"
-                       th:each="accion : ${accionesTruco}"
-                       th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
-                       th:text="${accion.texto}">
-                    </a>
-                </div>
+    </section>
 
-            </div>
-            <!--  MIS CARTAS -->
-            <div class="gap-2 cartasJugadorContainer col-4">
-                <th:block th:each="carta : ${misCartas}" th:if="${meTocaTirar}">
-                    <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=${miNumero})}"
-                       class="cartaTirarBtn">
-                        <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
-                    </a>
-                </th:block>
-                <th:block th:each="carta : ${misCartas}" th:if="${!meTocaTirar}">
-                    <img th:src="@{${carta.img}}" alt="Carta" class="carta cursorNegado"/>
-                </th:block>
-            </div>
-        </div>
-    </div>
 </main>
 
 <!-- Footer -->
-<footer>
-    <div class="footer-container">
-        <p>&copy; 2024 UNLAM. Todos los derechos reservados.</p>
-        <div class="footer-alumnos">
-            <p>Lucas Gavagnin | </p>
-            <p>Gonzalo Ramos | </p>
-            <p>Martin Zaccardo | </p>
-            <p>Victoria Croce </p>
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+<footer class="relative bg-blueGray-200 pt-8 pb-6" style="background: #1a1a28; color: white;">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap text-left lg:text-left">
+            <div class="w-full lg:w-6/12 px-4">
+                <h4 class="text-3xl font-semibold text-blueGray-700" style="color: white;">¡Sigamos en contacto!</h4>
+                <h5 class="text-lg mt-0 mb-2 text-blueGray-600" style="color: #bbb;">
+                    las mejores partidas comienzan con una buena estrategia y terminan con grandes recuerdos.
+                </h5>
+                <div class="mt-6 lg:mb-0 mb-6 social-buttons">
+                    <button class="social-button twitter" type="button">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="social-button facebook" type="button">
+                        <i class="fab fa-facebook-square"></i>
+                    </button>
+                    <button class="social-button dribbble" type="button">
+                        <i class="fab fa-dribbble"></i>
+                    </button>
+                    <button class="social-button github" type="button">
+                        <i class="fab fa-github"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+                <div class="flex flex-wrap items-top mb-6">
+                    <div class="w-full lg:w-4/12 px-4 ml-auto">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Miembros</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Ramos Gonzalo</a></li>
+                            <li><a class="link" href="">Croce Victoria</a></li>
+                            <li><a class="link" href="">Zaccardo Martín</a></li>
+                            <li><a class="link" href="">Gavagnin Lucas</a></li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-4/12 px-4">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Enlaces</span>
+                        <ul class="list-unstyled">
+                            <li><a class="link" href="">Preguntas Frecuentes</a></li>
+                            <li><a class="link" href="">Terminos & Condiciones</a></li>
+                            <li><a class="link" href="">Política de Privacidad</a></li>
+                            <li><a class="link" href="">Contactanos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-blueGray-300">
+        <div class="flex flex-wrap items-center md:justify-between justify-center">
+            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-blueGray-500 font-semibold py-1">
+                    Copyright © <span id="get-current-year">2024</span>
+                    <a href="" class="text-blueGray-500 hover:text-gray-800" target="_blank">
+                        Trucoteca.
+                    </a>
+                    <a href="" class="text-blueGray-500 hover:text-blueGray-800">Los Maestros Del Mazo</a>.
+                </div>
+            </div>
         </div>
     </div>
 </footer>

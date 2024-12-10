@@ -1,26 +1,32 @@
 /* USUARIOS */
-INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id, urlFotoPerfil, victorias, nivel)
+INSERT INTO Usuario(nombreUsuario, email, password, rol, activo, id, urlFotoPerfil, victorias, descripcion)
 VALUES
-('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, '/img/fotos-perfil/default.png', 0, 'Sin Categoria'),
-('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, '/img/fotos-perfil/default.png', 0, 'Sin Categoria'),
-('xXxTuTerrorxXx', 'tuterror@user.com', 'user0000', 'USER', true, 3, '/img/fotos-perfil/foto-perfil-1.jpg', 12, 'Bronce'),
-('MatiElMasPro', 'mati@user.com', 'user0000', 'USER', true, 4, '/img/fotos-perfil/foto-perfil-2.jpg', 2, 'Sin Categoria'),
-('Perr0k0sMik0', 'perr0@user.com', 'user0000', 'USER', true, 5, '/img/fotos-perfil/foto-perfil-3.jpg', 16, 'Bronce'),
-('Gabriel2007', 'gabriel2007@user.com', 'user0000', 'USER', true, 6, '/img/fotos-perfil/foto-perfil-4.jpg', 21, 'Bronce'),
-('Delicate', 'delicate@user.com', 'user0000', 'USER', true, 7, '/img/fotos-perfil/foto-perfil-5.webp', 32, 'Plata'),
-('Gobernador', 'user1@user.com', 'user0000', 'USER', true, 8, '/img/fotos-perfil/foto-perfil-6.png', 55, 'Oro');
+('test', 'test@unlam.edu.ar', 'test1234', 'ADMIN', true, 1, '/img/fotos-perfil/default.png', 0,  null),
+('admin', 'test@prueba.com', 'admin', 'ADMIN', true, 2, '/img/fotos-perfil/default.png', 9, null),
+('xXxTuTerrorxXx', 'tuterror@user.com', 'user0000', 'USER', true, 3, '/img/fotos-perfil/foto-perfil-1.jpg', 12, 'A la gilada ni cabida'),
+('MatiElMasPro', 'mati@user.com', 'user0000', 'USER', true, 4, '/img/fotos-perfil/foto-perfil-2.jpg', 2,  'Pro player de clash royale'),
+('Perr0k0sMik0', 'perr0@user.com', 'user0000', 'USER', true, 5, '/img/fotos-perfil/foto-perfil-3.jpg', 16, 'Perro banana te amo'),
+('Gabriel2007', 'gabriel2007@user.com', 'user0000', 'USER', true, 6, '/img/fotos-perfil/foto-perfil-4.jpg', 21, 'Hola me gusta jugar juegos'),
+('Delicate', 'delicate@user.com', 'user0000', 'USER', true, 7, '/img/fotos-perfil/foto-perfil-5.webp', 32, 'Shake it off'),
+('Gobernador', 'user1@user.com', 'user0000', 'USER', true, 8, '/img/fotos-perfil/foto-perfil-6.png', 55, 'Campeón mundial de truco');
+
+/* EJEMPLO AMISTAD */
+INSERT INTO Amistad (id, usuario_id, amigo_id)
+VALUES
+    (1, 8, 4),
+    (2, 8, 6);
 
 /* CREAMOS ESTADISTICAS PARA CADA JUGADOR */
-INSERT INTO Estadistica(usuario_id, jugadas)
+INSERT INTO Estadistica(id, usuario_id, jugadas)
 VALUES
-    (1, 0),
-    (2, 0),
-    (3, 21),
-    (4, 35),
-    (5, 25),
-    (6, 56),
-    (7, 106),
-    (8, 56);
+    (1, 1, 0),
+    (2, 2, 9),
+    (3, 3, 21),
+    (4, 4, 35),
+    (5, 5, 25),
+    (6, 6, 56),
+    (7, 7, 106),
+    (8, 8, 56);
 
 /* PROBAR JUGADORES */
 INSERT INTO Jugador (id, nombre, numero, usuario_id)
