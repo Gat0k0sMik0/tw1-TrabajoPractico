@@ -26,8 +26,8 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         if (truco == null) throw new TrucoException("No se puede guardar el resultado");
 
         // Obtener estadísticas existentes
-        Estadistica estadisticaJ1 = this.repositorioEstadistica.obtenerEstadisticaDeJugador(truco.getJ1().getUsuario().getId());
-        Estadistica estadisticaJ2 = this.repositorioEstadistica.obtenerEstadisticaDeJugador(truco.getJ2().getUsuario().getId());
+        Estadistica estadisticaJ1 = obtenerEstadisticasDeUnJugador(truco.getJ1().getUsuario());
+        Estadistica estadisticaJ2 = obtenerEstadisticasDeUnJugador(truco.getJ2().getUsuario());
 
         // Crear estadísticas nuevas si no existen
         if (estadisticaJ1 == null) {
@@ -57,7 +57,8 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
         this.repositorioEstadistica.guardarEstadistica(estadisticaJ2);
     }
 
-    private Estadistica crearEstadisticaParaUsuario(Usuario usuario) {
+    @Override
+    public Estadistica crearEstadisticaParaUsuario(Usuario usuario) {
         Estadistica nuevaEstadistica = new Estadistica();
         nuevaEstadistica.setUsuario(usuario);
         nuevaEstadistica.setJugadas(0); // Inicialmente 0

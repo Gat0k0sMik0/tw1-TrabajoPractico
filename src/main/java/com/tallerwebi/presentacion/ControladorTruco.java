@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.infraestructura.ServicioEstadisticasImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -69,8 +70,8 @@ public class ControladorTruco {
 
     @RequestMapping("/partida-truco")
     public ModelAndView irAPartidaTruco(
-            @RequestParam("idPartida") Long partidaId,
-            @RequestParam("idUsuario") Long idUsuario
+            @ModelAttribute("idPartida") Long partidaId,
+            @ModelAttribute("idUsuario") Long idUsuario
     ) {
         ModelMap model = new ModelMap();
 
@@ -78,10 +79,22 @@ public class ControladorTruco {
         Usuario usuarioActual = servicioUsuario.buscarPorId(idUsuario);
         if (usuarioActual == null) return new ModelAndView("redirect:/login");
         if (partidaId == null) return new ModelAndView("redirect:/home");
+        model.put("usuarioActual", usuarioActual);
 
         // Obtener partida
         Partida partida = servicioTruco.obtenerPartidaPorId(partidaId);
         if (partida == null) return new ModelAndView("redirect:/home");
+        model.put("partida", partida);
+
+        // Obtenemos estadisticas de jugadores en caso de existir
+        if(partida.getJ1() != null) {
+            Estadistica estadisticasJ1 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ1().getUsuario());
+            model.put("estadisticasJ1", estadisticasJ1);
+        }
+        if(partida.getJ2() != null) {
+            Estadistica estadisticasJ2 = servicioEstadistica.obtenerEstadisticasDeUnJugador(partida.getJ2().getUsuario());
+            model.put("estadisticasJ2", estadisticasJ2);
+        }
 
         if (partida.getJ1() != null && partida.getJ2() != null) {
             // Comenzar partida
@@ -167,7 +180,6 @@ public class ControladorTruco {
                 model.put("seTermino", mano.getEstaTerminada());
                 model.put("puntosParaGanar", partida.getPuntosParaGanar());
                 model.put("mano", mano);
-                model.put("partida", partida);
                 model.put("idPartida", partida.getId());
                 model.put("accionAResponder", mano.getUltimaAccionPreguntada());
 
@@ -195,7 +207,7 @@ public class ControladorTruco {
 
 
     @GetMapping("/comenzar-truco")
-    public ModelAndView comenzarTruco(@RequestParam("idPartida") Long idPartida,
+    public ModelAndView comenzarTruco(@ModelAttribute("idPartida") Long idPartida,
                                       @ModelAttribute("idUsuario") Long idUsuario
             ) {
         // Obtén la partida por su ID
