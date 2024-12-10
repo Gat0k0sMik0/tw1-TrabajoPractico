@@ -130,14 +130,15 @@
                     <div th:if="${respondoYo && respondoEnvido}" class="d-flex gap-2">
                         <a class="btn envido"
                            th:each="accion : ${accionesEnvido}"
-                           th:href="@{/respuesta(idPartida=${partidaModel.idPartida}, idUsuario=${partidaModel.idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"                           th:text="${accion.texto}">
+                           th:href="@{/respuesta(idPartida=${idPartida}, idUsuario=${idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                           th:text="${accion.texto}">
                         </a>
                     </div>
                     <!-- BOTONES RESPUESTAS TRUCO -->
                     <div th:if="${respondoYo && respondoTruco}" class="d-flex gap-2">
                         <a class="btn truco"
                            th:each="accion : ${accionesTruco}"
-                           th:href="@{/respuesta(mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
+                           th:href="@{/respuesta(idPartida=${idPartida}, idUsuario=${idUsuario},mano=${mano.getId()}, respuesta=${accion.nro}, accion=${accionAResponder}, jugador=${miNumero})}"
                            th:text="${accion.texto}">
                         </a>
                     </div>
@@ -146,7 +147,7 @@
                 <!--  MIS CARTAS -->
                 <div class="gap-2 cartasJugadorContainer col-4">
                     <th:block th:each="carta : ${misCartas}" th:if="${meTocaTirar}">
-                        <a th:href="@{/accion-tirar(cartaId=${carta.id}, manoId=${mano.id}, nroJugador=${miNumero})}"
+                        <a th:href="@{/accion-tirar(idPartida=${idPartida}, idUsuario=${idUsuario}, cartaId=${carta.id}, manoId=${mano.id}, nroJugador=${miNumero})}"
                            class="cartaTirarBtn">
                             <img th:src="@{${carta.img}}" alt="Carta" th:attr="data-id=${carta.id}" class="carta"/>
                         </a>
