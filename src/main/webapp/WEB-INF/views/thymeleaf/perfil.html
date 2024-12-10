@@ -117,7 +117,7 @@
             <h1>Mis amigos</h1>
             <div th:if="${amigosDelUsuario.size()} <= 0" class="sin-amigos">
                 <h1>No tienes amigos !Busca algunos :D!</h1>
-                <a th:href="@{/amigos(idUsuario=${usuarioActual.id})}" class="btn">Buscar Amigos</a>
+                <a th:href="@{/amigos(idUsuario=${usuarioActual.id})}" class="btn">¡Buscar Amigos!</a>
             </div>
             <a th:href="@{/amigos(idUsuario=${usuarioActual.id})}">
                 <div class="listaDeAmigos">
@@ -133,7 +133,7 @@
         <!-- ULTIMA PARTIDA -->
         <div class="partida-rectangulo">
             <h1>Última partida</h1>
-            <div class="lista-partidas"
+            <div class="lista-partidas" th:if="${ultimaPartida != null}"
                  th:style="${ultimaPartida.getGanador() != null ? (ultimaPartida.getGanador().getUsuario().getId() == usuarioActual.getId() ? 'background-color: #d4f7d4;' : 'background-color: #f7d4d4;') : 'background-color: white;'}">
                 <p class="id-partida" style="color: #666">Partida N:<span th:text="${ultimaPartida.getId()}"></span></p>
                 <div class="participantes">
@@ -175,6 +175,12 @@
                 <span class="ganador" th:text="'Ganador: ' + ${ultimaPartida.getGanador().getUsuario().getNombreUsuario()}" style="color: #666"></span>
                 <span class="puntos" th:text="'Puntos para ganar: ' + ${ultimaPartida.puntosParaGanar}" style="color: #666"></span>
                 <span style="display: none" th:text="${ultimaPartida.getGanador().getUsuario().getId()}"></span>
+            </div>
+
+
+            <div th:if="${ultimaPartida == null}" class="sin-amigos">
+                <h1>Aún no has jugado ninguna !Atrévete :D!</h1>
+                <a th:href="@{/menuJuego(idUsuario=${usuarioActual.id})}" class="btn">¡Jugar!</a>
             </div>
         </div>
 

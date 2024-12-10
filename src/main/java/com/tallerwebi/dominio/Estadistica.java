@@ -29,13 +29,13 @@ public class Estadistica {
     }
 
     public void calcularNivel () {
-        if(this.usuario.getNivel().equals("Oro") || this.usuario.getVictorias() >= 50) {
+        if(this.usuario.getVictorias() >= 50) {
             urlNivel = "img/logos/divisiones/Oro.png";
-        } else if (this.usuario.getNivel().equals("Plata") || this.usuario.getVictorias() >= 30) {
+        } else if (this.usuario.getVictorias() >= 30) {
             urlNivel = "img/logos/divisiones/Plata.png";
-        } else if (this.usuario.getNivel().equals("Bronce") || this.usuario.getVictorias() >= 10) {
+        } else if (this.usuario.getVictorias() >= 10) {
             urlNivel = "img/logos/divisiones/Bronce.png";
-        } else if (this.usuario.getNivel().equals("Sin Categoria") || this.usuario.getVictorias() < 10) {
+        } else if (this.usuario.getVictorias() < 10) {
             urlNivel = "img/logos/divisiones/SinDivision.PNG";
         } else {
             urlNivel = "img/logos/divisiones/SinDivision.PNG";

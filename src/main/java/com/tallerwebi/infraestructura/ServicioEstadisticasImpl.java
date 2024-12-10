@@ -121,6 +121,7 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
             // Verificamos si el jugador1 o jugador2 tiene el mismo id que el usuario
             if ((usuarioBuscado != null && usuarioBuscado.getId().equals(usuario.getId()))) {
+                estadistica.calcularNivel();
                 return estadistica;
             }
         }
@@ -130,7 +131,13 @@ public class ServicioEstadisticasImpl implements ServicioEstadisticas {
 
     @Override
     public List<Estadistica> obtenerTopJugadores() {
-       return this.repositorioEstadistica.obtenerTodasLasEstadisticas();
+        List<Estadistica> estadisticasBuscadas = this.repositorioEstadistica.obtenerTodasLasEstadisticas();
+
+        for (Estadistica estadistica : estadisticasBuscadas) {
+            estadistica.calcularNivel();
+            repositorioEstadistica.actualizarEstadistica(estadistica);
+        }
+        return estadisticasBuscadas;
     }
 
 
