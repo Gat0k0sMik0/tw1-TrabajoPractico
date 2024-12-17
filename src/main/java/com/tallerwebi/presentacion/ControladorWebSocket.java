@@ -4,20 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tallerwebi.dominio.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -31,7 +25,7 @@ public class ControladorWebSocket {
     public ControladorWebSocket(
             ServicioMensajes servicioMensajes,
             ServicioUsuario servicioUsuario,
-            SimpMessagingTemplate messagingTemplate) {
+            @Qualifier("simpMessagingTemplate") SimpMessagingTemplate messagingTemplate) {
         this.servicioMensajes = servicioMensajes;
         this.servicioUsuario = servicioUsuario;
         this.messagingTemplate = messagingTemplate;
