@@ -25,7 +25,7 @@ public class ControladorWebSocket {
     public ControladorWebSocket(
             ServicioMensajes servicioMensajes,
             ServicioUsuario servicioUsuario,
-            @Qualifier("simpMessagingTemplate") SimpMessagingTemplate messagingTemplate) {
+            @Qualifier("brokerMessagingTemplate") SimpMessagingTemplate messagingTemplate) {
         this.servicioMensajes = servicioMensajes;
         this.servicioUsuario = servicioUsuario;
         this.messagingTemplate = messagingTemplate;
@@ -77,26 +77,5 @@ public class ControladorWebSocket {
         String json = mapper.writeValueAsString(mensaje);
         return json;
     }
-
-//    @MessageMapping("/chat/{idUsuario1}/{idUsuario2}")
-//    public void enviarMensaje(
-//            @DestinationVariable String idUsuario1,
-//            @DestinationVariable String idUsuario2,
-//            MensajeDTO mensaje
-//    ) {
-//        System.out.println("Conectado");
-//        System.out.println(idUsuario1);
-//        System.out.println(idUsuario2);
-//        System.out.println(mensaje);
-////        // Envía el mensaje al destinatario (idUsuario2)
-////        messagingTemplate.convertAndSendToUser(
-////                idUsuario2, "/queue/messages", mensaje
-////        );
-////
-////        // Opcional: También se lo envía al remitente para confirmar
-////        messagingTemplate.convertAndSendToUser(
-////                idUsuario1, "/queue/messages", mensaje
-////        );
-//    }
 
 }

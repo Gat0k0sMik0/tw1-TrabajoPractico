@@ -26,9 +26,5 @@
             registry.addEndpoint("/wschat").setAllowedOrigins("*");
         }
 
-        @Bean
-        public SimpMessagingTemplate simpMessagingTemplate() {
-            return new SimpMessagingTemplate(new ExecutorSubscribableChannel());
-        }
 
     }
